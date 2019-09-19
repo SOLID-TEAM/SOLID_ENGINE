@@ -30,4 +30,9 @@ public:
 
 	PhysBody3D* pb_snake2[MAX_SNAKE];
 	Sphere s_snake2[MAX_SNAKE];*/
+
+	// IMGUI TEST
+private:
+	bool show_demo_window = true;
+
 };
