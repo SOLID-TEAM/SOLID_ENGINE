@@ -57,7 +57,8 @@ update_status ModuleEditor::Update(float dt)
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
 
-	ImGui::ShowDemoWindow();
+	if (show_demo_window)
+		ImGui::ShowDemoWindow(&show_demo_window);
 
 	ImGui::Begin("Hello, world!");
 
@@ -65,6 +66,10 @@ update_status ModuleEditor::Update(float dt)
 	static int counter = 0;
 	if (ImGui::Button("EXIT"))
 		return UPDATE_STOP;
+	ImGui::SameLine();
+	if (ImGui::Button("TOGGLE DEMO WINDOW"))
+		show_demo_window = !show_demo_window;
+
 	/*	counter++;
 	ImGui::SameLine();
 	ImGui::Text("counter = %d", counter);*/
