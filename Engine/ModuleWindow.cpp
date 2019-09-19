@@ -66,6 +66,7 @@ bool ModuleWindow::Init()
 		{
 			//Get window surface
 			screen_surface = SDL_GetWindowSurface(window);
+			SetTitle("SOLID ENGINE v0.1");
 		}
 	}
 
