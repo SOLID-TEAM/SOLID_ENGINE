@@ -8,7 +8,7 @@
 #include "ImGui/Impl/imgui_impl_sdl.h"
 #include "ImGui/Impl/imgui_impl_opengl2.h"
 
-#define MAX_SNAKE 8
+//#define MAX_SNAKE 8
 
 struct PhysBody3D;
 
@@ -25,9 +25,9 @@ public:
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
 public:
-	PhysBody3D* pb_snake[MAX_SNAKE];
+	/*PhysBody3D* pb_snake[MAX_SNAKE];
 	Sphere s_snake[MAX_SNAKE];
 
 	PhysBody3D* pb_snake2[MAX_SNAKE];
-	Sphere s_snake2[MAX_SNAKE];
+	Sphere s_snake2[MAX_SNAKE];*/
 };
