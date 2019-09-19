@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
-#include "p2DynArray.h"
 #include "Globals.h"
-#include "Primitive.h"
 
 #include "ImGui/imgui.h"
 #include "ImGui/Impl/imgui_impl_sdl.h"
@@ -20,7 +18,7 @@ public:
 
 	bool Start();
 	update_status Update(float dt);
-	update_status PostUpdate();
+	update_status PostUpdate(float dt);
 	bool CleanUp();
 };
 

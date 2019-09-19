@@ -10,6 +10,9 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
+#include "ModulePhysics3D.h"
+#include "ModuleEditor.h"
+
 
 #include <list>
 
@@ -23,6 +26,7 @@ public:
 	ModuleRenderer3D* renderer3D = nullptr;
 	ModuleCamera3D* camera = nullptr;
 	ModulePhysics3D* physics = nullptr;
+	ModuleEditor* editor = nullptr;
 
 private:
 
