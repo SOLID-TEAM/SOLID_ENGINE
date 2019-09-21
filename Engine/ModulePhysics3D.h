@@ -1,9 +1,8 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "Primitive.h"
 #include "Bullet/include/btBulletDynamicsCommon.h"
-
+#include "Primitive.h"
 #include <list>
 
 // Recommended scale is 1.0f == 1 meter, no less than 0.2 objects

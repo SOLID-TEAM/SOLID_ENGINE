@@ -1,12 +1,17 @@
+
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+
+#include <GL\glew.h>
 #include "SDL\include\SDL_opengl.h"
+
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-#pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+#pragma comment (lib, "glu32.lib")
+#pragma comment (lib, "glew32.lib")    /* link OpenGL Utility lib     */
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -21,12 +26,30 @@ bool ModuleRenderer3D::Init()
 {
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY); //SDL_GL_CONTEXT_PROFILE_CORE);
+
+	//SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 	
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
 	if(context == NULL)
 	{
 		LOG("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
+		ret = false;
+	}
+
+	// Initialize GLEW
+	glewExperimental = true; // Needed for core profile
+
+	GLenum error = glewInit();
+	if (error != GLEW_OK) {
+		LOG("Failed to initialize GLEW\n" , glewGetErrorString(error));
 		ret = false;
 	}
 	
@@ -61,7 +84,9 @@ bool ModuleRenderer3D::Init()
 		}
 		
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+		//glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 		glClearDepth(1.0f);
+		//glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
 		
 		//Initialize clear color
 		glClearColor(0.f, 0.f, 0.f, 1.f);

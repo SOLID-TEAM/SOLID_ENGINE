@@ -42,12 +42,6 @@
     <ClInclude Include="ModuleWindow.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="p2DynArray.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="p2Point.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="glmath.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
@@ -56,9 +50,6 @@
     </ClInclude>
     <ClInclude Include="Globals.h">
       <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="Primitive.h">
-      <Filter>Sources\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Color.h">
       <Filter>Sources\Containers</Filter>
@@ -96,14 +87,17 @@
     <ClInclude Include="Imgui\imstb_truetype.h">
       <Filter>Sources\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Impl\imgui_impl_opengl2.h">
-      <Filter>Sources\Imgui</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\Impl\imgui_impl_sdl.h">
       <Filter>Sources\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="ModuleEditor.h">
       <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Impl\imgui_impl_opengl3.h">
+      <Filter>Sources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive.h">
+      <Filter>Sources\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,9 +131,6 @@
     <ClCompile Include="glmath.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="Primitive.cpp">
-      <Filter>Sources\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="Color.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
@@ -167,14 +158,17 @@
     <ClCompile Include="Imgui\imgui_widgets.cpp">
       <Filter>Sources\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\Impl\imgui_impl_opengl2.cpp">
-      <Filter>Sources\Imgui</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\Impl\imgui_impl_sdl.cpp">
       <Filter>Sources\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="ModuleEditor.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\Impl\imgui_impl_opengl3.cpp">
+      <Filter>Sources\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive.cpp">
+      <Filter>Sources\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

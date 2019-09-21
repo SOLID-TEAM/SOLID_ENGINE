@@ -4,7 +4,7 @@
 
 #include "ImGui/imgui.h"
 #include "ImGui/Impl/imgui_impl_sdl.h"
-#include "ImGui/Impl/imgui_impl_opengl2.h"
+#include "ImGui/Impl/imgui_impl_opengl3.h"
 
 class ModuleEditor : public Module
 {
