@@ -37,3 +37,8 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
 #define TITLE "3D Physics Playground"
+
+//#ifndef _HAS_EXCEPTIONS
+//#define _HAS_EXCEPTIONS 0
+//#endif
+//#define _STATIC_CPPLIB

@@ -4,7 +4,7 @@
 
 //#define MAX_SNAKE 8
 
-struct PhysBody3D;
+//struct PhysBody3D;
 
 class ModuleSceneIntro : public Module
 {
