@@ -6,11 +6,11 @@
 
 //struct PhysBody3D;
 
-class ModuleSceneIntro : public Module
+class ModuleTest : public Module
 {
 public:
-	ModuleSceneIntro(Application* app, bool start_enabled = true);
-	~ModuleSceneIntro();
+	ModuleTest(Application* app, bool start_enabled = true);
+	~ModuleTest();
 
 	bool Start();
 	update_status Update(float dt);

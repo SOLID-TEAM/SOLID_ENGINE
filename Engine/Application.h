@@ -20,7 +20,7 @@ public:
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
 
-	ModuleSceneIntro* scene_intro = nullptr;
+	ModuleTest* scene_intro = nullptr;
 	ModuleRenderer3D* renderer3D = nullptr;
 	ModuleCamera3D* camera = nullptr;
 	

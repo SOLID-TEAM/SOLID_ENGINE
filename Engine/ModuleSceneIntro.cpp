@@ -1,7 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleSceneIntro.h"
-
 #include "Primitive.h"
 
 #include "external/MathGeoLib/include/MathBuildConfig.h"
@@ -13,37 +12,99 @@
 #pragma comment (lib, "external/MathGeoLib/libx86/_Release/MathGeoLib.lib") 
 #endif
 
+// Random Number Generator Test ---------------------------
 
-ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
+#include "PCG/include/pcg_random.hpp"
+#include "Globals.h"
+#include <random>
+
+int GetIntRandomValue(int range_i1, int range_i2)
+{
+	// Seed with a real random value, if available
+	pcg_extras::seed_seq_from<std::random_device> seed_source;
+
+	// Make a random number engine
+	pcg32 rng(seed_source);
+
+	// Choose a random mean 
+	std::uniform_int_distribution<int> uniform_dist1(range_i1, range_i2);
+	int mean = uniform_dist1(rng);
+	LOG("Random number generated: %i", mean);
+
+	return mean;
+}
+
+float GetFloatRandomValue(float range_f1, float range_f2)
+{
+
+	// Seed with a real random value, if available
+	pcg_extras::seed_seq_from<std::random_device> seed_source;
+
+	// Make a random number engine
+	pcg32 rng(seed_source);
+
+	//Choose a random mean 
+	std::uniform_real_distribution<float> uniform_dist(range_f1, range_f2);
+	float mean = uniform_dist(rng);
+
+	LOG("Random number generated: %f", mean);
+
+	return mean;
+}
+
+// Return a value between 0 and 1
+
+float GetRandomPercent()
+{
+	// Seed with a real random value, if available
+	pcg_extras::seed_seq_from<std::random_device> seed_source;
+
+	// Make a random number engine
+	pcg32 rng(seed_source);
+
+	//Choose a random mean 
+	std::uniform_real_distribution<float> uniform_dist(0, 1);
+	float mean = uniform_dist(rng);
+
+	LOG("Random number generated: %f", mean);
+
+	return mean;
+}
+
+
+
+ModuleTest::ModuleTest(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
 
-ModuleSceneIntro::~ModuleSceneIntro()
+ModuleTest::~ModuleTest()
 {}
 
 // Load assets
-bool ModuleSceneIntro::Start()
+bool ModuleTest::Start()
 {
-	LOG("Loading Intro assets");
+	LOG("Loading Test assets");
 	bool ret = true;
 
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
-
+	GetIntRandomValue(1.f, 4.f);
+	GetFloatRandomValue(1.f, 10.f);
+	GetRandomPercent();
 	return ret;
 }
 
 // Load assets
-bool ModuleSceneIntro::CleanUp()
+bool ModuleTest::CleanUp()
 {
-	LOG("Unloading Intro scene");
+	LOG("Unloading Test scene");
 
 	
 	return true;
 }
 
 // Update
-update_status ModuleSceneIntro::Update(float dt)
+update_status ModuleTest::Update(float dt)
 {
 
 	PPlane p(0, 1, 0, 0);
@@ -98,7 +159,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
+void ModuleTest::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
 }
 

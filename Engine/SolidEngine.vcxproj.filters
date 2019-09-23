@@ -449,6 +449,9 @@
     <ClCompile Include="external\MathGeoLib\include\Time\Clock.cpp">
       <Filter>Sources\3rd Party\MathGeoLib\src</Filter>
     </ClCompile>
+    <ClCompile Include="random.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="external\MathGeoLib\include\Math\Matrix.inl">
