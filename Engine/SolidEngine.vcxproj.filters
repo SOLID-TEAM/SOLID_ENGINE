@@ -31,6 +31,9 @@
     <Filter Include="Sources\3rd Party\MathGeoLib\src">
       <UniqueIdentifier>{c3269427-f87d-4656-b4b7-0ff96ca31f66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\3rd Party\PCG">
+      <UniqueIdentifier>{50a1dc18-ca82-4d9b-aea9-16e2666db0ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -278,6 +281,15 @@
     </ClInclude>
     <ClInclude Include="external\MathGeoLib\include\MathGeoLibFwd.h">
       <Filter>Sources\3rd Party\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="PCG\include\pcg_extras.hpp">
+      <Filter>Sources\3rd Party\PCG</Filter>
+    </ClInclude>
+    <ClInclude Include="PCG\include\pcg_random.hpp">
+      <Filter>Sources\3rd Party\PCG</Filter>
+    </ClInclude>
+    <ClInclude Include="PCG\include\pcg_uint128.hpp">
+      <Filter>Sources\3rd Party\PCG</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
