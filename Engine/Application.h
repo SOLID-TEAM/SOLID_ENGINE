@@ -41,6 +41,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void RequestBrowser(const char* b_path) const;
+
 private:
 
 	void AddModule(Module* mod);

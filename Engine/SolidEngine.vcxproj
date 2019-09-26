@@ -55,8 +55,7 @@
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>$(SolutionDir)\Engine\external\glew-2.1.0\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -143,6 +142,7 @@
     <ClInclude Include="external\MathGeoLib\include\Math\sse_mathfun.h" />
     <ClInclude Include="external\MathGeoLib\include\Math\TransformOps.h" />
     <ClInclude Include="external\MathGeoLib\include\Time\Clock.h" />
+    <ClInclude Include="external\Parson\parson.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Imgui\imconfig.h" />
@@ -202,6 +202,7 @@
     <ClCompile Include="external\MathGeoLib\include\Math\SSEMath.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Math\TransformOps.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Time\Clock.cpp" />
+    <ClCompile Include="external\Parson\parson.c" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
     <ClCompile Include="Imgui\imgui_demo.cpp" />

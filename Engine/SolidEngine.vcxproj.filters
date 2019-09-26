@@ -31,6 +31,9 @@
     <Filter Include="Sources\3rd Party\PCG">
       <UniqueIdentifier>{50a1dc18-ca82-4d9b-aea9-16e2666db0ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\3rd Party\Parson">
+      <UniqueIdentifier>{3057bf6f-8e48-40db-9f8c-eb8584d08c21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -288,6 +291,9 @@
     <ClInclude Include="ModuleTest.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="external\Parson\parson.h">
+      <Filter>Sources\3rd Party\Parson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -448,6 +454,9 @@
     </ClCompile>
     <ClCompile Include="ModuleTest.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="external\Parson\parson.c">
+      <Filter>Sources\3rd Party\Parson</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
