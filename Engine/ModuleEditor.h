@@ -8,6 +8,10 @@
 
 #include "external/Parson/parson.h"
 #include <string>
+#include <vector>
+
+// TODO: change this/remove define
+#define MAX_STORED_FPS 60
 
 class ModuleEditor : public Module
 {
@@ -24,12 +28,19 @@ public:
 	bool SaveEditorConfig(const char* path);
 	bool LoadEditorConfig(const char* path);
 
+	void AddLastFps(const float fps);
+
+// IMGUI ----------------
 private:
 	std::string editor_filename;
 	// wip menu
 	// menu bar HELP ------
 	bool showcase = true;
 	bool about = false;
-	// --------------------
+// ----------------------
+// FPS
+private:
+	std::vector<float> stored_fps;
+
 };
 

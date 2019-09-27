@@ -124,6 +124,11 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	// store version opengl/graphic drivers
+	openglGDriversVersionString.assign((const char*)glGetString(GL_VERSION));
+	// store glew version
+	glewVersionString.assign((const char*)glewGetString(GLEW_VERSION));
+
 	return ret;
 }
 
@@ -174,4 +179,9 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+std::string ModuleRenderer3D::GetGlewVersionString() const
+{
+	return glewVersionString;
 }

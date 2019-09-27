@@ -3,6 +3,7 @@
 #include "Globals.h"
 //#include "glmath.h"
 #include "Light.h"
+#include <string>
 
 #define MAX_LIGHTS 8
 
@@ -19,10 +20,16 @@ public:
 
 	void OnResize(int width, int height);
 
+	std::string GetGlewVersionString() const;
+
 public:
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+private:
+	std::string openglGDriversVersionString;
+	std::string glewVersionString;
 };

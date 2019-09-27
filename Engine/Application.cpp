@@ -49,6 +49,13 @@ bool Application::Init()
 {
 	bool ret = true;
 
+	// set fps data before start/init modules
+	fps_counter = 0;
+	frames = 0;
+	capped_ms = 1000 / 60;
+	last_frame_ms = 0;
+	last_fps = 0;
+	
 	// Call Init() in all modules
 	std::list<Module*>::iterator item = list_modules.begin();
 
@@ -82,6 +89,24 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	// framerate calcs
+	++fps_counter;
+	++frames;
+
+	if (fps_timer.Read() >= 1000)
+	{
+		last_fps = fps_counter;
+		fps_counter = 0;
+		fps_timer.Start();
+	}
+
+	// limit framerate
+	if (capped_ms > 0 && (last_frame_ms < capped_ms))
+		SDL_Delay(capped_ms - last_frame_ms);
+
+	// save last fps to module editor vector
+	editor->AddLastFps((float)last_fps);
+
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -140,4 +165,12 @@ void Application::RequestBrowser(const char* url) const
 {
 	ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL); //SW_SHOWNA);
 		// SW_SHOWNA = show window in current state
+}
+
+void Application::AdjustCappedMs(int max_frames)
+{
+	if (max_frames > 0)
+		capped_ms = 1000 / max_frames;
+	else
+		capped_ms = 0;
 }

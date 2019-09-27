@@ -5,6 +5,11 @@
 
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	// fill stored fps vector with dummy values
+	// for evade ugly visualization
+	// TODO: TEST
+	//std::fill(stored_fps.begin(), stored_fps.end(), 0);
+	stored_fps.resize(MAX_STORED_FPS);
 }
 
 ModuleEditor::~ModuleEditor()
@@ -75,6 +80,8 @@ update_status ModuleEditor::Update(float dt)
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+	// TODO: create abstraction classes, for now this is a test
+
 	ImGui::BeginMainMenuBar();
 
 	if (ImGui::BeginMenu("File"))
@@ -127,28 +134,68 @@ update_status ModuleEditor::Update(float dt)
 
 	if (about)
 	{
+		//{
+		//	ImGui::Begin(("About SOLID Engine"), &about);
+		//
+		//	// TODO, load from json and add all required fields --------
+		//	/*
+		//	Name of your Engine
+		//	One line description
+		//	Name of the Author with link to github page
+		//	Libraries (with versions queried in real time) used with links to their web
+		//	Full text of the license
+		//	*/
+		ImGui::OpenPopup("About SOLID Engine");
+
+		if (ImGui::BeginPopupModal("About SOLID Engine", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			ImGui::Begin(("About SOLID Engine"), &about);
-		
-			// TODO, load from json and add all required fields --------
-			/*
-			Name of your Engine
-			One line description
-			Name of the Author with link to github page
-			Libraries (with versions queried in real time) used with links to their web
-			Full text of the license
-			*/
-			ImGui::Text("v0.1");
-
+			ImGui::Text("v0.1\n");
 			ImGui::Separator();
+			ImGui::BulletText("SOLID ENGINE is a project with the purpose of creating \n"
+							  "a fully functional video game engine with its own innovations and features\n"
+							  "implemented by SOLID TEAM. We are 2 Video Game Design and Development Degree students.");
+			ImGui::Separator();
+			ImGui::Text("3rd Party libs");
+			SDL_version sdl_version;
+			SDL_GetVersion(&sdl_version);
+			ImGui::BulletText("SDL v%d.%d.%d", sdl_version.major, sdl_version.minor, sdl_version.patch);
+			ImGui::BulletText("glew wrangler v%s", App->renderer3D->GetGlewVersionString().data());
+			ImGui::BulletText("ImGui v%s", ImGui::GetVersion());
 
-			ImGui::BulletText("SOLID ENGINE is a project with the purpose of creating \na fully functional video game engine with its own innovations and features \nimplemented by SOLID TEAM. We are 2 Video Game Design and Development Degree students.");
-			// -----------------------------
+
+			ImVec2 buttonSize = { 120.0f, 0.f };
+			ImGuiStyle& style = ImGui::GetStyle();
+			ImGui::Indent(ImGui::GetWindowWidth() * 0.5f - (buttonSize.x * 0.5f) - style.WindowPadding.x);
+			if (ImGui::Button("OK", buttonSize)) { ImGui::CloseCurrentPopup(); about = false; }
 			
-			ImGui::End();
 		}
+		ImGui::EndPopup();
 		
 	}
+
+	if (ImGui::Begin("Configuration"))
+	{
+		ImGui::Text("Testing");
+
+		static int test = 60;
+		if (ImGui::SliderInt("Framerate cap", &test, 0, 144))
+		{
+			App->AdjustCappedMs(test);
+		}
+
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Adjust to 0 to unlock cap");
+
+		if (stored_fps.size() > 0)
+		{
+			char title[25];
+			sprintf_s(title, 25, "Framerate %.1f", stored_fps[stored_fps.size() - 1]);
+			ImGui::PlotHistogram("##Framerate", &stored_fps[0], stored_fps.size(), 0, title, 0.0f, 100.0f, ImVec2(320, 100));
+		}
+	}
+	ImGui::End();
+
+	// Configuration window
 
 	/*ImGui::Begin("Hello, world!");
 
@@ -234,3 +281,20 @@ bool ModuleEditor::SaveEditorConfig(const char* path)
 }
 
 // ----------------------------------------------------------------------------
+
+void ModuleEditor::AddLastFps(const float fps)
+{
+	if (stored_fps.size() >= MAX_STORED_FPS)
+	{
+		// iterate and shift values
+		for (uint i = 0; i < MAX_STORED_FPS - 1; ++i)
+		{
+			stored_fps[i] = stored_fps[i + 1];
+		}
+
+		stored_fps[MAX_STORED_FPS - 1] = fps;
+	}
+	else
+		stored_fps.push_back(fps);
+	
+}

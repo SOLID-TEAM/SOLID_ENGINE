@@ -29,7 +29,14 @@ public:
 private:
 
 	Timer	ms_timer;
+	Timer fps_timer;
+	Uint32 frames; // stores total life application looped frames
 	float	dt;
+	int fps_counter;
+	int capped_ms;
+	int last_frame_ms; // stores amount of ms of last frame cycle
+	int last_fps; // stores last second total frames
+
 	std::list<Module*> list_modules;
 
 public:
@@ -42,6 +49,7 @@ public:
 	bool CleanUp();
 
 	void RequestBrowser(const char* b_path) const;
+	void AdjustCappedMs(int max_frames);
 
 private:
 
