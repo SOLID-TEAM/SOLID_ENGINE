@@ -10,6 +10,7 @@ ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, s
 	// TODO: TEST
 	//std::fill(stored_fps.begin(), stored_fps.end(), 0);
 	stored_fps.resize(MAX_STORED_FPS);
+	stored_ms.resize(MAX_STORED_FPS);
 }
 
 ModuleEditor::~ModuleEditor()
@@ -149,7 +150,7 @@ update_status ModuleEditor::Update(float dt)
 
 		if (ImGui::BeginPopupModal("About SOLID Engine", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			ImGui::Text("v0.1\n");
+			ImGui::Text("v0.1 - september 2019\n");
 			ImGui::Separator();
 			ImGui::BulletText("SOLID ENGINE is a project with the purpose of creating \n"
 							  "a fully functional video game engine with its own innovations and features\n"
@@ -158,10 +159,10 @@ update_status ModuleEditor::Update(float dt)
 			ImGui::Text("3rd Party libs");
 			SDL_version sdl_version;
 			SDL_GetVersion(&sdl_version);
-			ImGui::BulletText("SDL v%d.%d.%d", sdl_version.major, sdl_version.minor, sdl_version.patch);
-			ImGui::BulletText("glew wrangler v%s", App->renderer3D->GetGlewVersionString().data());
+			ImGui::BulletText("SDL   v%d.%d.%d", sdl_version.major, sdl_version.minor, sdl_version.patch);
+			ImGui::BulletText("glew  v%s", App->renderer3D->GetGlewVersionString().data());
 			ImGui::BulletText("ImGui v%s", ImGui::GetVersion());
-
+			ImGui::BulletText("Parson - JSON library parser");
 
 			ImVec2 buttonSize = { 120.0f, 0.f };
 			ImGuiStyle& style = ImGui::GetStyle();
@@ -175,22 +176,27 @@ update_status ModuleEditor::Update(float dt)
 
 	if (ImGui::Begin("Configuration"))
 	{
-		ImGui::Text("Testing");
-
-		static int test = 60;
-		if (ImGui::SliderInt("Framerate cap", &test, 0, 144))
+		if (ImGui::CollapsingHeader("Application"))
 		{
-			App->AdjustCappedMs(test);
-		}
+			ImGui::Text("Testing");
 
-		if (ImGui::IsItemHovered())
-			ImGui::SetTooltip("Adjust to 0 to unlock cap");
+			static int test = 60;
+			if (ImGui::SliderInt("##Framerate cap", &test, 0, 144, "FramerateCap = %.3f"))
+			{
+				App->AdjustCappedMs(test);
+			}
 
-		if (stored_fps.size() > 0)
-		{
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Adjust to 0 to unlock cap");
+
 			char title[25];
 			sprintf_s(title, 25, "Framerate %.1f", stored_fps[stored_fps.size() - 1]);
 			ImGui::PlotHistogram("##Framerate", &stored_fps[0], stored_fps.size(), 0, title, 0.0f, 100.0f, ImVec2(320, 100));
+
+			sprintf_s(title, 25, "ms %.1f", stored_ms[stored_ms.size() - 1]);
+			ImGui::PlotHistogram("##Framerate", &stored_ms[0], stored_ms.size(), 0, title, 0.0f, 50.0f, ImVec2(320, 100));
+
+
 		}
 	}
 	ImGui::End();
@@ -282,19 +288,25 @@ bool ModuleEditor::SaveEditorConfig(const char* path)
 
 // ----------------------------------------------------------------------------
 
-void ModuleEditor::AddLastFps(const float fps)
+void ModuleEditor::AddLastFps(const float fps, const float ms)
 {
+	// stored_fps and ms should be the same
 	if (stored_fps.size() >= MAX_STORED_FPS)
 	{
 		// iterate and shift values
 		for (uint i = 0; i < MAX_STORED_FPS - 1; ++i)
 		{
 			stored_fps[i] = stored_fps[i + 1];
+			stored_ms[i] = stored_ms[i + 1];
 		}
 
 		stored_fps[MAX_STORED_FPS - 1] = fps;
+		stored_ms[MAX_STORED_FPS - 1] = ms;
 	}
 	else
+	{
 		stored_fps.push_back(fps);
+		stored_ms.push_back(ms);
+	}
 	
 }

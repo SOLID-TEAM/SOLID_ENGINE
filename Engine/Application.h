@@ -34,7 +34,7 @@ private:
 	float	dt;
 	int fps_counter;
 	int capped_ms;
-	int last_frame_ms; // stores amount of ms of last frame cycle
+	Uint32 last_frame_ms; // stores amount of ms of last frame cycle
 	int last_fps; // stores last second total frames
 
 	std::list<Module*> list_modules;

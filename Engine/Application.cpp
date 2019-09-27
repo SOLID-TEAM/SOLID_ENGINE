@@ -100,12 +100,18 @@ void Application::FinishUpdate()
 		fps_timer.Start();
 	}
 
+	// gets last frame ms before delay comes in
+	last_frame_ms = ms_timer.Read();
+
 	// limit framerate
 	if (capped_ms > 0 && (last_frame_ms < capped_ms))
-		SDL_Delay(capped_ms - last_frame_ms);
+		SDL_Delay((Uint32)capped_ms - last_frame_ms);
+
+	// testing after sdl delay for plot purposes too
+	last_frame_ms = ms_timer.Read();
 
 	// save last fps to module editor vector
-	editor->AddLastFps((float)last_fps);
+	editor->AddLastFps((float)last_fps, (float)last_frame_ms);
 
 }
 

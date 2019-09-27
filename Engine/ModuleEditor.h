@@ -11,7 +11,7 @@
 #include <vector>
 
 // TODO: change this/remove define
-#define MAX_STORED_FPS 60
+#define MAX_STORED_FPS 100
 
 class ModuleEditor : public Module
 {
@@ -28,7 +28,7 @@ public:
 	bool SaveEditorConfig(const char* path);
 	bool LoadEditorConfig(const char* path);
 
-	void AddLastFps(const float fps);
+	void AddLastFps(const float fps, const float ms);
 
 // IMGUI ----------------
 private:
@@ -41,6 +41,7 @@ private:
 // FPS
 private:
 	std::vector<float> stored_fps;
+	std::vector<float> stored_ms;
 
 };
 
