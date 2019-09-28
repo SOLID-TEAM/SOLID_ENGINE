@@ -96,3 +96,49 @@ void ModuleWindow::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
 }
+
+// testing fancy way to set window brightness
+// TODO: maybe we need a more standard approach like store brightness on this module
+float& ModuleWindow::SetBrightness(float* br) const
+{
+	float brightness = *br;
+	if (brightness < 0.0f) brightness = 0.0f;
+	if (brightness > 1.0f) brightness = 1.0f;
+	
+	SDL_SetWindowBrightness(window, brightness);
+	*br = brightness;
+	
+	return *br;
+}
+
+// TODO: maybe we clean this destroying and creating new windows with required flags instead of bunch of functions?
+void ModuleWindow::SetWindowSize(int w, int h) const
+{	// TODO: LOAD FROM JSON
+	// for setting unwanted values that user can introduce with CTRL+CLICK on the slider
+	if (w > 1920 || w < 320) w = 1280; 
+	if (h > 1200 || h < 240) h = 1024;  
+
+	SDL_SetWindowSize(window, w, h);
+	App->renderer3D->OnResize(w, h);
+}
+
+void ModuleWindow::SetWindowFullscreen(float fullscreen, bool desktop) const
+{
+	Uint32 flags;
+	if (fullscreen)
+		flags = desktop ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
+	else
+		flags = SDL_WINDOW_MAXIMIZED;
+
+	SDL_SetWindowFullscreen(window, flags);
+}
+
+void ModuleWindow::SetWindowResizable(bool resizable) const
+{
+	SDL_SetWindowResizable(window, (SDL_bool)resizable);
+}
+
+void ModuleWindow::SetWindowBorderless(bool borderless) const
+{
+	SDL_SetWindowBordered(window, (SDL_bool)borderless);
+}

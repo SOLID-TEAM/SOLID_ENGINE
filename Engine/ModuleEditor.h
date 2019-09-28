@@ -29,6 +29,11 @@ public:
 	bool LoadEditorConfig(const char* path);
 
 	void AddLastFps(const float fps, const float ms);
+	
+
+	// temporaly utils for imgui prefab functions
+	void HelpMarker(const char* desc) const;
+
 
 // IMGUI ----------------
 private:

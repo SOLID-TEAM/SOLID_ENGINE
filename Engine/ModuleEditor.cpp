@@ -168,10 +168,10 @@ update_status ModuleEditor::Update(float dt)
 			ImGuiStyle& style = ImGui::GetStyle();
 			ImGui::Indent(ImGui::GetWindowWidth() * 0.5f - (buttonSize.x * 0.5f) - style.WindowPadding.x);
 			if (ImGui::Button("OK", buttonSize)) { ImGui::CloseCurrentPopup(); about = false; }
-			
+
 		}
 		ImGui::EndPopup();
-		
+
 	}
 
 	if (ImGui::Begin("Configuration"))
@@ -185,9 +185,7 @@ update_status ModuleEditor::Update(float dt)
 			{
 				App->AdjustCappedMs(test);
 			}
-
-			if (ImGui::IsItemHovered())
-				ImGui::SetTooltip("Adjust to 0 to unlock cap");
+			ImGui::SameLine(); HelpMarker("Adjust to 0 to unlock cap");
 
 			char title[25];
 			sprintf_s(title, 25, "Framerate %.1f", stored_fps[stored_fps.size() - 1]);
@@ -195,9 +193,107 @@ update_status ModuleEditor::Update(float dt)
 
 			sprintf_s(title, 25, "ms %.1f", stored_ms[stored_ms.size() - 1]);
 			ImGui::PlotHistogram("##Framerate", &stored_ms[0], stored_ms.size(), 0, title, 0.0f, 50.0f, ImVec2(320, 100));
+		}
 
+		if (ImGui::CollapsingHeader("Window"))
+		{
+			// ----------------------------------------------------------------------
+			// TODO:
+			// bool active?
+			// icon "file explorer"
+			// TODO: loads from JSON
+			static float brightness = 1.0f;
+			static int width = SCREEN_WIDTH;
+			static int height = SCREEN_HEIGHT;
+			// fullscreen, resizable, borderless, fulldesktop || bools cols
+			static bool fullscreen = WIN_FULLSCREEN;
+			static bool fullscreen_desktop = WIN_FULLSCREEN_DESKTOP;
+			static bool resizable = WIN_RESIZABLE;
+			static bool borderless = WIN_BORDERLESS;
+			// -----------------------------------------------------------------------
+
+			if (ImGui::SliderFloat("Screen Brightness", &brightness, 0.0f, 1.0f))
+			{   // only calls when slider is clicked
+				&App->window->SetBrightness(&brightness);
+			}
+			
+			if (ImGui::SliderInt("Window Width", &width, 320, 1920))
+			{   // only calls when slider is clicked
+				App->window->SetWindowSize(width, height);
+			}
+			if (ImGui::SliderInt("Window Height", &height, 240, 1080))
+			{   // only calls when slider is clicked
+				App->window->SetWindowSize(width, height);
+			}
+
+			ImGui::Separator();
+
+			// GET DISPLAY data for every monitor
+			SDL_DisplayMode dpm;
+			// store color for highlighteds words
+			ImColor hl_color = { 255,0,255 };
+			for (int i = 0; i < SDL_GetNumVideoDisplays(); ++i)
+			{
+				SDL_GetCurrentDisplayMode(i, &dpm);
+				ImGui::Text("Monitor:");
+				ImGui::SameLine();
+				ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)hl_color);
+				ImGui::Text("%i", i);
+				ImGui::PopStyleColor(1);
+				ImGui::SameLine();
+				ImGui::Text("Res:");
+				ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)hl_color);
+				ImGui::SameLine();
+				ImGui::Text("%dx%dpx %ibpp", dpm.w, dpm.h, SDL_BITSPERPIXEL(dpm.format));
+				ImGui::PopStyleColor(1);
+				ImGui::Text("Refresh rate:");
+				ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)hl_color);
+				ImGui::SameLine();
+				ImGui::Text("%dHz", dpm.refresh_rate);
+				ImGui::PopStyleColor(1);
+				ImGui::Separator();
+			}
+
+			if (ImGui::Checkbox("Fullscreen", &fullscreen))
+			{
+				App->window->SetWindowFullscreen(fullscreen);
+			}
+			ImGui::SameLine(); HelpMarker("Sets fullscreen with current window resolution");
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Fullscreen Desktop", &fullscreen_desktop))
+			{
+				App->window->SetWindowFullscreen(fullscreen_desktop, true);
+			}
+			ImGui::SameLine(); HelpMarker("Sets fullscreen with current desktop resolution");
+
+			// TODO: when the window is changed throught this, doesnt update current size on previous sliders (obviously)
+			if (ImGui::Checkbox("Resizable ", &resizable))
+			{
+				App->window->SetWindowResizable(resizable);
+			}
+			ImGui::SameLine(); HelpMarker("Allow to resize the window manually");
+			ImGui::SameLine();
+			//ImGui::SameLine(test * stringLength);
+			if (ImGui::Checkbox("Borderless", &borderless))
+			{
+				App->window->SetWindowBorderless(borderless);
+			}
+		}
+
+		if (ImGui::CollapsingHeader("File System"))
+		{
+		}
+
+		if (ImGui::CollapsingHeader("Input"))
+		{
 
 		}
+
+		if (ImGui::CollapsingHeader("Hardware"))
+		{
+
+		}
+
 	}
 	ImGui::End();
 
@@ -309,4 +405,21 @@ void ModuleEditor::AddLastFps(const float fps, const float ms)
 		stored_ms.push_back(ms);
 	}
 	
+}
+
+//--------------------------------------------------------------------------
+// TODO: temporaly methods helpers for imgui here --------------------------
+
+// In your own code you may want to display an actual icon if you are using a merged icon fonts (see misc/fonts/README.txt)
+void ModuleEditor::HelpMarker(const char* desc) const
+{
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		//ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(desc);
+		//ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
 }
