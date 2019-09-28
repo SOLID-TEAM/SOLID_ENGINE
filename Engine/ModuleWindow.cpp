@@ -140,5 +140,5 @@ void ModuleWindow::SetWindowResizable(bool resizable) const
 
 void ModuleWindow::SetWindowBorderless(bool borderless) const
 {
-	SDL_SetWindowBordered(window, (SDL_bool)borderless);
+	SDL_SetWindowBordered(window, (SDL_bool)!borderless);
 }
