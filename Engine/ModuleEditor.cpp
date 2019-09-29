@@ -87,7 +87,7 @@ update_status ModuleEditor::Update(float dt)
 	//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	// TODO: create abstraction classes, for now this is a test
-
+	
 	ImGui::BeginMainMenuBar();
 
 	if (ImGui::BeginMenu("File"))
@@ -146,46 +146,48 @@ update_status ModuleEditor::Update(float dt)
 	if (showcase)
 		ImGui::ShowDemoWindow(&showcase);
 
-	if (about)
-	{
-		//{
-		//	ImGui::Begin(("About SOLID Engine"), &about);
-		//
-		//	// TODO, load from json and add all required fields --------
-		//	/*
-		//	Name of your Engine
-		//	One line description
-		//	Name of the Author with link to github page
-		//	Libraries (with versions queried in real time) used with links to their web
-		//	Full text of the license
-		//	*/
-		ImGui::OpenPopup("About SOLID Engine");
+	// TODO: Uncomment about, too annoying for testing xD
 
-		if (ImGui::BeginPopupModal("About SOLID Engine", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-		{
-			ImGui::Text("v0.1 - september 2019\n");
-			ImGui::Separator();
-			ImGui::BulletText("SOLID ENGINE is a project with the purpose of creating \n"
-							  "a fully functional video game engine with its own innovations and features\n"
-							  "implemented by SOLID TEAM. We are 2 Video Game Design and Development Degree students.");
-			ImGui::Separator();
-			ImGui::Text("3rd Party libs");
-			SDL_version sdl_version;
-			SDL_GetVersion(&sdl_version);
-			ImGui::BulletText("SDL   v%d.%d.%d", sdl_version.major, sdl_version.minor, sdl_version.patch);
-			ImGui::BulletText("glew  v%s", App->renderer3D->GetGlewVersionString().data());
-			ImGui::BulletText("ImGui v%s", ImGui::GetVersion());
-			ImGui::BulletText("Parson - JSON library parser");
+	//if (about)
+	//{
+	//	//{
+	//	//	ImGui::Begin(("About SOLID Engine"), &about);
+	//	//
+	//	//	// TODO, load from json and add all required fields --------
+	//	//	/*
+	//	//	Name of your Engine
+	//	//	One line description
+	//	//	Name of the Author with link to github page
+	//	//	Libraries (with versions queried in real time) used with links to their web
+	//	//	Full text of the license
+	//	//	*/
+	//	ImGui::OpenPopup("About SOLID Engine");
 
-			ImVec2 buttonSize = { 120.0f, 0.f };
-			ImGuiStyle& style = ImGui::GetStyle();
-			ImGui::Indent(ImGui::GetWindowWidth() * 0.5f - (buttonSize.x * 0.5f) - style.WindowPadding.x);
-			if (ImGui::Button("OK", buttonSize)) { ImGui::CloseCurrentPopup(); about = false; }
+	//	if (ImGui::BeginPopupModal("About SOLID Engine", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	//	{
+	//		ImGui::Text("v0.1 - september 2019\n");
+	//		ImGui::Separator();
+	//		ImGui::BulletText("SOLID ENGINE is a project with the purpose of creating \n"
+	//						  "a fully functional video game engine with its own innovations and features\n"
+	//						  "implemented by SOLID TEAM. We are 2 Video Game Design and Development Degree students.");
+	//		ImGui::Separator();
+	//		ImGui::Text("3rd Party libs");
+	//		SDL_version sdl_version;
+	//		SDL_GetVersion(&sdl_version);
+	//		ImGui::BulletText("SDL   v%d.%d.%d", sdl_version.major, sdl_version.minor, sdl_version.patch);
+	//		ImGui::BulletText("glew  v%s", App->renderer3D->GetGlewVersionString().data());
+	//		ImGui::BulletText("ImGui v%s", ImGui::GetVersion());
+	//		ImGui::BulletText("Parson - JSON library parser");
 
-		}
-		ImGui::EndPopup();
+	//		ImVec2 buttonSize = { 120.0f, 0.f };
+	//		ImGuiStyle& style = ImGui::GetStyle();
+	//		ImGui::Indent(ImGui::GetWindowWidth() * 0.5f - (buttonSize.x * 0.5f) - style.WindowPadding.x);
+	//		if (ImGui::Button("OK", buttonSize)) { ImGui::CloseCurrentPopup(); about = false; }
 
-	}
+	//	}
+	//	ImGui::EndPopup();
+
+	//}
 
 	if (show_configuration)
 	{
@@ -196,20 +198,24 @@ update_status ModuleEditor::Update(float dt)
 				ImGui::Text("Testing");
 
 				static int test = 60;
-				if (ImGui::SliderInt("##Framerate cap", &test, 0, 144, "FramerateCap = %.3f"))
+
+				if (ImGui::SliderInt("#Framerate cap", &test, 0, 144, "FramerateCap = %.3f"))
 				{
 					App->AdjustCappedMs(test);
 				}
 				ImGui::SameLine(); HelpMarker("Adjust to 0 to unlock cap");
 
-				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, (ImVec4)ImColor(255,0,255));
+				ImGui::Separator();
 
+				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, (ImVec4)ImColor(255,0,255));
 				char title[25];
 				sprintf_s(title, 25, "Framerate %.1f", stored_fps[stored_fps.size() - 1]);
-				ImGui::PlotHistogram("##Framerate", &stored_fps[0], stored_fps.size(), 0, title, 0.0f, 100.0f, ImVec2(320, 100));
+				ImGui::PlotHistogram("##Framerate", &stored_fps[0], stored_fps.size(), 0, title, 0.0f, 100.0f, ImVec2(ImGui::GetWindowContentRegionWidth(), 100));
+				
+				ImGui::Separator();
 
 				sprintf_s(title, 25, "ms %.1f", stored_ms[stored_ms.size() - 1]);
-				ImGui::PlotHistogram("##Framerate", &stored_ms[0], stored_ms.size(), 0, title, 0.0f, 50.0f, ImVec2(320, 100));
+				ImGui::PlotHistogram("##Framerate", &stored_ms[0], stored_ms.size(), 0, title, 0.0f, 50.0f, ImVec2(ImGui::GetWindowContentRegionWidth(), 100));
 
 				ImGui::PopStyleColor();
 			}
@@ -306,12 +312,43 @@ update_status ModuleEditor::Update(float dt)
 
 			if (ImGui::CollapsingHeader("Input"))
 			{
+				static bool auto_scroll = true;
 
+				ImGui::Text("Mouse Position:");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4( 255, 0, 0 ,255), "%i,%i", App->input->GetMouseX(), App->input->GetMouseY());
+
+				ImGui::Text("Mouse Motion:");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(255, 0, 0, 255), "%i,%i", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
+
+				ImGui::Text("Mouse Wheel:");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(255, 0, 0, 255), "%i", App->input->GetMouseZ());
+
+				ImGui::Separator();
+
+				ImGui::Checkbox("Auto scroll", &auto_scroll);
+				ImGui::SameLine();
+				if (ImGui::Button("Clear console"))
+				{
+					App->input->GetInputBuffer()->clear();
+				}
+				
+				ImGui::BeginChild("Input Log");
+				ImGui::TextUnformatted( App->input->GetInputBuffer()->begin());
+				
+				if (auto_scroll)
+				{
+					ImGui::SetScrollHere(1.0f);
+				}
+
+				ImGui::EndChild();
 			}
 
 			if (ImGui::CollapsingHeader("Hardware"))
 			{
-
+				 
 			}
 
 		}

@@ -42,21 +42,32 @@ update_status ModuleInput::PreUpdate(float dt)
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 	
-	for(int i = 0; i < MAX_KEYS; ++i)
+	for (int i = 0; i < MAX_KEYS; ++i)
 	{
-		if(keys[i] == 1)
+		if (keys[i] == 1)
 		{
-			if(keyboard[i] == KEY_IDLE)
+			if (keyboard[i] == KEY_IDLE)
+			{
 				keyboard[i] = KEY_DOWN;
+				AddInputEvent(i, KEY_DOWN, 0);
+			}
 			else
+			{
 				keyboard[i] = KEY_REPEAT;
+				AddInputEvent(i, KEY_REPEAT, 0);
+			}
 		}
 		else
 		{
-			if(keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
+			if (keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
+			{
 				keyboard[i] = KEY_UP;
+				AddInputEvent(i, KEY_UP, 0);
+			}
 			else
+			{
 				keyboard[i] = KEY_IDLE;
+			}
 		}
 	}
 
@@ -66,21 +77,32 @@ update_status ModuleInput::PreUpdate(float dt)
 	mouse_y /= SCREEN_SIZE;
 	mouse_z = 0;
 
-	for(int i = 0; i < 5; ++i)
+	for(int i = 0; i < MAX_MOUSE_BUTTONS; ++i)
 	{
 		if(buttons & SDL_BUTTON(i))
 		{
-			if(mouse_buttons[i] == KEY_IDLE)
+			if (mouse_buttons[i] == KEY_IDLE)
+			{
 				mouse_buttons[i] = KEY_DOWN;
+				AddInputEvent(i, KEY_DOWN, 1 );
+			}
 			else
+			{
 				mouse_buttons[i] = KEY_REPEAT;
+				AddInputEvent(i, KEY_REPEAT, 1);
+			}
 		}
 		else
 		{
-			if(mouse_buttons[i] == KEY_REPEAT || mouse_buttons[i] == KEY_DOWN)
+			if (mouse_buttons[i] == KEY_REPEAT || mouse_buttons[i] == KEY_DOWN)
+			{
 				mouse_buttons[i] = KEY_UP;
+				AddInputEvent(i, KEY_UP, 1);
+			}
 			else
+			{
 				mouse_buttons[i] = KEY_IDLE;
+			}
 		}
 	}
 
@@ -131,4 +153,28 @@ bool ModuleInput::CleanUp()
 	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+//  
+
+// Add a input event to common buffer
+// flag : 0 = keyboard , 1 = mouse
+void ModuleInput::AddInputEvent(uint key, KEY_STATE state, int flag)
+{
+	static char entry[512];
+	static const char* states[] = { "IDLE", "DOWN", "REPEAT", "UP" };
+
+	const char* key_name = SDL_GetScancodeName((SDL_Scancode)key);
+
+	if (flag == 0)
+	{
+		sprintf_s(entry, 512, "Key: %s - %s\n", key_name, states[state]);
+	}
+	else
+	{
+		sprintf_s(entry, 512, "Mouse: %02u - %s\n", key , states[state]);
+	}
+		
+
+	input_buffer.appendf(entry);
 }

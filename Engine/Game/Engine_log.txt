@@ -5,15 +5,15 @@
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
 [Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 970/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
+[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
+[Info] OpenGL version supported: 4.6.0 NVIDIA 430.86
 [Info] GLSL: 4.60 NVIDIA
 [Init] Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
 Random number generated: 1
-Random number generated: 9.507935
-Random number generated: 0.733555
+Random number generated: 8.605326
+Random number generated: 0.981175
 [Start] Loading Editor
 [Error] blabla
 Found
