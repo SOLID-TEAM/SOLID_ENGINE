@@ -1,4 +1,5 @@
 #include "Application.h"
+#include <fstream>
 
 Application::Application()
 {
@@ -66,7 +67,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	LOG("Application Start --------------");
+	LOG("[Init] Application Start --------------");
 	item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)
@@ -156,10 +157,24 @@ bool Application::CleanUp()
 
 	while(item != list_modules.rend() && ret == true)
 	{
+		//ret = (*item)->SetActiveAndGet(false);
 		ret = (*item)->CleanUp();
 		++item;
 	}
+
+	SaveLogToFile();
+
 	return ret;
+}
+
+void Application::SaveLogToFile() const
+{
+	// Save log to file at aplication exit
+	std::ofstream out_log("Engine_log.txt");
+	out_log << log_buffer << "\n";
+	out_log.clear();
+	out_log.close();
+
 }
 
 void Application::AddModule(Module* mod)
@@ -179,4 +194,19 @@ void Application::AdjustCappedMs(int max_frames)
 		capped_ms = 1000 / max_frames;
 	else
 		capped_ms = 0;
+}
+
+void Application::Log(const char* new_entry)
+{
+	// combine new line + new_entry to save log to file cleanly with new lines
+	// this is needed since we not include this sum on log.cpp
+	// for the current used method to print on console editor entries
+	// this way evades double jump
+	char tmp_string[4096];
+	// save to file
+	sprintf_s(tmp_string, 4096, "\n%s", new_entry);
+	log_buffer.append(tmp_string);
+
+	// editor console
+	editor->AddConsoleLog(new_entry);
 }

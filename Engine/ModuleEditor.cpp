@@ -3,7 +3,7 @@
 #include "ModuleEditor.h"
 
 
-ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleEditor::ModuleEditor(bool start_enabled) : Module(start_enabled)
 {
 	// fill stored fps vector with dummy values
 	// for evade ugly visualization
@@ -19,8 +19,11 @@ ModuleEditor::~ModuleEditor()
 // Load assets
 bool ModuleEditor::Start()
 {
-	LOG("Loading Editor");
+	LOG("[Start] Loading Editor");
 	bool ret = true;
+
+	// TODO: remove this
+	LOG("[Error] blabla");
 
 	// TODO: on some moment we must to pass a config file from application
 	// like we do with XML but with json data and grab from there all needed data
@@ -50,10 +53,12 @@ bool ModuleEditor::Start()
 // Load assets
 bool ModuleEditor::CleanUp()
 {
-	LOG("Unloading Editor");
+	LOG("[CleanUp] Unloading Editor");
 
 	// TODO: save editor config on exit or application error
 	//SaveEditorConf(editor_filename.data());
+
+	//console_buffer.clear();
 
 	ImGui_ImplSDL2_Shutdown();
 	ImGui_ImplOpenGL3_Shutdown();
@@ -99,6 +104,14 @@ update_status ModuleEditor::Update(float dt)
 			LoadEditorConfig(editor_filename.data());
 		if (ImGui::MenuItem("Save editor windows states", "Ctrl+Alt+S"))
 			SaveEditorConfig(editor_filename.data());
+
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("View"))
+	{
+		ImGui::MenuItem("Configuration", NULL, &show_configuration);
+		ImGui::MenuItem("Console", NULL, &show_console);
 
 		ImGui::EndMenu();
 	}
@@ -174,128 +187,198 @@ update_status ModuleEditor::Update(float dt)
 
 	}
 
-	if (ImGui::Begin("Configuration"))
+	if (show_configuration)
 	{
-		if (ImGui::CollapsingHeader("Application"))
+		if (ImGui::Begin("Configuration",&show_configuration))
 		{
-			ImGui::Text("Testing");
-
-			static int test = 60;
-			if (ImGui::SliderInt("##Framerate cap", &test, 0, 144, "FramerateCap = %.3f"))
+			if (ImGui::CollapsingHeader("Application"))
 			{
-				App->AdjustCappedMs(test);
+				ImGui::Text("Testing");
+
+				static int test = 60;
+				if (ImGui::SliderInt("##Framerate cap", &test, 0, 144, "FramerateCap = %.3f"))
+				{
+					App->AdjustCappedMs(test);
+				}
+				ImGui::SameLine(); HelpMarker("Adjust to 0 to unlock cap");
+
+				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, (ImVec4)ImColor(255,0,255));
+
+				char title[25];
+				sprintf_s(title, 25, "Framerate %.1f", stored_fps[stored_fps.size() - 1]);
+				ImGui::PlotHistogram("##Framerate", &stored_fps[0], stored_fps.size(), 0, title, 0.0f, 100.0f, ImVec2(320, 100));
+
+				sprintf_s(title, 25, "ms %.1f", stored_ms[stored_ms.size() - 1]);
+				ImGui::PlotHistogram("##Framerate", &stored_ms[0], stored_ms.size(), 0, title, 0.0f, 50.0f, ImVec2(320, 100));
+
+				ImGui::PopStyleColor();
 			}
-			ImGui::SameLine(); HelpMarker("Adjust to 0 to unlock cap");
 
-			char title[25];
-			sprintf_s(title, 25, "Framerate %.1f", stored_fps[stored_fps.size() - 1]);
-			ImGui::PlotHistogram("##Framerate", &stored_fps[0], stored_fps.size(), 0, title, 0.0f, 100.0f, ImVec2(320, 100));
+			if (ImGui::CollapsingHeader("Window"))
+			{
+				// ----------------------------------------------------------------------
+				// TODO:
+				// bool active?
+				// icon "file explorer"
+				// TODO: loads from JSON
+				static float brightness = 1.0f;
+				static int width = SCREEN_WIDTH;
+				static int height = SCREEN_HEIGHT;
+				// fullscreen, resizable, borderless, fulldesktop || bools cols
+				static bool fullscreen = WIN_FULLSCREEN;
+				static bool fullscreen_desktop = WIN_FULLSCREEN_DESKTOP;
+				static bool resizable = WIN_RESIZABLE;
+				static bool borderless = WIN_BORDERLESS;
+				// -----------------------------------------------------------------------
 
-			sprintf_s(title, 25, "ms %.1f", stored_ms[stored_ms.size() - 1]);
-			ImGui::PlotHistogram("##Framerate", &stored_ms[0], stored_ms.size(), 0, title, 0.0f, 50.0f, ImVec2(320, 100));
+				if (ImGui::SliderFloat("Screen Brightness", &brightness, 0.0f, 1.0f))
+				{   // only calls when slider is clicked
+					&App->window->SetBrightness(&brightness);
+				}
+
+				if (ImGui::SliderInt("Window Width", &width, 320, 1920))
+				{   // only calls when slider is clicked
+					App->window->SetWindowSize(width, height);
+				}
+				if (ImGui::SliderInt("Window Height", &height, 240, 1080))
+				{   // only calls when slider is clicked
+					App->window->SetWindowSize(width, height);
+				}
+
+				ImGui::Separator();
+
+				// GET DISPLAY data for every monitor
+				SDL_DisplayMode dpm;
+				// store color for highlighteds words
+				ImColor hl_color = { 255,0,255 };
+				for (int i = 0; i < SDL_GetNumVideoDisplays(); ++i)
+				{
+					// instead of pushing and poping styles, we can directly call ImGui::TextColored()
+					SDL_GetCurrentDisplayMode(i, &dpm);
+					ImGui::Text("Monitor:");
+					ImGui::SameLine();
+					ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)hl_color);
+					ImGui::Text("%i", i);
+					ImGui::PopStyleColor(1);
+					ImGui::SameLine();
+					ImGui::Text("Res:");
+					ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)hl_color);
+					ImGui::SameLine();
+					ImGui::Text("%dx%dpx %ibpp", dpm.w, dpm.h, SDL_BITSPERPIXEL(dpm.format));
+					ImGui::PopStyleColor(1);
+					ImGui::Text("Refresh rate:");
+					ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)hl_color);
+					ImGui::SameLine();
+					ImGui::Text("%dHz", dpm.refresh_rate);
+					ImGui::PopStyleColor(1);
+					ImGui::Separator();
+				}
+
+				if (ImGui::Checkbox("Fullscreen", &fullscreen))
+				{
+					App->window->SetWindowFullscreen(fullscreen);
+				}
+				ImGui::SameLine(); HelpMarker("Sets fullscreen with current window resolution");
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Fullscreen Desktop", &fullscreen_desktop))
+				{
+					App->window->SetWindowFullscreen(fullscreen_desktop, true);
+				}
+				ImGui::SameLine(); HelpMarker("Sets fullscreen with current desktop resolution");
+
+				// TODO: when the window is changed throught this, doesnt update current size on previous sliders (obviously)
+				if (ImGui::Checkbox("Resizable ", &resizable))
+				{
+					App->window->SetWindowResizable(resizable);
+				}
+				ImGui::SameLine(); HelpMarker("Allow to resize the window manually");
+				ImGui::SameLine();
+				//ImGui::SameLine(test * stringLength);
+				if (ImGui::Checkbox("Borderless", &borderless))
+				{
+					App->window->SetWindowBorderless(borderless);
+				}
+			}
+
+			if (ImGui::CollapsingHeader("File System"))
+			{
+			}
+
+			if (ImGui::CollapsingHeader("Input"))
+			{
+
+			}
+
+			if (ImGui::CollapsingHeader("Hardware"))
+			{
+
+			}
+
 		}
+		ImGui::End();
+	}
 
-		if (ImGui::CollapsingHeader("Window"))
+	if (show_console)
+	{
+		ImGui::SetNextWindowSize(ImVec2(380, 600), ImGuiCond_Once);
+		static bool auto_scroll = true;
+		if (ImGui::Begin("Console Log", &show_console))
 		{
-			// ----------------------------------------------------------------------
-			// TODO:
-			// bool active?
-			// icon "file explorer"
-			// TODO: loads from JSON
-			static float brightness = 1.0f;
-			static int width = SCREEN_WIDTH;
-			static int height = SCREEN_HEIGHT;
-			// fullscreen, resizable, borderless, fulldesktop || bools cols
-			static bool fullscreen = WIN_FULLSCREEN;
-			static bool fullscreen_desktop = WIN_FULLSCREEN_DESKTOP;
-			static bool resizable = WIN_RESIZABLE;
-			static bool borderless = WIN_BORDERLESS;
-			// -----------------------------------------------------------------------
 
-			if (ImGui::SliderFloat("Screen Brightness", &brightness, 0.0f, 1.0f))
-			{   // only calls when slider is clicked
-				&App->window->SetBrightness(&brightness);
+			ImGui::Checkbox("Auto scroll", &auto_scroll);
+			ImGui::SameLine();
+			if (ImGui::Button("Clear console"))
+			{
+				for (int i = 0; i < console_log.Size; i++)
+					delete(console_log[i]);
+				console_log.clear();
 			}
-			
-			if (ImGui::SliderInt("Window Width", &width, 320, 1920))
-			{   // only calls when slider is clicked
-				App->window->SetWindowSize(width, height);
+
+			ImGui::SameLine();
+			if (ImGui::Button("Save History Log"))
+			{
+				App->SaveLogToFile();
+				LOG("[Info] Log File saved to hard disk");
 			}
-			if (ImGui::SliderInt("Window Height", &height, 240, 1080))
-			{   // only calls when slider is clicked
-				App->window->SetWindowSize(width, height);
-			}
+			ImGui::SameLine(); HelpMarker("Save all time history, doesn't affect console clearing");
 
 			ImGui::Separator();
 
-			// GET DISPLAY data for every monitor
-			SDL_DisplayMode dpm;
-			// store color for highlighteds words
-			ImColor hl_color = { 255,0,255 };
-			for (int i = 0; i < SDL_GetNumVideoDisplays(); ++i)
+			ImGui::BeginChild("ScrollingRegion");
+
+			// TODO: if we need thousands of lines of log, implement clipping (see on imgui_demo.cpp commentary)
+			for (int i = 0; i < console_log.size(); i++)
 			{
-				SDL_GetCurrentDisplayMode(i, &dpm);
-				ImGui::Text("Monitor:");
-				ImGui::SameLine();
-				ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)hl_color);
-				ImGui::Text("%i", i);
-				ImGui::PopStyleColor(1);
-				ImGui::SameLine();
-				ImGui::Text("Res:");
-				ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)hl_color);
-				ImGui::SameLine();
-				ImGui::Text("%dx%dpx %ibpp", dpm.w, dpm.h, SDL_BITSPERPIXEL(dpm.format));
-				ImGui::PopStyleColor(1);
-				ImGui::Text("Refresh rate:");
-				ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)hl_color);
-				ImGui::SameLine();
-				ImGui::Text("%dHz", dpm.refresh_rate);
-				ImGui::PopStyleColor(1);
-				ImGui::Separator();
+				const char* item = console_log[i];
+
+				// Normally you would store more information in your item (e.g. make Items[](console_log) an array of structure, store color/type etc.)
+				bool pop_color = false;
+
+				//if (strstr(item, "[Error]")) { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); pop_color = true; }
+				// strstr compare full string searching for match
+
+				// change color of the line respect prefix tag
+				// on [Error] | [Init] | [CleanUp] etc, only we need to compare the first 2 + \n from log 
+				//(if we need we can delete for every line the jump) characters to perform a good match
+				// update: deleted from editor log for now
+				if (strncmp(item, "[Init]", 4) == 0) {       ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor(100, 255, 97, 255)); pop_color = true;}
+				else if (strncmp(item, "[Start]", 2) == 0) { ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor(94, 156, 255, 255)); pop_color = true;}
+				else if (strncmp(item, "[Info]", 4) == 0) {  ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor(255, 230, 70, 255)); pop_color = true;}
+				else if (strncmp(item, "[Error]", 2) == 0) { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); pop_color = true;}
+
+				ImGui::TextUnformatted(item);
+				if (pop_color)
+					ImGui::PopStyleColor();
 			}
 
-			if (ImGui::Checkbox("Fullscreen", &fullscreen))
-			{
-				App->window->SetWindowFullscreen(fullscreen);
-			}
-			ImGui::SameLine(); HelpMarker("Sets fullscreen with current window resolution");
-			ImGui::SameLine();
-			if (ImGui::Checkbox("Fullscreen Desktop", &fullscreen_desktop))
-			{
-				App->window->SetWindowFullscreen(fullscreen_desktop, true);
-			}
-			ImGui::SameLine(); HelpMarker("Sets fullscreen with current desktop resolution");
-
-			// TODO: when the window is changed throught this, doesnt update current size on previous sliders (obviously)
-			if (ImGui::Checkbox("Resizable ", &resizable))
-			{
-				App->window->SetWindowResizable(resizable);
-			}
-			ImGui::SameLine(); HelpMarker("Allow to resize the window manually");
-			ImGui::SameLine();
-			//ImGui::SameLine(test * stringLength);
-			if (ImGui::Checkbox("Borderless", &borderless))
-			{
-				App->window->SetWindowBorderless(borderless);
-			}
+			/*ImGui::TextUnformatted(console_buffer.begin());*/
+			if (auto_scroll)
+				ImGui::SetScrollHereY(1.0f);
+			ImGui::EndChild();
 		}
-
-		if (ImGui::CollapsingHeader("File System"))
-		{
-		}
-
-		if (ImGui::CollapsingHeader("Input"))
-		{
-
-		}
-
-		if (ImGui::CollapsingHeader("Hardware"))
-		{
-
-		}
-
+		ImGui::End();
 	}
-	ImGui::End();
+
 
 	// Configuration window
 
@@ -422,4 +505,10 @@ void ModuleEditor::HelpMarker(const char* desc) const
 		//ImGui::PopTextWrapPos();
 		ImGui::EndTooltip();
 	}
+}
+
+void ModuleEditor::AddConsoleLog(const char* new_entry)
+{
+	//console_buffer.appendf(new_entry);
+	console_log.push_back(strdup(new_entry));
 }

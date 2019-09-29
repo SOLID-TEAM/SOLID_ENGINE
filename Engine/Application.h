@@ -7,15 +7,35 @@
 #include "ModuleInput.h"
 
 #include "ModuleTest.h"
+
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleEditor.h"
 
-
 #include <list>
+#include <string>
 
 class Application
 {
+public:
+
+	Application();
+	~Application();
+
+	bool Init();
+	update_status Update();
+	bool CleanUp();
+
+	void RequestBrowser(const char* b_path) const;
+	void AdjustCappedMs(int max_frames);
+	void Log(const char* new_entry);
+	void SaveLogToFile() const;
+
+private:
+	void AddModule(Module* mod);
+	void PrepareUpdate();
+	void FinishUpdate();
+
 public:
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
@@ -39,21 +59,9 @@ private:
 
 	std::list<Module*> list_modules;
 
-public:
-
-	Application();
-	~Application();
-
-	bool Init();
-	update_status Update();
-	bool CleanUp();
-
-	void RequestBrowser(const char* b_path) const;
-	void AdjustCappedMs(int max_frames);
-
-private:
-
-	void AddModule(Module* mod);
-	void PrepareUpdate();
-	void FinishUpdate();
+	std::string log_buffer;
+	std::string app_name;
+	std::string organization_name;
 };
+
+extern Application* App;

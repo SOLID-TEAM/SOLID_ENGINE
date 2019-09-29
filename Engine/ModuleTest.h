@@ -9,7 +9,7 @@
 class ModuleTest : public Module
 {
 public:
-	ModuleTest(Application* app, bool start_enabled = true);
+	ModuleTest(bool start_enabled = true);
 	~ModuleTest();
 
 	bool Start();

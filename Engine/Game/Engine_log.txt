@@ -1,0 +1,27 @@
+
+-------------- Application Init --------------
+[Init] SDL window & surface
+[Init] SDL input event system
+[Init] Creating 3D Renderer context
+[Init] Using Glew 2.1.0
+[Info] Vendor: NVIDIA Corporation
+[Info] Renderer: GeForce GTX 970/PCIe/SSE2
+[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
+[Info] GLSL: 4.60 NVIDIA
+[Init] Application Start --------------
+[Start] Setting up the camera
+Loading Test assets
+Random number generated: 1
+Random number generated: 9.507935
+Random number generated: 0.733555
+[Start] Loading Editor
+[Error] blabla
+Found
+-------------- Application Update --------------
+-------------- Application CleanUp --------------
+[CleanUp] Destroying 3D Renderer
+[CleanUp] Unloading Editor
+Unloading Test scene
+Quitting SDL input event subsystem
+[CleanUp] Cleaning camera
+[CleanUp] Destroying SDL window and quitting all SDL systems

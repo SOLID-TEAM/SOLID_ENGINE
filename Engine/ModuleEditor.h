@@ -16,7 +16,7 @@
 class ModuleEditor : public Module
 {
 public:
-	ModuleEditor(Application* app, bool start_enabled = true);
+	ModuleEditor(bool start_enabled = true);
 	~ModuleEditor();
 
 	bool Start();
@@ -29,7 +29,7 @@ public:
 	bool LoadEditorConfig(const char* path);
 
 	void AddLastFps(const float fps, const float ms);
-	
+	void AddConsoleLog(const char* new_entry);
 
 	// temporaly utils for imgui prefab functions
 	void HelpMarker(const char* desc) const;
@@ -42,11 +42,15 @@ private:
 	// menu bar HELP ------
 	bool showcase = true;
 	bool about = false;
+	bool show_console = true;
+	bool show_configuration = true;
 // ----------------------
 // FPS
 private:
 	std::vector<float> stored_fps;
 	std::vector<float> stored_ms;
+	//ImGuiTextBuffer console_buffer; // used for raw text (without widgets or custom colors)
+	ImVector<char*> console_log;
 
 };
 

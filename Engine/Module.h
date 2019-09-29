@@ -1,6 +1,5 @@
 #pragma once
 
-class Application;
 struct PhysBody3D;
 
 class Module
@@ -9,9 +8,8 @@ private :
 	bool enabled;
 
 public:
-	Application* App;
 
-	Module(Application* parent, bool start_enabled = true) : App(parent)
+	Module(bool start_enabled = true) : enabled(start_enabled)
 	{}
 
 	virtual ~Module()
@@ -49,4 +47,28 @@ public:
 
 	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	{}
+
+	// ---------------------------------------------------
+	bool IsActive() const
+	{
+		return enabled;
+	}
+
+	bool SetActiveAndGet(bool active)
+	{
+		bool ret = true;
+
+		if (enabled != active)
+		{
+			enabled = active;
+			if (enabled == true)
+				ret = Start();
+			else
+				ret = CleanUp();
+		}
+		
+		return ret;
+	}
+
+	// ---------------------------------------------------
 };

@@ -73,7 +73,7 @@ float GetRandomPercent()
 
 
 
-ModuleTest::ModuleTest(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleTest::ModuleTest(bool start_enabled) : Module(start_enabled)
 {
 }
 
@@ -141,7 +141,7 @@ update_status ModuleTest::Update(float dt)
 	s2.r = 50.0f + z;
 	s2.pos.Set(x, 0.f, 0.0f);
 
-	LOG("S2 pos: %f,%f,%f", s2.pos.x, s2.pos.y, s2.pos.z);
+	/*LOG("S2 pos: %f,%f,%f", s2.pos.x, s2.pos.y, s2.pos.z);
 	LOG("S2 radius: %f", s2.r);
 
 	if (s1.Intersects(s2))
@@ -151,7 +151,7 @@ update_status ModuleTest::Update(float dt)
 	else
 	{
 		LOG("Spheres not intersecting");
-	}
+	}*/
 	
 	// ----------------------------------------------------------
 	
