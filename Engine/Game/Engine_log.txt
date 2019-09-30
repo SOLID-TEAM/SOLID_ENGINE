@@ -11,9 +11,9 @@
 [Init] Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-Random number generated: 1
-Random number generated: 8.605326
-Random number generated: 0.981175
+Random number generated: 3
+Random number generated: 4.600728
+Random number generated: 0.444836
 [Start] Loading Editor
 [Error] blabla
 Found

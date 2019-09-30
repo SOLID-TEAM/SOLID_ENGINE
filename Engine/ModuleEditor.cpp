@@ -1,7 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleEditor.h"
-
+#include "SDL/include/SDL_opengl.h"
 
 ModuleEditor::ModuleEditor(bool start_enabled) : Module(start_enabled)
 {
@@ -348,7 +348,51 @@ update_status ModuleEditor::Update(float dt)
 
 			if (ImGui::CollapsingHeader("Hardware"))
 			{
-				 
+				Hardware_Info info;
+				
+				GetHardWareInfo(&info);
+				std::string amount;
+
+				ImGui::Text("CPU:");
+				ImGui::SameLine();
+				amount = std::to_string(info.cpu_count) + " (Cache: " + std::to_string(info.cpu_cache) + "Kb)";
+				ImGui::TextColored({ 0, 1.0f, 1.0f, 1.0f }, amount.c_str());
+
+				ImGui::Text("System RAM:");
+				ImGui::SameLine();
+				amount = std::to_string(info.sys_ram) + "Mb";
+				ImGui::TextColored({ 0, 1.0f, 1.0f, 1.0f }, amount.c_str());
+
+				ImGui::Text("Caps:");
+				ImGui::SameLine();
+				ImGui::TextColored({ 0, 1.0f, 1.0f, 1.0f }, info.caps.c_str());
+
+				ImGui::Separator();
+
+				ImGui::Text("GPU Brand:");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), info.gpu_vendor.c_str());
+
+				ImGui::Text("Device: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), info.gpu_device.c_str());
+
+				ImGui::Text("VRAM Dedicated: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%2.f Mb", info.vram_dedicated);
+
+				ImGui::Text("VRAM Available: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%2.f Mb", info.vram_available);
+
+				ImGui::Text("VRAM Current: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%2.f Mb", info.vram_current);
+
+				ImGui::Text("VRAM Evicted: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%2.f Mb", info.vram_evicted);
+
 			}
 
 		}
@@ -548,4 +592,49 @@ void ModuleEditor::AddConsoleLog(const char* new_entry)
 {
 	//console_buffer.appendf(new_entry);
 	console_log.push_back(strdup(new_entry));
+}
+
+void ModuleEditor::GetHardWareInfo( Hardware_Info *info)
+{
+	// CPU ------------------------------------
+	info->cpu_count = SDL_GetCPUCount();
+	info->cpu_cache = SDL_GetCPUCacheLineSize();
+	// RAM ------------------------------------
+	int sys_ram = SDL_GetSystemRAM();
+	// CAPS -----------------------------------
+	if (SDL_Has3DNow())
+		info->caps.append("3DNow, ");
+	if (SDL_HasAVX())
+		info->caps.append("AVX, ");
+	if (SDL_HasAVX2())
+		info->caps.append("AVX2, ");
+	if (SDL_HasMMX())
+		info->caps.append("MMX, ");
+	if (SDL_HasRDTSC())
+		info->caps.append("RDTSC, ");
+	if (SDL_HasSSE())
+		info->caps.append("SSE, ");
+	if (SDL_HasSSE2())
+		info->caps.append("SSE2, ");
+	if (SDL_HasSSE3())
+		info->caps.append("SSE3, ");
+	if (SDL_HasSSE41())
+		info->caps.append("SSE41, ");
+	if (SDL_HasSSE42())
+		info->caps.append("SSE42, ");
+	if (SDL_HasAltiVec)
+		info->caps.append("AltiVec, ");
+	// GPU ----------------------------------
+	info->gpu_device.assign((const char*)glGetString(GL_RENDERER));
+	info->gpu_vendor.assign((const char*)glGetString(GL_VENDOR));
+
+	glGetFloatv(GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, &info->vram_dedicated);
+	info->vram_dedicated /= 1024.f;
+	glGetFloatv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &info->vram_available);
+	info->vram_available /= 1024.f;
+	glGetFloatv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &info->vram_current);
+	info->vram_current /= 1024.f;
+	glGetFloatv(GL_GPU_MEMORY_INFO_EVICTED_MEMORY_NVX, &info->vram_evicted);
+	info->vram_evicted /= 1024.f;
+
 }
