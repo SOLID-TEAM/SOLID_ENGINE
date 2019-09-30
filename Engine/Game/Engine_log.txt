@@ -12,8 +12,8 @@
 [Start] Setting up the camera
 Loading Test assets
 Random number generated: 3
-Random number generated: 4.600728
-Random number generated: 0.444836
+Random number generated: 2.240390
+Random number generated: 0.275550
 [Start] Loading Editor
 [Error] blabla
 Found

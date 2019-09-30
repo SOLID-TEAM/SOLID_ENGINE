@@ -461,23 +461,46 @@ update_status ModuleEditor::Update(float dt)
 	}
 
 
-	// Configuration window
+	// Render window -------------------------------------------
 
-	/*ImGui::Begin("Hello, world!");
+	ImGui::Begin("Render");
 
-	ImGui::Text("This is some useful text.");
-	static int counter = 0;
-	if (ImGui::Button("EXIT"))
-		return UPDATE_STOP;
-	ImGui::SameLine();
-	if (ImGui::Button("TOGGLE DEMO WINDOW"))
-		showcase = !showcase;*/
+	if (ImGui::Button("Depth Test"))
+	{
+		if (glIsEnabled(GL_DEPTH_TEST))
+			glDisable(GL_DEPTH_TEST);
+		else
+			glEnable(GL_DEPTH_TEST);
+	}
 
-	/*	counter++;
-	ImGui::SameLine();
-	ImGui::Text("counter = %d", counter);*/
+	if (ImGui::Button("Cull Face"))
+	{
+		if (glIsEnabled(GL_CULL_FACE))
+			glDisable(GL_CULL_FACE);
+		else
+			glEnable(GL_CULL_FACE);
+	}
 
-	//ImGui::End();
+	if (ImGui::Button("Lighting"))
+	{
+		if (glIsEnabled(GL_LIGHTING))
+			glDisable(GL_LIGHTING);
+		else
+			glEnable(GL_LIGHTING);
+	}
+
+	if (ImGui::Button("Color Material"))
+	{
+		if (glIsEnabled(GL_COLOR_MATERIAL))
+			glDisable(GL_COLOR_MATERIAL);
+		else
+			glEnable(GL_COLOR_MATERIAL);
+	}
+
+
+
+
+	ImGui::End();
 
 	// ----------------------------------------------------------------------------------
 
