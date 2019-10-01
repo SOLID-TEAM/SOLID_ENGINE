@@ -8,12 +8,12 @@
 [Info] Renderer: GeForce GTX 1080/PCIe/SSE2
 [Info] OpenGL version supported: 4.6.0 NVIDIA 430.86
 [Info] GLSL: 4.60 NVIDIA
-[Init] Application Start --------------
+-------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-Random number generated: 4
-Random number generated: 9.971645
-Random number generated: 0.418049
+Random number generated: 3
+Random number generated: 3.653800
+Random number generated: 0.866407
 [Start] Loading Editor
 Found
 -------------- Application Update --------------

@@ -5,25 +5,19 @@
 
 Application::Application()
 {
+	LOG("-------------- Application Creation --------------");
+
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
-
 	test = new ModuleTest(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
-	
 	editor = new ModuleEditor(this);
-
-	// The order of calls is very important!
-	// Modules will Init() Start() and Update in this order
-	// They will CleanUp() in reverse order
 
 	// Main Modules
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
-	
-	
 	
 	// Scenes
 	AddModule(test);
@@ -52,6 +46,8 @@ bool Application::Init()
 {
 	bool ret = true;
 
+	LOG("-------------- Application Init --------------");
+
 	// set fps data before start/init modules
 	fps_counter = 0;
 	frames = 0;
@@ -69,7 +65,8 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	LOG("[Init] Application Start --------------");
+
+	LOG("-------------- Application Start --------------");
 	item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)

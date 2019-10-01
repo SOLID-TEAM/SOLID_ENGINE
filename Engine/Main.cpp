@@ -31,14 +31,12 @@ int main(int argc, char ** argv)
 		{
 		case MAIN_CREATION:
 
-			LOG("-------------- Application Creation --------------");
 			App = new Application();
 			state = MAIN_START;
 			break;
 
 		case MAIN_START:
 
-			LOG("-------------- Application Init --------------");
 			if (App->Init() == false)
 			{
 				//LOG("Application Init exits with ERROR");
