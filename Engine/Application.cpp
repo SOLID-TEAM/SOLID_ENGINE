@@ -1,4 +1,6 @@
 #include "Application.h"
+#include "PanelConfig.h"
+#include "PanelConsole.h"
 #include <fstream>
 
 Application::Application()
@@ -112,7 +114,7 @@ void Application::FinishUpdate()
 	last_frame_ms = ms_timer.Read();
 
 	// save last fps to module editor vector
-	editor->AddLastFps((float)last_fps, (float)last_frame_ms);
+	editor->config->AddFpsLog((float)last_fps, (float)last_frame_ms);
 
 }
 
@@ -202,11 +204,22 @@ void Application::Log(const char* new_entry)
 	// this is needed since we not include this sum on log.cpp
 	// for the current used method to print on console editor entries
 	// this way evades double jump
+
 	char tmp_string[4096];
-	// save to file
+
+	// Save to file -------------
 	sprintf_s(tmp_string, 4096, "\n%s", new_entry);
 	log_buffer.append(tmp_string);
 
-	// editor console
-	editor->AddConsoleLog(new_entry);
+	//Console ------------------
+
+	if (editor != nullptr && editor->console != nullptr)
+	{
+		editor->console->AddConsoleLog(new_entry);
+	}
+	else
+	{
+		console_log_aux.push_back(strdup(new_entry));
+	}
+	
 }

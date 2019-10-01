@@ -2,18 +2,16 @@
 
 #include "Globals.h"
 #include "Timer.h"
+#include <list>
+#include <string>
+
 #include "Module.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-
 #include "ModuleTest.h"
-
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleEditor.h"
-
-#include <list>
-#include <string>
 
 class Application
 {
@@ -45,6 +43,9 @@ public:
 	ModuleCamera3D* camera = nullptr;
 	
 	ModuleEditor* editor = nullptr;
+
+	// TODO: Improve this aux 
+	ImVector<char*> console_log_aux;
 
 private:
 

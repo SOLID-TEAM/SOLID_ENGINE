@@ -59,17 +59,8 @@ public:
 		return mouse_y_motion;
 	}
 
-	ImGuiTextBuffer * GetInputBuffer() 
-	{
-		return &input_buffer;
-	}
-
 private:
 
-	void AddInputEvent(uint key, KEY_STATE state, int flag);
-
-private:
-	ImGuiTextBuffer input_buffer;
 	KEY_STATE* keyboard;
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
 	int mouse_x;

@@ -1,6 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleEditor.h"
+#include "PanelConfig.h"
 
 #include "ImGui/Impl/imgui_impl_sdl.h"
 
@@ -49,12 +51,12 @@ update_status ModuleInput::PreUpdate(float dt)
 			if (keyboard[i] == KEY_IDLE)
 			{
 				keyboard[i] = KEY_DOWN;
-				AddInputEvent(i, KEY_DOWN, 0);
+				App->editor->config->AddInputLog(i, KEY_DOWN, 0);
 			}
 			else
 			{
 				keyboard[i] = KEY_REPEAT;
-				AddInputEvent(i, KEY_REPEAT, 0);
+				App->editor->config->AddInputLog(i, KEY_REPEAT, 0);
 			}
 		}
 		else
@@ -62,7 +64,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			if (keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
 			{
 				keyboard[i] = KEY_UP;
-				AddInputEvent(i, KEY_UP, 0);
+				App->editor->config->AddInputLog(i, KEY_UP, 0);
 			}
 			else
 			{
@@ -84,12 +86,12 @@ update_status ModuleInput::PreUpdate(float dt)
 			if (mouse_buttons[i] == KEY_IDLE)
 			{
 				mouse_buttons[i] = KEY_DOWN;
-				AddInputEvent(i, KEY_DOWN, 1 );
+				App->editor->config->AddInputLog(i, KEY_DOWN, 1 );
 			}
 			else
 			{
 				mouse_buttons[i] = KEY_REPEAT;
-				AddInputEvent(i, KEY_REPEAT, 1);
+				App->editor->config->AddInputLog(i, KEY_REPEAT, 1);
 			}
 		}
 		else
@@ -97,7 +99,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			if (mouse_buttons[i] == KEY_REPEAT || mouse_buttons[i] == KEY_DOWN)
 			{
 				mouse_buttons[i] = KEY_UP;
-				AddInputEvent(i, KEY_UP, 1);
+				App->editor->config->AddInputLog(i, KEY_UP, 1);
 			}
 			else
 			{
@@ -155,26 +157,4 @@ bool ModuleInput::CleanUp()
 	return true;
 }
 
-//  
 
-// Add a input event to common buffer
-// flag : 0 = keyboard , 1 = mouse
-void ModuleInput::AddInputEvent(uint key, KEY_STATE state, int flag)
-{
-	static char entry[512];
-	static const char* states[] = { "IDLE", "DOWN", "REPEAT", "UP" };
-
-	const char* key_name = SDL_GetScancodeName((SDL_Scancode)key);
-
-	if (flag == 0)
-	{
-		sprintf_s(entry, 512, "Key: %s - %s\n", key_name, states[state]);
-	}
-	else
-	{
-		sprintf_s(entry, 512, "Mouse: %02u - %s\n", key , states[state]);
-	}
-		
-
-	input_buffer.appendf(entry);
-}
