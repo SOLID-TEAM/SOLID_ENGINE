@@ -1,19 +1,32 @@
 
 -------------- Application Init --------------
+[Init] Loaded configuration file editor_config.json
+Window
+
 [Init] SDL window & surface
+Camera3D
+
+Input
+
 [Init] SDL input event system
+ModuleRandom?
+
+Editor
+
+Renderer3D
+
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
 [Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 430.86
+[Info] Renderer: GeForce GTX 970/PCIe/SSE2
+[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-Random number generated: 3
-Random number generated: 3.653800
-Random number generated: 0.866407
+Random number generated: 2
+Random number generated: 3.412278
+Random number generated: 0.525994
 [Start] Loading Editor
 Found
 -------------- Application Update --------------

@@ -15,7 +15,7 @@ public:
 	// Destructor
 	virtual ~ModuleWindow();
 
-	bool Init();
+	bool Init(Config& config);
 	bool CleanUp();
 
 	// EDITOR needs --------------

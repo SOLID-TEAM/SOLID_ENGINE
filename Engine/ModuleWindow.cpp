@@ -4,6 +4,8 @@
 
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
 {
+	name.assign("Window");
+
 	window = NULL;
 	screen_surface = NULL;
 }
@@ -14,7 +16,7 @@ ModuleWindow::~ModuleWindow()
 }
 
 // Called before render is available
-bool ModuleWindow::Init()
+bool ModuleWindow::Init(Config& config)
 {
 	LOG("[Init] SDL window & surface");
 	bool ret = true;

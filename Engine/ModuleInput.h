@@ -20,7 +20,7 @@ public:
 	ModuleInput(bool start_enabled = true);
 	~ModuleInput();
 
-	bool Init();
+	bool Init(Config& config);
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 

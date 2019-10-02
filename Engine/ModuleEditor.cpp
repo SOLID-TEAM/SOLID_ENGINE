@@ -15,13 +15,13 @@
 
 ModuleEditor::ModuleEditor(bool start_enabled) : Module(start_enabled)
 {
-
+	name.assign("Editor");
 }
 
 ModuleEditor::~ModuleEditor()
 {}
 
-bool ModuleEditor::Init()
+bool ModuleEditor::Init(Config& conf)
 {
 	// DEAR IMGUI SETUP ---------------------------------------------------------- 
 	IMGUI_CHECKVERSION();
@@ -38,7 +38,7 @@ bool ModuleEditor::Init()
 }
 
 // Load assets
-bool ModuleEditor::Start()
+bool ModuleEditor::Start(Config& conf)
 {
 	LOG("[Start] Loading Editor");
 	bool ret = true;

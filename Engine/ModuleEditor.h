@@ -18,8 +18,8 @@ public:
 	ModuleEditor(bool start_enabled = true);
 	~ModuleEditor();
 
-	bool Init();
-	bool Start();
+	bool Init(Config& config);
+	bool Start(Config& config);
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);

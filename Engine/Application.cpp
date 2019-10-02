@@ -7,12 +7,12 @@ Application::Application()
 {
 	LOG("-------------- Application Creation --------------");
 
-	window = new ModuleWindow(this);
-	input = new ModuleInput(this);
-	test = new ModuleTest(this);
-	renderer3D = new ModuleRenderer3D(this);
-	camera = new ModuleCamera3D(this);
-	editor = new ModuleEditor(this);
+	window = new ModuleWindow();
+	input = new ModuleInput();
+	test = new ModuleTest();
+	renderer3D = new ModuleRenderer3D();
+	camera = new ModuleCamera3D();
+	editor = new ModuleEditor();
 
 	// Main Modules
 	AddModule(window);
@@ -54,13 +54,18 @@ bool Application::Init()
 	capped_ms = 1000 / 60;
 	last_frame_ms = 0;
 	last_fps = 0;
+
+	// reads configuration file
+	if ((config = new Config("editor_config.json")) == nullptr)
+		ret = false;
 	
 	// Call Init() in all modules
 	std::list<Module*>::iterator item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)
 	{
-		ret = (*item)->Init();
+		LOG("%s", (*item)->GetName());
+		ret = (*item)->Init((config->GetSection((*item)->GetName())));
 		++item;
 	}
 
@@ -71,7 +76,7 @@ bool Application::Init()
 
 	while(item != list_modules.end() && ret == true)
 	{
-		ret = (*item)->Start();
+		ret = (*item)->Start((config->GetSection((*item)->GetName())));
 		++item;
 	}
 	
@@ -162,6 +167,7 @@ bool Application::CleanUp()
 	}
 
 	SaveLogToFile();
+	delete config;
 
 	return ret;
 }

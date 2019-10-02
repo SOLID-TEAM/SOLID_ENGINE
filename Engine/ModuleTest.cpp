@@ -75,13 +75,14 @@ float GetRandomPercent()
 
 ModuleTest::ModuleTest(bool start_enabled) : Module(start_enabled)
 {
+	name.assign("ModuleRandom?");
 }
 
 ModuleTest::~ModuleTest()
 {}
 
 // Load assets
-bool ModuleTest::Start()
+bool ModuleTest::Start(Config& config)
 {
 	LOG("Loading Test assets");
 	bool ret = true;

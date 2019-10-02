@@ -12,7 +12,7 @@ public:
 	ModuleTest(bool start_enabled = true);
 	~ModuleTest();
 
-	bool Start();
+	bool Start(Config& config);
 	update_status Update(float dt);
 	bool CleanUp();
 

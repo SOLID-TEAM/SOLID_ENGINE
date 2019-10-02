@@ -13,6 +13,8 @@
 #include "ModuleCamera3D.h"
 #include "ModuleEditor.h"
 
+#include "Config.h"
+
 class Application
 {
 public:
@@ -63,6 +65,9 @@ private:
 	std::string log_buffer;
 	std::string app_name;
 	std::string organization_name;
+
+	// testing persistence config
+	Config* config = nullptr;
 };
 
 extern Application* App;

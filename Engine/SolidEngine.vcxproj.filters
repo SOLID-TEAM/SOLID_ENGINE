@@ -306,6 +306,9 @@
     <ClInclude Include="PanelConsole.h">
       <Filter>Sources\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -478,6 +481,9 @@
     </ClCompile>
     <ClCompile Include="PanelConsole.cpp">
       <Filter>Sources\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Config.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

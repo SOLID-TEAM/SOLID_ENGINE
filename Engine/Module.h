@@ -1,11 +1,14 @@
 #pragma once
 
 struct PhysBody3D;
+class Config;
 
 class Module
 {
 private :
 	bool enabled;
+protected:
+	std::string name;
 
 public:
 
@@ -15,12 +18,12 @@ public:
 	virtual ~Module()
 	{}
 
-	virtual bool Init() 
+	virtual bool Init(Config& config) 
 	{
 		return true; 
 	}
 
-	virtual bool Start()
+	virtual bool Start(Config& config)
 	{
 		return true;
 	}
@@ -54,21 +57,26 @@ public:
 		return enabled;
 	}
 
-	bool SetActiveAndGet(bool active)
+	const char* GetName()
 	{
-		bool ret = true;
-
-		if (enabled != active)
-		{
-			enabled = active;
-			if (enabled == true)
-				ret = Start();
-			else
-				ret = CleanUp();
-		}
-		
-		return ret;
+		return name.data();
 	}
+
+	//bool SetActiveAndGet(bool active)
+	//{
+	//	bool ret = true;
+
+	//	if (enabled != active)
+	//	{
+	//		enabled = active;
+	//		if (enabled == true)
+	//			ret = Start(NULL); // TODO: get config from app if we need to use this
+	//		else
+	//			ret = CleanUp();
+	//	}
+	//	
+	//	return ret;
+	//}
 
 	// ---------------------------------------------------
 };
