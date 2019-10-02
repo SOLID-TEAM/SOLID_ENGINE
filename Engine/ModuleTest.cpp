@@ -15,6 +15,7 @@
 // Random Number Generator Test ---------------------------
 
 #include "PCG/include/pcg_random.hpp"
+#include "GL/glew.h"
 #include "Globals.h"
 #include <random>
 
@@ -142,18 +143,14 @@ update_status ModuleTest::Update(float dt)
 	s2.r = 50.0f + z;
 	s2.pos.Set(x, 0.f, 0.0f);
 
-	/*LOG("S2 pos: %f,%f,%f", s2.pos.x, s2.pos.y, s2.pos.z);
-	LOG("S2 radius: %f", s2.r);
+	glLineWidth(2.0f);
+	glBegin(GL_TRIANGLES);
+	glVertex3f(3.f, 0.f, 0.f);
+	glVertex3f(0.f, 3.f, 0.f);
+	glVertex3f(-3.f, 0.f, 0.f);
+	glEnd();
+	glLineWidth(1.0f);
 
-	if (s1.Intersects(s2))
-	{
-		LOG("Spheres intersecting");
-	}
-	else
-	{
-		LOG("Spheres not intersecting");
-	}*/
-	
 	// ----------------------------------------------------------
 	
 

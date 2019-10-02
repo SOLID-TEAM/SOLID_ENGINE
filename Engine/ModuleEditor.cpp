@@ -259,7 +259,9 @@ update_status ModuleEditor::Update(float dt)
 
 update_status ModuleEditor::PostUpdate(float dt)
 {
+	if (console->active)
 	console->Draw();
+	if (config->active)
 	config->Draw();
 
 	// ImGui Internal System ------------------------------
