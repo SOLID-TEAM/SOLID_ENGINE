@@ -31,7 +31,7 @@ public:
 
 public:
 
-	bool	active = true;
+	bool	active = false;
 	int		pos_x   = 0;
 	int		pos_y   = 0;
 	int		width	= 0;

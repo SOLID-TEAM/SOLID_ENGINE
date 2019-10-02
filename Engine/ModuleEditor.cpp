@@ -193,7 +193,24 @@ update_status ModuleEditor::Update(float dt)
 
 	ImGui::Begin("Render");
 
-	if (ImGui::Button("Depth Test"))
+
+	static bool gl_depth_test = false;
+	static bool gl_cull_face = false;
+	static bool gl_lighting = false;
+	static bool gl_color_material = false;
+	static bool wireframe = false;
+
+
+	if (ImGui::Checkbox("GL_COLOR_MATERIAL", &gl_color_material))
+	{
+		if (glIsEnabled(GL_COLOR_MATERIAL))
+			glDisable(GL_COLOR_MATERIAL);
+		else
+			glEnable(GL_COLOR_MATERIAL);
+	}
+
+
+	if (ImGui::Checkbox("GL_DEPTH_TEST", &gl_depth_test))
 	{
 		if (glIsEnabled(GL_DEPTH_TEST))
 			glDisable(GL_DEPTH_TEST);
@@ -201,9 +218,8 @@ update_status ModuleEditor::Update(float dt)
 			glEnable(GL_DEPTH_TEST);
 	}
 
-	ImGui::SameLine();
 
-	if (ImGui::Button("Cull Face"))
+	if (ImGui::Checkbox("GL_CULL_FACE", &gl_cull_face))
 	{
 		if (glIsEnabled(GL_CULL_FACE))
 			glDisable(GL_CULL_FACE);
@@ -211,9 +227,8 @@ update_status ModuleEditor::Update(float dt)
 			glEnable(GL_CULL_FACE);
 	}
 
-	ImGui::SameLine();
 
-	if (ImGui::Button("Lighting"))
+	if (ImGui::Checkbox("GL_LIGHTING", &gl_lighting))
 	{
 		if (glIsEnabled(GL_LIGHTING))
 			glDisable(GL_LIGHTING);
@@ -221,34 +236,17 @@ update_status ModuleEditor::Update(float dt)
 			glEnable(GL_LIGHTING);
 	}
 
-	if (ImGui::Button("Color Material"))
+	if (ImGui::Checkbox("WIREFRAME", &wireframe))
 	{
-		if (glIsEnabled(GL_COLOR_MATERIAL))
-			glDisable(GL_COLOR_MATERIAL);
+		if (wireframe)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
 		else
-			glEnable(GL_COLOR_MATERIAL);
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
 	}
-
-	ImGui::SameLine();
-
-	if (ImGui::Button("Color Material"))
-	{
-		if (glIsEnabled(GL_COLOR_MATERIAL))
-			glDisable(GL_COLOR_MATERIAL);
-		else
-			glEnable(GL_COLOR_MATERIAL);
-	}
-
-	ImGui::SameLine();
-
-	if (ImGui::Button("Color Material"))
-	{
-		if (glIsEnabled(GL_COLOR_MATERIAL))
-			glDisable(GL_COLOR_MATERIAL);
-		else
-			glEnable(GL_COLOR_MATERIAL);
-	}
-
 
 	ImGui::End();
 

@@ -93,6 +93,64 @@ bool ModuleTest::Start(Config& config)
 	GetIntRandomValue(1.f, 4.f);
 	GetFloatRandomValue(1.f, 10.f);
 	GetRandomPercent();
+
+
+	float cube[36 * 3] = {
+	-.5f, .5f, .5f,
+	-.5f, -.5f, .5f,
+	.5f, -.5f, .5f,
+
+	.5f, -.5f, .5f,
+	.5f, .5f, .5f,
+	-.5f, .5f, .5f,
+
+	.5f, .5f, .5f,
+	.5f, -.5f, .5f,
+	.5f, -.5f, -.5f,
+
+	.5f, -.5f, -.5f,
+	.5f, .5f, -.5f,
+	.5f, .5f, .5f,
+
+	.5f, .5f, -.5f,
+	.5f, -.5f, -.5f,
+	-.5f, -.5f, -.5f,
+
+	-.5f, -.5f, -.5f,
+	-.5f, .5f, -.5f,
+	.5f, .5f, -.5f,
+
+	-.5f, -.5f, -.5f,
+	-.5f, -.5f, .5f,
+	-.5f, .5f, .5f,
+
+	-.5f, .5f, .5f,
+	-.5f, .5f, -.5f,
+	-.5f, -.5f, -.5f,
+
+	-.5f, .5f, .5f,
+	.5f, .5f, .5f,
+	.5f, .5f, -.5f,
+
+	-.5f, .5f, .5f,
+	.5f, .5f, -.5f,
+	-.5f, .5f, -.5f,
+
+	.5f, -.5f, -.5f,
+	.5f, -.5f, .5f,
+	-.5f, -.5f, .5f,
+
+	-.5f, -.5f, -.5f,
+	.5f, -.5f, -.5f,
+	-.5f, -.5f, .5f
+	};
+
+	my_id = 2;
+	glGenBuffers(1, (GLuint*) & (my_id));
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, cube, GL_STATIC_DRAW);
+
+
 	return ret;
 }
 
@@ -143,16 +201,14 @@ update_status ModuleTest::Update(float dt)
 	s2.r = 50.0f + z;
 	s2.pos.Set(x, 0.f, 0.0f);
 
-	glLineWidth(2.0f);
-	glBegin(GL_TRIANGLES);
-	glVertex3f(3.f, 0.f, 0.f);
-	glVertex3f(0.f, 3.f, 0.f);
-	glVertex3f(-3.f, 0.f, 0.f);
-	glEnd();
-	glLineWidth(1.0f);
-
 	// ----------------------------------------------------------
-	
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	// … draw other buffers
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDisableClientState(GL_VERTEX_ARRAY);
 
 	return UPDATE_CONTINUE;
 }
