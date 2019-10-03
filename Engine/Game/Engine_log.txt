@@ -18,9 +18,9 @@ Renderer3D
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-Random number generated: 2
-Random number generated: 9.810614
-Random number generated: 0.652022
+Random number generated: 3
+Random number generated: 3.560496
+Random number generated: 0.302869
 8 points
 12 tris
 triangle 7

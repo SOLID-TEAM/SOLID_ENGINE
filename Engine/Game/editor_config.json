@@ -4,13 +4,34 @@
         "organization": "SOLID_TEAM",
         "framerate_cap": 60
     },
-    "Window": {},
+    "Window": {
+        "window_width": 1280,
+        "window_height": 1024,
+        "fullscreen": false,
+        "fullscreen_desktop": false,
+        "resizable": true,
+        "borderless": false
+    },
     "Camera3D": {},
     "Input": {},
     "ModuleRandom?": {},
     "Editor": {
-        "about": true,
-        "showcase": true
+        "about": false,
+        "showcase": false,
+        "sdfgd": [
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            4,
+            5,
+            5,
+            10
+        ],
+        "show_configuration": false,
+        "show_console": false
     },
     "Renderer3D": {}
 }

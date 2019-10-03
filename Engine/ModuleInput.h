@@ -24,6 +24,9 @@ public:
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 
+	bool Save(Config& config);
+	void Load(Config& config);
+
 	KEY_STATE GetKey(int id) const
 	{
 		return keyboard[id];

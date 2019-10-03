@@ -17,14 +17,16 @@ public:
 
 	bool Init(Config& config);
 	bool CleanUp();
+	bool Save(Config& config);
+	void Load(Config& config);
 
 	// EDITOR needs --------------
 	void SetTitle(const char* title);
 	float& SetBrightness(float* br) const;
-	void SetWindowSize(int w, int h) const;
-	void SetWindowFullscreen(float fullscreen, bool desktop = false) const;
-	void SetWindowResizable(bool resizable) const;
-	void SetWindowBorderless(bool borderless) const;
+	void SetWindowSize(int w, int h);
+	void SetWindowFullscreen(float fullscreen, bool desktop = false);
+	void SetWindowResizable(bool resizable);
+	void SetWindowBorderless(bool borderless);
 
 public:
 	//The window we'll be rendering to
@@ -34,10 +36,18 @@ public:
 	SDL_Surface* screen_surface = nullptr;
 
 	// Editor needs
-private:
+public:
 	// default values, brightness doesnt need, we understand that default is full brightness 1.0f
-	const float max_width = 1920; // TODO: load from JSON for setting the editor to default
-	const float max_height = 1080;
+	float max_width = 1920;
+	float max_height = 1080;
+
+	uint current_w = SCREEN_WIDTH;
+	uint current_h = SCREEN_HEIGHT;
+
+	bool fullscreen = WIN_FULLSCREEN;
+	bool resizable = WIN_RESIZABLE;
+	bool fullscreen_desktop = WIN_FULLSCREEN_DESKTOP;
+	bool borderless = WIN_BORDERLESS;
 
 };
 

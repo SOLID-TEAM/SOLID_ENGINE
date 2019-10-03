@@ -13,6 +13,7 @@ class Panel
 public:
 
 	Panel(std::string name);
+	Panel(std::string name, bool active) : name(name), active(active) {}
 
 	virtual ~Panel();
 

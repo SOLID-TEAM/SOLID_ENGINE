@@ -25,7 +25,7 @@ class PanelConfig : public Panel
 {
 public:
 
-	PanelConfig(std::string name);
+	PanelConfig(std::string name, bool active);
 
 	virtual ~PanelConfig();
 

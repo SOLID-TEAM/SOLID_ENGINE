@@ -193,3 +193,13 @@ std::string ModuleRenderer3D::GetGlewVersionString() const
 {
 	return glewVersionString;
 }
+
+bool ModuleRenderer3D::Save(Config& config)
+{
+	return true;
+}
+
+void ModuleRenderer3D::Load(Config& config)
+{
+
+}
