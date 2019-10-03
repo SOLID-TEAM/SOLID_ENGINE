@@ -1,6 +1,4 @@
 #include "Application.h"
-#include "PanelConfig.h"
-#include "PanelConsole.h"
 #include <fstream>
 
 Application::Application()

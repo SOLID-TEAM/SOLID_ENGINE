@@ -144,6 +144,7 @@
     <ClInclude Include="external\MathGeoLib\include\Math\TransformOps.h" />
     <ClInclude Include="external\MathGeoLib\include\Time\Clock.h" />
     <ClInclude Include="external\Parson\parson.h" />
+    <ClInclude Include="external\par_shapes.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Imgui\imconfig.h" />

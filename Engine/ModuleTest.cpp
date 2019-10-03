@@ -1,8 +1,12 @@
+#define PAR_SHAPES_IMPLEMENTATION
+#include "external/par_shapes.h"
+
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleTest.h"
 #include "Primitive.h"
 
+// MathGeoLib ---------------------------------------------
 #include "external/MathGeoLib/include/MathBuildConfig.h"
 #include "external/MathGeoLib/include/MathGeoLib.h"
 
@@ -11,13 +15,14 @@
 #else
 #pragma comment (lib, "external/MathGeoLib/libx86/_Release/MathGeoLib.lib") 
 #endif
-
+// --------------------------------------------------------
 // Random Number Generator Test ---------------------------
-
 #include "PCG/include/pcg_random.hpp"
 #include "GL/glew.h"
-#include "Globals.h"
 #include <random>
+
+
+
 
 int GetIntRandomValue(int range_i1, int range_i2)
 {
@@ -76,7 +81,7 @@ float GetRandomPercent()
 
 ModuleTest::ModuleTest(bool start_enabled) : Module(start_enabled)
 {
-	name.assign("ModuleRandom?");
+	//name.assign("ModuleRandom?");
 }
 
 ModuleTest::~ModuleTest()
@@ -95,7 +100,7 @@ bool ModuleTest::Start(Config& config)
 	GetRandomPercent();
 
 
-	float cube[36 * 3] = {
+	/*float cube[36 * 3] = {
 	-.5f, .5f, .5f,
 	-.5f, -.5f, .5f,
 	.5f, -.5f, .5f,
@@ -148,7 +153,49 @@ bool ModuleTest::Start(Config& config)
 	my_id = 2;
 	glGenBuffers(1, (GLuint*) & (my_id));
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, cube, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, cube, GL_STATIC_DRAW);*/
+
+
+	// -----------------------------------------------------
+	// shapes from par_shapes.h
+	s_cube = par_shapes_create_cube();
+	par_shapes_translate(s_cube, -2, 0, 0);
+	s_sphere = par_shapes_create_parametric_sphere(40, 20);
+	par_shapes_translate(s_sphere, 1, 0, 0);
+
+	LOG("%i points", s_cube->npoints); // store vertices indexed
+	LOG("%i tris", s_cube->ntriangles); // store indices of each point / each triangle index to a point || each index points to 3 values
+
+	for (int i = 0; i < s_cube->ntriangles * 3; ++i) // each face/tri has 3 index to some vertex/points
+	{
+		LOG("triangle %i", s_cube->triangles[i]);
+	}
+	for (int i = 0; i < s_cube->npoints; ++i)
+	{
+		float* v = &s_cube->points[i];
+		LOG("point %i - %f,%f,%f", i,v[0], v[1], v[2]);
+	}
+	
+	//generate buffer for vertices
+	glGenBuffers(1, &s_cube_v_id);
+	glBindBuffer(GL_ARRAY_BUFFER, s_cube_v_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * s_cube->npoints, &s_cube->points[0], GL_STATIC_DRAW);
+
+	// generate buffer for indices
+	glGenBuffers(1, &s_cube_elements_id);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_cube_elements_id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * s_cube->ntriangles * 3, &s_cube->triangles[0], GL_STATIC_DRAW);
+
+	// sphere
+	//generate buffer for vertices
+	glGenBuffers(1, &s_sphere_v_id);
+	glBindBuffer(GL_ARRAY_BUFFER, s_sphere_v_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * s_sphere->npoints, &s_sphere->points[0], GL_STATIC_DRAW);
+
+	// generate buffer for indices
+	glGenBuffers(1, &s_sphere_elements_id);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_sphere_elements_id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * s_sphere->ntriangles * 3, &s_sphere->triangles[0], GL_STATIC_DRAW);
 
 
 	return ret;
@@ -203,11 +250,33 @@ update_status ModuleTest::Update(float dt)
 
 	// ----------------------------------------------------------
 
+	//glEnableClientState(GL_VERTEX_ARRAY);
+	//glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	//glVertexPointer(3, GL_FLOAT, 0, NULL);
+	//// … draw other buffers
+	//glDrawArrays(GL_TRIANGLES, 0, 36);
+	//glDisableClientState(GL_VERTEX_ARRAY);
+
+	//par_shapes_translate(s_cube, 0 +(xAmount), 0, 0);
+	//par_shapes_scale(s_cube, 1.001f, 1.0f, 1.0f);
+	// s_cube draw --------------------
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	// … draw other buffers
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	// cube
+	glBindBuffer(GL_ARRAY_BUFFER, s_cube_v_id);
+	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * s_cube->npoints, &s_cube->points[0], GL_STATIC_DRAW); // re-send for translate
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_cube_elements_id);
+	glDrawElements(GL_TRIANGLES, s_cube->ntriangles * 3, GL_UNSIGNED_SHORT, (void*)0);
+	
+	// sphere
+	glBindBuffer(GL_ARRAY_BUFFER, s_sphere_v_id);
+	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_sphere_elements_id);
+	glDrawElements(GL_TRIANGLES, s_sphere->ntriangles * 3, GL_UNSIGNED_SHORT, (void*)0);
+	// --------------------------------
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	return UPDATE_CONTINUE;

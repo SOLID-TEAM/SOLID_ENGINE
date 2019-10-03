@@ -12,6 +12,8 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleEditor.h"
+#include "PanelConfig.h"
+#include "PanelConsole.h"
 
 #include "Config.h"
 
