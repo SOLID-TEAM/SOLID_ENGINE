@@ -67,7 +67,7 @@ S_Cube::S_Cube(float x, float y, float z) : Primitive()
 
 S_Sphere::S_Sphere(float x, float y, float z ,float radius) : Primitive(), radius(radius)
 {
-	mesh = par_shapes_create_parametric_sphere(40, 20);
+	mesh = par_shapes_create_parametric_sphere(20, 20);
 	par_shapes_translate(mesh, x, y, z);
 	GenBuffer();
 }

@@ -19,8 +19,8 @@ Renderer3D
 [Start] Setting up the camera
 Loading Test assets
 Random number generated: 4
-Random number generated: 8.244415
-Random number generated: 0.910841
+Random number generated: 4.083180
+Random number generated: 0.444494
 [Start] Loading Editor
 -------------- Application Update --------------
 -------------- Application CleanUp --------------

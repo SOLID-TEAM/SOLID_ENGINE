@@ -15,7 +15,7 @@ PanelConfig::~PanelConfig()
 {
 }
 
-void PanelConfig::Render()
+void PanelConfig::Draw()
 {
 	if (ImGui::Begin("Configuration", &active))
 	{
