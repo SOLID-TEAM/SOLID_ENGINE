@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "ModuleTest.h"
 #include "Primitive.h"
+#include "par_shapes.h"
 
 // MathGeoLib ---------------------------------------------
 #include "external/MathGeoLib/include/MathBuildConfig.h"
@@ -93,12 +94,11 @@ bool ModuleTest::Start(Config& config)
 	LOG("Loading Test assets");
 	bool ret = true;
 
-	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
+	App->camera->Move(vec3(1.0f, 1.0f, 1.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 	GetIntRandomValue(1.f, 4.f);
 	GetFloatRandomValue(1.f, 10.f);
 	GetRandomPercent();
-
 
 	/*float cube[36 * 3] = {
 	-.5f, .5f, .5f,
@@ -145,14 +145,45 @@ bool ModuleTest::Start(Config& config)
 	.5f, -.5f, .5f,
 	-.5f, -.5f, .5f,
 
-	-.5f, -.5f, -.5f,
-	.5f, -.5f, -.5f,
-	-.5f, -.5f, .5f
+	float vertices[] = {
+		// front
+		-1.0, -1.0,  1.0,
+		 1.0, -1.0,  1.0,
+		 1.0,  1.0,  1.0,
+		-1.0,  1.0,  1.0,
+		// back
+		-1.0, -1.0, -1.0,
+		 1.0, -1.0, -1.0,
+		 1.0,  1.0, -1.0,
+		-1.0,  1.0, -1.0
 	};
 
-	my_id = 2;
+
+	uint indices[] = {
+		// front
+		0, 1, 2,
+		2, 3, 0,
+		// right
+		1, 5, 6,
+		6, 2, 1,
+		// back
+		7, 6, 5,
+		5, 4, 7,
+		// left
+		4, 0, 3,
+		3, 7, 4,
+		// bottom
+		4, 5, 1,
+		1, 0, 4,
+		// top
+		3, 2, 6,
+		6, 7, 3
+	};
+
+	my_id = 0;
 	glGenBuffers(1, (GLuint*) & (my_id));
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, cube, GL_STATIC_DRAW);*/
 
 
@@ -196,7 +227,17 @@ bool ModuleTest::Start(Config& config)
 	glGenBuffers(1, &s_sphere_elements_id);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_sphere_elements_id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * s_sphere->ntriangles * 3, &s_sphere->triangles[0], GL_STATIC_DRAW);
+//=======
+//	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8 * 3 , vertices, GL_STATIC_DRAW);
+//>>>>>>> 3f51289fb7c610bdf779fccba2570d648eac60da
+//
+//	my_indices = 2;
+//	glGenBuffers(1, (GLuint*) & (my_indices));
+//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, indices, GL_STATIC_DRAW);
 
+
+	//cube = par_shapes_create_cube();
 
 	return ret;
 }
@@ -277,6 +318,7 @@ update_status ModuleTest::Update(float dt)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_sphere_elements_id);
 	glDrawElements(GL_TRIANGLES, s_sphere->ntriangles * 3, GL_UNSIGNED_SHORT, (void*)0);
 	// --------------------------------
+
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	return UPDATE_CONTINUE;
@@ -284,5 +326,6 @@ update_status ModuleTest::Update(float dt)
 
 void ModuleTest::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
+
 }
 
