@@ -18,7 +18,7 @@ public:
 
 	void AddConsoleLog(const char* new_entry);
 
-	void Draw();
+	void Render();
 
 private:
 

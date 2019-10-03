@@ -29,7 +29,7 @@ public:
 
 	virtual ~PanelConfig();
 
-	void Draw();
+	void Render();
 
 	void AddFpsLog(const float fps, const float ms);
 

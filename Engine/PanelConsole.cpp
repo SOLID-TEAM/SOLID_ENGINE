@@ -12,7 +12,7 @@ PanelConsole::~PanelConsole()
 {
 }
 
-void PanelConsole::Draw()
+void PanelConsole::Render()
 {
 	ImGui::SetNextWindowSize(ImVec2(380, 600), ImGuiCond_Once);
 	static bool auto_scroll = true;

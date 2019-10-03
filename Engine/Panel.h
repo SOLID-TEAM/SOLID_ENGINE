@@ -16,7 +16,7 @@ public:
 
 	virtual ~Panel();
 
-	virtual void Draw() = 0;
+	virtual void Render() = 0;
 
 	void SwitchActive();
 

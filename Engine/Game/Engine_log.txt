@@ -12,61 +12,15 @@ Renderer3D
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
 [Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 970/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
+[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
+[Info] OpenGL version supported: 4.6.0 NVIDIA 430.86
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-Random number generated: 2
-Random number generated: 9.810614
-Random number generated: 0.652022
-8 points
-12 tris
-triangle 7
-triangle 6
-triangle 5
-triangle 5
-triangle 4
-triangle 7
-triangle 0
-triangle 1
-triangle 2
-triangle 2
-triangle 3
-triangle 0
-triangle 6
-triangle 7
-triangle 3
-triangle 3
-triangle 2
-triangle 6
-triangle 5
-triangle 6
-triangle 2
-triangle 2
-triangle 1
-triangle 5
-triangle 4
-triangle 5
-triangle 1
-triangle 1
-triangle 0
-triangle 4
-triangle 7
-triangle 4
-triangle 0
-triangle 0
-triangle 3
-triangle 7
-point 0 - -2.000000,0.000000,0.000000
-point 1 - 0.000000,0.000000,-2.000000
-point 2 - 0.000000,-2.000000,1.000000
-point 3 - -2.000000,1.000000,0.000000
-point 4 - 1.000000,0.000000,-1.000000
-point 5 - 0.000000,-1.000000,1.000000
-point 6 - -1.000000,1.000000,0.000000
-point 7 - 1.000000,0.000000,-1.000000
+Random number generated: 4
+Random number generated: 8.244415
+Random number generated: 0.910841
 [Start] Loading Editor
 -------------- Application Update --------------
 -------------- Application CleanUp --------------
