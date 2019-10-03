@@ -55,7 +55,20 @@ void Config::SaveConfigToFile(const char* path)
 	json_serialize_to_file_pretty(root_value, path);
 }
 
-// utils
+// utils ----------------------------------------------
+JSON_Value* Config::FindValue(const char* var_name, int array_index) const
+{
+	JSON_Value* ret = nullptr;
+	// returns the value, or the array index value
+	if (array_index < 0)
+		return ret = json_object_get_value(root_object, var_name);
+	
+	JSON_Array* arr = json_object_get_array(root_object, var_name);
+	if (arr != nullptr)
+		return ret = json_array_get_value(arr, array_index);
+	
+	return ret;
+}
 // ADD ----------------------
 
 bool Config::AddBool(const char* name, bool value)
@@ -73,19 +86,52 @@ bool Config::AddInt(const char* name, int value)
 	return !json_object_set_number(root_object, name, (double)value);
 }
 
+bool Config::AddFloatArray(const char* var_name, const float* values, const int size)
+{
+	bool ret = true;
+
+	if (values != nullptr && size > 0)
+	{
+		JSON_Value* value = json_value_init_array();
+		json_object_set_value(root_object, var_name, value);
+
+		for (int i = 0; i < size; ++i)
+			json_array_append_number(json_value_get_array(value), values[i]);
+	}
+	else
+		ret = false;
+
+	return ret;
+}
+
 // GET -------------------------
 
-bool Config::GetBool(const char* name) const
+bool Config::GetBool(const char* name,const bool default, const int array_index) const
 {
-	return json_object_get_boolean(root_object, name);
+	JSON_Value* value = FindValue(name, array_index);
+
+	if (value != NULL)
+		return json_value_get_boolean(value);
+
+	return default;
 }
 
-const char* Config::GetString(const char* name) const
+const char* Config::GetString(const char* name, const char* default, const int array_index) const
 {
-	return json_object_get_string(root_object, name);
+	JSON_Value* value = FindValue(name, array_index);
+
+	if (value != NULL)
+		return json_value_get_string(value);
+
+	return default;
 }
 
-int Config::GetInt(const char* name) const
+int Config::GetInt(const char* name, const int default, const int array_index) const
 {
-	return (int)json_object_get_number(root_object, name);
+	JSON_Value* value = FindValue(name, array_index);
+
+	if (value != NULL)
+		return (int)json_value_get_number(value);
+
+	return default;
 }

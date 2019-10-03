@@ -12,7 +12,7 @@ class PanelConsole : public Panel
 {
 public:
 
-	PanelConsole(std::string name);
+	PanelConsole(std::string name, bool active);
 
 	virtual ~PanelConsole();
 

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _MODULE_EDITOR_H__
+#define _MODULE_EDITOR_H__
+
 #include "Module.h"
 #include "Globals.h"
 
@@ -38,14 +40,17 @@ private:
 	// General editor info ---------
 
 	std::string editor_filename;
-	bool showcase = true;
+	bool showcase = false;
 	bool about = false;
+	bool show_console = false;
+	bool show_configuration = false;
 
 public:
 
 	// Panels -----------------------
 
-	PanelConfig* config = nullptr;
-	PanelConsole* console = nullptr;
+	PanelConfig* config_panel = nullptr;
+	PanelConsole* console_panel = nullptr;
 };
 
+#endif // !_MODULE_EDITOR_H__

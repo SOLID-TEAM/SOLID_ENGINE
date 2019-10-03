@@ -21,6 +21,9 @@ bool ModuleWindow::Init(Config& config)
 	LOG("[Init] SDL window & surface");
 	bool ret = true;
 
+	// load configuration
+	Load(config);
+
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		LOG("[Error] SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -29,8 +32,8 @@ bool ModuleWindow::Init(Config& config)
 	else
 	{
 		//Create window
-		int width = SCREEN_WIDTH * SCREEN_SIZE;
-		int height = SCREEN_HEIGHT * SCREEN_SIZE;
+		int width = current_w * SCREEN_SIZE;
+		int height = current_h * SCREEN_SIZE;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 3.3
@@ -40,22 +43,22 @@ bool ModuleWindow::Init(Config& config)
 		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);*/
 
 
-		if(WIN_FULLSCREEN == true)
+		if(fullscreen == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		if(WIN_RESIZABLE == true)
+		if(resizable == true)
 		{
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
 
-		if(WIN_BORDERLESS == true)
+		if(borderless == true)
 		{
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
 
-		if(WIN_FULLSCREEN_DESKTOP == true)
+		if(fullscreen_desktop == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
@@ -114,17 +117,20 @@ float& ModuleWindow::SetBrightness(float* br) const
 }
 
 // TODO: maybe we clean this destroying and creating new windows with required flags instead of bunch of functions?
-void ModuleWindow::SetWindowSize(int w, int h) const
+void ModuleWindow::SetWindowSize(int w, int h)
 {	// TODO: LOAD FROM JSON
 	// for setting unwanted values that user can introduce with CTRL+CLICK on the slider
 	if (w > 1920 || w < 320) w = 1280; 
 	if (h > 1200 || h < 240) h = 1024;  
 
-	SDL_SetWindowSize(window, w, h);
-	App->renderer3D->OnResize(w, h);
+	current_w = (uint)w;
+	current_h = (uint)h;
+
+	SDL_SetWindowSize(window, current_w, current_h);
+	App->renderer3D->OnResize(current_w, current_h);
 }
 
-void ModuleWindow::SetWindowFullscreen(float fullscreen, bool desktop) const
+void ModuleWindow::SetWindowFullscreen(float fullscreen, bool desktop)
 {
 	Uint32 flags;
 	if (fullscreen)
@@ -132,15 +138,44 @@ void ModuleWindow::SetWindowFullscreen(float fullscreen, bool desktop) const
 	else
 		flags = SDL_WINDOW_MAXIMIZED;
 
+	this->fullscreen = fullscreen;
 	SDL_SetWindowFullscreen(window, flags);
 }
 
-void ModuleWindow::SetWindowResizable(bool resizable) const
+void ModuleWindow::SetWindowResizable(bool resizable)
 {
+	this->resizable = resizable;
 	SDL_SetWindowResizable(window, (SDL_bool)resizable);
 }
 
-void ModuleWindow::SetWindowBorderless(bool borderless) const
+void ModuleWindow::SetWindowBorderless(bool borderless)
 {
+	this->borderless = borderless;
 	SDL_SetWindowBordered(window, (SDL_bool)!borderless);
+}
+
+bool ModuleWindow::Save(Config& config)
+{
+	bool ret = true;
+
+	ret = config.AddInt("window_width", current_w);
+	ret = config.AddInt("window_height", current_h);
+
+	ret = config.AddBool("fullscreen", fullscreen);
+	ret = config.AddBool("fullscreen_desktop", fullscreen_desktop);
+	ret = config.AddBool("resizable", resizable);
+	ret = config.AddBool("borderless", borderless);
+
+	return true;
+}
+
+void ModuleWindow::Load(Config& config)
+{
+	current_w = (uint)config.GetInt("window_width", current_w);
+	current_h = (uint)config.GetInt("window_height", current_h);
+
+	fullscreen = config.GetBool("fullscreen", fullscreen);
+	fullscreen_desktop = config.GetBool("fullscreen_desktop", fullscreen_desktop);
+	resizable = config.GetBool("resizable", resizable);
+	borderless = config.GetBool("borderless", borderless);
 }

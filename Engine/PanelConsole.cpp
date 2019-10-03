@@ -2,7 +2,7 @@
 #include "ModuleEditor.h"
 #include "Application.h"
 
-PanelConsole::PanelConsole(std::string name): Panel(name)
+PanelConsole::PanelConsole(std::string name, bool active): Panel(name, active)
 {
 	console_log = App->console_log_aux;
 	App->console_log_aux.clear();

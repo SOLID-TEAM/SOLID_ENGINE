@@ -60,21 +60,20 @@ bool Application::Init()
 	// if file not found, or something goes wrong, we need to save default values on new config file ----
 	if (!config->IsOk() && ret)
 	{
+		LOG("[Error] Config file not found");
 		bool newconf = config->CreateNewRootObject(config_filename.data());
 
-		SaveConfig(config->AddSection("App"));
-		
-		for (; item != list_modules.end() && ret; ++item)
+		if (newconf)
 		{
-			ret = (*item)->Save((config->AddSection((*item)->GetName())));
+			if (WantToSave())
+			{
+				LOG("[Info] Created new default editor config %s", config_filename.data());
+			}
+			else
+				LOG("[Error] Unable to create default config file %s", config_filename.data());
 		}
-		if (ret)
-		{
-			config->SaveConfigToFile(config_filename.data());
-		}
-		else
-			LOG("[Error] Unable to create default config file %s", config_filename.data());
 	}
+	
 	// ---------------------------------------------------------------------------------------------------
 
 	// loads application config
@@ -145,7 +144,7 @@ void Application::FinishUpdate()
 	last_frame_ms = ms_timer.Read();
 
 	// save last fps to module editor vector
-	editor->config->AddFpsLog((float)last_fps, (float)last_frame_ms);
+	editor->config_panel->AddFpsLog((float)last_fps, (float)last_frame_ms);
 
 }
 
@@ -157,8 +156,8 @@ update_status Application::Update()
 
 	/*if (input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 	{
-		config->SaveConfigToFile(config_filename.data());
-		LOG("");
+		if(WantToSave())
+			LOG("[Info] Editor config %s succesfully overwritten", config_filename.data());
 	}*/
 	
 	std::list<Module*>::iterator item = list_modules.begin();
@@ -251,9 +250,9 @@ void Application::Log(const char* new_entry)
 
 	//Console ------------------
 
-	if (editor != nullptr && editor->console != nullptr)
+	if (editor != nullptr && editor->console_panel != nullptr)
 	{
-		editor->console->AddConsoleLog(new_entry);
+		editor->console_panel->AddConsoleLog(new_entry);
 	}
 	else
 	{
@@ -266,6 +265,22 @@ void Application::Log(const char* new_entry)
 bool Application::WantToSave()
 {
 	bool ret = true;
+
+	std::list<Module*>::iterator item = list_modules.begin();
+
+	SaveConfig(config->AddSection("App"));
+
+	for (; item != list_modules.end() && ret; ++item)
+	{
+		ret = (*item)->Save((config->AddSection((*item)->GetName())));
+	}
+
+	if (ret)
+	{
+		config->SaveConfigToFile(config_filename.data());
+	}
+	else
+		ret = false;
 
 	return ret;
 }
@@ -294,9 +309,9 @@ bool Application::LoadConfig(Config& config)
 {
 	bool ret = true;
 
-	app_name.assign(config.GetString("name"));
-	organization_name.assign(config.GetString("organization"));
-	max_frames = config.GetInt("framerate_cap");
+	app_name.assign(config.GetString("name", app_name.data()));
+	organization_name.assign(config.GetString("organization", organization_name.data()));
+	max_frames = config.GetInt("framerate_cap", max_frames);
 
 	return ret;
 }

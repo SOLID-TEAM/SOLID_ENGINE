@@ -5,7 +5,7 @@
 #include "PanelConfig.h"
 #include "ModuleEditor.h"
 
-PanelConfig::PanelConfig(std::string name): Panel(name)
+PanelConfig::PanelConfig(std::string name, bool active): Panel(name, active)
 {
 	stored_fps.resize(MAX_STORED_FPS);
 	stored_ms.resize(MAX_STORED_FPS);
@@ -54,13 +54,13 @@ void PanelConfig::Render()
 			// icon "file explorer"
 			// TODO: loads from JSON
 			static float brightness = 1.0f;
-			static int width = SCREEN_WIDTH;
-			static int height = SCREEN_HEIGHT;
+			static int width = (int)App->window->current_w;
+			static int height = (int)App->window->current_h;
 			// fullscreen, resizable, borderless, fulldesktop || bools cols
-			static bool fullscreen = WIN_FULLSCREEN;
-			static bool fullscreen_desktop = WIN_FULLSCREEN_DESKTOP;
-			static bool resizable = WIN_RESIZABLE;
-			static bool borderless = WIN_BORDERLESS;
+			static bool fullscreen = App->window->fullscreen;
+			static bool fullscreen_desktop = App->window->fullscreen_desktop;
+			static bool resizable = App->window->resizable;
+			static bool borderless = App->window->borderless;
 			// -----------------------------------------------------------------------
 
 			if (ImGui::SliderFloat("Screen Brightness", &brightness, 0.0f, 1.0f))

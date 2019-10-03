@@ -25,6 +25,8 @@ bool ModuleCamera3D::Start(Config& config)
 	LOG("[Start] Setting up the camera");
 	bool ret = true;
 
+	Load(config);
+
 	return ret;
 }
 
@@ -155,4 +157,23 @@ void ModuleCamera3D::CalculateViewMatrix()
 {
 	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
 	ViewMatrixInverse = inverse(ViewMatrix);
+}
+
+bool ModuleCamera3D::Save(Config& config)
+{
+	bool ret = true;
+
+	/*float blabla[10] = { 0,2,0,0,0,0,4,5,5,10 };
+
+	ret = config.AddBool("about", about);
+	ret = config.AddBool("showcase", showcase);
+	ret = config.AddFloatArray("sdfgd", blabla, 10);*/
+
+	return ret;
+}
+
+void ModuleCamera3D::Load(Config& config)
+{
+	/*about = config.GetBool("about", about);
+	showcase = config.GetBool("showcase", showcase);*/
 }

@@ -21,8 +21,11 @@ ModuleEditor::ModuleEditor(bool start_enabled) : Module(start_enabled)
 ModuleEditor::~ModuleEditor()
 {}
 
-bool ModuleEditor::Init(Config& conf)
+bool ModuleEditor::Init(Config& config)
 {
+	// load values from json
+	Load(config);
+
 	// DEAR IMGUI SETUP ---------------------------------------------------------- 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -31,8 +34,8 @@ bool ModuleEditor::Init(Config& conf)
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL3_Init();
 
-	config = new PanelConfig("Configuration");
-	console = new PanelConsole("Console");
+	config_panel = new PanelConfig("Configuration", show_configuration);
+	console_panel = new PanelConsole("Console", show_console);
 
 	return true;
 }
@@ -42,17 +45,6 @@ bool ModuleEditor::Start(Config& conf)
 {
 	LOG("[Start] Loading Editor");
 	bool ret = true;
-
-	// TODO: on some moment we must to pass a config file from application
-	// like we do with XML but with json data and grab from there all needed data
-	editor_filename.assign("blabla.json");
-
-	// ----------------------------------------------------------------------------
-
-	// Load editor configuration if file is found
-	// TODO: clean this -----------
-	//LoadEditorConfig(editor_filename.data());
-	// ----------------------------
 
 	// Create all panels --------------------------------
 
@@ -96,6 +88,14 @@ update_status ModuleEditor::Update(float dt)
 
 	if (ImGui::BeginMenu("File"))
 	{
+		if (ImGui::MenuItem("Save editor configuration", "Ctrl+S"))
+		{
+			if (App->WantToSave())
+			{
+				LOG("[Info] %s succesfully saved", App->config_filename.data());
+			}
+		}
+
 		if (ImGui::MenuItem("Quit", "ESC"))
 			return update_status::UPDATE_STOP;
 		
@@ -114,8 +114,8 @@ update_status ModuleEditor::Update(float dt)
 
 	if (ImGui::BeginMenu("View"))
 	{
-		ImGui::MenuItem("Configuration", NULL, &config->active);
-		ImGui::MenuItem("Console", NULL, &console->active);
+		ImGui::MenuItem("Configuration", NULL, &config_panel->active);
+		ImGui::MenuItem("Console", NULL, &console_panel->active);
 
 		ImGui::EndMenu();
 	}
@@ -252,30 +252,31 @@ update_status ModuleEditor::Update(float dt)
 
 	// ----------------------------------------------------------------------------------
 
-	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-	{
-		//App->config->SaveConfigToFile("blas.json");
-		Save(App->config->GetSection(name.data()));
-		App->config->SaveConfigToFile(App->config_filename.data());
-		//SaveEditorConfig(editor_filename.data());
-	}
-	if (App->input->GetKey(SDL_SCANCODE_KP_ENTER) == KEY_DOWN)
-	{
-		//App->config->SaveConfigToFile("blasfdgfd.json");
-		Load(App->config->GetSection(name.data()));
-		/*Save(App->config->GetSection(name.data()));*/
-		//SaveEditorConfig(editor_filename.data());
-	}
+	//if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	//{
+	//	//App->config->SaveConfigToFile("blas.json");
+	//	Save(App->config->GetSection(name.data()));
+	//	App->config->SaveConfigToFile(App->config_filename.data());
+	//	//SaveEditorConfig(editor_filename.data());
+	//}
+	//if (App->input->GetKey(SDL_SCANCODE_KP_ENTER) == KEY_DOWN)
+	//{
+	//	//App->config->SaveConfigToFile("blasfdgfd.json");
+	//	Load(App->config->GetSection(name.data()));
+	//	/*Save(App->config->GetSection(name.data()));*/
+	//	//SaveEditorConfig(editor_filename.data());
+	//}
 
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleEditor::PostUpdate(float dt)
 {
-	if (console->active)
-	console->Render();
-	if (config->active)
-	config->Render();
+
+	if (console_panel->active)
+	console_panel->Draw();
+	if (config_panel->active)
+	config_panel->Draw();
 
 	// ImGui Internal System ------------------------------
 
@@ -311,27 +312,32 @@ bool ModuleEditor::LoadEditorConfig(const char* path)
 bool ModuleEditor::SaveEditorConfig(const char* path)
 {
 	bool ret = true;
+	
+	// testing how array works ----
 
-	////JSON_Value* schema = json_parse_string("{\"name\":\"\"}");
-	//JSON_Value* user_data = json_parse_file(path);
-	////JSON_Array* arrayTest = json_value_get_array(schema);
+	JSON_Array* arr = nullptr;
+	JSON_Value* va = json_value_init_object();
+	JSON_Object* obj = nullptr;
+	obj = json_value_get_object(va);
+	
+	JSON_Value* vaa = json_value_init_array();
+	json_object_set_value(obj, "blabla", vaa);
 
-	//// create new file if file not found or validated types not match with scheme types
+	//va = json_value_init_array();
+	//arr = json_value_get_array(vaa);
 
-	////if (user_data == NULL || json_validate(schema, user_data) != JSONSuccess)
-	////{
-	//	user_data = json_value_init_object();
+	/*json_array_append_boolean(arr, true);
+	json_array_append_boolean(arr, true);
+	json_array_append_boolean(arr, false);
+	json_array_append_boolean(arr, true);
+	json_array_append_boolean(arr, true);*/
 
-	//	json_object_set_string(json_object(user_data), "name", "Very solid");
-	//	json_object_set_boolean(json_object(user_data), "showcase", showcase);
-	//	json_object_set_boolean(json_object(user_data), "about", about);
+	json_array_append_boolean(json_value_get_array(vaa), true);
+	json_array_append_boolean(json_value_get_array(vaa), true);
+	json_array_append_boolean(json_value_get_array(vaa), true);
+	json_array_append_boolean(json_value_get_array(vaa), true);
 
-
-	//	// write data to file
-	//	json_serialize_to_file(user_data, path);
-	////}
-
-	//json_value_free(user_data);
+	json_serialize_to_file_pretty(va, "testingArray.json");
 
 	return ret;
 }
@@ -359,14 +365,29 @@ bool ModuleEditor::Save(Config& config)
 {
 	bool ret = true;
 
+	float blabla[10] = { 0,2,0,0,0,0,4,5,5,10 };
+
 	ret = config.AddBool("about", about);
 	ret = config.AddBool("showcase", showcase);
+	ret = config.AddFloatArray("sdfgd", blabla, 10);
+
+	if(config_panel != nullptr)
+		ret = config.AddBool("show_configuration", config_panel->active);
+	else
+		ret = config.AddBool("show_configuration", show_configuration);
+	if(console_panel != nullptr)
+		ret = config.AddBool("show_console", console_panel->active);
+	else
+		ret = config.AddBool("show_console", show_console);
+	
 
 	return ret;
 }
 
 void ModuleEditor::Load(Config& config)
 {
-	about = config.GetBool("about");
-	showcase = config.GetBool("showcase");
+	about = config.GetBool("about", about);
+	showcase = config.GetBool("showcase", showcase);
+	show_console = config.GetBool("show_console", show_console);
+	show_configuration = config.GetBool("show_configuration", show_configuration);
 }

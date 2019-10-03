@@ -18,6 +18,9 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	bool Save(Config& config);
+	void Load(Config& config);
+
 	void OnResize(int width, int height);
 
 	std::string GetGlewVersionString() const;
