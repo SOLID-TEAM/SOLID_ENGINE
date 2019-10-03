@@ -62,6 +62,16 @@ public:
 		return name.data();
 	}
 
+	virtual bool Save(Config& config)
+	{
+		return true;
+	}
+
+	virtual void Load(Config& config)
+	{
+		//return true;
+	}
+
 	//bool SetActiveAndGet(bool active)
 	//{
 	//	bool ret = true;

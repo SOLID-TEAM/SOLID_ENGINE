@@ -5,6 +5,10 @@ Application::Application()
 {
 	LOG("-------------- Application Creation --------------");
 
+	config_filename.assign("editor_config.json");
+	app_name.assign("SOLID_ENGINE");
+	organization_name.assign("SOLID_TEAM");
+
 	window = new ModuleWindow();
 	input = new ModuleInput();
 	test = new ModuleTest();
@@ -46,19 +50,46 @@ bool Application::Init()
 
 	LOG("-------------- Application Init --------------");
 
+	// reads configuration file
+	if ((config = new Config(config_filename.data())) == nullptr)
+		ret = false;
+
+	// Call Init() in all modules
+	std::list<Module*>::iterator item = list_modules.begin();
+
+	// if file not found, or something goes wrong, we need to save default values on new config file ----
+	if (!config->IsOk() && ret)
+	{
+		bool newconf = config->CreateNewRootObject(config_filename.data());
+
+		SaveConfig(config->AddSection("App"));
+		
+		for (; item != list_modules.end() && ret; ++item)
+		{
+			ret = (*item)->Save((config->AddSection((*item)->GetName())));
+		}
+		if (ret)
+		{
+			config->SaveConfigToFile(config_filename.data());
+		}
+		else
+			LOG("[Error] Unable to create default config file %s", config_filename.data());
+	}
+	// ---------------------------------------------------------------------------------------------------
+
+	// loads application config
+	LoadConfig(config->GetSection("App"));
+
 	// set fps data before start/init modules
 	fps_counter = 0;
 	frames = 0;
-	capped_ms = 1000 / 60;
+	capped_ms = 1000 / max_frames;
 	last_frame_ms = 0;
 	last_fps = 0;
 
-	// reads configuration file
-	if ((config = new Config("editor_config.json")) == nullptr)
-		ret = false;
-	
-	// Call Init() in all modules
-	std::list<Module*>::iterator item = list_modules.begin();
+	// modules init --------
+
+	item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)
 	{
@@ -123,6 +154,12 @@ update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
+
+	/*if (input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		config->SaveConfigToFile(config_filename.data());
+		LOG("");
+	}*/
 	
 	std::list<Module*>::iterator item = list_modules.begin();
 	
@@ -223,4 +260,43 @@ void Application::Log(const char* new_entry)
 		console_log_aux.push_back(strdup(new_entry));
 	}
 	
+}
+
+// For re-write all modules current values -------
+bool Application::WantToSave()
+{
+	bool ret = true;
+
+	return ret;
+}
+
+bool Application::WantToLoad()
+{
+	bool ret = true;
+	
+
+	return ret;
+}
+// -------------------------------------------------
+
+bool Application::SaveConfig(Config& config)
+{
+	bool ret = true;
+
+	ret = config.AddString("name", app_name.data());
+	ret = config.AddString("organization", organization_name.data());
+	ret = config.AddInt("framerate_cap", max_frames);
+
+	return ret;
+}
+
+bool Application::LoadConfig(Config& config)
+{
+	bool ret = true;
+
+	app_name.assign(config.GetString("name"));
+	organization_name.assign(config.GetString("organization"));
+	max_frames = config.GetInt("framerate_cap");
+
+	return ret;
 }

@@ -1,1 +1,16 @@
-{"name":"Very solid","showcase":false,"about":false}
+{
+    "App": {
+        "name": "SOLID_ENGINE",
+        "organization": "SOLID_TEAM",
+        "framerate_cap": 60
+    },
+    "Window": {},
+    "Camera3D": {},
+    "Input": {},
+    "ModuleRandom?": {},
+    "Editor": {
+        "about": true,
+        "showcase": true
+    },
+    "Renderer3D": {}
+}

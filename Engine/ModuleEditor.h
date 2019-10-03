@@ -20,6 +20,8 @@ public:
 
 	bool Init(Config& config);
 	bool Start(Config& config);
+	bool Save(Config& config);
+	void Load(Config& config);
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);

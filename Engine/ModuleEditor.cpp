@@ -45,13 +45,13 @@ bool ModuleEditor::Start(Config& conf)
 
 	// TODO: on some moment we must to pass a config file from application
 	// like we do with XML but with json data and grab from there all needed data
-	editor_filename.assign("editor_config.json");
+	editor_filename.assign("blabla.json");
 
 	// ----------------------------------------------------------------------------
 
 	// Load editor configuration if file is found
 	// TODO: clean this -----------
-	LoadEditorConfig(editor_filename.data());
+	//LoadEditorConfig(editor_filename.data());
 	// ----------------------------
 
 	// Create all panels --------------------------------
@@ -104,10 +104,10 @@ update_status ModuleEditor::Update(float dt)
 
 	if (ImGui::BeginMenu("Window"))
 	{
-		if (ImGui::MenuItem("Load editor windows states", "Ctrl+Alt+L"))
-			LoadEditorConfig(editor_filename.data());
-		if (ImGui::MenuItem("Save editor windows states", "Ctrl+Alt+S"))
-			SaveEditorConfig(editor_filename.data());
+		/*if (ImGui::MenuItem("Load editor windows states", "Ctrl+Alt+L"))
+			LoadEditorConfig(editor_filename.data());*/
+		//if (ImGui::MenuItem("Save editor windows states", "Ctrl+Alt+S"))
+			//SaveEditorConfig(editor_filename.data());
 
 		ImGui::EndMenu();
 	}
@@ -252,6 +252,21 @@ update_status ModuleEditor::Update(float dt)
 
 	// ----------------------------------------------------------------------------------
 
+	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		//App->config->SaveConfigToFile("blas.json");
+		Save(App->config->GetSection(name.data()));
+		App->config->SaveConfigToFile(App->config_filename.data());
+		//SaveEditorConfig(editor_filename.data());
+	}
+	if (App->input->GetKey(SDL_SCANCODE_KP_ENTER) == KEY_DOWN)
+	{
+		//App->config->SaveConfigToFile("blasfdgfd.json");
+		Load(App->config->GetSection(name.data()));
+		/*Save(App->config->GetSection(name.data()));*/
+		//SaveEditorConfig(editor_filename.data());
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -297,26 +312,26 @@ bool ModuleEditor::SaveEditorConfig(const char* path)
 {
 	bool ret = true;
 
-	//JSON_Value* schema = json_parse_string("{\"name\":\"\"}");
-	JSON_Value* user_data = json_parse_file(path);
-	//JSON_Array* arrayTest = json_value_get_array(schema);
+	////JSON_Value* schema = json_parse_string("{\"name\":\"\"}");
+	//JSON_Value* user_data = json_parse_file(path);
+	////JSON_Array* arrayTest = json_value_get_array(schema);
 
-	// create new file if file not found or validated types not match with scheme types
+	//// create new file if file not found or validated types not match with scheme types
 
-	//if (user_data == NULL || json_validate(schema, user_data) != JSONSuccess)
-	//{
-		user_data = json_value_init_object();
+	////if (user_data == NULL || json_validate(schema, user_data) != JSONSuccess)
+	////{
+	//	user_data = json_value_init_object();
 
-		json_object_set_string(json_object(user_data), "name", "Very solid");
-		json_object_set_boolean(json_object(user_data), "showcase", showcase);
-		json_object_set_boolean(json_object(user_data), "about", about);
+	//	json_object_set_string(json_object(user_data), "name", "Very solid");
+	//	json_object_set_boolean(json_object(user_data), "showcase", showcase);
+	//	json_object_set_boolean(json_object(user_data), "about", about);
 
 
-		// write data to file
-		json_serialize_to_file(user_data, path);
-	//}
+	//	// write data to file
+	//	json_serialize_to_file(user_data, path);
+	////}
 
-	json_value_free(user_data);
+	//json_value_free(user_data);
 
 	return ret;
 }
@@ -338,4 +353,20 @@ void ModuleEditor::HelpMarker(const char* desc) const
 		//ImGui::PopTextWrapPos();
 		ImGui::EndTooltip();
 	}
+}
+
+bool ModuleEditor::Save(Config& config)
+{
+	bool ret = true;
+
+	ret = config.AddBool("about", about);
+	ret = config.AddBool("showcase", showcase);
+
+	return ret;
+}
+
+void ModuleEditor::Load(Config& config)
+{
+	about = config.GetBool("about");
+	showcase = config.GetBool("showcase");
 }

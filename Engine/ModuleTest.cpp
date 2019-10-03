@@ -82,7 +82,7 @@ float GetRandomPercent()
 
 ModuleTest::ModuleTest(bool start_enabled) : Module(start_enabled)
 {
-	//name.assign("ModuleRandom?");
+	name.assign("ModuleRandom?");
 }
 
 ModuleTest::~ModuleTest()

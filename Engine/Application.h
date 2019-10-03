@@ -33,10 +33,17 @@ public:
 	void Log(const char* new_entry);
 	void SaveLogToFile() const;
 
+	bool WantToSave();
+	bool WantToLoad();
+
 private:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+	//
+	bool SaveConfig(Config& config);
+	bool LoadConfig(Config& config);
 
 public:
 	ModuleWindow* window = nullptr;
@@ -59,6 +66,7 @@ private:
 	float	dt;
 	int fps_counter;
 	int capped_ms;
+	int max_frames = 60; // for default value
 	Uint32 last_frame_ms; // stores amount of ms of last frame cycle
 	int last_fps; // stores last second total frames
 
@@ -67,9 +75,10 @@ private:
 	std::string log_buffer;
 	std::string app_name;
 	std::string organization_name;
-
+public:
 	// testing persistence config
 	Config* config = nullptr;
+	std::string config_filename;
 };
 
 extern Application* App;
