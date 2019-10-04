@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _MODULE_EDITOR_H__
+#define _MODULE_EDITOR_H__
+
 #include "Module.h"
 #include "Globals.h"
 
@@ -51,3 +53,4 @@ public:
 	PanelConsole* console_panel = nullptr;
 };
 
+#endif // !_MODULE_EDITOR_H__

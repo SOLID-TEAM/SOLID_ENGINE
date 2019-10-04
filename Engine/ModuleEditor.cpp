@@ -306,6 +306,7 @@ update_status ModuleEditor::Update(float dt)
 
 update_status ModuleEditor::PostUpdate(float dt)
 {
+
 	if (console_panel->active)
 	console_panel->Draw();
 	if (config_panel->active)
