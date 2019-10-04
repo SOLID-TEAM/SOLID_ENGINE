@@ -23,7 +23,7 @@ void PanelConfig::Draw()
 		{
 			ImGui::Text("Testing");
 
-			static int test = 60;
+			int test = App->max_frames;
 
 			if (ImGui::SliderInt("#Framerate cap", &test, 0, 144, "FramerateCap = %.3f"))
 			{
@@ -54,13 +54,13 @@ void PanelConfig::Draw()
 			// icon "file explorer"
 			// TODO: loads from JSON
 			static float brightness = 1.0f;
-			static int width = (int)App->window->current_w;
+			int width = (int)App->window->current_w;
 			static int height = (int)App->window->current_h;
 			// fullscreen, resizable, borderless, fulldesktop || bools cols
-			static bool fullscreen = App->window->fullscreen;
-			static bool fullscreen_desktop = App->window->fullscreen_desktop;
-			static bool resizable = App->window->resizable;
-			static bool borderless = App->window->borderless;
+			bool fullscreen = App->window->fullscreen;
+			bool fullscreen_desktop = App->window->fullscreen_desktop;
+			bool resizable = App->window->resizable;
+			bool borderless = App->window->borderless;
 			// -----------------------------------------------------------------------
 
 			if (ImGui::SliderFloat("Screen Brightness", &brightness, 0.0f, 1.0f))
@@ -114,7 +114,7 @@ void PanelConfig::Draw()
 			ImGui::SameLine();
 			if (ImGui::Checkbox("Fullscreen Desktop", &fullscreen_desktop))
 			{
-				App->window->SetWindowFullscreen(fullscreen_desktop, true);
+				App->window->SetWindowFullscreen(false, fullscreen_desktop);
 			}
 			ImGui::SameLine(); App->editor->HelpMarker("Sets fullscreen with current desktop resolution");
 

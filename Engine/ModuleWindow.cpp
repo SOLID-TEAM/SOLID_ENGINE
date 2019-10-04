@@ -133,12 +133,15 @@ void ModuleWindow::SetWindowSize(int w, int h)
 void ModuleWindow::SetWindowFullscreen(float fullscreen, bool desktop)
 {
 	Uint32 flags;
-	if (fullscreen)
+
+	if (fullscreen || desktop)
 		flags = desktop ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
 	else
 		flags = SDL_WINDOW_MAXIMIZED;
 
 	this->fullscreen = fullscreen;
+	this->fullscreen_desktop = desktop;
+
 	SDL_SetWindowFullscreen(window, flags);
 }
 
@@ -171,11 +174,11 @@ bool ModuleWindow::Save(Config& config)
 
 void ModuleWindow::Load(Config& config)
 {
-	current_w = (uint)config.GetInt("window_width", current_w);
-	current_h = (uint)config.GetInt("window_height", current_h);
-
-	fullscreen = config.GetBool("fullscreen", fullscreen);
-	fullscreen_desktop = config.GetBool("fullscreen_desktop", fullscreen_desktop);
-	resizable = config.GetBool("resizable", resizable);
-	borderless = config.GetBool("borderless", borderless);
+	// window size ----------------------
+	SetWindowSize(config.GetInt("window_width", current_w), config.GetInt("window_height", current_h));
+	// ----------------------------------
+	// window flags
+	SetWindowFullscreen(config.GetBool("fullscreen", fullscreen), config.GetBool("fullscreen_desktop", fullscreen_desktop));
+	SetWindowResizable(config.GetBool("resizable", resizable));
+	SetWindowBorderless(config.GetBool("borderless", borderless));
 }

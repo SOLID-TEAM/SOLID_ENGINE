@@ -65,7 +65,7 @@ bool Application::Init()
 
 		if (newconf)
 		{
-			if (WantToSave())
+			if (WantToSave(true))
 			{
 				LOG("[Info] Created new default editor config %s", config_filename.data());
 			}
@@ -92,7 +92,6 @@ bool Application::Init()
 
 	while(item != list_modules.end() && ret == true)
 	{
-		LOG("%s", (*item)->GetName());
 		ret = (*item)->Init((config->GetSection((*item)->GetName())));
 		++item;
 	}
@@ -233,6 +232,8 @@ void Application::AdjustCappedMs(int max_frames)
 		capped_ms = 1000 / max_frames;
 	else
 		capped_ms = 0;
+
+	this->max_frames = max_frames;
 }
 
 void Application::Log(const char* new_entry)
@@ -262,7 +263,7 @@ void Application::Log(const char* new_entry)
 }
 
 // For re-write all modules current values -------
-bool Application::WantToSave()
+bool Application::WantToSave(bool cleanInit)
 {
 	bool ret = true;
 
@@ -277,6 +278,9 @@ bool Application::WantToSave()
 
 	if (ret)
 	{
+		if (cleanInit) // we create one default file apart when editor starts without any configuration, for reset values purposes
+			config->SaveConfigToFile("default_editor_config.json");
+
 		config->SaveConfigToFile(config_filename.data());
 	}
 	else
@@ -285,12 +289,39 @@ bool Application::WantToSave()
 	return ret;
 }
 
-bool Application::WantToLoad()
+void Application::WantToLoad(bool restoreDefault)
 {
 	bool ret = true;
 	
+	std::list<Module*>::iterator item = list_modules.begin();
 
-	return ret;
+	if (restoreDefault)
+	{
+		Config default_config("default_editor_config.json");
+
+		if (default_config.IsOk())
+		{
+			LoadConfig(default_config.GetSection("App"));
+
+			for (; item != list_modules.end() && ret; ++item)
+			{
+				(*item)->Load((default_config.GetSection((*item)->GetName())));
+			}
+		}
+		else
+		{
+			LOG("[Error] unable to restore default editor config");
+		}
+	}
+	else
+	{
+		LoadConfig(config->GetSection("App"));
+
+		for (; item != list_modules.end() && ret; ++item)
+		{
+			(*item)->Load((config->GetSection((*item)->GetName())));
+		}
+	}
 }
 // -------------------------------------------------
 
@@ -311,7 +342,7 @@ bool Application::LoadConfig(Config& config)
 
 	app_name.assign(config.GetString("name", app_name.data()));
 	organization_name.assign(config.GetString("organization", organization_name.data()));
-	max_frames = config.GetInt("framerate_cap", max_frames);
+	AdjustCappedMs(config.GetInt("framerate_cap", max_frames));
 
 	return ret;
 }

@@ -125,7 +125,7 @@ bool ModuleRenderer3D::Init(Config& config)
 	}
 
 	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	OnResize(App->window->current_w, App->window->current_h);//SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// store version opengl/graphic drivers
 	openglGDriversVersionString.assign((const char*)glGetString(GL_VERSION));

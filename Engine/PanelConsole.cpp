@@ -16,7 +16,7 @@ void PanelConsole::Draw()
 {
 	ImGui::SetNextWindowSize(ImVec2(380, 600), ImGuiCond_Once);
 	static bool auto_scroll = true;
-	if (ImGui::Begin("Console", &active))
+	if (ImGui::Begin("Console Log", &active))
 	{
 
 		ImGui::Checkbox("Auto scroll", &auto_scroll);

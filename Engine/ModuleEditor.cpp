@@ -82,12 +82,21 @@ update_status ModuleEditor::PreUpdate(float dt)
 // Update
 update_status ModuleEditor::Update(float dt)
 {
+	static bool restore_popup = false;
+
 	// Main Menu Bar ---------------------------------
 
 	ImGui::BeginMainMenuBar();
 
 	if (ImGui::BeginMenu("File"))
 	{
+		if (ImGui::MenuItem("Load editor configuration", "Ctrl+L"))
+		{
+			App->WantToLoad();
+			LOG("[Info] Succesfully loaded last valid config from memory");
+			
+		}
+
 		if (ImGui::MenuItem("Save editor configuration", "Ctrl+S"))
 		{
 			if (App->WantToSave())
@@ -96,11 +105,18 @@ update_status ModuleEditor::Update(float dt)
 			}
 		}
 
+		if (ImGui::MenuItem("Restore editor to default config"))
+		{
+			restore_popup = true;
+		}
+
 		if (ImGui::MenuItem("Quit", "ESC"))
 			return update_status::UPDATE_STOP;
 		
 		ImGui::EndMenu();
 	}
+
+	
 
 	if (ImGui::BeginMenu("Window"))
 	{
@@ -115,7 +131,7 @@ update_status ModuleEditor::Update(float dt)
 	if (ImGui::BeginMenu("View"))
 	{
 		ImGui::MenuItem("Configuration", NULL, &config_panel->active);
-		ImGui::MenuItem("Console", NULL, &console_panel->active);
+		ImGui::MenuItem("Console Log", NULL, &console_panel->active);
 
 		ImGui::EndMenu();
 	}
@@ -144,6 +160,24 @@ update_status ModuleEditor::Update(float dt)
 	ImGui::EndMainMenuBar();
 
 	// print active imgui elements -----------------------
+
+	if (restore_popup)
+	{
+		ImGui::OpenPopup("Are you sure?");
+		if (ImGui::BeginPopupModal("Are you sure?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("All editor modificable values are going to reset\n" 
+						"after this, you are still capable to revert this\n" 
+						"change by loading config editor before save them");
+			ImGui::Separator();
+			if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); restore_popup = false; App->WantToLoad(true); }
+			ImGui::SameLine();
+			if (ImGui::Button("OK and save", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); restore_popup = false; App->WantToLoad(true); App->WantToSave(); }
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); restore_popup = false; }
+			ImGui::EndPopup();
+		}
+	}
 
 	if (showcase)
 		ImGui::ShowDemoWindow(&showcase);
@@ -387,6 +421,12 @@ void ModuleEditor::Load(Config& config)
 {
 	about = config.GetBool("about", about);
 	showcase = config.GetBool("showcase", showcase);
-	show_console = config.GetBool("show_console", show_console);
-	show_configuration = config.GetBool("show_configuration", show_configuration);
+	if(console_panel != nullptr)
+		console_panel->active = config.GetBool("show_console", console_panel->active);
+	else
+		show_console = config.GetBool("show_console", show_console);
+	if (config_panel != nullptr)
+		config_panel->active = config.GetBool("show_configuration", config_panel->active);
+	else
+		show_configuration = config.GetBool("show_configuration", show_configuration);
 }
