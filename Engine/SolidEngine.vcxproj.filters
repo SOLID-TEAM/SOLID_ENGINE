@@ -312,6 +312,7 @@
     <ClInclude Include="external\par_shapes.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="par_shapes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
