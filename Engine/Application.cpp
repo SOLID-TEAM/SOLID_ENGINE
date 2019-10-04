@@ -14,6 +14,7 @@ Application::Application()
 	test = new ModuleTest();
 	renderer3D = new ModuleRenderer3D();
 	camera = new ModuleCamera3D();
+	importer = new ModuleImporter();
 	editor = new ModuleEditor();
 
 	// Main Modules

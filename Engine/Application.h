@@ -11,7 +11,9 @@
 #include "ModuleTest.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
+#include "ModuleImporter.h"
 #include "ModuleEditor.h"
+
 #include "PanelConfig.h"
 #include "PanelConsole.h"
 
@@ -53,6 +55,7 @@ public:
 	ModuleRenderer3D* renderer3D = nullptr;
 	ModuleCamera3D* camera = nullptr;
 	
+	ModuleImporter* importer = nullptr;
 	ModuleEditor* editor = nullptr;
 
 	// TODO: Improve this aux 

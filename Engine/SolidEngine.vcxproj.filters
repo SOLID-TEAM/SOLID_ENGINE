@@ -313,6 +313,9 @@
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="par_shapes.h" />
+    <ClInclude Include="ModuleImporter.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -488,6 +491,9 @@
     </ClCompile>
     <ClCompile Include="Config.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleImporter.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
