@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _MODULE_H__
+#define _MODULE_H__
 
 struct PhysBody3D;
 class Config;
@@ -71,22 +72,6 @@ public:
 	{
 		//return true;
 	}
-
-	//bool SetActiveAndGet(bool active)
-	//{
-	//	bool ret = true;
-
-	//	if (enabled != active)
-	//	{
-	//		enabled = active;
-	//		if (enabled == true)
-	//			ret = Start(NULL); // TODO: get config from app if we need to use this
-	//		else
-	//			ret = CleanUp();
-	//	}
-	//	
-	//	return ret;
-	//}
-
-	// ---------------------------------------------------
 };
+
+#endif // !_MODULE_H__

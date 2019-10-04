@@ -12,9 +12,9 @@
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-Random number generated: 2
-Random number generated: 1.079181
-Random number generated: 0.940958
+Random number generated: 1
+Random number generated: 8.400772
+Random number generated: 0.238669
 [Start] Loading Editor
 -------------- Application Update --------------
 -------------- Application CleanUp --------------
