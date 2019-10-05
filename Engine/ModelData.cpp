@@ -89,6 +89,7 @@ bool ModelData::DebugRenderVertexNormals()
 	bool ret = false;
 
 	// draw points
+	glColor3f(1.0f, 1.0f, 0.0f);
 	uint pointSize = 5;
 	glPointSize(pointSize);
 
@@ -106,7 +107,7 @@ bool ModelData::DebugRenderVertexNormals()
 	glBindBuffer(GL_ARRAY_BUFFER, debug_normals_gl_id);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 
-	glDrawArrays(GL_LINES, 0, _v_size);
+	glDrawArrays(GL_LINES, 0, _v_size * 2);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 
@@ -130,25 +131,23 @@ void ModelData::ComputeNormals()
 {
 	// to draw lines, we need an array ready to what expects gldrawarrays
 	// start point and finish point
-	// TODO, improve this thinking in deepth if this is possible with memcpy
+	// TODO: improve this, thinking in deepth if this is possible with memcpy
 
 	float length = 0.3f;
 
 	debug_v_normals = new float[_v_size * 6]; // 3 for startpoint, 3 more for endpoint
 
-	int count = 0;
-	int i = 0;
-	while(count < _v_size)
+	uint n_count = 0;
+	for(uint i = 0; i < _v_size * 3; i += 3)
 	{
-		debug_v_normals[i]     = vertices[i];
-		debug_v_normals[i + 1] = vertices[i+1];
-		debug_v_normals[i + 2] = vertices[i+2];
+		debug_v_normals[n_count]     = vertices[i]; // x
+		debug_v_normals[n_count + 1] = vertices[i+1]; // y
+		debug_v_normals[n_count + 2] = vertices[i+2]; //z
 
-		debug_v_normals[i + 3] = vertices[i] + normals[i] * length;
-		debug_v_normals[i + 4] = vertices[i+1] + normals[i+1] * length;
-		debug_v_normals[i + 5] = vertices[i+2] + normals[i+2] * length;
+		debug_v_normals[n_count + 3] = vertices[i] + normals[i] * length; // x
+		debug_v_normals[n_count + 4] = vertices[i+1] + normals[i+1] * length; // y
+		debug_v_normals[n_count + 5] = vertices[i+2] + normals[i+2] * length; // z
 
-		i += 6;
-		count++;
+		n_count += 6;
 	}
 }

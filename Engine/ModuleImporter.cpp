@@ -14,7 +14,6 @@ ModuleImporter::~ModuleImporter() {}
 
 bool ModuleImporter::Init(Config& config)
 {
-
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 
@@ -67,7 +66,7 @@ update_status ModuleImporter::PostUpdate(float dt)
 
 		(*model)->Render();
 
-		glColor3f(1.0f, 1.0f, 0.0f);
+		//glColor3f(1.0f, 1.0f, 0.0f);
 		(*model)->DebugRenderVertexNormals();
 		
 	}
@@ -144,7 +143,7 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 
 
 			m->GenerateBuffers();
-			m->ComputeNormals(); // for debug draw purposes | BEFORE UPDATE BUFFER to fill computed normals before we fill the buffers
+			m->ComputeNormals(); // for debug draw purposes | BEFORE UPDATE BUFFERS!! to compute debugdraw normals before we fill the buffers
 			m->UpdateBuffers();
 			
 
