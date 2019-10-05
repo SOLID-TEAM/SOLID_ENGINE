@@ -13,6 +13,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleImporter.h"
 #include "ModuleEditor.h"
+#include "ModuleFileSystem.h"
 
 #include "PanelConfig.h"
 #include "PanelConsole.h"
@@ -57,8 +58,8 @@ public:
 	
 	ModuleImporter* importer = nullptr;
 	ModuleEditor* editor = nullptr;
+	ModuleFileSystem* file_sys = nullptr;
 
-	// TODO: Improve this aux 
 	ImVector<char*> console_log_aux;
 
 private:

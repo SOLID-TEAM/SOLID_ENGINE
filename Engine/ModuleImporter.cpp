@@ -22,6 +22,7 @@ bool ModuleImporter::Init(Config& config)
 
 bool ModuleImporter::Start(Config& config)
 {
+
 	LoadFileMesh("Assets/Models/suzanne.blend");
 	//LoadFileMesh("Assets/Models/warrior/warrior.FBX");
 
@@ -46,6 +47,7 @@ update_status ModuleImporter::Update(float dt)
 update_status ModuleImporter::PostUpdate(float dt)
 {
 	std::vector<ModelData*>::iterator model = meshes.begin();
+
 	for (; model != meshes.end(); ++model)
 	{
 		// TODO NEXT: implement this at level editor to show 2 possibilities:

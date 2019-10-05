@@ -5,16 +5,18 @@
 [Init] SDL input event system
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
-[Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 970/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
-[Info] GLSL: 4.60 NVIDIA
+[Info] Vendor: Intel
+[Info] Renderer: Intel(R) HD Graphics 530
+[Info] OpenGL version supported: 3.3.0 - Build 22.20.16.4836
+[Info] GLSL: 3.30 - Build 22.20.16.4836
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
+
 Random number generated: 4
 Random number generated: 9.264292
 Random number generated: 0.613519
+
 [Info] Created new mesh with 723 vertices
 [Info] Loaded vertex normals for mesh defaultobject
 First vertex: 0.351563,0.242188,0.828125

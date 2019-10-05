@@ -96,9 +96,9 @@ bool ModuleTest::Start(Config& config)
 
 	App->camera->Move(vec3(1.0f, 1.0f, 1.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
-	GetIntRandomValue(1.f, 4.f);
-	GetFloatRandomValue(1.f, 10.f);
-	GetRandomPercent();
+	//GetIntRandomValue(1.f, 4.f);
+	//GetFloatRandomValue(1.f, 10.f);
+	//GetRandomPercent();
 
 	cube = new S_Cube(1, 0, 0);
 	cube->Scale(2, 1, 1);
@@ -125,6 +125,22 @@ update_status ModuleTest::Update(float dt)
 
 update_status ModuleTest::PostUpdate(float dt)
 {
+	// TODO: place scene y0 plane in other site
+
+	glLineWidth(2.5f);
+	glBegin(GL_LINES);
+
+	for (float i = -100.f; i <= 100.f; i++)
+	{
+		glVertex3f(i, 0.f, 100.f);
+		glVertex3f(i, 0.f, -100.f);
+
+		glVertex3f(-100.f, 0.f, -i);
+		glVertex3f(100.f, 0.f, -i);
+	}
+
+	glEnd();
+
 	// TODO: same of the "TODO NEXT" on ModuleImporter
 
 	/*glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
