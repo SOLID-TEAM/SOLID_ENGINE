@@ -16,7 +16,6 @@ Loading Test assets
 [Info] Created new mesh with 3752 vertices
 [Start] Loading Editor
 -------------- Application Update --------------
-[Info] Created new mesh with 3752 vertices
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor
