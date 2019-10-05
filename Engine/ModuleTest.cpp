@@ -96,9 +96,9 @@ bool ModuleTest::Start(Config& config)
 
 	App->camera->Move(vec3(1.0f, 1.0f, 1.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
-	GetIntRandomValue(1.f, 4.f);
-	GetFloatRandomValue(1.f, 10.f);
-	GetRandomPercent();
+	//GetIntRandomValue(1.f, 4.f);
+	//GetFloatRandomValue(1.f, 10.f);
+	//GetRandomPercent();
 
 	cube = new S_Cube(1, 0, 0);
 	cube->Scale(2, 1, 1);

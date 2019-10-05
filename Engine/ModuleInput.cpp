@@ -36,6 +36,9 @@ bool ModuleInput::Init(Config& config)
 		ret = false;
 	}
 
+	// SDL Enables -----------------------------
+	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+	
 	return ret;
 }
 
@@ -114,35 +117,41 @@ update_status ModuleInput::PreUpdate(float dt)
 	mouse_x_motion = mouse_y_motion = 0;
 
 	bool quit = false;
-	SDL_Event e;
-	
-	while(SDL_PollEvent(&e))
+	SDL_Event event;
+
+	char* dropped_filedir = nullptr;
+
+	while (SDL_PollEvent(&event))
 	{
-		ImGui_ImplSDL2_ProcessEvent(&e);
+		ImGui_ImplSDL2_ProcessEvent(&event);
 
-		switch(e.type)
+		switch (event.type)
 		{
-			case SDL_MOUSEWHEEL:
-			mouse_z = e.wheel.y;
+		case SDL_MOUSEWHEEL:
+			mouse_z = event.wheel.y;
 			break;
 
-			case SDL_MOUSEMOTION:
-			mouse_x = e.motion.x / SCREEN_SIZE;
-			mouse_y = e.motion.y / SCREEN_SIZE;
+		case SDL_MOUSEMOTION:
+			mouse_x = event.motion.x / SCREEN_SIZE;
+			mouse_y = event.motion.y / SCREEN_SIZE;
 
-			mouse_x_motion = e.motion.xrel / SCREEN_SIZE;
-			mouse_y_motion = e.motion.yrel / SCREEN_SIZE;
+			mouse_x_motion = event.motion.xrel / SCREEN_SIZE;
+			mouse_y_motion = event.motion.yrel / SCREEN_SIZE;
 			break;
 
-			case SDL_QUIT:
+		case SDL_DROPFILE:
+			dropped_filedir = event.drop.file;
+			App->importer->LoadFileMesh(dropped_filedir);
+			SDL_free(dropped_filedir);
+			break;
+
+		case SDL_QUIT:
 			quit = true;
 			break;
 
-			case SDL_WINDOWEVENT:
-			{
-				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-					App->renderer3D->OnResize(e.window.data1, e.window.data2);
-			}
+		case SDL_WINDOWEVENT:
+			if (event.window.event == SDL_WINDOWEVENT_RESIZED)
+				App->renderer3D->OnResize(event.window.data1, event.window.data2);
 		}
 	}
 

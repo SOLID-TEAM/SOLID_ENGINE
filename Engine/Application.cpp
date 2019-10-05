@@ -16,6 +16,7 @@ Application::Application()
 	camera = new ModuleCamera3D();
 	importer = new ModuleImporter();
 	editor = new ModuleEditor();
+	file_sys = new ModuleFileSystem();
 
 	// Main Modules
 	AddModule(window);
@@ -26,6 +27,7 @@ Application::Application()
 	AddModule(test);
 
 	// Renderer last!
+	AddModule(file_sys);
 	AddModule(importer);
 	AddModule(editor);
 	AddModule(renderer3D);

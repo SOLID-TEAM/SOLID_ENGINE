@@ -37,6 +37,9 @@
     <Filter Include="Sources\Editor">
       <UniqueIdentifier>{cb612c4b-4d4a-441a-add0-c2bfaa63a7b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\3rd Party\PhysFS">
+      <UniqueIdentifier>{eb4b02e5-f154-43f2-83e9-01d0741e51b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -321,6 +324,9 @@
     </ClInclude>
     <ClInclude Include="ModelData.h">
       <Filter>Sources\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="external\PhysFS\include\physfs.h">
+      <Filter>Sources\3rd Party\PhysFS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
