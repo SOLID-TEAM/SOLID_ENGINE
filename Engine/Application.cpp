@@ -26,7 +26,7 @@ Application::Application()
 	AddModule(test);
 
 	// Renderer last!
-
+	AddModule(importer);
 	AddModule(editor);
 	AddModule(renderer3D);
 
