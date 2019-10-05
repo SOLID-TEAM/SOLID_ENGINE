@@ -73,7 +73,7 @@ bool ModelData::Render()
 	// indices
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_gl_id);
 	// draw
-	glDrawElements(GL_TRIANGLES, _idx_size * 3, GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, _idx_size, GL_UNSIGNED_INT, (void*)0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -87,10 +87,13 @@ bool ModelData::Render()
 bool ModelData::DebugRenderVertexNormals()
 {
 	bool ret = false;
+	
+	float pointSize = 5.0f;
+	float lineWidth = 1;
 
 	// draw points
 	glColor3f(1.0f, 1.0f, 0.0f);
-	uint pointSize = 5;
+	
 	glPointSize(pointSize);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -102,6 +105,7 @@ bool ModelData::DebugRenderVertexNormals()
 
 	//glEnableClientState(GL_VERTEX_ARRAY);
 
+	glLineWidth(lineWidth);
 	// draw normals lines
 	glColor3f(0.2f, 1.0f, 0.0f);
 	glBindBuffer(GL_ARRAY_BUFFER, debug_normals_gl_id);
@@ -110,6 +114,8 @@ bool ModelData::DebugRenderVertexNormals()
 	glDrawArrays(GL_LINES, 0, _v_size * 2);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glLineWidth(1.0f);
 
 	return ret;
 }
