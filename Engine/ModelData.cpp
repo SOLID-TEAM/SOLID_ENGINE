@@ -25,7 +25,7 @@ bool ModelData::UpdateBuffers()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * _v_size, &vertices[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_gl_id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * _idx_size, &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * _idx_size, &indices[0], GL_STATIC_DRAW);
 
 	/*glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _uv_size * 2, &uvs[0], GL_STATIC_DRAW);

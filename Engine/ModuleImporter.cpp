@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleImporter.h"
 
-
+#include "GL/glew.h"
 
 
 ModuleImporter::ModuleImporter(bool start_enabled) : Module(start_enabled) {}
@@ -20,7 +20,7 @@ bool ModuleImporter::Init(Config& config)
 
 bool ModuleImporter::Start(Config& config)
 {
-	//LoadFileMesh("Assets/Models/suzanne.obj");
+	LoadFileMesh("Assets/Models/suzanne.blend");
 	LoadFileMesh("Assets/Models/warrior/warrior.FBX");
 
 	return true;
@@ -46,7 +46,24 @@ update_status ModuleImporter::PostUpdate(float dt)
 	std::vector<ModelData*>::iterator model = meshes.begin();
 	for (; model != meshes.end(); ++model)
 	{
+		// TODO NEXT: implement this at level editor to show 2 possibilities:
+		// 1: fill models with solid color (user selected plain color with imgui color picker) | on-off
+		// 2: wireframe, lines color selectable by user too | on-off
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glPolygonOffset(1.0f, 0.375f);
+
+		glColor3f(1.0f, 0.0f, 1.0f);
+
 		(*model)->Render();
+
+		glDisable(GL_POLYGON_OFFSET_FILL);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		glColor3f(1.0f, 1.0f, 1.0f);
+
+		(*model)->Render();
+		
 	}
 
 

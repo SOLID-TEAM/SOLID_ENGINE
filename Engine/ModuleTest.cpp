@@ -120,9 +120,32 @@ bool ModuleTest::CleanUp()
 // Update
 update_status ModuleTest::Update(float dt)
 {
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleTest::PostUpdate(float dt)
+{
+	// TODO: same of the "TODO NEXT" on ModuleImporter
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(1.0f, 0.375f);
+
+	glColor3f(1.0f, 0.0f, 1.0f);
+
 	cube->Render();
 	plane->Render();
 	sphere->Render();
+
+	glDisable(GL_POLYGON_OFFSET_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	cube->Render();
+	plane->Render();
+	sphere->Render();
+
 
 	return UPDATE_CONTINUE;
 }
