@@ -33,5 +33,6 @@
         "show_configuration": false,
         "show_console": false
     },
-    "Renderer3D": {}
+    "Renderer3D": {},
+    "": {}
 }

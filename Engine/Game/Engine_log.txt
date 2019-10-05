@@ -12,11 +12,11 @@
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-Random number generated: 1
-Random number generated: 2.810254
-Random number generated: 0.869203
+Random number generated: 3
+Random number generated: 9.117888
+Random number generated: 0.092397
 [Info] Created new mesh with 723 vertices
-[Info] Created new mesh with 3752 vertices
+[Info] Loaded vertex normals for mesh defaultobject
 [Start] Loading Editor
 -------------- Application Update --------------
 -------------- Application CleanUp --------------

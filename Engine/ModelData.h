@@ -18,6 +18,10 @@ public:
 	//UpdateTexture2DUVBuffer(uint uvs_id);
 	//UseShaderID(uint shader_program_id); 
 
+	bool DebugRenderVertexNormals();
+
+	void ComputeNormals();
+
 	// void Scale();
 	// void Translate();
 	// void ApplyRotation();
@@ -34,12 +38,14 @@ public:
 	uint _v_size = -1; // vertex
 	uint _idx_size = -1; // indices
 	uint _uv_size = -1; // texture coords
-	uint _n_size = -1; // normals
+	//uint _n_size = -1; // normals || not needed, assume each vertes has its normal
 	
 	float* vertices = nullptr;
 	uint* indices = nullptr;
 	float* uvs = nullptr;
 	float* normals = nullptr;
+	// debug draw vertex normals
+	float* debug_v_normals = nullptr;
 	// --------------------------
 	// gl buffer ----------------
 	uint vertices_gl_id = -1;
@@ -47,6 +53,7 @@ public:
 	
 	uint uv_gl_id = -1;
 	uint normals_gl_id = -1;
+	uint debug_normals_gl_id = -1;
 	//uint texture_gl_id = -1;
 	//
 	float color[3] = { 1.0f,0.0f,1.0f };
@@ -55,6 +62,11 @@ public:
 	mat4x4 transform;
 	vec4 position;
 	vec4 direction;
+
+	// TODO: testing here, print points and lines for vertex and faces normals debug draw
+	bool debug_vertex_normals = true;
+	bool debug_faces_normals = false;
+
 
 private:
 	// containers

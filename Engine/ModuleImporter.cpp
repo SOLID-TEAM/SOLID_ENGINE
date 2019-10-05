@@ -5,7 +5,10 @@
 #include "GL/glew.h"
 
 
-ModuleImporter::ModuleImporter(bool start_enabled) : Module(start_enabled) {}
+ModuleImporter::ModuleImporter(bool start_enabled) : Module(start_enabled) 
+{
+	name.assign("ModuleImporter");
+}
 
 ModuleImporter::~ModuleImporter() {}
 
@@ -21,7 +24,7 @@ bool ModuleImporter::Init(Config& config)
 bool ModuleImporter::Start(Config& config)
 {
 	LoadFileMesh("Assets/Models/suzanne.blend");
-	LoadFileMesh("Assets/Models/warrior/warrior.FBX");
+	//LoadFileMesh("Assets/Models/warrior/warrior.FBX");
 
 	return true;
 }
@@ -63,6 +66,9 @@ update_status ModuleImporter::PostUpdate(float dt)
 		glColor3f(1.0f, 1.0f, 1.0f);
 
 		(*model)->Render();
+
+		glColor3f(1.0f, 1.0f, 0.0f);
+		(*model)->DebugRenderVertexNormals();
 		
 	}
 
@@ -105,9 +111,12 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 			
 			m->_v_size = assMesh->mNumVertices;
 			m->vertices = new float[m->_v_size * 3];
+			// the part of i * 3 doesnt make sense, we not store more meshes in one "modelData"
+			// instead for each mesh we create other modeldata right now
 			memcpy(&m->vertices[i * 3], assMesh->mVertices, sizeof(float) * m->_v_size * 3);
 			LOG("[Info] Created new mesh with %d vertices", m->_v_size);
 
+			// LOAD triangle faces indices
 			if (assMesh->HasFaces())
 			{
 				m->_idx_size = assMesh->mNumFaces * 3;
@@ -124,8 +133,20 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 				}
 			}
 
+			// LOAD vertex normals
+			if (assMesh->HasNormals())
+			{
+				m->normals = new float[assMesh->mNumVertices * 3];
+				memcpy(&m->normals[i * 3], assMesh->mNormals, sizeof(float) * assMesh->mNumVertices * 3);
+				LOG("[Info] Loaded vertex normals for mesh %s", assMesh->mName.data);
+			}
+
+
+
 			m->GenerateBuffers();
+			m->ComputeNormals(); // for debug draw purposes | BEFORE UPDATE BUFFER to fill computed normals before we fill the buffers
 			m->UpdateBuffers();
+			
 
 			meshes.push_back(m);
 			//startup_meshes.push_back(&m);

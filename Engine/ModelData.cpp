@@ -13,6 +13,7 @@ bool ModelData::GenerateBuffers()
 	glGenBuffers(1, &indices_gl_id);
 	glGenBuffers(1, &uv_gl_id);
 	glGenBuffers(1, &normals_gl_id);
+	glGenBuffers(1, &debug_normals_gl_id);
 
 	return ret;
 }
@@ -27,14 +28,20 @@ bool ModelData::UpdateBuffers()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_gl_id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * _idx_size, &indices[0], GL_STATIC_DRAW);
 
-	/*glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _uv_size * 2, &uvs[0], GL_STATIC_DRAW);
+	// WARNING: FOR NORMALS DEBUG ONLY, the normals for other calculations remains on normals float pointer 
+	glBindBuffer(GL_ARRAY_BUFFER, debug_normals_gl_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * _v_size, &debug_v_normals[0], GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, normals_gl_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _uv_size * 3, &normals[0], GL_STATIC_DRAW);*/
+	/*glBindBuffer(GL_ARRAY_BUFFER, normals_gl_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * _v_size, &normals[0], GL_STATIC_DRAW);*/
+
+	/*glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _uv_size * 2, &uvs[0], GL_STATIC_DRAW);*/
 
 	return ret;
 }
+
+
 
 bool ModelData::Render()
 {
@@ -76,6 +83,36 @@ bool ModelData::Render()
 	return ret;
 
 }
+
+bool ModelData::DebugRenderVertexNormals()
+{
+	bool ret = false;
+
+	// draw points
+	uint pointSize = 5;
+	glPointSize(pointSize);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertices_gl_id);
+	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+
+	glDrawArrays(GL_POINTS, 0, _v_size);
+
+	//glEnableClientState(GL_VERTEX_ARRAY);
+
+	// draw normals lines
+	glColor3f(0.2f, 1.0f, 0.0f);
+	glBindBuffer(GL_ARRAY_BUFFER, debug_normals_gl_id);
+	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+
+	glDrawArrays(GL_LINES, 0, _v_size);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	return ret;
+}
+
 bool ModelData::CleanUp()
 {
 	bool ret = true;
@@ -84,6 +121,34 @@ bool ModelData::CleanUp()
 	glDeleteBuffers(1, &indices_gl_id);
 	glDeleteBuffers(1, &uv_gl_id);
 	glDeleteBuffers(1, &normals_gl_id);
+	glDeleteBuffers(1, &debug_normals_gl_id);
 
 	return ret;
+}
+
+void ModelData::ComputeNormals()
+{
+	// to draw lines, we need an array ready to what expects gldrawarrays
+	// start point and finish point
+	// TODO, improve this thinking in deepth if this is possible with memcpy
+
+	float length = 0.3f;
+
+	debug_v_normals = new float[_v_size * 6]; // 3 for startpoint, 3 more for endpoint
+
+	int count = 0;
+	int i = 0;
+	while(count < _v_size)
+	{
+		debug_v_normals[i]     = vertices[i];
+		debug_v_normals[i + 1] = vertices[i+1];
+		debug_v_normals[i + 2] = vertices[i+2];
+
+		debug_v_normals[i + 3] = vertices[i] + normals[i] * length;
+		debug_v_normals[i + 4] = vertices[i+1] + normals[i+1] * length;
+		debug_v_normals[i + 5] = vertices[i+2] + normals[i+2] * length;
+
+		i += 6;
+		count++;
+	}
 }
