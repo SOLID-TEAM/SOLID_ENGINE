@@ -67,7 +67,8 @@ update_status ModuleImporter::PostUpdate(float dt)
 		(*model)->Render();
 
 		//glColor3f(1.0f, 1.0f, 0.0f);
-		(*model)->DebugRenderVertexNormals();
+		//(*model)->DebugRenderVertexNormals();
+		(*model)->DebugRenderFacesNormals();
 		
 	}
 
@@ -143,7 +144,8 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 
 
 			m->GenerateBuffers();
-			m->ComputeNormals(); // for debug draw purposes | BEFORE UPDATE BUFFERS!! to compute debugdraw normals before we fill the buffers
+			m->ComputeVertexNormals(); // for debug draw purposes | BEFORE UPDATE BUFFERS!! to compute debugdraw normals before we fill the buffers
+			m->ComputeFacesNormals();
 			m->UpdateBuffers();
 			
 

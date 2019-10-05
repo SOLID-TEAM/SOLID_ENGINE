@@ -19,8 +19,10 @@ public:
 	//UseShaderID(uint shader_program_id); 
 
 	bool DebugRenderVertexNormals();
+	bool DebugRenderFacesNormals();
 
-	void ComputeNormals();
+	void ComputeVertexNormals();
+	bool ComputeFacesNormals();
 
 	// void Scale();
 	// void Translate();
@@ -44,8 +46,9 @@ public:
 	uint* indices = nullptr;
 	float* uvs = nullptr;
 	float* normals = nullptr;
-	// debug draw vertex normals
+	// debug draw normals data ------
 	float* debug_v_normals = nullptr;
+	float* debug_f_normals = nullptr; // this array should store 1 computed vertex(for draw the point on midface) and 3 startpoint and 3 endpoint of each face
 	// --------------------------
 	// gl buffer ----------------
 	uint vertices_gl_id = -1;
@@ -53,7 +56,9 @@ public:
 	
 	uint uv_gl_id = -1;
 	uint normals_gl_id = -1;
-	uint debug_normals_gl_id = -1;
+	// DEBUG DRAW PURPOSES BUFFERS ids ------
+	uint debug_v_normals_gl_id = -1;
+	uint debug_f_normals_gl_id = -1;
 	//uint texture_gl_id = -1;
 	//
 	float color[3] = { 1.0f,0.0f,1.0f };
