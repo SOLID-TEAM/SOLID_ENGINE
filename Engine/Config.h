@@ -23,10 +23,12 @@ public:
 	bool AddString(const char* name, const char* string);
 	bool AddInt(const char* name, int value);
 	bool AddFloatArray(const char* var_name, const float* values, const int size);
+	bool AddFloat(const char* var_name, const float value);
 	// Get -----
 	bool GetBool(const char* name, const bool default, const int array_index = -1) const;
 	const char* GetString(const char* name,  const char* default, const int array_index = -1) const;
 	int GetInt(const char* name, const int default,const int array_index = -1) const;
+	float GetFloat(const char* name, const float default, const float array_index = -1) const;
 
 
 private:

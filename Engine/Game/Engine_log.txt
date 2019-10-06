@@ -17,6 +17,10 @@ Loading Test assets
 [Info] Loaded vertex normals for mesh defaultobject
 [Start] Loading Editor
 -------------- Application Update --------------
+[Info] editor_config.json succesfully saved
+[Init] Loaded configuration file default_editor_config.json
+[Init] Loaded configuration file default_editor_config.json
+[Init] Loaded configuration file default_editor_config.json
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

@@ -15,6 +15,56 @@
     "Camera3D": {},
     "Input": {},
     "ModuleRandom?": {},
+    "": {},
+    "ModuleImporter": {
+        "wireframe_mode": true,
+        "fill_mode": true,
+        "debug_vertex_normals": true,
+        "debug_face_normals": true,
+        "fill_color": [
+            1,
+            0.34999999403953552,
+            1,
+            1
+        ],
+        "wire_color": [
+            1,
+            1,
+            1,
+            1
+        ],
+        "d_vertex_color": [
+            0.5899999737739563,
+            0.2199999988079071,
+            1,
+            1
+        ],
+        "d_vertex_n_color": [
+            0.20000000298023224,
+            1,
+            0,
+            1
+        ],
+        "d_vertex_face_color": [
+            1,
+            0.5,
+            0.20000000298023224,
+            1
+        ],
+        "d_vertex_face_n_color": [
+            0,
+            0.5,
+            1,
+            1
+        ],
+        "wire_line_width": 1,
+        "v_point_size": 5,
+        "f_v_point_size": 5,
+        "v_n_line_width": 1,
+        "f_n_line_width": 1,
+        "v_n_line_length": 0.40000000596046448,
+        "f_n_line_length": 0.40000000596046448
+    },
     "Editor": {
         "about": false,
         "showcase": false,
@@ -33,6 +83,5 @@
         "show_configuration": false,
         "show_console": false
     },
-    "Renderer3D": {},
-    "": {}
+    "Renderer3D": {}
 }

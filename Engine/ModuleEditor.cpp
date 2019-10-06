@@ -270,7 +270,54 @@ update_status ModuleEditor::Update(float dt)
 			glEnable(GL_LIGHTING);
 	}
 
-	if (ImGui::Checkbox("WIREFRAME", &wireframe))
+	if (ImGui::Checkbox("Wireframe Mode", &App->importer->wireframe_mode)) {}
+	if (ImGui::Checkbox("Fill mode", &App->importer->fill_mode)) {}
+	if (ImGui::Checkbox("Debug Vertex Normals", &App->importer->debug_vertex_normals)) {}
+	if (ImGui::Checkbox("Debug Face Normals", &App->importer->debug_face_normals)) {}
+
+	const float max_line_w = 10.0f;
+	const float min_line_w = 0.0f;
+	const float max_point_size = 10.0f;
+	const float min_point_size = 0.0f;
+
+	const float max_n_length = 3.0f;
+	const float min_n_length = 0.0f;
+
+	float v_n_line_length = App->importer->v_n_line_length;
+	float f_n_line_length = App->importer->f_n_line_length;
+
+	ImGui::Separator();
+	ImGui::ColorEdit4("Fill Color##2f", (float*)&App->importer->fill_color, ImGuiColorEditFlags_Float);
+	ImGui::ColorEdit4("Wire Color##2f", (float*)&App->importer->wire_color, ImGuiColorEditFlags_Float);
+	ImGui::SliderScalar("Wireframe line width", ImGuiDataType_Float, &App->importer->wire_line_width, &min_line_w, &max_line_w, "%.1f", 1.0f);
+	ImGui::Separator();
+	ImGui::Text("Debug vertex normals:");
+	ImGui::ColorEdit4("Vertex Color##2f", (float*)&App->importer->d_vertex_color, ImGuiColorEditFlags_Float);
+	ImGui::SliderScalar("Vertex point size", ImGuiDataType_Float, &App->importer->v_point_size, &min_point_size, &max_point_size, "%.1f", 1.0f);
+	ImGui::ColorEdit4("Normal Color##2f", (float*)&App->importer->d_vertex_n_color, ImGuiColorEditFlags_Float);
+	ImGui::SliderScalar("Vertex normal line width", ImGuiDataType_Float, &App->importer->v_n_line_width, &min_line_w, &max_line_w, "%.1f", 1.0f);
+	if (ImGui::SliderScalar("Vertex normal line length", ImGuiDataType_Float, &v_n_line_length, &min_n_length, &max_n_length, "%.3f", 1.0f))
+	{
+		App->importer->ReComputeVertexNormals(v_n_line_length);
+	}
+	ImGui::SameLine();
+	HelpMarker("CPU Heavy load, normal end points needs to be re-computed");
+	ImGui::Separator();
+	ImGui::Text("Debug faces normals:");
+	ImGui::ColorEdit4("Face Vertex Color##2f", (float*)&App->importer->d_vertex_face_color, ImGuiColorEditFlags_Float);
+	ImGui::SliderScalar("Face Vertex point size", ImGuiDataType_Float, &App->importer->f_v_point_size, &min_point_size, &max_point_size, "%.1f", 1.0f);
+	ImGui::ColorEdit4("Face Normal Color##2f", (float*)&App->importer->d_vertex_face_n_color, ImGuiColorEditFlags_Float);
+	ImGui::SliderScalar("Face normal line width", ImGuiDataType_Float, &App->importer->f_n_line_width, &min_line_w, &max_line_w, "%.1f", 1.0f);
+	if (ImGui::SliderScalar("Face normal line length", ImGuiDataType_Float, &f_n_line_length, &min_n_length, &max_n_length, "%.3f", 1.0f))
+	{
+		App->importer->ReComputeFacesNormals(f_n_line_length);
+	}
+	ImGui::SameLine();
+	HelpMarker("CPU Heavy load, normal end points needs to be re-computed");
+	ImGui::Separator();
+
+	
+	/*if (ImGui::Checkbox("WIREFRAME", &wireframe))
 	{
 		if (wireframe)
 		{
@@ -280,7 +327,7 @@ update_status ModuleEditor::Update(float dt)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
-	}
+	}*/
 
 	ImGui::End();
 

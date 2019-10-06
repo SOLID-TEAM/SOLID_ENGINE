@@ -55,6 +55,30 @@ bool ModelData::UpdateBuffers()
 	return ret;
 }
 
+bool ModelData::RefillDebugVertexNormalsBuffers()
+{
+	bool ret = true;
+
+	//glDeleteBuffers(1, &debug_v_normals_gl_id);
+	glBindBuffer(GL_ARRAY_BUFFER, debug_v_normals_gl_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * _v_size, &debug_v_normals[0], GL_STATIC_DRAW);
+
+	return ret;
+}
+
+bool ModelData::RefillDebugFacesNormalsBuffers()
+{
+	bool ret = true;
+
+	/*glDeleteBuffers(1, &debug_f_vertices_gl_id);
+	glDeleteBuffers(1, &debug_f_normals_gl_id);*/
+	glBindBuffer(GL_ARRAY_BUFFER, debug_f_vertices_gl_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _idx_size, &debug_f_vertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, debug_f_normals_gl_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _idx_size * 2, &debug_f_normals[0], GL_STATIC_DRAW);
+
+	return ret;
+}
 
 
 bool ModelData::Render()
@@ -98,17 +122,11 @@ bool ModelData::Render()
 
 }
 
-bool ModelData::DebugRenderVertexNormals()
+bool ModelData::DebugRenderVertex(float pointSize)
 {
-	bool ret = false;
-	
-	float pointSize = 5.0f;
-	float lineWidth = 1;
+	bool ret = true;
 
 	// draw points
-	//glColor3f(1.0f, 0.8f, 0.0f);
-	glColor3f(0.59f, 0.22f, 1.0f);
-	
 	glPointSize(pointSize);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -118,11 +136,22 @@ bool ModelData::DebugRenderVertexNormals()
 
 	glDrawArrays(GL_POINTS, 0, _v_size);
 
-	//glEnableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
 
+	glPointSize(1.0f);
+
+	return ret;
+}
+
+bool ModelData::DebugRenderVertexNormals(float lineWidth)
+{
+	bool ret = true;
+	
 	glLineWidth(lineWidth);
+
 	// draw normals lines
-	glColor3f(0.2f, 1.0f, 0.0f);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
 	glBindBuffer(GL_ARRAY_BUFFER, debug_v_normals_gl_id);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 
@@ -130,39 +159,41 @@ bool ModelData::DebugRenderVertexNormals()
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 
-	//LOG("tri %f %f %f", &)
-
 	glLineWidth(1.0f);
 
 	return ret;
 }
 
-bool ModelData::DebugRenderFacesNormals()
+bool ModelData::DebugRenderFacesVertex(float pointSize)
 {
 	bool ret = true;
 
-	float pointSize = 5.0f;
-	float lineWidth = 1;
+	glPointSize(pointSize);
 
 	// draw points
-	//glColor3f(1.0f, 1.0f, 0.0f);
-	//glColor3f(1.0f, 0.56f, 0.35f);
-	glColor3f(1.0f, 0.5f, 0.2f);
+	glEnableClientState(GL_VERTEX_ARRAY);
 
-	glPointSize(pointSize);
+	glBindBuffer(GL_ARRAY_BUFFER, debug_f_vertices_gl_id);
+	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+
+	glDrawArrays(GL_POINTS, 0, _idx_size);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glPointSize(1.0f);
+
+	return ret;
+}
+
+bool ModelData::DebugRenderFacesNormals(float lineWidth)
+{
+	bool ret = true;
+
 	glLineWidth(lineWidth);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	
-	glBindBuffer(GL_ARRAY_BUFFER, debug_f_vertices_gl_id);
-	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
-	
-	glDrawArrays(GL_POINTS, 0, _idx_size);
-
 	// draw lines
-
-	glColor3f(0.0f, 0.5f, 1.0f);
-
 	glBindBuffer(GL_ARRAY_BUFFER, debug_f_normals_gl_id);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 
@@ -171,8 +202,6 @@ bool ModelData::DebugRenderFacesNormals()
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	glLineWidth(1.0f); // returns to default line width
-
-	glColor3f(0.9f, 0.9f, 0.9f);
 
 	return ret;
 }
@@ -202,13 +231,13 @@ bool ModelData::CleanUp()
 	return ret;
 }
 
-void ModelData::ComputeVertexNormals()
+void ModelData::ComputeVertexNormals(float length)
 {
 	// to draw lines, we need an array ready to what expects gldrawarrays
 	// start point and finish point
 	// TODO: improve this, thinking in deepth if this is possible with memcpy
 
-	float length = 0.3f;
+	if (debug_v_normals != nullptr) delete[] debug_v_normals;
 
 	debug_v_normals = new float[_v_size * 6]; // 3 for startpoint, 3 more for endpoint
 
@@ -225,11 +254,11 @@ void ModelData::ComputeVertexNormals()
 
 		n_count += 6;
 	}
+
 }
 
-bool ModelData::ComputeFacesNormals()
+bool ModelData::ComputeFacesNormals(float length)
 {
-	float length = 0.4f; // temporaly length here to project the normal direction
 
 	if (_idx_size % 3 != 0)
 	{
@@ -237,7 +266,8 @@ bool ModelData::ComputeFacesNormals()
 		return false;
 	}
 
-	if (debug_f_vertices != nullptr) delete debug_f_vertices;
+	if (debug_f_vertices != nullptr) delete[] debug_f_vertices;
+	if (debug_f_normals != nullptr) delete[] debug_f_normals;
 
 	debug_f_vertices = new float[_idx_size];
 	debug_f_normals = new float[_idx_size * 2];

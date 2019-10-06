@@ -18,11 +18,16 @@ public:
 	//UpdateTexture2DUVBuffer(uint uvs_id);
 	//UseShaderID(uint shader_program_id); 
 
-	bool DebugRenderVertexNormals();
-	bool DebugRenderFacesNormals();
+	bool DebugRenderVertex(float pointSize = 5.0f);
+	bool DebugRenderVertexNormals(float lineWidth = 1.0f);
+	bool DebugRenderFacesVertex(float pointSize = 5.0f);
+	bool DebugRenderFacesNormals(float lineWidth = 1.0f);
 
-	void ComputeVertexNormals();
-	bool ComputeFacesNormals();
+	void ComputeVertexNormals(float length = 0.4f);
+	bool ComputeFacesNormals(float length = 0.4f);
+
+	bool RefillDebugVertexNormalsBuffers();
+	bool RefillDebugFacesNormalsBuffers();
 
 	// void Scale();
 	// void Translate();

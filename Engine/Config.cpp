@@ -104,6 +104,11 @@ bool Config::AddFloatArray(const char* var_name, const float* values, const int 
 	return ret;
 }
 
+bool Config::AddFloat(const char* var_name, const float value)
+{
+	return !json_object_set_number(root_object, var_name, (double)value);
+}
+
 // GET -------------------------
 
 bool Config::GetBool(const char* name,const bool default, const int array_index) const
@@ -132,6 +137,16 @@ int Config::GetInt(const char* name, const int default, const int array_index) c
 
 	if (value != NULL)
 		return (int)json_value_get_number(value);
+
+	return default;
+}
+
+float Config::GetFloat(const char* name, const float default, const float array_index) const
+{
+	JSON_Value* value = FindValue(name, array_index);
+
+	if (value != NULL)
+		return (float)json_value_get_number(value);
 
 	return default;
 }
