@@ -41,7 +41,7 @@ public:
 	uint _idx_size = -1; // indices
 	uint _uv_size = -1; // texture coords
 	//uint _n_size = -1; // normals || not needed, assume each vertes has its normal
-	
+	uint _f_size = -1; // triangulated faces
 	float* vertices = nullptr;
 	uint* indices = nullptr;
 	float* uvs = nullptr;

@@ -127,6 +127,7 @@ update_status ModuleTest::PostUpdate(float dt)
 {
 	// TODO: place scene y0 plane in other site
 
+	glColor3f(0.9f, 0.9f, 0.9f);
 	glLineWidth(2.5f);
 	glBegin(GL_LINES);
 

@@ -4,6 +4,8 @@
 
 #include "GL/glew.h"
 
+#include "external/Assimp/include/version.h"
+
 
 ModuleImporter::ModuleImporter(bool start_enabled) : Module(start_enabled) 
 {
@@ -17,14 +19,16 @@ bool ModuleImporter::Init(Config& config)
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 
+	LOG("[Info] Using Assimp v%i.%i.%i", aiGetVersionMajor(), aiGetVersionMinor(), aiGetVersionRevision());
+
 	return true;
 }
 
 bool ModuleImporter::Start(Config& config)
 {
 
-	LoadFileMesh("Assets/Models/suzanne.blend");
-	//LoadFileMesh("Assets/Models/warrior/warrior.FBX");
+	LoadFileMesh("Assets/Models/suzanne.obj");
+	//LoadFileMesh("Assets/Models/warrior.FBX");
 
 	return true;
 }
@@ -61,6 +65,7 @@ update_status ModuleImporter::PostUpdate(float dt)
 
 		(*model)->Render();
 
+		glLineWidth(1.0f);
 		glDisable(GL_POLYGON_OFFSET_FILL);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -69,8 +74,11 @@ update_status ModuleImporter::PostUpdate(float dt)
 		(*model)->Render();
 
 		//glColor3f(1.0f, 1.0f, 0.0f);
-		//(*model)->DebugRenderVertexNormals();
-		(*model)->DebugRenderFacesNormals();
+		(*model)->DebugRenderVertexNormals();
+		//(*model)->DebugRenderFacesNormals();
+
+		/*for (int i = 0; i < (*model)->_idx_size; ++i)
+			LOG("%u", (*model)->indices[i]);*/
 		
 	}
 
@@ -121,9 +129,12 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 			// LOAD triangle faces indices
 			if (assMesh->HasFaces())
 			{
+				m->_f_size = assMesh->mNumFaces;
+				//
 				m->_idx_size = assMesh->mNumFaces * 3;
 				m->indices = new uint[m->_idx_size];
 
+				int t = 0;
 				for (uint i = 0; i < assMesh->mNumFaces; ++i)
 				{
 					if (assMesh->mFaces[i].mNumIndices != 3)

@@ -143,8 +143,8 @@ bool ModelData::DebugRenderFacesNormals()
 
 	glBindBuffer(GL_ARRAY_BUFFER, debug_f_normals_gl_id);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
-
-	glDrawArrays(GL_POINTS, 0, _idx_size);
+	
+	glDrawArrays(GL_POINTS, 0, _f_size);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 
@@ -204,6 +204,7 @@ bool ModelData::ComputeFacesNormals()
 
 	debug_f_normals = new float[_idx_size]; // for the moment only vertex for test
 
+	//memset(debug_f_normals, 0, _idx_size);
 
 	//uint v_count = 0;
 	uint i = 0;
@@ -215,18 +216,13 @@ bool ModelData::ComputeFacesNormals()
 		float* v2 = &vertices[indices[i + 1]]; // get second face vertex
 		float* v3 = &vertices[indices[i + 2]]; // get third face vertex
 
-		float test = v1[0];
-		float test2 = v2[0];
-
-		LOG("First vertex: %f,%f,%f", v1[0], v1[1], v1[2]);
-		LOG("2nd vertex: %f,%f,%f", v2[0], v2[1], v2[2]);
-		LOG("Third vertex: %f,%f,%f", v3[0], v3[1], v3[2]);
+		LOG("First vertex: %f %f %f", v1[0], v1[1], v1[2]);
+		LOG("2nd vertex: %f %f %f", v2[0], v2[1], v2[2]);
+		LOG("Third vertex: %f %f %f", v3[0], v3[1], v3[2]);
 
 		debug_f_normals[i]     = (v1[0] + v2[0] + v3[0]) / 3; // x coord
 		debug_f_normals[i + 1] = (v1[1] + v2[1] + v3[1]) / 3; // y coord
 		debug_f_normals[i + 2] = (v1[2] + v2[2] + v3[2]) / 3; // z coord
-
-		LOG("");
 	}
 
 	return true;
