@@ -61,7 +61,7 @@ update_status ModuleImporter::PostUpdate(float dt)
 		glEnable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(1.0f, 0.375f);
 
-		glColor3f(1.0f, 0.0f, 1.0f);
+		glColor3f(1.0f, 0.35f, 1.0f);
 
 		(*model)->Render();
 
@@ -70,12 +70,13 @@ update_status ModuleImporter::PostUpdate(float dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		glColor3f(1.0f, 1.0f, 1.0f);
+		//glColor3f(1.0f, 0.8f, 0.0f);
 
 		(*model)->Render();
 
 		//glColor3f(1.0f, 1.0f, 0.0f);
 		(*model)->DebugRenderVertexNormals();
-		//(*model)->DebugRenderFacesNormals();
+		(*model)->DebugRenderFacesNormals();
 
 		/*for (int i = 0; i < (*model)->_idx_size; ++i)
 			LOG("%u", (*model)->indices[i]);*/
@@ -129,8 +130,6 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 			// LOAD triangle faces indices
 			if (assMesh->HasFaces())
 			{
-				m->_f_size = assMesh->mNumFaces;
-				//
 				m->_idx_size = assMesh->mNumFaces * 3;
 				m->indices = new uint[m->_idx_size];
 

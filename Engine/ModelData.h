@@ -41,14 +41,16 @@ public:
 	uint _idx_size = -1; // indices
 	uint _uv_size = -1; // texture coords
 	//uint _n_size = -1; // normals || not needed, assume each vertes has its normal
-	uint _f_size = -1; // triangulated faces
+	//uint _f_size = -1; // triangulated faces
 	float* vertices = nullptr;
 	uint* indices = nullptr;
 	float* uvs = nullptr;
 	float* normals = nullptr;
 	// debug draw normals data ------
 	float* debug_v_normals = nullptr;
-	float* debug_f_normals = nullptr; // this array should store 1 computed vertex(for draw the point on midface) and 3 startpoint and 3 endpoint of each face
+	// maybe we dont need this for nothing more than debug ----
+	float* debug_f_vertices = nullptr; // this array should store 1 computed vertex(for draw the point on midface) for each face
+	float* debug_f_normals = nullptr; // and 3 startpoint and 3 endpoint of each face
 	// --------------------------
 	// gl buffer ----------------
 	uint vertices_gl_id = -1;
@@ -56,9 +58,13 @@ public:
 	
 	uint uv_gl_id = -1;
 	uint normals_gl_id = -1;
-	// DEBUG DRAW PURPOSES BUFFERS ids ------
+	// DEBUG DRAW PURPOSES BUFFERS ids -------------------------------
 	uint debug_v_normals_gl_id = -1;
+	// for debug draw faces points and line normals
+	// TODO: implement this with stride in one float array (debug_f_vertices and debug_f_normals float arrays)
+	uint debug_f_vertices_gl_id = -1;
 	uint debug_f_normals_gl_id = -1;
+	// ---------------------------------------------------------------
 	//uint texture_gl_id = -1;
 	//
 	float color[3] = { 1.0f,0.0f,1.0f };
