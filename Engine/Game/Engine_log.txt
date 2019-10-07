@@ -13,14 +13,11 @@
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-[Info] Created new mesh with 723 vertices
-[Info] Loaded vertex normals for mesh defaultobject
+[Info] Created new mesh defaultobject with 723 vertices
+[Info] Containing 2904 indices for 968 triangles
+[Info] Loaded vertex normals
 [Start] Loading Editor
 -------------- Application Update --------------
-[Info] editor_config.json succesfully saved
-[Init] Loaded configuration file default_editor_config.json
-[Init] Loaded configuration file default_editor_config.json
-[Init] Loaded configuration file default_editor_config.json
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

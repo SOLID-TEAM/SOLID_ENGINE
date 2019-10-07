@@ -3,12 +3,15 @@
 #include "Globals.h"
 #include "glmath.h"
 #include <vector>
+#include <string>
 
 class ModelData
 {
 public:
 	ModelData();
 	~ModelData();
+
+	ModelData(float* vertices, uint* indices, float* normals, float* uvs, int nVertices, int nIndices);
 
 	bool GenerateBuffers(); // generate all needed buffers at once
 	bool UpdateBuffers(); // update/fill/refill all buffers
@@ -40,6 +43,7 @@ public:
 
 	
 public:
+	std::string name;
 	bool to_delete = false;
 	// model data ---------------
 	uint _v_size = -1; // vertex

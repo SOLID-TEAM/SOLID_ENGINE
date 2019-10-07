@@ -1,11 +1,10 @@
-#define PAR_SHAPES_IMPLEMENTATION
-#include "external/par_shapes.h"
+//#define PAR_SHAPES_IMPLEMENTATION
+//#include "external/par_shapes.h"
 
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleTest.h"
-#include "Primitive.h"
-#include "par_shapes.h"
+//#include "Primitive.h"
 
 // MathGeoLib ---------------------------------------------
 #include "external/MathGeoLib/include/MathBuildConfig.h"
@@ -100,10 +99,10 @@ bool ModuleTest::Start(Config& config)
 	//GetFloatRandomValue(1.f, 10.f);
 	//GetRandomPercent();
 
-	cube = new S_Cube(1, 0, 0);
-	cube->Scale(2, 1, 1);
-	plane = new S_Plane(4, 0, 0);
-	sphere = new S_Sphere(-2, 0, 0, 4);
+	//cube = new S_Cube(1, 0, 0);
+	////cube->Scale(2, 1, 1);
+	//plane = new S_Plane(4, 0, 0);
+	//sphere = new S_Sphere(-2, 0, 0, 4);
 
 	return ret;
 }
@@ -163,6 +162,7 @@ update_status ModuleTest::PostUpdate(float dt)
 	plane->Render();
 	sphere->Render();*/
 
+	/*cube->Render();*/
 
 	return UPDATE_CONTINUE;
 }

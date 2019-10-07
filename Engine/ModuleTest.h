@@ -4,9 +4,6 @@
 #include "Module.h"
 #include "Globals.h"
 
-#include "external/par_shapes.h"
-#include "Primitive.h"
-
 class ModuleTest : public Module
 {
 public:
@@ -20,9 +17,9 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
-	S_Cube* cube = nullptr;
+	/*S_Cube* cube = nullptr;
 	S_Plane* plane = nullptr;
-	S_Sphere* sphere = nullptr;
+	S_Sphere* sphere = nullptr;*/
 };
 
 #endif // !__MODULETEST_H__

@@ -3,6 +3,27 @@
 
 ModelData::ModelData() {}
 
+ModelData::ModelData(float* vertices, uint* indices, float* normals, float* uvs, int nVertices, int nIndices)
+{
+	this->vertices = new float[nVertices * 3];
+	this->indices = new uint[nIndices * 3];
+	this->normals = new float[nVertices * 3];
+	//this->uvs = new float[nVertices * 2];
+
+	memcpy(this->vertices, vertices, sizeof(float) * nVertices * 3);
+	memcpy(this->indices, indices, sizeof(uint) * nIndices * 3);
+	memcpy(this->normals, normals, sizeof(float) * nVertices * 3);
+	//memcpy(this->uvs, uvs, sizeof(float) * nVertices * 2);
+
+	_v_size = nVertices;
+	_idx_size = nIndices * 3;
+
+	GenerateBuffers();
+	ComputeVertexNormals();
+	ComputeFacesNormals();
+	UpdateBuffers();
+}
+
 ModelData::~ModelData() {}
 
 bool ModelData::GenerateBuffers()

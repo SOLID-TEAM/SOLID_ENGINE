@@ -12,6 +12,23 @@
 #pragma comment (lib, "external/Assimp/libx86/assimp.lib")
 
 #include "ModelData.h"
+#include "external/par_shapes.h"
+
+enum PrimitiveType
+{
+	CUBE,
+	DODECAHEDRON,
+	TETRAHEDRON,
+	OCTOHEDRON,
+	ICOSAHEDRON,
+	PLANE,
+	SPHERE,
+	CYLINDER,
+	CONE,
+	TORUS,
+	// TODO: add more types if needed
+	MAX
+};
 
 class ModuleImporter : public Module
 {
@@ -33,6 +50,9 @@ public:
 	// TODO: think where to fit this better
 	bool ReComputeVertexNormals(float length = 0.4f);
 	bool ReComputeFacesNormals(float length = 0.4f);
+
+	// Create primitives with par_shapes tool
+	ModelData* CreatePrimitive(PrimitiveType type, vec3 position = { 0,0,0 }, vec3 size = { 1,1,1 });
 
 private:
 	struct aiLogStream stream;
