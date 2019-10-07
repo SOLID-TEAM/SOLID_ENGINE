@@ -198,7 +198,7 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 			}
 
 
-
+			m->name.assign(assMesh->mName.data);
 			m->GenerateBuffers();
 			m->ComputeVertexNormals(v_n_line_length); // for debug draw purposes | BEFORE UPDATE BUFFERS!! to compute debugdraw normals before we fill the buffers
 			m->ComputeFacesNormals(f_n_line_length);
@@ -255,6 +255,7 @@ ModelData* ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, ve
 {
 	ModelData* ret = nullptr;
 	bool isPlatonic = false; // par_shapes weld its vertices on creation and needs to be unwelded to compute normals
+	std::string name;
 
 	par_shapes_mesh* p_mesh = nullptr;
 
@@ -267,37 +268,47 @@ ModelData* ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, ve
 	case CUBE:
 		p_mesh = par_shapes_create_cube();
 		isPlatonic = true;
+		name.assign("CUBE");
 		break;
 	case DODECAHEDRON:
 		p_mesh = par_shapes_create_dodecahedron();
 		isPlatonic = true;
+		name.assign("DODECAHEDRON");
 		break;
 	case TETRAHEDRON:
 		p_mesh = par_shapes_create_tetrahedron();
 		isPlatonic = true;
+		name.assign("TETRAHEDRON");
 		break;
 	case OCTOHEDRON:
 		p_mesh = par_shapes_create_octahedron();
 		isPlatonic = true;
+		name.assign("TETRAHEDRON");
 		break;
 	case ICOSAHEDRON:
 		p_mesh = par_shapes_create_icosahedron();
 		isPlatonic = true;
+		name.assign("ICOSAHEDRON");
 		break;
 	case PLANE:
 		p_mesh = par_shapes_create_plane(slices, stacks);
+		name.assign("PLANE");
 		break;
 	case SPHERE:
 		p_mesh = par_shapes_create_parametric_sphere(slices, stacks);
+		name.assign("SPHERE");
 		break;
 	case CYLINDER:
 		p_mesh = par_shapes_create_cylinder(slices, stacks);
+		name.assign("CYLINDER");
 		break;
 	case CONE:
 		p_mesh = par_shapes_create_cone(slices, stacks);
+		name.assign("CONE");
 		break;
 	case TORUS:
 		p_mesh = par_shapes_create_torus(slices, stacks, size.x * 0.5f); // Gets the radius from the size x component
+		name.assign("TORUS");
 		break;
 	case MAX:
 		break;
@@ -320,6 +331,10 @@ ModelData* ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, ve
 	// pass data to own class
 
 	ModelData* model = new ModelData(p_mesh->points, p_mesh->triangles, p_mesh->normals, p_mesh->tcoords, p_mesh->npoints, p_mesh->ntriangles);
+
+	if (model != nullptr) model->name.assign(name.data());
+
+	par_shapes_free_mesh(p_mesh);
 
 	return model == nullptr ? nullptr : model;
 
@@ -412,4 +427,9 @@ void ModuleImporter::Load(Config& config)
 		ReComputeFacesNormals(f_n_line_length);
 	// -----------------------------------------------------------------------
 	
+}
+
+std::vector<ModelData*>& ModuleImporter::GetModels()
+{
+	return meshes;
 }

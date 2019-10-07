@@ -225,6 +225,7 @@ update_status ModuleEditor::Update(float dt)
 
 	// Render window -------------------------------------------
 
+	// TODO: MAKE A PANEL CLASS
 	ImGui::Begin("Render");
 
 
@@ -316,20 +317,41 @@ update_status ModuleEditor::Update(float dt)
 	HelpMarker("CPU Heavy load, normal end points needs to be re-computed");
 	ImGui::Separator();
 
-	
-	/*if (ImGui::Checkbox("WIREFRAME", &wireframe))
+	ImGui::End();
+
+	// TODO: MAKE A HIERARCHY PANEL
+
+	//static bool show_hierarchy = true;
+	if (ImGui::Begin("Hierarchy"))
 	{
-		if (wireframe)
+		// get all the gameObjects
+		std::vector<ModelData*> vgo = App->importer->GetModels();
+		std::vector<ModelData*>::iterator go = vgo.begin();
+
+		for (; go != vgo.end(); ++go)
 		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			ImGui::PushID((int)*go); // to correctly "link" each element without same problems with identical name when we manage buttons etc
+			
+			if (ImGui::TreeNode((*go)->name.data()))
+			{
+				ImGui::Text("blabla");
+				
+				if (ImGui::TreeNode("Renderer Options"))
+				{
+					ImGui::Text("wip");
+					ImGui::TreePop();
+				}
+				
+				ImGui::TreePop();
+			}
+			
+			ImGui::PopID();
 		}
-		else
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
-	}*/
+	}
 
 	ImGui::End();
+
+
 
 	// ----------------------------------------------------------------------------------
 

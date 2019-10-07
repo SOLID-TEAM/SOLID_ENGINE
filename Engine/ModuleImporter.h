@@ -54,6 +54,9 @@ public:
 	// Create primitives with par_shapes tool
 	ModelData* CreatePrimitive(PrimitiveType type, vec3 position = { 0,0,0 }, vec3 size = { 1,1,1 });
 
+	// TODO: implement base class gameObjects (for future components addition)
+	std::vector<ModelData*>& GetModels();
+
 private:
 	struct aiLogStream stream;
 

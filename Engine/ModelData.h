@@ -36,6 +36,8 @@ public:
 	// void Translate();
 	// void ApplyRotation();
 	// mat4x4 GetTransform();
+
+	//const char* GetName() const;
 	
 	bool Render();
 

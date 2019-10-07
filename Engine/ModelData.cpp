@@ -331,3 +331,8 @@ bool ModelData::ComputeFacesNormals(float length)
 
 	return true;
 }
+
+//const char* ModelData::GetName() const
+//{
+//	return name.data();
+//}
