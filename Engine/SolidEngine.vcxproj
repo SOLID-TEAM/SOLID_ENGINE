@@ -171,6 +171,7 @@
     <ClInclude Include="PanelConfig.h" />
     <ClInclude Include="PanelConsole.h" />
     <ClInclude Include="par_shapes.h" />
+    <ClInclude Include="PathNode.h" />
     <ClInclude Include="PCG\include\pcg_extras.hpp" />
     <ClInclude Include="PCG\include\pcg_random.hpp" />
     <ClInclude Include="PCG\include\pcg_uint128.hpp" />

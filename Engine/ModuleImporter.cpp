@@ -433,3 +433,17 @@ std::vector<ModelData*>& ModuleImporter::GetModels()
 {
 	return meshes;
 }
+
+void ModuleImporter::ImportFileFromPath(const char* path)
+{
+	std::string normalized_path = App->file_sys->NormalizePath(path);
+	std::string final_path;
+
+	// Duplicate file to the indicated internal path 
+	if (App->file_sys->DuplicateFile(normalized_path.c_str(),  "Project/Assets" , final_path))
+	{
+		// Load asset and create meta data 
+		// If is a mesh import and add to scene 
+		LoadFileMesh(normalized_path.c_str()); // Model test
+	}
+}

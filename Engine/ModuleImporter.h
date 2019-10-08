@@ -57,6 +57,8 @@ public:
 	// TODO: implement base class gameObjects (for future components addition)
 	std::vector<ModelData*>& GetModels();
 
+	void ImportFileFromPath(const char* path);
+
 private:
 	struct aiLogStream stream;
 
