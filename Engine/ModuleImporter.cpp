@@ -40,7 +40,7 @@ bool ModuleImporter::Init(Config& config)
 bool ModuleImporter::Start(Config& config)
 {
 
-	LoadFileMesh("Assets/Models/suzanne.obj");
+	LoadFileMesh("Assets/Models/suzanne.solid");
 	//LoadFileMesh("Assets/Models/warrior.FBX");
 
 	meshes.push_back(CreatePrimitive(CUBE, { 2,0,0 }, { 1,1,1 }));

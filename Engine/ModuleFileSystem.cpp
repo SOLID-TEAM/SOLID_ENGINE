@@ -11,14 +11,11 @@
 
 #pragma comment( lib, "external/PhysFS/libx86/physfs.lib" )
 
-using namespace std;
 
-ModuleFileSystem::ModuleFileSystem(const char* game_path) : Module()
 ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module()
 {
 	// needs to be created before Init so other modules can use it
 	char* base_path = SDL_GetBasePath();
-	PHYSFS_init(base_path);
 	PHYSFS_init(base_path); 
 	SDL_free(base_path);
 
