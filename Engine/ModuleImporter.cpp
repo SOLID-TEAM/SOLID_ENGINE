@@ -39,14 +39,14 @@ bool ModuleImporter::Init(Config& config)
 
 bool ModuleImporter::Start(Config& config)
 {
+	LoadFileMesh("Assets/Models/hammer_low.fbx");
+	//LoadFileMesh("Assets/Models/suzanne.solid");
+	////LoadFileMesh("Assets/Models/warrior.FBX");
 
-	LoadFileMesh("Assets/Models/suzanne.solid");
-	//LoadFileMesh("Assets/Models/warrior.FBX");
-
-	meshes.push_back(CreatePrimitive(CUBE, { 2,0,0 }, { 1,1,1 }));
-	meshes.push_back(CreatePrimitive(SPHERE, { -3,0,0 }, { 1,1,1 }));
-	meshes.push_back(CreatePrimitive(TETRAHEDRON, { 0,1,0 }, { 1,1.2f,1 }));
-	meshes.push_back(CreatePrimitive(ICOSAHEDRON, { 4.5f,0,0 }, { 1,1,1 }));
+	//meshes.push_back(CreatePrimitive(CUBE, { 2,0,0 }, { 1,1,1 }));
+	//meshes.push_back(CreatePrimitive(SPHERE, { -3,0,0 }, { 1,1,1 }));
+	//meshes.push_back(CreatePrimitive(TETRAHEDRON, { 0,1,0 }, { 1,1.2f,1 }));
+	//meshes.push_back(CreatePrimitive(ICOSAHEDRON, { 4.5f,0,0 }, { 1,1,1 }));
 
 	return true;
 }
@@ -156,8 +156,6 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 		for (uint i = 0; i < scene->mNumMeshes; ++i)
 		{
 			ModelData* m = new ModelData();
-			//m->_v_size = scene->mMeshes[i]->mNumVertices;
-
 			// TODO: divide this on separate functions
 
 			aiMesh* assMesh = scene->mMeshes[i]; // :)
@@ -165,25 +163,26 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 			m->_v_size = assMesh->mNumVertices;
 			m->vertices = new float[m->_v_size * 3];
 			// the part of i * 3 doesnt make sense, we not store more meshes in one "modelData"
-			// instead for each mesh we create other modeldata right now
-			memcpy(&m->vertices[i * 3], assMesh->mVertices, sizeof(float) * m->_v_size * 3);
+			// instead for each mesh we create other modeldata right now -> removed &m->vertices[i*3]
+			memcpy(m->vertices, assMesh->mVertices, sizeof(float) * m->_v_size * 3);
 			LOG("[Info] Created new mesh %s with %d vertices", assMesh->mName.data, m->_v_size);
-
 			// LOAD triangle faces indices
 			if (assMesh->HasFaces())
 			{
 				m->_idx_size = assMesh->mNumFaces * 3;
 				m->indices = new uint[m->_idx_size];
 
-				int t = 0;
 				for (uint i = 0; i < assMesh->mNumFaces; ++i)
 				{
 					if (assMesh->mFaces[i].mNumIndices != 3)
 					{
 						LOG("[Error] Detected face with != 3 indices");
+						// TODO: rework this, we need to research how to load models with != 3 vertex per face
+						// prevention for index accessor from computevertex and faces normals functions
+						memset(&m->indices[i * 3], 0, sizeof(uint) * 3);
 					}
 					else
-						memcpy(&m->indices[i * 3], assMesh->mFaces[i].mIndices, sizeof(uint) * 3);
+						memcpy(&m->indices[i * 3], &assMesh->mFaces[i].mIndices[0], sizeof(uint) * 3);
 				}
 
 				LOG("[Info] Containing %i indices for %i triangles", m->_idx_size, assMesh->mNumFaces);
@@ -193,18 +192,18 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 			if (assMesh->HasNormals())
 			{
 				m->normals = new float[assMesh->mNumVertices * 3];
-				memcpy(&m->normals[i * 3], assMesh->mNormals, sizeof(float) * assMesh->mNumVertices * 3);
+				memcpy(m->normals, assMesh->mNormals, sizeof(float) * assMesh->mNumVertices * 3);
 				LOG("[Info] Loaded vertex normals");
 			}
 
-
 			m->name.assign(assMesh->mName.data);
 			m->GenerateBuffers();
+			
 			m->ComputeVertexNormals(v_n_line_length); // for debug draw purposes | BEFORE UPDATE BUFFERS!! to compute debugdraw normals before we fill the buffers
 			m->ComputeFacesNormals(f_n_line_length);
-			m->UpdateBuffers();
 			
-
+			m->UpdateBuffers();
+	
 			meshes.push_back(m);
 			//startup_meshes.push_back(&m);
 		}

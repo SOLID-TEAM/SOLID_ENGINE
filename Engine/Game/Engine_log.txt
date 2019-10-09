@@ -8,19 +8,29 @@ Loading File System
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
 [Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 430.86
+[Info] Renderer: GeForce GTX 970/PCIe/SSE2
+[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-[Error] Loading scene Assets/Models/suzanne.obj
+[Info] Created new mesh handle_bottom_low with 98 vertices
+[Info] Containing 348 indices for 116 triangles
+[Info] Loaded vertex normals
+[Info] Created new mesh handle_top_low with 30 vertices
+[Info] Containing 84 indices for 28 triangles
+[Info] Loaded vertex normals
+[Info] Created new mesh base_top_low with 56 vertices
+[Info] Containing 180 indices for 60 triangles
+[Info] Loaded vertex normals
+[Info] Created new mesh base_low with 194 vertices
+[Info] Containing 348 indices for 116 triangles
+[Info] Loaded vertex normals
+[Info] Created new mesh handle_base_low with 30 vertices
+[Info] Containing 84 indices for 28 triangles
+[Info] Loaded vertex normals
 [Start] Loading Editor
 -------------- Application Update --------------
-[success] File Duplicated Correctly
-[Info] Created new mesh RPG-Character-Mesh with 3768 vertices
-[Info] Containing 3768 indices for 1256 triangles
-[Info] Loaded vertex normals
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

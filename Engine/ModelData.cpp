@@ -315,8 +315,8 @@ bool ModelData::ComputeFacesNormals(float length)
 
 		float avg_n[3];
 		avg_n[0] = (n1[0] + n2[0] + n3[0]) / 3.0f; // x coord
-		avg_n[1] = (n1[1] + n2[1] + n3[1]) / 3.0f; // x coord
-		avg_n[2] = (n1[2] + n2[2] + n3[2]) / 3.0f; // x coord
+		avg_n[1] = (n1[1] + n2[1] + n3[1]) / 3.0f; // y coord
+		avg_n[2] = (n1[2] + n2[2] + n3[2]) / 3.0f; // z coord
 
 		debug_f_normals[n_count]     = debug_f_vertices[i]; // x
 		debug_f_normals[n_count + 1] = debug_f_vertices[i + 1]; // y
