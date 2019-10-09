@@ -40,14 +40,16 @@ bool ModuleImporter::Init(Config& config)
 
 bool ModuleImporter::Start(Config& config)
 {
+	LoadFileMesh("Assets/Models/BakerHouse.fbx");
 	//LoadFileMesh("Assets/Models/hammer_low.fbx");
-	LoadFileMesh("Assets/Models/suzanne.solid");
+	//LoadFileMesh("Assets/Models/suzanne.solid");
 	////LoadFileMesh("Assets/Models/warrior.FBX");
 
-	meshes.push_back(CreatePrimitive(CUBE, { 2,0,0 }, { 1,1,1 }));
+
+	/*meshes.push_back(CreatePrimitive(CUBE, { 2,0,0 }, { 1,1,1 }));
 	meshes.push_back(CreatePrimitive(SPHERE, { -3,0,0 }, { 1,1,1 }));
 	meshes.push_back(CreatePrimitive(TETRAHEDRON, { 0,1,0 }, { 1,1.2f,1 }));
-	meshes.push_back(CreatePrimitive(ICOSAHEDRON, { 4.5f,0,0 }, { 1,1,1 }));
+	meshes.push_back(CreatePrimitive(ICOSAHEDRON, { 4.5f,0,0 }, { 1,1,1 }));*/
 
 	return true;
 }

@@ -19,18 +19,18 @@
     "ModuleImporter": {
         "wireframe_mode": true,
         "fill_mode": true,
-        "debug_vertex_normals": true,
-        "debug_face_normals": true,
+        "debug_vertex_normals": false,
+        "debug_face_normals": false,
         "fill_color": [
             1,
-            0.34999999403953552,
+            0.99998998641967773,
             1,
             1
         ],
         "wire_color": [
-            1,
-            1,
-            1,
+            9.9999999747524271e-07,
+            8.774509865361324e-07,
+            8.774509865361324e-07,
             1
         ],
         "d_vertex_color": [
@@ -83,5 +83,6 @@
         "show_configuration": false,
         "show_console": false
     },
-    "Renderer3D": {}
+    "Renderer3D": {},
+    "Textures": {}
 }

@@ -1,5 +1,9 @@
 #include "ModelData.h"
 #include "GL/glew.h"
+// TODO: for testing lenna wip
+#include "Application.h"
+#include "ModuleTextures.h"
+
 
 ModelData::ModelData() {}
 
@@ -49,8 +53,8 @@ bool ModelData::GenerateBuffers()
 
 	// TODO: move to moduletextures
 	// texture buffer
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &texture_gl_id);
+	/*glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &texture_gl_id);*/
 
 	return ret;
 }
@@ -68,8 +72,11 @@ bool ModelData::UpdateBuffers()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * _v_size, &normals[0], GL_STATIC_DRAW);
 
 	// uv's
-	glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * _v_size, &uvs[0], GL_STATIC_DRAW);
+	if (uvs != nullptr)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * _v_size, &uvs[0], GL_STATIC_DRAW);
+	}
 
 	// elements index
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_gl_id);
@@ -88,7 +95,7 @@ bool ModelData::UpdateBuffers()
 
 	// TESTING: checker texture needs to be moved to new moduletextures
 	// Bind and set parameters for TEXTURE_2D
-	if (uvs != nullptr)
+	/*if (uvs != nullptr)
 	{
 		glBindTexture(GL_TEXTURE_2D, texture_gl_id);
 
@@ -112,7 +119,7 @@ bool ModelData::UpdateBuffers()
 		}
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
-	}
+	}*/
 	// ---------------------------------------------------------------------------------------------------------
 
 	/*glBindBuffer(GL_ARRAY_BUFFER, normals_gl_id);
@@ -170,7 +177,7 @@ bool ModelData::Render()
 	// uvs / texture
 	if (uvs != nullptr)
 	{
-		glBindTexture(GL_TEXTURE_2D, texture_gl_id);
+		glBindTexture(GL_TEXTURE_2D, App->textures->image_test);
 
 		// uv coords
 		glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
