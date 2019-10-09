@@ -4,6 +4,9 @@
 #include "Module.h"
 #include "Globals.h"
 
+#define CHECKERS_HEIGHT  64;
+#define CHECKERS_WIDTH  64;
+
 class ModuleTest : public Module
 {
 public:
@@ -13,13 +16,13 @@ public:
 	bool Start(Config& config);
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
+	float** CreateCubeVertices(int vertex_num, float cube_dist);
+	void DrawCube(float** v);
+	void CubeFace(float* v0, float* v1, float* v2, float* v3);
 	bool CleanUp();
 
-	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
+	float** v;
 
-	/*S_Cube* cube = nullptr;
-	S_Plane* plane = nullptr;
-	S_Sphere* sphere = nullptr;*/
 };
 
 #endif // !__MODULETEST_H__

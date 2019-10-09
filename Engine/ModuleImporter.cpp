@@ -39,7 +39,7 @@ bool ModuleImporter::Init(Config& config)
 
 bool ModuleImporter::Start(Config& config)
 {
-	LoadFileMesh("Assets/Models/hammer_low.fbx");
+	//LoadFileMesh("Assets/Models/hammer_low.fbx");
 	//LoadFileMesh("Assets/Models/suzanne.solid");
 	////LoadFileMesh("Assets/Models/warrior.FBX");
 

@@ -8,27 +8,12 @@ Loading File System
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
 [Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 970/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
-[Info] GLSL: 4.60 NVIDIA
+[Info] Renderer: Quadro FX 370/PCIe/SSE2
+[Info] OpenGL version supported: 3.3.0
+[Info] GLSL: 3.30 NVIDIA via Cg compiler
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-[Info] Created new mesh handle_bottom_low with 98 vertices
-[Info] Containing 348 indices for 116 triangles
-[Info] Loaded vertex normals
-[Info] Created new mesh handle_top_low with 30 vertices
-[Info] Containing 84 indices for 28 triangles
-[Info] Loaded vertex normals
-[Info] Created new mesh base_top_low with 56 vertices
-[Info] Containing 180 indices for 60 triangles
-[Info] Loaded vertex normals
-[Info] Created new mesh base_low with 194 vertices
-[Info] Containing 348 indices for 116 triangles
-[Info] Loaded vertex normals
-[Info] Created new mesh handle_base_low with 30 vertices
-[Info] Containing 84 indices for 28 triangles
-[Info] Loaded vertex normals
 [Start] Loading Editor
 -------------- Application Update --------------
 -------------- Application CleanUp --------------

@@ -22,8 +22,6 @@
 #include <random>
 
 
-
-
 int GetIntRandomValue(int range_i1, int range_i2)
 {
 	// Seed with a real random value, if available
@@ -98,11 +96,9 @@ bool ModuleTest::Start(Config& config)
 	//GetIntRandomValue(1.f, 4.f);
 	//GetFloatRandomValue(1.f, 10.f);
 	//GetRandomPercent();
+	glEnable(GL_TEXTURE_2D);
 
-	//cube = new S_Cube(1, 0, 0);
-	////cube->Scale(2, 1, 1);
-	//plane = new S_Plane(4, 0, 0);
-	//sphere = new S_Sphere(-2, 0, 0, 4);
+	v = CreateCubeVertices(8, 1.f);
 
 	return ret;
 }
@@ -141,34 +137,117 @@ update_status ModuleTest::PostUpdate(float dt)
 
 	glEnd();
 
-	// TODO: same of the "TODO NEXT" on ModuleImporter
+	GLubyte checkImage[64][64][4];
 
-	/*glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glEnable(GL_POLYGON_OFFSET_FILL);
-	glPolygonOffset(1.0f, 0.375f);
+	for (int i = 0; i < 64; i++) {
+		for (int j = 0; j < 64; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkImage[i][j][0] = (GLubyte)c;
+			checkImage[i][j][1] = (GLubyte)c;
+			checkImage[i][j][2] = (GLubyte)c;
+			checkImage[i][j][3] = (GLubyte)255;
+		}
+	}
 
-	glColor3f(1.0f, 0.0f, 1.0f);
+	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	//glGenTextures(1, &ImageName);
+	//glBindTexture(GL_TEXTURE_2D, ImageName);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
+	//	0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
 
-	cube->Render();
-	plane->Render();
-	sphere->Render();
-
-	glDisable(GL_POLYGON_OFFSET_FILL);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	glColor3f(1.0f, 1.0f, 1.0f);
-
-	cube->Render();
-	plane->Render();
-	sphere->Render();*/
-
-	/*cube->Render();*/
+	DrawCube(v);
 
 	return UPDATE_CONTINUE;
 }
 
-void ModuleTest::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
+float** ModuleTest::CreateCubeVertices(int vertex_num, float cube_dist)
 {
+	float** v = new float* [vertex_num];;
+
+	for (int i = 0; i < vertex_num; ++i)
+	{
+		v[i] = new float[3];
+	}
+
+	//v0
+	v[0][0] = 0.f;
+	v[0][1] = 0.f;
+	v[0][2] = 0.f;
+
+	//v1
+	v[1][0] = 0.f;
+	v[1][1] = 0.f;
+	v[1][2] = cube_dist;
+
+	//v2
+	v[2][0] = cube_dist;
+	v[2][1] = 0.f;
+	v[2][2] = 0.f;
+
+	//v3
+	v[3][0] = cube_dist;
+	v[3][1] = 0.f;
+	v[3][2] = cube_dist;
+
+	//v4
+	v[4][0] = 0.f;
+	v[4][1] = cube_dist;
+	v[4][2] = 0.f;
+
+	//v5
+	v[5][0] = 0.f;
+	v[5][1] = cube_dist;
+	v[5][2] = cube_dist;
+
+	//v6
+	v[6][0] = cube_dist;
+	v[6][1] = cube_dist;
+	v[6][2] = 0.f;
+
+	//v7
+	v[7][0] = cube_dist;
+	v[7][1] = cube_dist;
+	v[7][2] = cube_dist;
+
+	return v;
+}
+
+//Draw a cube and name each vertex with the number
+//Place the vertices of each face of the cube in counterclock direction
+void ModuleTest::DrawCube(float** v)
+{
+	CubeFace(v[2], v[3], v[1], v[0]);
+	CubeFace(v[0], v[1], v[5], v[4]);
+	CubeFace(v[2], v[0], v[4], v[6]);
+	CubeFace(v[3], v[2], v[6], v[7]);
+	CubeFace(v[1], v[3], v[7], v[5]);
+	CubeFace(v[4], v[5], v[7], v[6]);
+}
+
+
+//Square direction
+//   3 - 2
+//   | / |
+//   0 - 1 
+void ModuleTest::CubeFace(float* v0, float* v1, float* v2, float* v3)
+{
+	//tri 0
+	glBegin(GL_TRIANGLES);
+	glVertex3fv(v0);
+	glVertex3fv(v1);
+	glVertex3fv(v2);
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	//tri 1
+	glVertex3fv(v2);
+	glVertex3fv(v3);
+	glVertex3fv(v0);
+	glEnd();
 
 }
 
