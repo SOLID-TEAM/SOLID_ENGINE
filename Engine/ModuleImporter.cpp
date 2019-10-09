@@ -40,14 +40,14 @@ bool ModuleImporter::Init(Config& config)
 
 bool ModuleImporter::Start(Config& config)
 {
-	LoadFileMesh("Assets/Models/hammer_low.fbx");
-	//LoadFileMesh("Assets/Models/suzanne.solid");
+	//LoadFileMesh("Assets/Models/hammer_low.fbx");
+	LoadFileMesh("Assets/Models/suzanne.solid");
 	////LoadFileMesh("Assets/Models/warrior.FBX");
 
-	//meshes.push_back(CreatePrimitive(CUBE, { 2,0,0 }, { 1,1,1 }));
-	//meshes.push_back(CreatePrimitive(SPHERE, { -3,0,0 }, { 1,1,1 }));
-	//meshes.push_back(CreatePrimitive(TETRAHEDRON, { 0,1,0 }, { 1,1.2f,1 }));
-	//meshes.push_back(CreatePrimitive(ICOSAHEDRON, { 4.5f,0,0 }, { 1,1,1 }));
+	meshes.push_back(CreatePrimitive(CUBE, { 2,0,0 }, { 1,1,1 }));
+	meshes.push_back(CreatePrimitive(SPHERE, { -3,0,0 }, { 1,1,1 }));
+	meshes.push_back(CreatePrimitive(TETRAHEDRON, { 0,1,0 }, { 1,1.2f,1 }));
+	meshes.push_back(CreatePrimitive(ICOSAHEDRON, { 4.5f,0,0 }, { 1,1,1 }));
 
 	return true;
 }
@@ -158,9 +158,11 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 		{
 			ModelData* m = new ModelData();
 			// TODO: divide this on separate functions
+			// AND: improve to load all needed data only in one array for vertex,normals,uvs, and another for indices
+			// to later use stride before filled the buffers
 
 			aiMesh* assMesh = scene->mMeshes[i]; // :)
-			
+
 			m->_v_size = assMesh->mNumVertices;
 			m->vertices = new float[m->_v_size * 3];
 			// the part of i * 3 doesnt make sense, we not store more meshes in one "modelData"
@@ -194,7 +196,35 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 			{
 				m->normals = new float[assMesh->mNumVertices * 3];
 				memcpy(m->normals, assMesh->mNormals, sizeof(float) * assMesh->mNumVertices * 3);
-				LOG("[Info] Loaded vertex normals");
+				LOG("[Info] Loaded vertex normals for %i vertices", assMesh->mNumVertices);
+			}
+
+			// LOAD uv coords
+			uint num_uv_channels = assMesh->GetNumUVChannels();
+			if (num_uv_channels > 0)
+			{
+				m->uvs = new float[num_uv_channels * m->_v_size * 2]; // only supports 2 uv for now
+				//uint num_uv_components = 0;
+				for (uint i = 0; i < num_uv_channels; ++i)
+				{
+					// for meshes containing more than 1 uv/w channel for vertex 
+					if (assMesh->HasTextureCoords(i))
+					{
+						if (assMesh->mNumUVComponents[i] != 2) // U, UV, UVW of each channel
+						{
+							LOG("[Error] Currently only supports 2 components for each UV channel")
+							memset(&m->uvs[(i * assMesh->mNumUVComponents[i] * m->_v_size) + m->_v_size * 2], 0, sizeof(float) * 2);
+						}
+						else
+						{
+							for (int j = 0; j < m->_v_size; ++j)
+							{
+								memcpy(&m->uvs[(i * assMesh->mNumUVComponents[i] * m->_v_size) + j * 2], &assMesh->mTextureCoords[i][j], sizeof(float) * 2);
+							}
+						}
+						LOG("[Info] Loaded texture coords for Channel %i", i);
+					}
+				}
 			}
 
 			m->name.assign(assMesh->mName.data);

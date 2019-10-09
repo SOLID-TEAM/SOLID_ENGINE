@@ -8,12 +8,17 @@ ModelData::ModelData(float* vertices, uint* indices, float* normals, float* uvs,
 	this->vertices = new float[nVertices * 3];
 	this->indices = new uint[nIndices * 3];
 	this->normals = new float[nVertices * 3];
-	//this->uvs = new float[nVertices * 2];
+	
 
 	memcpy(this->vertices, vertices, sizeof(float) * nVertices * 3);
 	memcpy(this->indices, indices, sizeof(uint) * nIndices * 3);
 	memcpy(this->normals, normals, sizeof(float) * nVertices * 3);
-	//memcpy(this->uvs, uvs, sizeof(float) * nVertices * 2);
+	if(uvs != nullptr)
+	{
+		this->uvs = new float[nVertices * 2];
+		memcpy(this->uvs, uvs, sizeof(float) * nVertices * 2);
+	}
+		
 
 	_v_size = nVertices;
 	_idx_size = nIndices * 3;
@@ -34,11 +39,18 @@ bool ModelData::GenerateBuffers()
 	glGenBuffers(1, &indices_gl_id);
 	glGenBuffers(1, &uv_gl_id);
 	glGenBuffers(1, &normals_gl_id);
+	if(uvs != nullptr)
+		glGenBuffers(1, &uv_gl_id);
 	// debug draw vertices normals (vertices already stored and ready to be used for this in normal way)
 	glGenBuffers(1, &debug_v_normals_gl_id);
 	// debug draw faces normals buffers
 	glGenBuffers(1, &debug_f_vertices_gl_id);
 	glGenBuffers(1, &debug_f_normals_gl_id);
+
+	// TODO: move to moduletextures
+	// texture buffer
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &texture_gl_id);
 
 	return ret;
 }
@@ -55,6 +67,10 @@ bool ModelData::UpdateBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, normals_gl_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * _v_size, &normals[0], GL_STATIC_DRAW);
 
+	// uv's
+	glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * _v_size, &uvs[0], GL_STATIC_DRAW);
+
 	// elements index
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_gl_id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * _idx_size, &indices[0], GL_STATIC_DRAW);
@@ -69,9 +85,34 @@ bool ModelData::UpdateBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, debug_f_normals_gl_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _idx_size * 2, &debug_f_normals[0], GL_STATIC_DRAW);
 
-	
 
+	// TESTING: checker texture needs to be moved to new moduletextures
+	// Bind and set parameters for TEXTURE_2D
+	if (uvs != nullptr)
+	{
+		glBindTexture(GL_TEXTURE_2D, texture_gl_id);
 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+		GLubyte checkImage[128][128][4];
+
+		for (int i = 0; i < 128; i++)
+		{
+			for (int j = 0; j < 128; j++)
+			{
+				int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+				checkImage[i][j][0] = (GLubyte)c;
+				checkImage[i][j][1] = (GLubyte)c;
+				checkImage[i][j][2] = (GLubyte)c;
+				checkImage[i][j][3] = (GLubyte)255;
+			}
+		}
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+	}
 	// ---------------------------------------------------------------------------------------------------------
 
 	/*glBindBuffer(GL_ARRAY_BUFFER, normals_gl_id);
@@ -117,20 +158,25 @@ bool ModelData::Render()
 	
 	// enable client side individual capabilities
 	glEnableClientState(GL_VERTEX_ARRAY);
-	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 
 	//glClientActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, texture_gl_id);
 	//glEnableClientState(GL_COLOR_ARRAY); to colorize each vertex with an array of colors
 
 	// vertices
 	glBindBuffer(GL_ARRAY_BUFFER, vertices_gl_id);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
-	// uv coords
-	//glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
-	//glTexCoordPointer(2, GL_FLOAT, 0, (void*)0);
-	//// normals
+	// uvs / texture
+	if (uvs != nullptr)
+	{
+		glBindTexture(GL_TEXTURE_2D, texture_gl_id);
+
+		// uv coords
+		glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
+		glTexCoordPointer(2, GL_FLOAT, 0, (void*)0);
+	}
+	// normals
 	glBindBuffer(GL_ARRAY_BUFFER, normals_gl_id);
 	glNormalPointer(GL_FLOAT, 0, (void*)0);
 	// each vertex colors // "without shaders"
@@ -142,8 +188,12 @@ bool ModelData::Render()
 	glDrawElements(GL_TRIANGLES, _idx_size, GL_UNSIGNED_INT, (void*)0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
+	
+	// unbind texture
+	glBindTexture(GL_TEXTURE_2D, 0);
+	//glDisableClientState(GL_TEXTURE0);
 	//glDisableClientState(GL_COLOR_ARRAY);
 
 	return ret;

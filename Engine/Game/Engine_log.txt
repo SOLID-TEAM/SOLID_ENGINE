@@ -14,21 +14,10 @@ Loading File System
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-[Info] Created new mesh handle_bottom_low with 98 vertices
-[Info] Containing 348 indices for 116 triangles
-[Info] Loaded vertex normals
-[Info] Created new mesh handle_top_low with 30 vertices
-[Info] Containing 84 indices for 28 triangles
-[Info] Loaded vertex normals
-[Info] Created new mesh base_top_low with 56 vertices
-[Info] Containing 180 indices for 60 triangles
-[Info] Loaded vertex normals
-[Info] Created new mesh base_low with 194 vertices
-[Info] Containing 348 indices for 116 triangles
-[Info] Loaded vertex normals
-[Info] Created new mesh handle_base_low with 30 vertices
-[Info] Containing 84 indices for 28 triangles
-[Info] Loaded vertex normals
+[Info] Created new mesh defaultobject with 723 vertices
+[Info] Containing 2904 indices for 968 triangles
+[Info] Loaded vertex normals for 723 vertices
+[Info] Loaded texture coords for Channel 0
 [Start] Loading Editor
 -------------- Application Update --------------
 -------------- Application CleanUp --------------

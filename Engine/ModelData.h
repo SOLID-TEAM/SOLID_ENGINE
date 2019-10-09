@@ -1,9 +1,12 @@
-#pragma once
+#ifndef __MODELDATA_H__
+#define __MODELDATA_H__
 
 #include "Globals.h"
 #include "glmath.h"
 #include <vector>
 #include <string>
+
+typedef unsigned char GLubyte;
 
 class ModelData
 {
@@ -38,7 +41,7 @@ public:
 	// mat4x4 GetTransform();
 
 	//const char* GetName() const;
-	
+
 	bool Render();
 
 	bool CleanUp();
@@ -76,7 +79,7 @@ public:
 	uint debug_f_vertices_gl_id = -1;
 	uint debug_f_normals_gl_id = -1;
 	// ---------------------------------------------------------------
-	//uint texture_gl_id = -1;
+	uint texture_gl_id = -1;
 	//
 	float color[3] = { 1.0f,0.0f,1.0f };
 	// --------------------------
@@ -89,7 +92,6 @@ public:
 	bool debug_vertex_normals = true;
 	bool debug_faces_normals = false;
 
-
 private:
 	// containers
 	/*std::vector<uint*> c_gl_buffers;
@@ -98,3 +100,5 @@ private:
 	std::vector<uint*> c_normals;*/
 	
 };
+
+#endif // !__MODELDATA_H__
