@@ -60,8 +60,6 @@ public:
 	void ImportFileFromPath(const char* path);
 
 private:
-	struct aiLogStream stream;
-
 	// TODO: for testing here, but we need to search a better place, maybe new module coming
 	std::vector<ModelData*> meshes;
 	//std::vector<ModelData*> startup_meshes;

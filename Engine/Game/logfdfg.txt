@@ -1,0 +1,10 @@
+Info,  T22944: Load C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/BakerHouse.fbx
+Info,  T22944: Found a matching importer for this file format: Autodesk FBX Importer.
+Info,  T22944: Import root directory is 'C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models\'
+Warn,  T22944: Validation warning: A specular shading model is specified but the value of the AI_MATKEY_SHININESS_STRENGTH key is 0.0
+Info,  T22944: Entering post processing pipeline
+Info,  T22944: Points: 0, Lines: 0, Triangles: 2, Polygons: 0 (Meshes, X = removed)
+Info,  T22944: CalcTangentsProcess finished. Tangents have been calculated
+Info,  T22944: JoinVerticesProcess finished | Verts in: 3075 out: 1801 | ~41.4309
+Info,  T22944: Cache relevant are 2 meshes (1025 faces). Average output ACMR is 1.75707
+Info,  T22944: Leaving post processing pipeline

@@ -47,9 +47,15 @@ bool ModelData::UpdateBuffers()
 {
 	bool ret = true;
 
+	// vertex
 	glBindBuffer(GL_ARRAY_BUFFER, vertices_gl_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * _v_size, &vertices[0], GL_STATIC_DRAW);
 
+	// normals
+	glBindBuffer(GL_ARRAY_BUFFER, normals_gl_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * _v_size, &normals[0], GL_STATIC_DRAW);
+
+	// elements index
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_gl_id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * _idx_size, &indices[0], GL_STATIC_DRAW);
 
@@ -63,6 +69,7 @@ bool ModelData::UpdateBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, debug_f_normals_gl_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _idx_size * 2, &debug_f_normals[0], GL_STATIC_DRAW);
 
+	
 
 
 	// ---------------------------------------------------------------------------------------------------------
@@ -110,8 +117,8 @@ bool ModelData::Render()
 	
 	// enable client side individual capabilities
 	glEnableClientState(GL_VERTEX_ARRAY);
-	/*glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);*/
+	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
 
 	//glClientActiveTexture(GL_TEXTURE0);
 	//glBindTexture(GL_TEXTURE_2D, texture_gl_id);
@@ -124,8 +131,8 @@ bool ModelData::Render()
 	//glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
 	//glTexCoordPointer(2, GL_FLOAT, 0, (void*)0);
 	//// normals
-	//glBindBuffer(GL_ARRAY_BUFFER, normals_gl_id);
-	//glNormalPointer(GL_FLOAT, 0, (void*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, normals_gl_id);
+	glNormalPointer(GL_FLOAT, 0, (void*)0);
 	// each vertex colors // "without shaders"
 	//glBindBuffer(GL_ARRAY_BUFFER, colors_gl_id);
 	//glColorPointer(3, GL_FLOAT, 0, (void*)0);
@@ -135,7 +142,7 @@ bool ModelData::Render()
 	glDrawElements(GL_TRIANGLES, _idx_size, GL_UNSIGNED_INT, (void*)0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	//glDisableClientState(GL_COLOR_ARRAY);
 
