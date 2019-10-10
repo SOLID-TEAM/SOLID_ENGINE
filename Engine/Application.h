@@ -14,6 +14,7 @@
 #include "ModuleImporter.h"
 #include "ModuleEditor.h"
 #include "ModuleFileSystem.h"
+#include "ModuleTextures.h"
 
 #include "PanelConfig.h"
 #include "PanelConsole.h"
@@ -56,6 +57,7 @@ public:
 	ModuleRenderer3D* renderer3D = nullptr;
 	ModuleCamera3D* camera = nullptr;
 	
+	ModuleTextures* textures = nullptr;
 	ModuleImporter* importer = nullptr;
 	ModuleEditor* editor = nullptr;
 	ModuleFileSystem* file_sys = nullptr;

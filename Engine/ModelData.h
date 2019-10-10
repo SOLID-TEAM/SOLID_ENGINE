@@ -1,9 +1,12 @@
-#pragma once
+#ifndef __MODELDATA_H__
+#define __MODELDATA_H__
 
 #include "Globals.h"
 #include "glmath.h"
 #include <vector>
 #include <string>
+
+typedef unsigned char GLubyte;
 
 class ModelData
 {
@@ -38,7 +41,7 @@ public:
 	// mat4x4 GetTransform();
 
 	//const char* GetName() const;
-	
+
 	bool Render();
 
 	bool CleanUp();
@@ -48,9 +51,9 @@ public:
 	std::string name;
 	bool to_delete = false;
 	// model data ---------------
-	uint _v_size = -1; // vertex
-	uint _idx_size = -1; // indices
-	uint _uv_size = -1; // texture coords
+	uint _v_size = 0; // vertex
+	uint _idx_size = 0; // indices
+	uint _uv_size = 0; // texture coords
 	//uint _n_size = -1; // normals || not needed, assume each vertes has its normal
 	//uint _f_size = -1; // triangulated faces
 	float* vertices = nullptr;
@@ -64,19 +67,19 @@ public:
 	float* debug_f_normals = nullptr; // and 3 startpoint and 3 endpoint of each face
 	// --------------------------
 	// gl buffer ----------------
-	uint vertices_gl_id = -1;
-	uint indices_gl_id = -1;
+	uint vertices_gl_id = 0;
+	uint indices_gl_id = 0;
 	
-	uint uv_gl_id = -1;
-	uint normals_gl_id = -1;
+	uint uv_gl_id = 0;
+	uint normals_gl_id = 0;
 	// DEBUG DRAW PURPOSES BUFFERS ids -------------------------------
-	uint debug_v_normals_gl_id = -1;
+	uint debug_v_normals_gl_id = 0;
 	// for debug draw faces points and line normals
 	// TODO: implement this with stride in one float array (debug_f_vertices and debug_f_normals float arrays)
-	uint debug_f_vertices_gl_id = -1;
-	uint debug_f_normals_gl_id = -1;
+	uint debug_f_vertices_gl_id = 0;
+	uint debug_f_normals_gl_id = 0;
 	// ---------------------------------------------------------------
-	//uint texture_gl_id = -1;
+	uint texture_gl_id = -1;
 	//
 	float color[3] = { 1.0f,0.0f,1.0f };
 	// --------------------------
@@ -89,7 +92,6 @@ public:
 	bool debug_vertex_normals = true;
 	bool debug_faces_normals = false;
 
-
 private:
 	// containers
 	/*std::vector<uint*> c_gl_buffers;
@@ -98,3 +100,5 @@ private:
 	std::vector<uint*> c_normals;*/
 	
 };
+
+#endif // !__MODELDATA_H__

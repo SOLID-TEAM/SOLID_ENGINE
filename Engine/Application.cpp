@@ -17,6 +17,7 @@ Application::Application()
 	importer = new ModuleImporter();
 	editor = new ModuleEditor();
 	file_sys = new ModuleFileSystem();
+	textures = new ModuleTextures();
 
 	// Main Modules
 	AddModule(window);
@@ -28,6 +29,7 @@ Application::Application()
 
 	// Renderer last!
 	AddModule(file_sys);
+	AddModule(textures);
 	AddModule(importer);
 	AddModule(editor);
 	AddModule(renderer3D);
