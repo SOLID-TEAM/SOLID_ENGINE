@@ -372,6 +372,7 @@ update_status ModuleEditor::Update(float dt)
 
 	if (ImGui::CollapsingHeader("OpenGL Test"))
 	{
+
 		ImGui::AlignTextToFramePadding();
 
 		ImGui::Text("   Color Material");

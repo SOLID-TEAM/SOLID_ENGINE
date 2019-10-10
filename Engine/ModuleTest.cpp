@@ -4,8 +4,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleTest.h"
-//#include "Primitive.h"
-
 // MathGeoLib ---------------------------------------------
 #include "external/MathGeoLib/include/MathBuildConfig.h"
 #include "external/MathGeoLib/include/MathGeoLib.h"
@@ -15,67 +13,8 @@
 #else
 #pragma comment (lib, "external/MathGeoLib/libx86/_Release/MathGeoLib.lib") 
 #endif
-// --------------------------------------------------------
-// Random Number Generator Test ---------------------------
-#include "PCG/include/pcg_random.hpp"
 #include "GL/glew.h"
-#include <random>
 
-
-
-
-int GetIntRandomValue(int range_i1, int range_i2)
-{
-	// Seed with a real random value, if available
-	pcg_extras::seed_seq_from<std::random_device> seed_source;
-
-	// Make a random number engine
-	pcg32 rng(seed_source);
-
-	// Choose a random mean 
-	std::uniform_int_distribution<int> uniform_dist1(range_i1, range_i2);
-	int mean = uniform_dist1(rng);
-	LOG("Random number generated: %i", mean);
-
-	return mean;
-}
-
-float GetFloatRandomValue(float range_f1, float range_f2)
-{
-
-	// Seed with a real random value, if available
-	pcg_extras::seed_seq_from<std::random_device> seed_source;
-
-	// Make a random number engine
-	pcg32 rng(seed_source);
-
-	//Choose a random mean 
-	std::uniform_real_distribution<float> uniform_dist(range_f1, range_f2);
-	float mean = uniform_dist(rng);
-
-	LOG("Random number generated: %f", mean);
-
-	return mean;
-}
-
-// Return a value between 0 and 1
-
-float GetRandomPercent()
-{
-	// Seed with a real random value, if available
-	pcg_extras::seed_seq_from<std::random_device> seed_source;
-
-	// Make a random number engine
-	pcg32 rng(seed_source);
-
-	//Choose a random mean 
-	std::uniform_real_distribution<float> uniform_dist(0, 1);
-	float mean = uniform_dist(rng);
-
-	LOG("Random number generated: %f", mean);
-
-	return mean;
-}
 
 
 

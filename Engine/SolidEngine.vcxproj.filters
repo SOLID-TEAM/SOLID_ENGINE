@@ -334,6 +334,9 @@
     <ClInclude Include="ModuleTextures.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -488,9 +491,6 @@
     </ClCompile>
     <ClCompile Include="external\MathGeoLib\include\Time\Clock.cpp">
       <Filter>Sources\3rd Party\MathGeoLib\src</Filter>
-    </ClCompile>
-    <ClCompile Include="random.cpp">
-      <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="ModuleTest.cpp">
       <Filter>Sources\Modules</Filter>

@@ -177,6 +177,7 @@
     <ClInclude Include="PCG\include\pcg_random.hpp" />
     <ClInclude Include="PCG\include\pcg_uint128.hpp" />
     <ClInclude Include="Primitive.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -240,7 +241,6 @@
     <ClCompile Include="PanelConfig.cpp" />
     <ClCompile Include="PanelConsole.cpp" />
     <ClCompile Include="Primitive.cpp" />
-    <ClCompile Include="random.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

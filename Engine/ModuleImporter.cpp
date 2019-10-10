@@ -9,6 +9,7 @@
 
 #include "external/Assimp/include/version.h"
 
+#include"Random.h"
 
 ModuleImporter::ModuleImporter(bool start_enabled) : Module(start_enabled) 
 {
@@ -50,6 +51,8 @@ bool ModuleImporter::Start(Config& config)
 	meshes.push_back(CreatePrimitive(SPHERE, { -3,0,0 }, { 1,1,1 }));
 	meshes.push_back(CreatePrimitive(TETRAHEDRON, { 0,1,0 }, { 1,1.2f,1 }));
 	meshes.push_back(CreatePrimitive(ICOSAHEDRON, { 4.5f,0,0 }, { 1,1,1 }));*/
+
+	Random::GetRandomPercent();
 
 	return true;
 }

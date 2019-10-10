@@ -26,27 +26,6 @@ Image Assets/Textures/lenna.png correctly loaded into DevIL
 [Info] Loaded texture coords for Channel 0
 [Start] Loading Editor
 -------------- Application Update --------------
-[success] File Duplicated Correctly
-[Info] Created new mesh handle_bottom_low with 98 vertices
-[Info] Containing 348 indices for 116 triangles
-[Info] Loaded vertex normals for 98 vertices
-[Info] Loaded texture coords for Channel 0
-[Info] Created new mesh handle_top_low with 30 vertices
-[Info] Containing 84 indices for 28 triangles
-[Info] Loaded vertex normals for 30 vertices
-[Info] Loaded texture coords for Channel 0
-[Info] Created new mesh base_top_low with 56 vertices
-[Info] Containing 180 indices for 60 triangles
-[Info] Loaded vertex normals for 56 vertices
-[Info] Loaded texture coords for Channel 0
-[Info] Created new mesh base_low with 194 vertices
-[Info] Containing 348 indices for 116 triangles
-[Info] Loaded vertex normals for 194 vertices
-[Info] Loaded texture coords for Channel 0
-[Info] Created new mesh handle_base_low with 30 vertices
-[Info] Containing 84 indices for 28 triangles
-[Info] Loaded vertex normals for 30 vertices
-[Info] Loaded texture coords for Channel 0
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor
