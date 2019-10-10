@@ -17,6 +17,7 @@ ModelData::ModelData(float* vertices, uint* indices, float* normals, float* uvs,
 	memcpy(this->vertices, vertices, sizeof(float) * nVertices * 3);
 	memcpy(this->indices, indices, sizeof(uint) * nIndices * 3);
 	memcpy(this->normals, normals, sizeof(float) * nVertices * 3);
+
 	if(uvs != nullptr)
 	{
 		this->uvs = new float[nVertices * 2];

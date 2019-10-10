@@ -1,0 +1,38 @@
+
+-------------- Application Init --------------
+[Init] Loaded configuration file editor_config.json
+[Init] SDL window & surface
+[Init] SDL input event system
+Loading File System
+[Info] Using Developer's Image Library (DevIL) 1.8.0
+[Info] Using Assimp v4.1.0
+[Init] Creating 3D Renderer context
+[Init] Using Glew 2.1.0
+[Info] Vendor: Intel
+[Info] Renderer: Intel(R) UHD Graphics 620
+[Info] OpenGL version supported: 3.3.0 - Build 25.20.100.6374
+[Info] GLSL: 3.30 - Build 25.20.100.6374
+-------------- Application Start --------------
+[Start] Setting up the camera
+Loading Test assets
+[Info] Created new mesh Untitled.001 with 160 vertices
+[Info] Containing 324 indices for 108 triangles
+[Info] Loaded vertex normals for 160 vertices
+[Info] Loaded texture coords for Channel 0
+[Info] Image Assets/Textures/Baker_house.png correctly loaded into DevIL
+[Info] Image correctly uploaded to gl buffer
+[Info] Created new mesh Untitled with 1641 vertices
+[Info] Containing 2751 indices for 917 triangles
+[Info] Loaded vertex normals for 1641 vertices
+[Info] Loaded texture coords for Channel 0
+[Info] Texture with same name Baker_house.png already loaded into buffers
+[Start] Loading Editor
+-------------- Application Update --------------
+-------------- Application CleanUp --------------
+[CleanUp] Destroying 3D Renderer
+[CleanUp] Unloading Editor
+[Info] Shutting down DevIL library
+Unloading Test scene
+Quitting SDL input event subsystem
+[CleanUp] Cleaning camera
+[CleanUp] Destroying SDL window and quitting all SDL systems

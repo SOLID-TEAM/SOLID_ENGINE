@@ -4,6 +4,20 @@
 #include "Module.h"
 #include "Globals.h"
 
+class Grid 
+{
+	Grid( int units);
+	void ComputeLines();
+	void Render();
+	void Destroy();
+
+private:
+	int units = 1;
+	float* vertices = nullptr;
+	int n_vertices = 0;
+	uint id = 1;
+};
+
 class ModuleTest : public Module
 {
 public:

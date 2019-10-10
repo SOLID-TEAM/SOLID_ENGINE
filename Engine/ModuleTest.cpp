@@ -111,3 +111,46 @@ void ModuleTest::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 
 }
 
+Grid::Grid(int units) : units(units)
+{
+	glGenBuffers(1, &id);
+	ComputeLines();
+}
+
+void Grid::ComputeLines()
+{
+	if (vertices != nullptr)
+	{
+		delete[] vertices;
+	}
+
+	n_vertices = units * units;
+	this->vertices = new float[n_vertices * 3];
+
+	for (int i = 0; i < units; ++i)
+	{
+
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * n_vertices, &vertices[0], GL_STATIC_DRAW);
+}
+
+void Grid::Render()
+{
+
+}
+
+void Grid::Destroy()
+{
+	glDeleteBuffers(1, &id);
+	
+	// delete all stored data
+
+	if (vertices != nullptr) 
+	{
+		delete[] vertices;
+	}
+}
+
+
