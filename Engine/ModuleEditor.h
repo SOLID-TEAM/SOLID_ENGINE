@@ -26,6 +26,7 @@ public:
 	void Load(Config& config);
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
+	void SetItemsSize(int mount);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 

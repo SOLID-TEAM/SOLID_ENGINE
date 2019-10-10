@@ -68,14 +68,14 @@ private:
 public:
 	// TODO: maybe this vars fits better on the model itself and each model has its own properties of visualization
 	// implement when we already finish module filesystem
-	bool wireframe_mode = true;
-	bool fill_mode = true;
+	bool wireframe = true;
+	bool fill_faces = true;
 	bool debug_vertex_normals = true;
 	bool debug_face_normals = true;
 	ImVec4 fill_color = ImVec4(1.0f, 0.35f, 1.0f , 1.0f);
 	ImVec4 wire_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);;
-	ImVec4 d_vertex_color = ImVec4(0.59f, 0.22f, 1.0f, 1.0f);
-	ImVec4 d_vertex_n_color = ImVec4(0.2f, 1.0f, 0.0f, 1.0f);
+	ImVec4 d_vertex_p_color = ImVec4(0.59f, 0.22f, 1.0f, 1.0f);
+	ImVec4 d_vertex_l_color = ImVec4(0.2f, 1.0f, 0.0f, 1.0f);
 	ImVec4 d_vertex_face_color = ImVec4(1.0f, 0.5f, 0.2f,1.0f);
 	ImVec4 d_vertex_face_n_color = ImVec4(0.0f, 0.5f, 1.0f, 1.0f);
 
