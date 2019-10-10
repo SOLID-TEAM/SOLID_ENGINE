@@ -177,7 +177,7 @@ bool ModelData::Render()
 	// uvs / texture
 	if (uvs != nullptr)
 	{
-		glBindTexture(GL_TEXTURE_2D, App->textures->image_test);
+		glBindTexture(GL_TEXTURE_2D, texture_gl_id);
 
 		// uv coords
 		glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);

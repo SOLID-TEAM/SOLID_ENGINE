@@ -11,10 +11,14 @@
 #pragma comment(lib, "external/DevIL-1.8.0/libx86/ILU.lib")
 #pragma comment(lib, "external/DevIL-1.8.0/libx86/ILUT.lib")
 
+#include <string>
+
 
 ModuleTextures::ModuleTextures(bool start_enabled)// : Module(start_enabled)
 {
 	name.assign("Textures");
+
+	texture_path.assign("Assets/Textures/");
 }
 
 ModuleTextures::~ModuleTextures() {}
@@ -41,25 +45,54 @@ bool ModuleTextures::Init(Config& config)
 bool ModuleTextures::Start(Config& config)
 {
 
-	image_test = LoadTexture("Assets/Textures/lenna.png");
+	//image_test = LoadTexture("lenna.png");
+	//image_test = LoadTexture("Assets/Textures/Baker_house.png");
 
 	return true;
 }
 
-uint ModuleTextures::LoadTexture(const char* path)
+bool ModuleTextures::CleanUp()
+{
+	LOG("[Info] Shutting down DevIL library");
+	ilShutDown();
+
+	return true;
+}
+
+uint ModuleTextures::LoadTexture(const char* texture_name)
 {
 	/*ilGenImages(1, &image_test);
 	ilBindImage(image_test);*/
-	if (ilLoadImage(path))
+
+	// first find if the texture are previously loaded into buffers
+	std::map<const char*, uint>::iterator tex;
+	tex = textures.find(texture_name);
+	if (tex != textures.end())
 	{
-		LOG("Image %s correctly loaded into DevIL", path);
+		LOG("[Info] Texture with same name %s already loaded into buffers", texture_name);
+		
+		return (*tex).second;
+	}
+	
+	
+	std::string tex_name(texture_name);
+	std::string final_path(texture_path + tex_name);
+
+	if (ilLoadImage(final_path.data()))
+	{
+		LOG("[Info] Image %s correctly loaded into DevIL", final_path.data());
 
 		GLuint texture = 0;
 		texture = ilutGLBindTexImage();
 
 		if (texture > 0)
 		{
+			LOG("[Info] Image correctly uploaded to gl buffer");
+			// add to map
+			textures.insert({ texture_name, texture });
+			// unbind from gpu
 			glBindTexture(GL_TEXTURE_2D, 0);
+			// delete devil data
 			ilDeleteImage(texture);
 		}
 		
