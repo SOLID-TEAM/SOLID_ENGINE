@@ -16,16 +16,38 @@ Loading File System
 [Start] Setting up the camera
 Loading Test assets
 Image Assets/Textures/lenna.png correctly loaded into DevIL
-[Info] Created new mesh Untitled.001 with 160 vertices
-[Info] Containing 324 indices for 108 triangles
-[Info] Loaded vertex normals for 160 vertices
-[Info] Loaded texture coords for Channel 0
-[Info] Created new mesh Untitled with 1641 vertices
-[Info] Containing 2751 indices for 917 triangles
-[Info] Loaded vertex normals for 1641 vertices
-[Info] Loaded texture coords for Channel 0
 [Start] Loading Editor
 -------------- Application Update --------------
+[success] File Duplicated Correctly
+[Error] Loading scene D:/Doc/Handgun_fbx_6.1_ASCII.fbx
+[success] File Duplicated Correctly
+[Info] Created new mesh Cube.005 with 8 vertices
+[Info] Containing 12 indices for 4 triangles
+[Info] Loaded vertex normals for 8 vertices
+[Info] Loaded texture coords for Channel 0
+[Info] Created new mesh Mesh with 67 vertices
+[Info] Containing 168 indices for 56 triangles
+[Info] Loaded vertex normals for 67 vertices
+[Info] Loaded texture coords for Channel 0
+[Info] Created new mesh Cube with 12 vertices
+[Info] Containing 60 indices for 20 triangles
+[Info] Loaded vertex normals for 12 vertices
+[Info] Created new mesh Mesh.001 with 11977 vertices
+[Info] Containing 59160 indices for 19720 triangles
+[Info] Loaded vertex normals for 11977 vertices
+[Info] Loaded texture coords for Channel 0
+[Info] Created new mesh Mesh.002 with 6080 vertices
+[Info] Containing 22440 indices for 7480 triangles
+[Info] Loaded vertex normals for 6080 vertices
+[Info] Loaded texture coords for Channel 0
+[Info] Created new mesh Plane.002 with 17 vertices
+[Info] Containing 24 indices for 8 triangles
+[Info] Loaded vertex normals for 17 vertices
+[Info] Loaded texture coords for Channel 0
+[Info] Created new mesh Mesh.003 with 134 vertices
+[Info] Containing 456 indices for 152 triangles
+[Info] Loaded vertex normals for 134 vertices
+[Info] Loaded texture coords for Channel 0
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor
