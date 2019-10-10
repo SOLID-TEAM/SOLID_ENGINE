@@ -11,7 +11,7 @@
 
 #include"Random.h"
 
-ModuleImporter::ModuleImporter(bool start_enabled) : Module(start_enabled) 
+ModuleImporter::ModuleImporter(bool start_enabled) : Module(start_enabled)
 {
 	name.assign("ModuleImporter");
 
@@ -41,7 +41,7 @@ bool ModuleImporter::Init(Config& config)
 
 bool ModuleImporter::Start(Config& config)
 {
-	LoadFileMesh("Assets/Models/BakerHouse.fbx");
+	/*LoadFileMesh("Assets/Models/BakerHouse.fbx");*/
 	/*LoadFileMesh("Assets/Models/BakerHouse.fbx");*/
 
 	//LoadFileMesh("Assets/Models/hammer_low.fbx");
@@ -130,7 +130,7 @@ update_status ModuleImporter::PostUpdate(float dt)
 
 		/*for (int i = 0; i < (*model)->_idx_size; ++i)
 			LOG("%u", (*model)->indices[i]);*/
-		
+
 	}
 
 
@@ -209,36 +209,22 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 			}
 
 			// LOAD uv coords
-			// TODO 1: SEARCH CRASH HERE when loading very complex models, maybe uvs relatives ( with 3 components)
 			uint num_uv_channels = assMesh->GetNumUVChannels();
 			if (num_uv_channels > 0)
 			{
-				m->uvs = new float[num_uv_channels * m->_v_size * 2]; // only supports 2 uv for now
-				//uint num_uv_components = 0;
-				for (uint i = 0; i < num_uv_channels; ++i)
+				if (num_uv_channels > 1)
+					LOG("[Error] more than 1 uv|w channel for mesh");
+
+				if (assMesh->HasTextureCoords(0)) // TODO: support more texture coord channels if needed
 				{
-					// for meshes containing more than 1 uv/w channel for vertex 
-					if (assMesh->HasTextureCoords(i))
+					m->_uv_num_components = assMesh->mNumUVComponents[0]; // num of components for text coord channel 0
+					m->uvs = new float[m->_uv_num_components * m->_v_size];
+
+					// we need a for loop if we want to improve memory performance, assimp stores its uvs in 3d vectors for uv/w 
+
+					for (uint i = 0; i < m->_v_size; ++i)
 					{
-						if (assMesh->mNumUVComponents[i] != 2) // U, UV, UVW of each channel
-						{
-							// TODO 2: START HERE
-							LOG("[Error] Currently only supports 2 components for each UV channel");
-							//memset(&m->uvs[(i * assMesh->mNumUVComponents[i] * m->_v_size) + m->_v_size * 2], 0, sizeof(float) * 2);
-							//memset(&m->uvs[(i * 2 * m->_v_size)], 0, sizeof(float) * 2 * m->_v_size);
-							delete[] m->uvs;
-							m->uvs = nullptr;
-							LOG("");
-						}
-						else
-						{
-							for (int j = 0; j < m->_v_size; ++j)
-							{
-								memcpy(&m->uvs[(i * assMesh->mNumUVComponents[i] * m->_v_size) + j * 2], &assMesh->mTextureCoords[i][j], sizeof(float) * 2);
-							}
-							LOG("[Info] Loaded texture coords for Channel %i", i);
-						}
-						
+						memcpy(&m->uvs[i * m->_uv_num_components], &assMesh->mTextureCoords[0][i], sizeof(float) * m->_uv_num_components);
 					}
 				}
 			}
@@ -273,20 +259,15 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 			//startup_meshes.push_back(&m);
 		}
 
+		if (scene != nullptr && scene->HasTextures()) // embedded textures into file
+		{
+			LOG("[Error] scene contains embedded textures, improve the loader to load it!");
+		}
+
 		aiReleaseImport(scene);
 	}
 	else
 		LOG("[Error] Loading scene %s / no meshes", path);
-
-	
-	
-	if (scene != nullptr && scene->HasTextures()) // embedded textures into file
-	{
-		LOG("[Error] scene contains embedded textures, improve the loader to load it!");
-	}
-
-	
-	
 
 	return ret;
 }
@@ -308,7 +289,7 @@ bool ModuleImporter::ReComputeVertexNormals(float length)
 	return ret;
 }
 
-bool ModuleImporter::ReComputeFacesNormals(float length) 
+bool ModuleImporter::ReComputeFacesNormals(float length)
 {
 	bool ret = true;
 
@@ -500,7 +481,7 @@ void ModuleImporter::Load(Config& config)
 	if (temp_f != f_n_line_length)
 		ReComputeFacesNormals(f_n_line_length);
 	// -----------------------------------------------------------------------
-	
+
 }
 
 std::vector<ModelData*>& ModuleImporter::GetModels()
@@ -514,7 +495,7 @@ void ModuleImporter::ImportFileFromPath(const char* path)
 	std::string final_path;
 
 	// Duplicate file to the indicated internal path 
-	if (App->file_sys->DuplicateFile(normalized_path.c_str(),  "Project/Assets" , final_path))
+	if (App->file_sys->DuplicateFile(normalized_path.c_str(), "Project/Assets", final_path))
 	{
 		// Load asset and create meta data 
 		// If is a mesh import and add to scene 

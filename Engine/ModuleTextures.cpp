@@ -65,7 +65,7 @@ uint ModuleTextures::LoadTexture(const char* texture_name)
 	ilBindImage(image_test);*/
 
 	// first find if the texture are previously loaded into buffers
-	std::map<const char*, uint>::iterator tex;
+	std::map<std::string, uint>::iterator tex;
 	tex = textures.find(texture_name);
 	if (tex != textures.end())
 	{
@@ -73,7 +73,6 @@ uint ModuleTextures::LoadTexture(const char* texture_name)
 		
 		return (*tex).second;
 	}
-	
 	
 	std::string tex_name(texture_name);
 	std::string final_path(texture_path + tex_name);
@@ -89,7 +88,7 @@ uint ModuleTextures::LoadTexture(const char* texture_name)
 		{
 			LOG("[Info] Image correctly uploaded to gl buffer");
 			// add to map
-			textures.insert({ texture_name, texture });
+			textures.insert({ tex_name, texture });
 			// unbind from gpu
 			glBindTexture(GL_TEXTURE_2D, 0);
 			// delete devil data

@@ -53,7 +53,8 @@ public:
 	// model data ---------------
 	uint _v_size = 0; // vertex
 	uint _idx_size = 0; // indices
-	uint _uv_size = 0; // texture coords
+	//uint _uv_size = 0; // texture coords
+	uint _uv_num_components = 0;
 	//uint _n_size = -1; // normals || not needed, assume each vertes has its normal
 	//uint _f_size = -1; // triangulated faces
 	float* vertices = nullptr;
@@ -79,7 +80,7 @@ public:
 	uint debug_f_vertices_gl_id = 0;
 	uint debug_f_normals_gl_id = 0;
 	// ---------------------------------------------------------------
-	uint texture_gl_id = -1;
+	uint texture_gl_id = 0;
 	//
 	float color[3] = { 1.0f,0.0f,1.0f };
 	// --------------------------

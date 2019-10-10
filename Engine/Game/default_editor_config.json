@@ -16,8 +16,9 @@
     "Input": {},
     "ModuleRandom?": {},
     "": {},
+    "Textures": {},
     "ModuleImporter": {
-        "wireframe_mode": true,
+        "wireframe": true,
         "fill_mode": true,
         "debug_vertex_normals": true,
         "debug_face_normals": true,
@@ -33,13 +34,13 @@
             1,
             1
         ],
-        "d_vertex_color": [
+        "d_vertex_p_color": [
             0.5899999737739563,
             0.2199999988079071,
             1,
             1
         ],
-        "d_vertex_n_color": [
+        "d_vertex_l_color": [
             0.20000000298023224,
             1,
             0,
