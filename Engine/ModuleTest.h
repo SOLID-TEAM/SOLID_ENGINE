@@ -6,13 +6,24 @@
 
 class Grid 
 {
+public:
 	Grid( int units);
 	void ComputeLines();
+	void SetUnits(int units);
+	int GetUnits();
 	void Render();
 	void Destroy();
 
+public:
+
+	bool active = true;
+	float width = 1.f;
+	ImVec4 color = { 1.f, 1.f ,1.f, 1.f };
+
 private:
+	// General
 	int units = 1;
+	//Buffers
 	float* vertices = nullptr;
 	int n_vertices = 0;
 	uint id = 1;
@@ -31,9 +42,7 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
-	/*S_Cube* cube = nullptr;
-	S_Plane* plane = nullptr;
-	S_Sphere* sphere = nullptr;*/
+	Grid* main_grid = nullptr;
 };
 
 #endif // !__MODULETEST_H__

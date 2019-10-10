@@ -13,6 +13,9 @@
 #include "PanelConfig.h"
 #include "PanelConsole.h"
 
+//TODO: MOVE HEADERS TO ITS OWN PANELS
+#include "ModuleTest.h"
+
 ModuleEditor::ModuleEditor(bool start_enabled) : Module(start_enabled)
 {
 	name.assign("Editor");
@@ -280,7 +283,7 @@ update_status ModuleEditor::Update(float dt)
 		ImGui::Text("   Fill Faces");
 		ImGui::SameLine(column_w);
 		ImGui::Checkbox("##fill_mode", &App->importer->fill_faces);
-
+		 
 		ImGui::Text("      Color");
 		ImGui::SameLine(column_w);
 		ImGui::ColorEdit4("fILL Color##2f", (float*)&App->importer->fill_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
@@ -375,7 +378,38 @@ update_status ModuleEditor::Update(float dt)
 			App->importer->ReComputeFacesNormals(App->importer->f_n_line_length);
 		}
 	}
+	static int units = 50;
 
+	if (ImGui::CollapsingHeader("Grid Settings"))
+	{
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("   Active");
+		ImGui::SameLine(column_w);
+		ImGui::Checkbox("##active_grid", &App->test->main_grid->active);
+
+		ImGui::Text("      Color");
+		ImGui::SameLine(column_w);
+		ImGui::ColorEdit4("Grid Color##2f", (float*)&App->test->main_grid->color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+
+		ImGui::Text("      Opacity");
+		ImGui::SameLine(column_w);
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+		if (ImGui::SliderFloat("##d_face_line_lenght", &App->test->main_grid->color.w, min_alpha, max_alpha, "%.1f", 1.0f));
+
+		ImGui::Text("      Distance");
+		ImGui::SameLine(column_w);
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+
+		if (ImGui::SliderInt("##grid_units", &units, 1, 50))
+		{
+			App->test->main_grid->SetUnits(units);
+		}
+
+		ImGui::Text("      Line Width");
+		ImGui::SameLine(column_w);
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+		if (ImGui::SliderFloat("##grid_width", &App->test->main_grid->width, min_line_w, max_line_w, "%.1f", 1.0f));
+	}
 	if (ImGui::CollapsingHeader("OpenGL Test"))
 	{
 
@@ -394,6 +428,8 @@ update_status ModuleEditor::Update(float dt)
 		ImGui::SameLine(column_w);
 		ImGui::Checkbox("##GL_LIGHTING", &gl_lighting);
 	}
+
+
 
 	if (glIsEnabled(gl_color_material))
 		glDisable(GL_COLOR_MATERIAL);

@@ -8,10 +8,10 @@ Loading File System
 [Info] Using Assimp v4.1.0
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
-[Info] Vendor: Intel
-[Info] Renderer: Intel(R) UHD Graphics 620
-[Info] OpenGL version supported: 3.3.0 - Build 25.20.100.6374
-[Info] GLSL: 3.30 - Build 25.20.100.6374
+[Info] Vendor: NVIDIA Corporation
+[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
+[Info] OpenGL version supported: 4.6.0 NVIDIA 430.86
+[Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets

@@ -34,14 +34,8 @@ bool ModuleTest::Start(Config& config)
 
 	App->camera->Move(vec3(1.0f, 1.0f, 1.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
-	//GetIntRandomValue(1.f, 4.f);
-	//GetFloatRandomValue(1.f, 10.f);
-	//GetRandomPercent();
 
-	//cube = new S_Cube(1, 0, 0);
-	////cube->Scale(2, 1, 1);
-	//plane = new S_Plane(4, 0, 0);
-	//sphere = new S_Sphere(-2, 0, 0, 4);
+	main_grid = new Grid(50);
 
 	return ret;
 }
@@ -63,45 +57,7 @@ update_status ModuleTest::Update(float dt)
 
 update_status ModuleTest::PostUpdate(float dt)
 {
-	// TODO: place scene y0 plane in other site
-
-	glColor3f(0.9f, 0.9f, 0.9f);
-	glLineWidth(2.5f);
-	glBegin(GL_LINES);
-
-	for (float i = -100.f; i <= 100.f; i++)
-	{
-		glVertex3f(i, 0.f, 100.f);
-		glVertex3f(i, 0.f, -100.f);
-
-		glVertex3f(-100.f, 0.f, -i);
-		glVertex3f(100.f, 0.f, -i);
-	}
-
-	glEnd();
-
-	// TODO: same of the "TODO NEXT" on ModuleImporter
-
-	/*glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glEnable(GL_POLYGON_OFFSET_FILL);
-	glPolygonOffset(1.0f, 0.375f);
-
-	glColor3f(1.0f, 0.0f, 1.0f);
-
-	cube->Render();
-	plane->Render();
-	sphere->Render();
-
-	glDisable(GL_POLYGON_OFFSET_FILL);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	glColor3f(1.0f, 1.0f, 1.0f);
-
-	cube->Render();
-	plane->Render();
-	sphere->Render();*/
-
-	/*cube->Render();*/
+	main_grid->Render();
 
 	return UPDATE_CONTINUE;
 }
@@ -124,21 +80,63 @@ void Grid::ComputeLines()
 		delete[] vertices;
 	}
 
-	n_vertices = units * units;
-	this->vertices = new float[n_vertices * 3];
-
-	for (int i = 0; i < units; ++i)
+	if (units < 1)
 	{
+		units = 1;
+	}
 
+	n_vertices =  4 + units * 8; // main axis + added perpendicular axis * units
+	this->vertices = new float[n_vertices * 3];
+	int j = 0;
+
+	for (int i = -units; i <= units; ++i)
+	{
+		vertices[j] = i; vertices[j + 1] = 0; vertices[j + 2] = units;
+		vertices[j +3] = i; vertices[j + 4] = 0; vertices[j + 5] = -units;
+
+		vertices[j + 6] = - units; vertices[j + 7] = 0; vertices[j + 8] = -i;
+		vertices[j + 9] = units; vertices[j + 10] = 0; vertices[j + 11] = -i;
+
+		j += 12;
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * n_vertices, &vertices[0], GL_STATIC_DRAW);
 }
 
+void Grid::SetUnits(int units) 
+{
+	if (units != this->units)
+	{
+		this->units = units;
+		ComputeLines();
+	}
+}
+int Grid::GetUnits() 
+{
+	return units;
+}
+
 void Grid::Render()
 {
+	if (active == false)
+	{
+		return;
+	}
 
+	glLineWidth(width);
+	glColor4fv((float*)&color);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glBindBuffer(GL_ARRAY_BUFFER, id);
+	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+
+	glDrawArrays(GL_LINES, 0, n_vertices * 2);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glLineWidth(1.0f);
 }
 
 void Grid::Destroy()
