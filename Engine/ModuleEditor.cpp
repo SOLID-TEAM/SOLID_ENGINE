@@ -23,6 +23,7 @@ ModuleEditor::~ModuleEditor()
 
 bool ModuleEditor::Init(Config& config)
 {
+
 	// load values from json
 	Load(config);
 
@@ -48,7 +49,17 @@ bool ModuleEditor::Start(Config& conf)
 
 	// Create all panels --------------------------------
 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
 
+	ImGui::GetStyle().WindowRounding = 0.0f;// <- Set this on init or use ImGui::PushStyleVar()
+	ImGui::GetStyle().ChildRounding = 0.0f;
+	ImGui::GetStyle().FrameRounding = 0.0f;
+	ImGui::GetStyle().GrabRounding = 0.0f;
+	ImGui::GetStyle().PopupRounding = 0.0f;
+	ImGui::GetStyle().ScrollbarRounding = 0.0f;
+	//ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+	
 	return ret;
 }
 
@@ -65,6 +76,7 @@ bool ModuleEditor::CleanUp()
 	ImGui_ImplSDL2_Shutdown();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui::DestroyContext();
+
 	return true;
 }
 
@@ -75,6 +87,9 @@ update_status ModuleEditor::PreUpdate(float dt)
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+
+	
+	
 
 	return UPDATE_CONTINUE;
 }
@@ -226,6 +241,8 @@ update_status ModuleEditor::Update(float dt)
 	// Render window -------------------------------------------
 
 	// TODO: MAKE A PANEL CLASS
+
+	
 	ImGui::Begin("Render");
 
 
@@ -235,51 +252,12 @@ update_status ModuleEditor::Update(float dt)
 	static bool gl_color_material = false;
 	static bool wireframe = false;
 
-
-	if (ImGui::Checkbox("GL_COLOR_MATERIAL", &gl_color_material))
-	{
-		if (glIsEnabled(GL_COLOR_MATERIAL))
-			glDisable(GL_COLOR_MATERIAL);
-		else
-			glEnable(GL_COLOR_MATERIAL);
-	}
-
-
-	if (ImGui::Checkbox("GL_DEPTH_TEST", &gl_depth_test))
-	{
-		if (glIsEnabled(GL_DEPTH_TEST))
-			glDisable(GL_DEPTH_TEST);
-		else
-			glEnable(GL_DEPTH_TEST);
-	}
-
-
-	if (ImGui::Checkbox("GL_CULL_FACE", &gl_cull_face))
-	{
-		if (glIsEnabled(GL_CULL_FACE))
-			glDisable(GL_CULL_FACE);
-		else
-			glEnable(GL_CULL_FACE);
-	}
-
-
-	if (ImGui::Checkbox("GL_LIGHTING", &gl_lighting))
-	{
-		if (glIsEnabled(GL_LIGHTING))
-			glDisable(GL_LIGHTING);
-		else
-			glEnable(GL_LIGHTING);
-	}
-
-	if (ImGui::Checkbox("Wireframe Mode", &App->importer->wireframe_mode)) {}
-	if (ImGui::Checkbox("Fill mode", &App->importer->fill_mode)) {}
-	if (ImGui::Checkbox("Debug Vertex Normals", &App->importer->debug_vertex_normals)) {}
-	if (ImGui::Checkbox("Debug Face Normals", &App->importer->debug_face_normals)) {}
-
 	const float max_line_w = 10.0f;
 	const float min_line_w = 0.0f;
 	const float max_point_size = 10.0f;
 	const float min_point_size = 0.0f;
+	const float min_alpha = 0.f;
+	const float max_alpha= 1.f;
 
 	const float max_n_length = 3.0f;
 	const float min_n_length = 0.0f;
@@ -287,39 +265,155 @@ update_status ModuleEditor::Update(float dt)
 	float v_n_line_length = App->importer->v_n_line_length;
 	float f_n_line_length = App->importer->f_n_line_length;
 
-	ImGui::Separator();
-	ImGui::ColorEdit4("Fill Color##2f", (float*)&App->importer->fill_color, ImGuiColorEditFlags_Float);
-	ImGui::ColorEdit4("Wire Color##2f", (float*)&App->importer->wire_color, ImGuiColorEditFlags_Float);
-	ImGui::SliderScalar("Wireframe line width", ImGuiDataType_Float, &App->importer->wire_line_width, &min_line_w, &max_line_w, "%.1f", 1.0f);
-	ImGui::Separator();
-	ImGui::Text("Debug vertex normals:");
-	ImGui::ColorEdit4("Vertex Color##2f", (float*)&App->importer->d_vertex_color, ImGuiColorEditFlags_Float);
-	ImGui::SliderScalar("Vertex point size", ImGuiDataType_Float, &App->importer->v_point_size, &min_point_size, &max_point_size, "%.1f", 1.0f);
-	ImGui::ColorEdit4("Normal Color##2f", (float*)&App->importer->d_vertex_n_color, ImGuiColorEditFlags_Float);
-	ImGui::SliderScalar("Vertex normal line width", ImGuiDataType_Float, &App->importer->v_n_line_width, &min_line_w, &max_line_w, "%.1f", 1.0f);
-	if (ImGui::SliderScalar("Vertex normal line length", ImGuiDataType_Float, &v_n_line_length, &min_n_length, &max_n_length, "%.3f", 1.0f))
+	
+	float column_w = 160.f;
+
+	if (ImGui::CollapsingHeader("Shading Modes"))
 	{
-		App->importer->ReComputeVertexNormals(v_n_line_length);
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("   Fill Faces");
+		ImGui::SameLine(column_w);
+		ImGui::Checkbox("##fill_mode", &App->importer->fill_faces);
+
+		ImGui::Text("      Color");
+		ImGui::SameLine(column_w);
+		ImGui::ColorEdit4("fILL Color##2f", (float*)&App->importer->fill_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+
+		ImGui::Text("      Alpha");
+		ImGui::SameLine(column_w);
+
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SliderFloat("##alpha_slider", &App->importer->fill_color.w, min_alpha, max_alpha, "%.1f", 1.0f);
+
+		ImGui::Separator();
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("   Wireframe");
+		ImGui::SameLine(column_w);
+		ImGui::Checkbox("##wireframe", &App->importer->wireframe);
+
+		ImGui::Text("      Color");
+		ImGui::SameLine(column_w);
+		ImGui::ColorEdit4("Line Color##2f", (float*)&App->importer->wire_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+
+		ImGui::Text("      Width");
+		ImGui::SameLine(column_w);
+
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SliderFloat("##wire_line_width", &App->importer->wire_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
 	}
-	ImGui::SameLine();
-	HelpMarker("CPU Heavy load, normal end points needs to be re-computed");
-	ImGui::Separator();
-	ImGui::Text("Debug faces normals:");
-	ImGui::ColorEdit4("Face Vertex Color##2f", (float*)&App->importer->d_vertex_face_color, ImGuiColorEditFlags_Float);
-	ImGui::SliderScalar("Face Vertex point size", ImGuiDataType_Float, &App->importer->f_v_point_size, &min_point_size, &max_point_size, "%.1f", 1.0f);
-	ImGui::ColorEdit4("Face Normal Color##2f", (float*)&App->importer->d_vertex_face_n_color, ImGuiColorEditFlags_Float);
-	ImGui::SliderScalar("Face normal line width", ImGuiDataType_Float, &App->importer->f_n_line_width, &min_line_w, &max_line_w, "%.1f", 1.0f);
-	if (ImGui::SliderScalar("Face normal line length", ImGuiDataType_Float, &f_n_line_length, &min_n_length, &max_n_length, "%.3f", 1.0f))
+
+	if (ImGui::CollapsingHeader("Debug Modes"))
 	{
-		App->importer->ReComputeFacesNormals(f_n_line_length);
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("   Vertex Normals");
+		ImGui::SameLine(column_w);
+		ImGui::Checkbox("##d_vertex_normals", &App->importer->debug_vertex_normals);
+
+		ImGui::Text("      Point Color");
+		ImGui::SameLine(column_w);
+		ImGui::ColorEdit4("Vertex Point Color##2f", (float*)&App->importer->d_vertex_p_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+
+		ImGui::Text("      Point Size");
+		ImGui::SameLine(column_w);
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SliderFloat("##d_vertex_p_size", &App->importer->v_point_size, min_point_size, max_point_size, "%.1f", 1.0f);
+
+		ImGui::Text("      Line Color");
+		ImGui::SameLine(column_w);
+		ImGui::ColorEdit4("Vertex Line Color##2f", (float*)&App->importer->d_vertex_l_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+
+		ImGui::Text("      Line Width");
+		ImGui::SameLine(column_w);
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SliderFloat("##d_vertex_line_width", &App->importer->v_n_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
+
+		ImGui::Text("      Line Lenght");
+		ImGui::SameLine(column_w);
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+		if (ImGui::SliderFloat("##d_vertex_line_lenght", &App->importer->v_n_line_length, min_n_length, max_n_length, "%.1f", 1.0f))
+		{
+			App->importer->ReComputeVertexNormals(App->importer->v_n_line_length);
+		}
+
+		ImGui::Separator();
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("   Face Normals");
+		ImGui::SameLine(column_w);
+		ImGui::Checkbox("##d_face_normals", &App->importer->debug_face_normals);
+
+		ImGui::Text("      Point Color");
+		ImGui::SameLine(column_w);
+		ImGui::ColorEdit4("Face Point Color##2f", (float*)&App->importer->d_vertex_face_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+
+		ImGui::Text("      Point Size");
+		ImGui::SameLine(column_w);
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SliderFloat("##d_face_p_size", &App->importer->f_v_point_size, min_point_size, max_point_size, "%.1f", 1.0f);
+
+		ImGui::Text("      Line Color");
+		ImGui::SameLine(column_w);
+		ImGui::ColorEdit4("Face Line Color##2f", (float*)&App->importer->d_vertex_face_n_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+
+		ImGui::Text("      Line Width");
+		ImGui::SameLine(column_w);
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SliderFloat("##d_face_line_width", &App->importer->f_n_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
+
+		ImGui::Text("      Line Lenght");
+		ImGui::SameLine(column_w);
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+		if (ImGui::SliderFloat("##d_face_line_lenght", &App->importer->f_n_line_length, min_n_length, max_n_length, "%.1f", 1.0f))
+		{
+			App->importer->ReComputeFacesNormals(App->importer->f_n_line_length);
+		}
 	}
-	ImGui::SameLine();
-	HelpMarker("CPU Heavy load, normal end points needs to be re-computed");
-	ImGui::Separator();
+
+	if (ImGui::CollapsingHeader("OpenGL Test"))
+	{
+
+		ImGui::AlignTextToFramePadding();
+
+		ImGui::Text("   Color Material");
+		ImGui::SameLine(column_w);
+		ImGui::Checkbox("##GL_COLOR_MATERIAL", &gl_color_material);
+		ImGui::Text("   Depht Test");
+		ImGui::SameLine(column_w);
+		ImGui::Checkbox("##GL_DEPTH_TEST", &gl_depth_test);
+		ImGui::Text("   Cull Faces");
+		ImGui::SameLine(column_w);
+		ImGui::Checkbox("##GL_CULL_FACE", &gl_cull_face);
+		ImGui::Text("   Lighting");
+		ImGui::SameLine(column_w);
+		ImGui::Checkbox("##GL_LIGHTING", &gl_lighting);
+	}
+
+	if (glIsEnabled(gl_color_material))
+		glDisable(GL_COLOR_MATERIAL);
+	else
+		glEnable(GL_COLOR_MATERIAL);
+
+	if (glIsEnabled(gl_depth_test))
+		glDisable(GL_DEPTH_TEST);
+	else
+		glEnable(GL_DEPTH_TEST);
+
+	if (glIsEnabled(gl_cull_face))
+		glDisable(GL_CULL_FACE);
+	else
+		glEnable(GL_CULL_FACE);
+
+	if (glIsEnabled(gl_lighting))
+		glDisable(GL_LIGHTING);
+	else
+		glEnable(GL_LIGHTING);
+
+
 
 	ImGui::End();
 
-	// TODO: MAKE A HIERARCHY PANEL
+	//// TODO: MAKE A HIERARCHY PANEL
 
 	//static bool show_hierarchy = true;
 	if (ImGui::Begin("Hierarchy"))
@@ -371,6 +465,11 @@ update_status ModuleEditor::Update(float dt)
 	//}
 
 	return UPDATE_CONTINUE;
+}
+
+void ModuleEditor::SetItemsSize(int mount)
+{
+	ImGui::PushItemWidth((ImGui::GetWindowWidth() - ImGui::GetCursorPosX())/ (float)mount);
 }
 
 update_status ModuleEditor::PostUpdate(float dt)

@@ -9,6 +9,7 @@
 
 #include "external/Assimp/include/version.h"
 
+#include"Random.h"
 
 ModuleImporter::ModuleImporter(bool start_enabled) : Module(start_enabled) 
 {
@@ -18,7 +19,7 @@ ModuleImporter::ModuleImporter(bool start_enabled) : Module(start_enabled)
 	/*fill_color = { 1.0f, 0.35f, 1.0f };
 	wire_color;
 	d_vertex_color;
-	d_vertex_n_color;
+	d_vertex_l_color;
 	d_vertex_face_color;
 	d_vertex_face_n_color;*/
 }
@@ -41,6 +42,8 @@ bool ModuleImporter::Init(Config& config)
 bool ModuleImporter::Start(Config& config)
 {
 	//LoadFileMesh("Assets/Models/BakerHouse.fbx");
+	/*LoadFileMesh("Assets/Models/BakerHouse.fbx");*/
+
 	//LoadFileMesh("Assets/Models/hammer_low.fbx");
 	//LoadFileMesh("Assets/Models/suzanne.solid");
 	////LoadFileMesh("Assets/Models/warrior.FBX");
@@ -50,6 +53,8 @@ bool ModuleImporter::Start(Config& config)
 	meshes.push_back(CreatePrimitive(SPHERE, { -3,0,0 }, { 1,1,1 }));
 	meshes.push_back(CreatePrimitive(TETRAHEDRON, { 0,1,0 }, { 1,1.2f,1 }));
 	meshes.push_back(CreatePrimitive(ICOSAHEDRON, { 4.5f,0,0 }, { 1,1,1 }));*/
+
+	Random::GetRandomPercent();
 
 	return true;
 }
@@ -76,7 +81,7 @@ update_status ModuleImporter::PostUpdate(float dt)
 	for (; model != meshes.end(); ++model)
 	{
 		// TODO NEXT: implement new render functionality to pass all this shit (colors, draw modes etc)
-		if (fill_mode && wireframe_mode)
+		if (fill_faces && wireframe)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			glEnable(GL_POLYGON_OFFSET_FILL);
@@ -89,13 +94,13 @@ update_status ModuleImporter::PostUpdate(float dt)
 			glLineWidth(1.0f);
 			glDisable(GL_POLYGON_OFFSET_FILL);
 		}
-		else if (fill_mode)
+		else if (fill_faces)
 		{
 			glColor4fv((float*)&fill_color);
 			(*model)->Render();
 		}
 
-		if (wireframe_mode)
+		if (wireframe)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -109,9 +114,9 @@ update_status ModuleImporter::PostUpdate(float dt)
 
 		if (debug_vertex_normals)
 		{
-			glColor4fv((float*)&d_vertex_color);
+			glColor4fv((float*)&d_vertex_p_color);
 			(*model)->DebugRenderVertex(v_point_size);
-			glColor4fv((float*)&d_vertex_n_color);
+			glColor4fv((float*)&d_vertex_l_color);
 			(*model)->DebugRenderVertexNormals(v_n_line_width);
 		}
 		//glColor3f(1.0f, 1.0f, 0.0f);
@@ -414,15 +419,15 @@ bool ModuleImporter::Save(Config& config)
 {
 	bool ret = true;
 
-	ret = config.AddBool("wireframe_mode", wireframe_mode);
-	ret = config.AddBool("fill_mode", fill_mode);
+	ret = config.AddBool("wireframe", wireframe);
+	ret = config.AddBool("fill_mode", fill_faces);
 	ret = config.AddBool("debug_vertex_normals", debug_vertex_normals);
 	ret = config.AddBool("debug_face_normals", debug_face_normals);
 
 	ret = config.AddFloatArray("fill_color", (float*)&fill_color, 4);
 	ret = config.AddFloatArray("wire_color", (float*)&wire_color, 4);
-	ret = config.AddFloatArray("d_vertex_color", (float*)&d_vertex_color, 4);
-	ret = config.AddFloatArray("d_vertex_n_color", (float*)&d_vertex_n_color, 4);
+	ret = config.AddFloatArray("d_vertex_p_color", (float*)&d_vertex_p_color, 4);
+	ret = config.AddFloatArray("d_vertex_l_color", (float*)&d_vertex_l_color, 4);
 	ret = config.AddFloatArray("d_vertex_face_color", (float*)&d_vertex_face_color, 4);
 	ret = config.AddFloatArray("d_vertex_face_n_color", (float*)&d_vertex_face_n_color, 4);
 
@@ -441,8 +446,8 @@ bool ModuleImporter::Save(Config& config)
 void ModuleImporter::Load(Config& config)
 {
 
-	wireframe_mode = config.GetBool("wireframe_mode", wireframe_mode);
-	fill_mode = config.GetBool("fill_mode", fill_mode);
+	wireframe = config.GetBool("wireframe", wireframe);
+	fill_faces = config.GetBool("fill_mode", fill_faces);
 	debug_vertex_normals = config.GetBool("debug_vertex_normals", debug_vertex_normals);
 	debug_face_normals = config.GetBool("debug_face_normals", debug_face_normals);
 
@@ -457,15 +462,15 @@ void ModuleImporter::Load(Config& config)
 	wire_color.z = config.GetFloat("wire_color", wire_color.z, 2);
 	wire_color.w = config.GetFloat("wire_color", wire_color.w, 3);
 
-	d_vertex_color.x = config.GetFloat("d_vertex_color", d_vertex_color.x, 0);
-	d_vertex_color.y = config.GetFloat("d_vertex_color", d_vertex_color.y, 1);
-	d_vertex_color.z = config.GetFloat("d_vertex_color", d_vertex_color.z, 2);
-	d_vertex_color.w = config.GetFloat("d_vertex_color", d_vertex_color.w, 3);
+	d_vertex_p_color.x = config.GetFloat("d_vertex_p_color", d_vertex_p_color.x, 0);
+	d_vertex_p_color.y = config.GetFloat("d_vertex_p_color", d_vertex_p_color.y, 1);
+	d_vertex_p_color.z = config.GetFloat("d_vertex_p_color", d_vertex_p_color.z, 2);
+	d_vertex_p_color.w = config.GetFloat("d_vertex_p_color", d_vertex_p_color.w, 3);
 
-	d_vertex_n_color.x = config.GetFloat("d_vertex_n_color", d_vertex_n_color.x, 0);
-	d_vertex_n_color.y = config.GetFloat("d_vertex_n_color", d_vertex_n_color.y, 1);
-	d_vertex_n_color.z = config.GetFloat("d_vertex_n_color", d_vertex_n_color.z, 2);
-	d_vertex_n_color.w = config.GetFloat("d_vertex_n_color", d_vertex_n_color.w, 3);
+	d_vertex_l_color.x = config.GetFloat("d_vertex_l_color", d_vertex_l_color.x, 0);
+	d_vertex_l_color.y = config.GetFloat("d_vertex_l_color", d_vertex_l_color.y, 1);
+	d_vertex_l_color.z = config.GetFloat("d_vertex_l_color", d_vertex_l_color.z, 2);
+	d_vertex_l_color.w = config.GetFloat("d_vertex_l_color", d_vertex_l_color.w, 3);
 
 	d_vertex_face_color.x = config.GetFloat("d_vertex_face_color", d_vertex_face_color.x, 0);
 	d_vertex_face_color.y = config.GetFloat("d_vertex_face_color", d_vertex_face_color.y, 1);
