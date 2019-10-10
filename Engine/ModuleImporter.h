@@ -59,6 +59,9 @@ public:
 
 	void ImportFileFromPath(const char* path);
 
+	// TODO: ONLY TEST
+	void ReloadTextureForAllModels(uint texture_id);
+
 private:
 	// TODO: for testing here, but we need to search a better place, maybe new module coming
 	std::vector<ModelData*> meshes;

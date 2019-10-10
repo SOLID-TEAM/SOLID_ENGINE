@@ -157,7 +157,11 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 {
 	bool ret = true;
 
-	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
+	// TODO: filesystem
+	std::string working_dir("Assets/Models/");
+	std::string final_path(working_dir + path);
+
+	const aiScene* scene = aiImportFile(final_path.data(), aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
@@ -500,5 +504,37 @@ void ModuleImporter::ImportFileFromPath(const char* path)
 		// Load asset and create meta data 
 		// If is a mesh import and add to scene 
 		LoadFileMesh(normalized_path.c_str()); // Model test
+	}
+}
+
+void ModuleImporter::ReloadTextureForAllModels(uint texture_id)
+{
+	std::vector<ModelData*>::iterator models = meshes.begin();
+	for (; models != meshes.end(); ++models)
+	{
+		// if the model has the same texture id, not free the buffer
+		if ((*models)->texture_gl_id == texture_id)
+		{
+			LOG("[Info] Texure id of the model already loaded");
+			continue;
+		}
+
+		// TODO: this is not the functionality we want, just for test
+		// free all the others and re assign new id
+		if (App->textures->FreeTextureBuffer((*models)->texture_gl_id))
+		{
+			LOG("[Info] freed texture buffer of %s model", (*models)->name.data());
+			
+		}
+		else
+		{
+			LOG("[Info] texture not found on buffers or previously freed");
+		}
+
+		// re-assign new id
+		if (texture_id > 0)
+			(*models)->texture_gl_id = texture_id;
+		else
+			LOG("");
 	}
 }

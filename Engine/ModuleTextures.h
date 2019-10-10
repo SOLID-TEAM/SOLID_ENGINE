@@ -20,6 +20,11 @@ public:
 
 	uint LoadTexture(const char* path);
 
+	// test
+	/*void LoadTextureFromEvent(const char* path, bool& already, uint& id);*/
+
+	bool FreeTextureBuffer(uint id);
+
 	/*bool GenerateCheckerTexture();*/
 
 public:
