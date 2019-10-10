@@ -75,7 +75,7 @@ bool ModelData::UpdateBuffers()
 	if (uvs != nullptr)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * _v_size, &uvs[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _uv_num_components * _v_size, &uvs[0], GL_STATIC_DRAW);
 	}
 
 	// elements index
@@ -165,7 +165,8 @@ bool ModelData::Render()
 	
 	// enable client side individual capabilities
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	if(_uv_num_components > 0)
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 
 	//glClientActiveTexture(GL_TEXTURE0);
@@ -181,12 +182,12 @@ bool ModelData::Render()
 
 		// uv coords
 		glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
-		glTexCoordPointer(2, GL_FLOAT, 0, (void*)0);
+		glTexCoordPointer(_uv_num_components, GL_FLOAT, 0, (void*)0);
 	}
 	// normals
 	glBindBuffer(GL_ARRAY_BUFFER, normals_gl_id);
 	glNormalPointer(GL_FLOAT, 0, (void*)0);
-	// each vertex colors // "without shaders"
+	// each vertex colors
 	//glBindBuffer(GL_ARRAY_BUFFER, colors_gl_id);
 	//glColorPointer(3, GL_FLOAT, 0, (void*)0);
 	// indices
