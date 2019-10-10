@@ -18,21 +18,28 @@ Loading Test assets
 [Start] Loading Editor
 -------------- Application Update --------------
 [success] File Duplicated Correctly
-[Info] Created new mesh handle_bottom_low with 98 vertices
-[Info] Containing 348 indices for 116 triangles
-[Info] Loaded vertex normals for 98 vertices
-[Info] Created new mesh handle_top_low with 30 vertices
-[Info] Containing 84 indices for 28 triangles
-[Info] Loaded vertex normals for 30 vertices
-[Info] Created new mesh base_top_low with 56 vertices
-[Info] Containing 180 indices for 60 triangles
-[Info] Loaded vertex normals for 56 vertices
-[Info] Created new mesh base_low with 194 vertices
-[Info] Containing 348 indices for 116 triangles
-[Info] Loaded vertex normals for 194 vertices
-[Info] Created new mesh handle_base_low with 30 vertices
-[Info] Containing 84 indices for 28 triangles
-[Info] Loaded vertex normals for 30 vertices
+[Info] Created new mesh Cube.004 with 632 vertices
+[Info] Containing 3312 indices for 1104 triangles
+[Info] Loaded vertex normals for 632 vertices
+[Error] more than 1 uv|w channel for mesh
+[Info] Image Assets/Textures/textures\Dragon_Bump_Col2.jpg correctly loaded into DevIL
+[Info] Image correctly uploaded to gl buffer
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Created new mesh Cube.004 with 278 vertices
+[Info] Containing 678 indices for 226 triangles
+[Info] Loaded vertex normals for 278 vertices
+[Error] more than 1 uv|w channel for mesh
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Created new mesh Cube.004 with 24954 vertices
+[Info] Containing 109968 indices for 36656 triangles
+[Info] Loaded vertex normals for 24954 vertices
+[Error] more than 1 uv|w channel for mesh
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

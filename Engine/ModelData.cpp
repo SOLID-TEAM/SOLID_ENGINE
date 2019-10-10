@@ -165,7 +165,7 @@ bool ModelData::Render()
 	
 	// enable client side individual capabilities
 	glEnableClientState(GL_VERTEX_ARRAY);
-	if(_uv_num_components > 0)
+	if (_uv_num_components > 0)
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 

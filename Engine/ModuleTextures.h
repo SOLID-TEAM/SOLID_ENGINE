@@ -26,7 +26,7 @@ public:
 	ILuint image_test = 0;
 	std::string texture_path;
 
-	std::map<const char*, uint> textures;
+	std::map<std::string, uint> textures;
 };
 
 #endif // !__MODULETEXTURES_H__

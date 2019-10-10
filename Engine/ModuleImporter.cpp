@@ -259,20 +259,15 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 			//startup_meshes.push_back(&m);
 		}
 
+		if (scene != nullptr && scene->HasTextures()) // embedded textures into file
+		{
+			LOG("[Error] scene contains embedded textures, improve the loader to load it!");
+		}
+
 		aiReleaseImport(scene);
 	}
 	else
 		LOG("[Error] Loading scene %s / no meshes", path);
-
-
-
-	if (scene != nullptr && scene->HasTextures()) // embedded textures into file
-	{
-		LOG("[Error] scene contains embedded textures, improve the loader to load it!");
-	}
-
-
-
 
 	return ret;
 }
