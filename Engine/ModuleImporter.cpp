@@ -40,7 +40,7 @@ bool ModuleImporter::Init(Config& config)
 
 bool ModuleImporter::Start(Config& config)
 {
-	LoadFileMesh("Assets/Models/BakerHouse.fbx");
+	//LoadFileMesh("Assets/Models/BakerHouse.fbx");
 	//LoadFileMesh("Assets/Models/hammer_low.fbx");
 	//LoadFileMesh("Assets/Models/suzanne.solid");
 	////LoadFileMesh("Assets/Models/warrior.FBX");
@@ -159,12 +159,14 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 		for (uint i = 0; i < scene->mNumMeshes; ++i)
 		{
 			ModelData* m = new ModelData();
+
 			// TODO: divide this on separate functions
 			// AND: improve to load all needed data only in one array for vertex,normals,uvs, and another for indices
 			// to later use stride before filled the buffers
 
 			aiMesh* assMesh = scene->mMeshes[i]; // :)
 
+			m->name.assign(assMesh->mName.data);
 			m->_v_size = assMesh->mNumVertices;
 			m->vertices = new float[m->_v_size * 3];
 			// the part of i * 3 doesnt make sense, we not store more meshes in one "modelData"
@@ -202,6 +204,7 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 			}
 
 			// LOAD uv coords
+			// TODO 1: SEARCH CRASH HERE when loading very complex models, maybe uvs relatives ( with 3 components)
 			uint num_uv_channels = assMesh->GetNumUVChannels();
 			if (num_uv_channels > 0)
 			{
@@ -214,8 +217,13 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 					{
 						if (assMesh->mNumUVComponents[i] != 2) // U, UV, UVW of each channel
 						{
-							LOG("[Error] Currently only supports 2 components for each UV channel")
-							memset(&m->uvs[(i * assMesh->mNumUVComponents[i] * m->_v_size) + m->_v_size * 2], 0, sizeof(float) * 2);
+							// TODO 2: START HERE
+							LOG("[Error] Currently only supports 2 components for each UV channel");
+							//memset(&m->uvs[(i * assMesh->mNumUVComponents[i] * m->_v_size) + m->_v_size * 2], 0, sizeof(float) * 2);
+							//memset(&m->uvs[(i * 2 * m->_v_size)], 0, sizeof(float) * 2 * m->_v_size);
+							delete[] m->uvs;
+							m->uvs = nullptr;
+							LOG("");
 						}
 						else
 						{
@@ -223,20 +231,39 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 							{
 								memcpy(&m->uvs[(i * assMesh->mNumUVComponents[i] * m->_v_size) + j * 2], &assMesh->mTextureCoords[i][j], sizeof(float) * 2);
 							}
+							LOG("[Info] Loaded texture coords for Channel %i", i);
 						}
-						LOG("[Info] Loaded texture coords for Channel %i", i);
+						
 					}
 				}
 			}
 
-			m->name.assign(assMesh->mName.data);
+			// LOAD material texture/s
+			// TODO: ONLY diffuse for now
+			if (scene->HasMaterials())
+			{
+				for (uint i = 0; i < scene->mNumMaterials; ++i)
+				{
+					uint diffuse_tex_count = scene->mMaterials[assMesh->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE);
+
+					assert(diffuse_tex_count <= 1); // WARNING: not tested with models with more than 1 diffuse, needs to improve and test*
+
+					for (int j = 0; j < diffuse_tex_count; ++j)
+					{
+						aiString tex_path;
+						scene->mMaterials[assMesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, j, &tex_path); // * not tested j
+						m->texture_gl_id = App->textures->LoadTexture(tex_path.data); // * more gl index
+					}
+				}
+			}
+
 			m->GenerateBuffers();
-			
+
 			m->ComputeVertexNormals(v_n_line_length); // for debug draw purposes | BEFORE UPDATE BUFFERS!! to compute debugdraw normals before we fill the buffers
 			m->ComputeFacesNormals(f_n_line_length);
-			
+
 			m->UpdateBuffers();
-	
+
 			meshes.push_back(m);
 			//startup_meshes.push_back(&m);
 		}
@@ -244,7 +271,17 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 		aiReleaseImport(scene);
 	}
 	else
-		LOG("[Error] Loading scene %s", path);
+		LOG("[Error] Loading scene %s / no meshes", path);
+
+	
+	
+	if (scene != nullptr && scene->HasTextures()) // embedded textures into file
+	{
+		LOG("[Error] scene contains embedded textures, improve the loader to load it!");
+	}
+
+	
+	
 
 	return ret;
 }

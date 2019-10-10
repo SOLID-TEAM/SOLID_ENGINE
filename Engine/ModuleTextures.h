@@ -6,6 +6,8 @@
 
 #include "external/DevIL-1.8.0/include/IL/il.h"
 
+#include <map>
+
 class ModuleTextures : public Module
 {
 public:
@@ -14,6 +16,7 @@ public:
 
 	bool Init(Config& config);
 	bool Start(Config& config);
+	bool CleanUp();
 
 	uint LoadTexture(const char* path);
 
@@ -21,6 +24,9 @@ public:
 
 public:
 	ILuint image_test = 0;
+	std::string texture_path;
+
+	std::map<const char*, uint> textures;
 };
 
 #endif // !__MODULETEXTURES_H__
