@@ -115,11 +115,12 @@ bool ModuleTextures::FreeTextureBuffer(uint id)
 		uint test = (*allTextures).second;
 		if ((*allTextures).second == id)
 		{
-			glDeleteBuffers(1, &(*allTextures).second);
+			glDeleteTextures(1, &(*allTextures).second);
 			LOG("Freed texture buffer %s from vram", (*allTextures).first.data());
 			LOG("Deleted texture %s from map", (*allTextures).first.data());
 			textures.erase(allTextures);
 			ret = true;
+			
 			break;
 		}
 	}

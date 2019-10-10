@@ -17,6 +17,121 @@ Loading File System
 Loading Test assets
 [Start] Loading Editor
 -------------- Application Update --------------
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/BakerHouse.fbx
+.fbx
+possible 3d model
+[Info] Created new mesh Untitled.001 with 160 vertices
+[Info] Containing 324 indices for 108 triangles
+[Info] Loaded vertex normals for 160 vertices
+[Info] Image Assets/Textures/Baker_house.png correctly loaded into DevIL
+[Info] Image correctly uploaded to gl buffer
+[Info] Created new mesh Untitled with 1641 vertices
+[Info] Containing 2751 indices for 917 triangles
+[Info] Loaded vertex normals for 1641 vertices
+[Info] Texture with same name Baker_house.png already loaded into buffers
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/lenna.png
+.png
+possible texture
+[Info] Image Assets/Textures/lenna.png correctly loaded into DevIL
+[Info] Image correctly uploaded to gl buffer
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/Baker_house.png
+.png
+possible texture
+[Info] Texture with same name Baker_house.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/lenna.png
+.png
+possible texture
+[Info] Texture with same name lenna.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/Baker_house.png
+.png
+possible texture
+[Info] Texture with same name Baker_house.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/lenna.png
+.png
+possible texture
+[Info] Texture with same name lenna.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/Baker_house.png
+.png
+possible texture
+[Info] Texture with same name Baker_house.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/lenna.png
+.png
+possible texture
+[Info] Texture with same name lenna.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/Baker_house.png
+.png
+possible texture
+[Info] Texture with same name Baker_house.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/lenna.png
+.png
+possible texture
+[Info] Texture with same name lenna.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/Baker_house.png
+.png
+possible texture
+[Info] Texture with same name Baker_house.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/lenna.png
+.png
+possible texture
+[Info] Texture with same name lenna.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/Baker_house.png
+.png
+possible texture
+[Info] Texture with same name Baker_house.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/lenna.png
+.png
+possible texture
+[Info] Texture with same name lenna.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/Baker_house.png
+.png
+possible texture
+[Info] Texture with same name Baker_house.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/lenna.png
+.png
+possible texture
+[Info] Texture with same name lenna.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/Baker_house.png
+.png
+possible texture
+[Info] Texture with same name Baker_house.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/lenna.png
+.png
+possible texture
+[Info] Texture with same name lenna.png already loaded into buffers
+[Info] texture not found on buffers or previously freed
+[Info] texture not found on buffers or previously freed
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

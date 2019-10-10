@@ -532,9 +532,7 @@ void ModuleImporter::ReloadTextureForAllModels(uint texture_id)
 		}
 
 		// re-assign new id
-		if (texture_id > 0)
-			(*models)->texture_gl_id = texture_id;
-		else
-			LOG("");
+		(*models)->texture_gl_id = texture_id;
+		
 	}
 }
