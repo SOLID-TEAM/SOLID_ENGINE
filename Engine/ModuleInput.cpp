@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleEditor.h"
-#include "PanelConfig.h"
+#include "W_Config.h"
 
 #include "ImGui/Impl/imgui_impl_sdl.h"
 
@@ -62,7 +62,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			if (keyboard[i] == KEY_IDLE)
 			{
 				keyboard[i] = KEY_DOWN;
-				App->editor->config_panel->AddInputLog(i, KEY_DOWN, 0);
+				App->editor->w_config->AddInputLog(i, KEY_DOWN, 0);
 			}
 			else
 			{
@@ -74,7 +74,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			if (keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
 			{
 				keyboard[i] = KEY_UP;
-				App->editor->config_panel->AddInputLog(i, KEY_UP, 0);
+				App->editor->w_config->AddInputLog(i, KEY_UP, 0);
 			}
 			else
 			{
@@ -96,7 +96,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			if (mouse_buttons[i] == KEY_IDLE)
 			{
 				mouse_buttons[i] = KEY_DOWN;
-				App->editor->config_panel->AddInputLog(i, KEY_DOWN, 1 );
+				App->editor->w_config->AddInputLog(i, KEY_DOWN, 1 );
 			}
 			else
 			{
@@ -108,7 +108,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			if (mouse_buttons[i] == KEY_REPEAT || mouse_buttons[i] == KEY_DOWN)
 			{
 				mouse_buttons[i] = KEY_UP;
-				App->editor->config_panel->AddInputLog(i, KEY_UP, 1);
+				App->editor->w_config->AddInputLog(i, KEY_UP, 1);
 			}
 			else
 			{

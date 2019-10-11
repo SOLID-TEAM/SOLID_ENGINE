@@ -1,18 +1,18 @@
-#include "PanelConsole.h"
+#include "W_Console.h"
 #include "ModuleEditor.h"
 #include "Application.h"
 
-PanelConsole::PanelConsole(std::string name, bool active): Panel(name, active)
+W_Console::W_Console(std::string name, bool active): Window(name, active)
 {
 	console_log = App->console_log_aux;
 	App->console_log_aux.clear();
 }
 
-PanelConsole::~PanelConsole()
+W_Console::~W_Console()
 {
 }
 
-void PanelConsole::Draw()
+void W_Console::Draw()
 {
 	ImGui::SetNextWindowSize(ImVec2(380, 600), ImGuiCond_Once);
 	static bool auto_scroll = true;
@@ -74,7 +74,7 @@ void PanelConsole::Draw()
 	ImGui::End();
 }
 
-void PanelConsole::AddConsoleLog(const char* new_entry)
+void W_Console::AddConsoleLog(const char* new_entry)
 {
 	console_log.push_back(strdup(new_entry));
 }

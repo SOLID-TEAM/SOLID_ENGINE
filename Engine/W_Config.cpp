@@ -1,23 +1,22 @@
-#include "ImGui/imgui.h"
 #include "ImGui/imgui_plot.h"
 #include "SDL/include/SDL_opengl.h"
 
 #include "Application.h"
-#include "PanelConfig.h"
+#include "W_Config.h"
 #include "ModuleEditor.h"
 
-PanelConfig::PanelConfig(std::string name, bool active): Panel(name, active)
+W_Config::W_Config(std::string name, bool active): Window(name, active)
 {
 	stored_fps.resize(MAX_STORED_FPS);
 	stored_ms.resize(MAX_STORED_FPS);
 	stored_mem.resize(MAX_STORED_FPS);
 }
 
-PanelConfig::~PanelConfig()
+W_Config::~W_Config()
 {
 }
 
-void PanelConfig::Draw()
+void W_Config::Draw()
 {
 	ImVec4 green = { 20.f / 255.f, 196.f / 255.f, 55.f / 255.f , 1.f };
 	static char app_name[40];
@@ -189,7 +188,7 @@ void PanelConfig::Draw()
 	ImGui::End();
 }
 
-void PanelConfig::AddFpsLog(const float fps, const float ms)
+void W_Config::AddFpsLog(const float fps, const float ms)
 {
 	// stored_fps and ms should be the same
 	if (stored_fps.size() >= MAX_STORED_FPS)
@@ -211,7 +210,7 @@ void PanelConfig::AddFpsLog(const float fps, const float ms)
 	}
 }
 
-void PanelConfig::AddMemoryLog(const float mem)
+void W_Config::AddMemoryLog(const float mem)
 {
 	// stored_fps and ms should be the same
 	if (stored_mem.size() >= MAX_STORED_FPS)
@@ -232,7 +231,7 @@ void PanelConfig::AddMemoryLog(const float mem)
 
 // Add a input event to common buffer
 // flag : 0 = keyboard , 1 = mouse
-void PanelConfig::AddInputLog(uint key, KEY_STATE state, int flag)
+void W_Config::AddInputLog(uint key, KEY_STATE state, int flag)
 {
 	static char entry[512];
 	static const char* states[] = { "IDLE", "DOWN", "REPEAT", "UP" };

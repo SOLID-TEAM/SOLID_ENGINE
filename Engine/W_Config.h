@@ -6,15 +6,15 @@
 
 #include "Globals.h"
 #include "SDL/include/SDL_scancode.h"
-#include "Panel.h"
+#include "Window.h"
 
-class PanelConfig : public Panel
+class W_Config : public Window
 {
 public:
 
-	PanelConfig(std::string name, bool active);
+	W_Config(std::string name, bool active);
 
-	virtual ~PanelConfig();
+	virtual ~W_Config();
 
 	void Draw();
 

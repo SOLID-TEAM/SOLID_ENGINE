@@ -152,8 +152,8 @@ void Application::FinishUpdate()
 	
 	hardware->UpdateDynamicVars();
 
-	editor->config_panel->AddMemoryLog(App->hardware->ram_usage.peak_actual_mem);
-	editor->config_panel->AddFpsLog((float)last_fps, (float)last_frame_ms);
+	editor->w_config->AddMemoryLog(App->hardware->ram_usage.peak_actual_mem);
+	editor->w_config->AddFpsLog((float)last_fps, (float)last_frame_ms);
 
 }
 
@@ -261,9 +261,9 @@ void Application::Log(const char* new_entry)
 
 	//Console ------------------
 
-	if (editor != nullptr && editor->console_panel != nullptr)
+	if (editor != nullptr && editor->w_console != nullptr)
 	{
-		editor->console_panel->AddConsoleLog(new_entry);
+		editor->w_console->AddConsoleLog(new_entry);
 	}
 	else
 	{

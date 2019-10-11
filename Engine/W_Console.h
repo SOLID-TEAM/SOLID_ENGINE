@@ -4,17 +4,17 @@
 #include "Globals.h"
 #include <string>
 #include <vector>
-#include "Panel.h"
+#include "Window.h"
 
 #include "ImGui/imgui.h"
 
-class PanelConsole : public Panel
+class W_Console : public Window
 {
 public:
 
-	PanelConsole(std::string name, bool active);
+	W_Console(std::string name, bool active);
 
-	virtual ~PanelConsole();
+	virtual ~W_Console();
 
 	void AddConsoleLog(const char* new_entry);
 

@@ -1,23 +1,20 @@
-#ifndef __PANEL_H__
-#define __PANEL_H__
+#ifndef __WINDOW_H__
+#define __WINDOW_H__
 
 #include "Globals.h"
 #include <string>
 #include <vector>
 #include "SDL/include/SDL_scancode.h"
 
-
-
 class ModuleEditor;
 
-class Panel
+class Window
 {
 public:
 
-	Panel(std::string name);
-	Panel(std::string name, bool active) : name(name), active(active) {}
+	Window(std::string name, bool active);
 
-	virtual ~Panel();
+	virtual ~Window();
 
 	virtual void Draw() = 0;
 
@@ -25,12 +22,18 @@ public:
 
 	bool IsActive() const;
 
+	void Destroy();    // External function to call anywhere
+
 	std::vector<SDL_Scancode> GetShortCut() const;
 
 	std::string GetName() const
 	{
 		return name;
 	}
+
+protected:
+
+	virtual void CleanUp() {};  // Internal , only Destroy can call this virtual function
 
 public:
 
@@ -44,6 +47,8 @@ protected:
 
 	std::string name;
 	std::vector<SDL_Scancode> shortcut;
+
+	friend ModuleEditor;
 };
 
-#endif // __PANEL_H__
+#endif // __WINDOW_H__

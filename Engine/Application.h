@@ -22,8 +22,8 @@
 #include "HardwareInfo.h"
 
 // Panels --------------------
-#include "PanelConfig.h"
-#include "PanelConsole.h"
+#include "W_Config.h"
+#include "W_Console.h"
 
 class Application
 {
