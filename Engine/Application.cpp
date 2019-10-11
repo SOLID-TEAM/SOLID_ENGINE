@@ -55,9 +55,8 @@ bool Application::Init()
 
 	LOG("-------------- Application Init --------------");
 
-	// reads configuration file
-	if ((config = new Config(config_filename.data())) == nullptr)
-		ret = false;
+	// Config Tool Creation --------------------------------
+	config = new Config(config_filename.data());
 
 	// Call Init() in all modules
 	std::list<Module*>::iterator item = list_modules.begin();
@@ -78,7 +77,6 @@ bool Application::Init()
 				LOG("[Error] Unable to create default config file %s", config_filename.data());
 		}
 	}
-	
 	// ---------------------------------------------------------------------------------------------------
 
 	// loads application config
@@ -100,6 +98,9 @@ bool Application::Init()
 		ret = (*item)->Init((config->GetSection((*item)->GetName())));
 		++item;
 	}
+
+	// Tools Creation --------------------------------
+	hardware = new HardwareInfo();
 
 	// After all Init calls we call Start() in all modules
 
@@ -148,6 +149,10 @@ void Application::FinishUpdate()
 	last_frame_ms = ms_timer.Read();
 
 	// save last fps to module editor vector
+	
+	hardware->UpdateDynamicVars();
+
+	editor->config_panel->AddMemoryLog(App->hardware->ram_usage.peak_actual_mem);
 	editor->config_panel->AddFpsLog((float)last_fps, (float)last_frame_ms);
 
 }
@@ -350,4 +355,8 @@ bool Application::LoadConfig(Config& config)
 	AdjustCappedMs(config.GetInt("framerate_cap", max_frames));
 
 	return ret;
+}
+int Application::GetFrames()
+{
+	return frames;
 }

@@ -15,17 +15,6 @@ Loading File System
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-[Info] Created new mesh Untitled.001 with 160 vertices
-[Info] Containing 324 indices for 108 triangles
-[Info] Loaded vertex normals for 160 vertices
-[Info] Loaded texture coords for Channel 0
-[Info] Image Assets/Textures/Baker_house.png correctly loaded into DevIL
-[Info] Image correctly uploaded to gl buffer
-[Info] Created new mesh Untitled with 1641 vertices
-[Info] Containing 2751 indices for 917 triangles
-[Info] Loaded vertex normals for 1641 vertices
-[Info] Loaded texture coords for Channel 0
-[Info] Texture with same name Baker_house.png already loaded into buffers
 [Start] Loading Editor
 -------------- Application Update --------------
 -------------- Application CleanUp --------------

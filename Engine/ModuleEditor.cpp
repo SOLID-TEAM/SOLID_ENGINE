@@ -61,14 +61,71 @@ bool ModuleEditor::Start(Config& conf)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 
-	ImGui::GetStyle().WindowRounding = 0.0f;// <- Set this on init or use ImGui::PushStyleVar()
-	ImGui::GetStyle().ChildRounding = 0.0f;
-	ImGui::GetStyle().FrameRounding = 0.0f;
-	ImGui::GetStyle().GrabRounding = 0.0f;
-	ImGui::GetStyle().PopupRounding = 0.0f;
-	ImGui::GetStyle().ScrollbarRounding = 0.0f;
-	//ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-	
+	ImGuiStyle* style = &ImGui::GetStyle();
+	style->DefaultColumnWidth = DFT_COLUMN;
+
+	style->WindowRounding = 0.0f;// <- Set this on init or use ImGui::PushStyleVar()
+	style->ChildRounding = 0.0f;
+	style->FrameRounding = 0.0f;
+	style->GrabRounding = 0.0f;
+	style->PopupRounding = 0.0f;
+	style->ScrollbarRounding = 0.0f;
+
+	//style->WindowPadding = ImVec2(15, 15);
+	//style->WindowRounding = 5.0f;
+	//style->FramePadding = ImVec2(5, 5);
+	//style->FrameRounding = 4.0f;
+	//style->ItemSpacing = ImVec2(12, 8);
+	//style->ItemInnerSpacing = ImVec2(8, 6);
+	//style->IndentSpacing = 25.0f;
+	//style->ScrollbarSize = 15.0f;
+	//style->ScrollbarRounding = 9.0f;
+	//style->GrabMinSize = 5.0f;
+	//style->GrabRounding = 3.0f;
+
+	//style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
+	//style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+	//style->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+	//style->Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+	//style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+	//style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
+	//style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
+	//style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	//style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+	//style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	//style->Colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	//style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 0.98f, 0.95f, 0.75f);
+	//style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+	//style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	//style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	//style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+	//style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	//style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+	////style->Colors[ImGuiCol_ComboBg] = ImVec4(0.19f, 0.18f, 0.21f, 1.00f);
+	//style->Colors[ImGuiCol_CheckMark] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+	//style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+	//style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+	//style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	//style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+	//style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	//style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	//style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	//style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+	////style->Colors[ImGuiCol_Column] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	////style->Colors[ImGuiCol_ColumnHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+	////style->Colors[ImGuiCol_ColumnActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	//style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+	//style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	//style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+	////style->Colors[ImGuiCol_CloseButton] = ImVec4(0.40f, 0.39f, 0.38f, 0.16f);
+	////style->Colors[ImGuiCol_CloseButtonHovered] = ImVec4(0.40f, 0.39f, 0.38f, 0.39f);
+	////style->Colors[ImGuiCol_CloseButtonActive] = ImVec4(0.40f, 0.39f, 0.38f, 1.00f);
+	//style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+	//style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+	//style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+	//style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+	//style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
+	//style->Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
 	return ret;
 }
 
@@ -274,72 +331,28 @@ update_status ModuleEditor::Update(float dt)
 	float v_n_line_length = App->importer->v_n_line_length;
 	float f_n_line_length = App->importer->f_n_line_length;
 
-	
-	float column_w = 160.f;
-
 	if (ImGui::CollapsingHeader("Shading Modes"))
 	{
-		ImGui::AlignTextToFramePadding();
-		ImGui::Text("   Fill Faces");
-		ImGui::SameLine(column_w);
-		ImGui::Checkbox("##fill_mode", &App->importer->fill_faces);
-		 
-		ImGui::Text("      Color");
-		ImGui::SameLine(column_w);
-		ImGui::ColorEdit4("fILL Color##2f", (float*)&App->importer->fill_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-
-		ImGui::Text("      Alpha");
-		ImGui::SameLine(column_w);
-
-		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
-		ImGui::SliderFloat("##alpha_slider", &App->importer->fill_color.w, min_alpha, max_alpha, "%.1f", 1.0f);
+		ImGui::Title("Fill Faces",1);	ImGui::Checkbox("##fill_mode", &App->importer->fill_faces);
+		ImGui::Title("Color", 2);		ImGui::ColorEdit4("fILL Color##2f", (float*)&App->importer->fill_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Alpha", 2);		ImGui::SliderFloat("##alpha_slider", &App->importer->fill_color.w, min_alpha, max_alpha, "%.1f", 1.0f);
 
 		ImGui::Separator();
 
-		ImGui::AlignTextToFramePadding();
-		ImGui::Text("   Wireframe");
-		ImGui::SameLine(column_w);
-		ImGui::Checkbox("##wireframe", &App->importer->wireframe);
-
-		ImGui::Text("      Color");
-		ImGui::SameLine(column_w);
-		ImGui::ColorEdit4("Line Color##2f", (float*)&App->importer->wire_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-
-		ImGui::Text("      Width");
-		ImGui::SameLine(column_w);
-
-		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
-		ImGui::SliderFloat("##wire_line_width", &App->importer->wire_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
+		ImGui::Title("Wireframe", 1);	ImGui::Checkbox("##wireframe", &App->importer->wireframe);
+		ImGui::Title("Color" , 2);		ImGui::ColorEdit4("Line Color##2f", (float*)&App->importer->wire_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Width", 2);		ImGui::SliderFloat("##wire_line_width", &App->importer->wire_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
 	}
 
 	if (ImGui::CollapsingHeader("Debug Modes"))
 	{
-		ImGui::AlignTextToFramePadding();
-		ImGui::Text("   Vertex Normals");
-		ImGui::SameLine(column_w);
-		ImGui::Checkbox("##d_vertex_normals", &App->importer->debug_vertex_normals);
+		ImGui::Title("Vertex Normals" , 1);		ImGui::Checkbox("##d_vertex_normals", &App->importer->debug_vertex_normals);
+		ImGui::Title("Point Color", 2);			ImGui::ColorEdit4("Vertex Point Color##2f", (float*)&App->importer->d_vertex_p_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Point Size", 2);			ImGui::SliderFloat("##d_vertex_p_size", &App->importer->v_point_size, min_point_size, max_point_size, "%.1f", 1.0f);
+		ImGui::Title("Line Color", 2);			ImGui::ColorEdit4("Vertex Line Color##2f", (float*)&App->importer->d_vertex_l_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Line Width", 2);			ImGui::SliderFloat("##d_vertex_line_width", &App->importer->v_n_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
+		ImGui::Title("Line Lenght", 2);
 
-		ImGui::Text("      Point Color");
-		ImGui::SameLine(column_w);
-		ImGui::ColorEdit4("Vertex Point Color##2f", (float*)&App->importer->d_vertex_p_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-
-		ImGui::Text("      Point Size");
-		ImGui::SameLine(column_w);
-		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
-		ImGui::SliderFloat("##d_vertex_p_size", &App->importer->v_point_size, min_point_size, max_point_size, "%.1f", 1.0f);
-
-		ImGui::Text("      Line Color");
-		ImGui::SameLine(column_w);
-		ImGui::ColorEdit4("Vertex Line Color##2f", (float*)&App->importer->d_vertex_l_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-
-		ImGui::Text("      Line Width");
-		ImGui::SameLine(column_w);
-		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
-		ImGui::SliderFloat("##d_vertex_line_width", &App->importer->v_n_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
-
-		ImGui::Text("      Line Lenght");
-		ImGui::SameLine(column_w);
-		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
 		if (ImGui::SliderFloat("##d_vertex_line_lenght", &App->importer->v_n_line_length, min_n_length, max_n_length, "%.1f", 1.0f))
 		{
 			App->importer->ReComputeVertexNormals(App->importer->v_n_line_length);
@@ -347,32 +360,13 @@ update_status ModuleEditor::Update(float dt)
 
 		ImGui::Separator();
 
-		ImGui::AlignTextToFramePadding();
-		ImGui::Text("   Face Normals");
-		ImGui::SameLine(column_w);
-		ImGui::Checkbox("##d_face_normals", &App->importer->debug_face_normals);
-
-		ImGui::Text("      Point Color");
-		ImGui::SameLine(column_w);
-		ImGui::ColorEdit4("Face Point Color##2f", (float*)&App->importer->d_vertex_face_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-
-		ImGui::Text("      Point Size");
-		ImGui::SameLine(column_w);
-		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
-		ImGui::SliderFloat("##d_face_p_size", &App->importer->f_v_point_size, min_point_size, max_point_size, "%.1f", 1.0f);
-
-		ImGui::Text("      Line Color");
-		ImGui::SameLine(column_w);
-		ImGui::ColorEdit4("Face Line Color##2f", (float*)&App->importer->d_vertex_face_n_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-
-		ImGui::Text("      Line Width");
-		ImGui::SameLine(column_w);
-		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
-		ImGui::SliderFloat("##d_face_line_width", &App->importer->f_n_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
-
-		ImGui::Text("      Line Lenght");
-		ImGui::SameLine(column_w);
-		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::Title("Face Normals", 1);	ImGui::Checkbox("##d_face_normals", &App->importer->debug_face_normals);
+		ImGui::Title("Point Color", 2);		ImGui::ColorEdit4("Face Point Color##2f", (float*)&App->importer->d_vertex_face_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Point Size", 2);		ImGui::SliderFloat("##d_face_p_size", &App->importer->f_v_point_size, min_point_size, max_point_size, "%.1f", 1.0f);
+		ImGui::Title("Line Color", 2);		ImGui::ColorEdit4("Face Line Color##2f", (float*)&App->importer->d_vertex_face_n_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Line Width", 2);		ImGui::SliderFloat("##d_face_line_width", &App->importer->f_n_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
+		ImGui::Title("Line Lenght", 2);
+		
 		if (ImGui::SliderFloat("##d_face_line_lenght", &App->importer->f_n_line_length, min_n_length, max_n_length, "%.1f", 1.0f))
 		{
 			App->importer->ReComputeFacesNormals(App->importer->f_n_line_length);
@@ -382,54 +376,19 @@ update_status ModuleEditor::Update(float dt)
 
 	if (ImGui::CollapsingHeader("Grid Settings"))
 	{
-		ImGui::AlignTextToFramePadding();
-		ImGui::Text("   Active");
-		ImGui::SameLine(column_w);
-		ImGui::Checkbox("##active_grid", &App->test->main_grid->active);
-
-		ImGui::Text("      Color");
-		ImGui::SameLine(column_w);
-		ImGui::ColorEdit4("Grid Color##2f", (float*)&App->test->main_grid->color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-
-		ImGui::Text("      Opacity");
-		ImGui::SameLine(column_w);
-		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
-		if (ImGui::SliderFloat("##d_face_line_lenght", &App->test->main_grid->color.w, min_alpha, max_alpha, "%.1f", 1.0f));
-
-		ImGui::Text("      Distance");
-		ImGui::SameLine(column_w);
-		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
-
-		if (ImGui::SliderInt("##grid_units", &units, 1, 50))
-		{
-			App->test->main_grid->SetUnits(units);
-		}
-
-		ImGui::Text("      Line Width");
-		ImGui::SameLine(column_w);
-		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
-		if (ImGui::SliderFloat("##grid_width", &App->test->main_grid->width, min_line_w, max_line_w, "%.1f", 1.0f));
+		ImGui::Title("Active",1);		ImGui::Checkbox("##active_grid", &App->test->main_grid->active);
+		ImGui::Title("Color",2);		ImGui::ColorEdit4("Grid Color##2f", (float*)&App->test->main_grid->color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Opacity",2);		ImGui::SliderFloat("##d_face_line_lenght", &App->test->main_grid->color.w, min_alpha, max_alpha, "%.1f", 1.0f);
+		ImGui::Title("Distance",2);     if (ImGui::SliderInt("##grid_units", &units, 1, 50)) App->test->main_grid->SetUnits(units);
+		ImGui::Title("Line Width" ,2);	ImGui::SliderFloat("##grid_width", &App->test->main_grid->width, min_line_w, max_line_w, "%.1f", 1.0f);
 	}
 	if (ImGui::CollapsingHeader("OpenGL Test"))
 	{
-
-		ImGui::AlignTextToFramePadding();
-
-		ImGui::Text("   Color Material");
-		ImGui::SameLine(column_w);
-		ImGui::Checkbox("##GL_COLOR_MATERIAL", &gl_color_material);
-		ImGui::Text("   Depht Test");
-		ImGui::SameLine(column_w);
-		ImGui::Checkbox("##GL_DEPTH_TEST", &gl_depth_test);
-		ImGui::Text("   Cull Faces");
-		ImGui::SameLine(column_w);
-		ImGui::Checkbox("##GL_CULL_FACE", &gl_cull_face);
-		ImGui::Text("   Lighting");
-		ImGui::SameLine(column_w);
-		ImGui::Checkbox("##GL_LIGHTING", &gl_lighting);
+		ImGui::Title("Color Material");	ImGui::Checkbox("##GL_COLOR_MATERIAL", &gl_color_material);
+		ImGui::Title("Depht Test");		ImGui::Checkbox("##GL_DEPTH_TEST", &gl_depth_test);
+		ImGui::Title("Cull Faces");		ImGui::Checkbox("##GL_CULL_FACE", &gl_cull_face);
+		ImGui::Title("Lighting");			ImGui::Checkbox("##GL_LIGHTING", &gl_lighting);
 	}
-
-
 
 	if (glIsEnabled(gl_color_material))
 		glDisable(GL_COLOR_MATERIAL);

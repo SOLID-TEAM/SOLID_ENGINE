@@ -81,7 +81,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="Color.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="external\MathGeoLib\include\Algorithm\Random\LCG.h" />
     <ClInclude Include="external\MathGeoLib\include\Geometry\AABB.h" />
@@ -143,14 +142,18 @@
     <ClInclude Include="external\MathGeoLib\include\Math\sse_mathfun.h" />
     <ClInclude Include="external\MathGeoLib\include\Math\TransformOps.h" />
     <ClInclude Include="external\MathGeoLib\include\Time\Clock.h" />
+    <ClInclude Include="external\mmgr\mmgr.h" />
+    <ClInclude Include="external\mmgr\nommgr.h" />
     <ClInclude Include="external\Parson\parson.h" />
     <ClInclude Include="external\par_shapes.h" />
     <ClInclude Include="external\PhysFS\include\physfs.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="HardwareInfo.h" />
     <ClInclude Include="Imgui\imconfig.h" />
     <ClInclude Include="Imgui\imgui.h" />
     <ClInclude Include="Imgui\imgui_internal.h" />
+    <ClInclude Include="ImGui\imgui_plot.h" />
     <ClInclude Include="ImGui\Impl\imgui_impl_opengl3.h" />
     <ClInclude Include="ImGui\Impl\imgui_impl_sdl.h" />
     <ClInclude Include="Imgui\imstb_rectpack.h" />
@@ -182,7 +185,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Color.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Algorithm\Random\LCG.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Geometry\AABB.cpp" />
@@ -216,11 +218,14 @@
     <ClCompile Include="external\MathGeoLib\include\Math\SSEMath.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Math\TransformOps.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Time\Clock.cpp" />
+    <ClCompile Include="external\mmgr\mmgr.cpp" />
     <ClCompile Include="external\Parson\parson.c" />
     <ClCompile Include="glmath.cpp" />
+    <ClCompile Include="HardwareInfo.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
     <ClCompile Include="Imgui\imgui_demo.cpp" />
     <ClCompile Include="Imgui\imgui_draw.cpp" />
+    <ClCompile Include="ImGui\imgui_plot.cpp" />
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="ImGui\Impl\imgui_impl_opengl3.cpp" />
     <ClCompile Include="ImGui\Impl\imgui_impl_sdl.cpp" />

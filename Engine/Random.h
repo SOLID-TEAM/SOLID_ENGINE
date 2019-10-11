@@ -7,7 +7,6 @@
 class Random
 {
 public:
-
 	static int GetIntRandomValue(int range_i1, int range_i2)
 	{
 		pcg_extras::seed_seq_from<std::random_device> seed_source;

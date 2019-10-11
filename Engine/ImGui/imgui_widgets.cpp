@@ -7716,4 +7716,43 @@ void ImGui::Columns(int columns_count, const char* id, bool border)
         BeginColumns(id, columns_count, flags);
 }
 
+
 //-------------------------------------------------------------------------
+// [SECTION] Widgets: Solid Team Implementations
+//-------------------------------------------------------------------------
+// - Title( const char* title); 
+//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
+
+#include <string>
+
+void ImGui::Title(const char* title , int hierarchy)
+{
+    std::string final_title(title);
+
+    if (hierarchy != 1 && hierarchy != 2)
+        hierarchy = 1;
+
+    switch (hierarchy)
+    {
+    case 1:
+        final_title = std::string("   ") + final_title;
+        break;
+    case 2:
+        final_title = std::string("      ") + final_title;
+        break;
+    }
+    ImGui::AlignTextToFramePadding();
+    ImGui::Text(final_title.c_str() ); ImGui::SameLine(ImGui::GetStyle().DefaultColumnWidth);   // Fake column
+    ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());        // Next Item Width
+}
+
+void ImGui::PushColumnWidth( float width)
+{
+    ImGui::GetStyle().DefaultColumnWidth = width;
+}
+
+void ImGui::PopColumnWidth()
+{
+    ImGui::GetStyle().DefaultColumnWidth = DFT_COLUMN;
+}

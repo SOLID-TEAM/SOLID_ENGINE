@@ -215,6 +215,11 @@ struct ImVec4
 
 namespace ImGui
 {
+    // Solid Team Implementation
+    IMGUI_API void          Title(const char* title , int hierarchy = 1);
+    IMGUI_API void          PushColumnWidth(float width);
+    IMGUI_API void          PopColumnWidth();
+
     // Context creation and access
     // Each context create its own ImFontAtlas by default. You may instance one yourself and pass it to CreateContext() to share a font atlas between imgui contexts.
     // All those functions are not reliant on the current context.
@@ -1396,6 +1401,10 @@ struct ImGuiStyle
     float       CurveTessellationTol;       // Tessellation tolerance when using PathBezierCurveTo() without a specific number of segments. Decrease for highly tessellated curves (higher quality, more polygons), increase to reduce quality.
     ImVec4      Colors[ImGuiCol_COUNT];
 
+    // Team Solid ------------------
+    float       DefaultColumnWidth;
+
+    // ------------------------------
     IMGUI_API ImGuiStyle();
     IMGUI_API void ScaleAllSizes(float scale_factor);
 };
@@ -1405,6 +1414,8 @@ struct ImGuiStyle
 // Communicate most settings and inputs/outputs to Dear ImGui using this structure.
 // Access via ImGui::GetIO(). Read 'Programmer guide' section in .cpp file for general usage.
 //-----------------------------------------------------------------------------
+
+#define DFT_COLUMN 160.f
 
 struct ImGuiIO
 {

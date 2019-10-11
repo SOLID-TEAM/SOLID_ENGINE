@@ -5,8 +5,8 @@
         "framerate_cap": 60
     },
     "Window": {
-        "window_width": 1280,
-        "window_height": 1024,
+        "window_width": 1920,
+        "window_height": 1080,
         "fullscreen": false,
         "fullscreen_desktop": false,
         "resizable": true,

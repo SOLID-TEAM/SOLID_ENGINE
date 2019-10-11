@@ -1,4 +1,5 @@
 #include "ImGui/imgui.h"
+#include "ImGui/imgui_plot.h"
 #include "SDL/include/SDL_opengl.h"
 
 #include "Application.h"
@@ -9,6 +10,7 @@ PanelConfig::PanelConfig(std::string name, bool active): Panel(name, active)
 {
 	stored_fps.resize(MAX_STORED_FPS);
 	stored_ms.resize(MAX_STORED_FPS);
+	stored_mem.resize(MAX_STORED_FPS);
 }
 
 PanelConfig::~PanelConfig()
@@ -17,33 +19,74 @@ PanelConfig::~PanelConfig()
 
 void PanelConfig::Draw()
 {
+	ImVec4 green = { 20.f / 255.f, 196.f / 255.f, 55.f / 255.f , 1.f };
+	static char app_name[40];
+	static char org_name[40];
+
 	if (ImGui::Begin("Configuration", &active))
 	{
-		if (ImGui::CollapsingHeader("Application"))
+		if (ImGui::CollapsingHeader("Aplication"))
 		{
-			ImGui::Text("Testing");
+			ImGui::Spacing();
+			ImGui::Title("Aplication"); 	ImGui::InputText("##Aplication Name", app_name, 40);
+			ImGui::Title("Organization"); 	ImGui::InputText("##Organization Name", org_name, 40);
+			ImGui::Spacing();
 
-			int test = App->max_frames;
+		}
+		if (ImGui::CollapsingHeader("Diagnostic Tools"))
+		{
+			ImGui::Spacing();
+			static int cap = 60;
+			ImGui::Title("Framerate"); if (ImGui::SliderInt("##Framerate cap", &cap, 0, 144, "%.2f")) App->AdjustCappedMs(cap);
+			ImGui::Spacing();
 
-			if (ImGui::SliderInt("#Framerate cap", &test, 0, 144, "FramerateCap = %.3f"))
-			{
-				App->AdjustCappedMs(test);
-			}
-			ImGui::SameLine(); App->editor->HelpMarker("Adjust to 0 to unlock cap");
+			ImGui::PlotConfig conf;
+			//conf.values.xs = x_data; // this line is optional
+			conf.values.ys = &stored_fps[0];
+			conf.values.count = MAX_STORED_FPS;
+			conf.scale.min = -1;
+			conf.scale.max = 100;
+			conf.tooltip.show = true;
+			conf.tooltip.format = "FPS: %.2f";
+			conf.grid_x.show = true;
+			conf.grid_y.show = true;
+			conf.frame_size = ImVec2(ImGui::GetContentRegionAvailWidth(), 100 );
+			conf.line_thickness = 2.f;
+			conf.overlay_text = "FPS";
+			conf.grid_x.show = false;
+			conf.grid_y.show = false;
+			
+			ImGui::Plot("FPS", conf);
+			ImGui::Spacing();
 
-			ImGui::Separator();
+			conf.tooltip.format = "Ms: %.2f";
+			conf.overlay_text = "Ms";
+			conf.values.ys = &stored_ms[0];
 
-			ImGui::PushStyleColor(ImGuiCol_PlotHistogram, (ImVec4)ImColor(255, 0, 255));
-			char title[25];
-			sprintf_s(title, 25, "Framerate %.1f", stored_fps[stored_fps.size() - 1]);
-			ImGui::PlotHistogram("##Framerate", &stored_fps[0], stored_fps.size(), 0, title, 0.0f, 100.0f, ImVec2(ImGui::GetWindowContentRegionWidth(), 100));
+			ImGui::Plot("Ms", conf);
+			ImGui::Spacing();
 
-			ImGui::Separator();
+			conf.scale.max = 20000;
+			conf.tooltip.format = "Mb: %.2f";
+			conf.overlay_text = "Memory Usage";
+			conf.values.ys = &stored_mem[0];
 
-			sprintf_s(title, 25, "ms %.1f", stored_ms[stored_ms.size() - 1]);
-			ImGui::PlotHistogram("##Framerate", &stored_ms[0], stored_ms.size(), 0, title, 0.0f, 50.0f, ImVec2(ImGui::GetWindowContentRegionWidth(), 100));
+			ImGui::Plot("Memory Usage", conf);
+			ImGui::Spacing();
 
-			ImGui::PopStyleColor();
+			ImGui::PushColumnWidth(200.f);
+			ImGui::Title("Total Reported:"); 		ImGui::TextColored(green, "%i",		App->hardware->ram_usage.total_reported_mem);
+			ImGui::Title("Total Actual: "); 		ImGui::TextColored(green, "%i",			App->hardware->ram_usage.total_actual_mem);
+			ImGui::Title("Peak Reported: ");		ImGui::TextColored(green, "%i",		App->hardware->ram_usage.peak_reported_mem);
+			ImGui::Title("Peak Actual: "); 			ImGui::TextColored(green, "%i",			App->hardware->ram_usage.peak_actual_mem);
+			ImGui::Title("Accumulated Reported: ");	ImGui::TextColored(green, "%i", App->hardware->ram_usage.accumulated_reported_mem);
+			ImGui::Title("Accumulated Actual: ");	ImGui::TextColored(green, "%i",	App->hardware->ram_usage.accumulated_actual_mem);
+			ImGui::Title("Accumulated Alloc: ");	ImGui::TextColored(green, "%i",	App->hardware->ram_usage.accumulated_alloc_unit);
+			ImGui::Title("Total Alloc Unit: ");		ImGui::TextColored(green, "%i",		App->hardware->ram_usage.total_alloc_unity_count);
+			ImGui::Title("PeakAlloc Unit: ");		ImGui::TextColored(green, "%i",		App->hardware->ram_usage.peak_alloc_unit_count);
+			ImGui::PopColumnWidth();
+
+			ImGui::Spacing();
 		}
 
 		if (ImGui::CollapsingHeader("Window"))
@@ -62,106 +105,74 @@ void PanelConfig::Draw()
 			bool resizable = App->window->resizable;
 			bool borderless = App->window->borderless;
 			// -----------------------------------------------------------------------
+			ImGui::Spacing();
+			ImGui::Title("Fullscreen");			if (ImGui::Checkbox("##Fullscreen", &fullscreen)) App->window->SetWindowFullscreen(fullscreen);
+			ImGui::Title("Desktop");			if (ImGui::Checkbox("##Fullscreen Desktop", &fullscreen_desktop)) App->window->SetWindowFullscreen(false, fullscreen_desktop);
+			ImGui::Title("Resizable");			if (ImGui::Checkbox("##Resizable ", &resizable)) App->window->SetWindowResizable(resizable);
+			ImGui::Title("Borderless");			if (ImGui::Checkbox("##Borderless", &borderless)) App->window->SetWindowBorderless(borderless);
 
-			if (ImGui::SliderFloat("Screen Brightness", &brightness, 0.0f, 1.0f))
-			{   // only calls when slider is clicked
-				&App->window->SetBrightness(&brightness);
-			}
+			ImGui::Spacing();
+			ImGui::Title("Screen Brightness "); if (ImGui::SliderFloat("##Screen Brightness", &brightness, 0.0f, 1.0f)) &App->window->SetBrightness(&brightness);
+			ImGui::Title("Window Width"); 		if (ImGui::SliderInt("##Window Width", &width, 320, 1920)) App->window->SetWindowSize(width, height);
+			ImGui::Title("Window Height");		if (ImGui::SliderInt("##Window Height", &height, 240, 1080)) App->window->SetWindowSize(width, height);
 
-			if (ImGui::SliderInt("Window Width", &width, 320, 1920))
-			{   // only calls when slider is clicked
-				App->window->SetWindowSize(width, height);
-			}
-			if (ImGui::SliderInt("Window Height", &height, 240, 1080))
-			{   // only calls when slider is clicked
-				App->window->SetWindowSize(width, height);
-			}
+			ImGui::Spacing();
+		}
+
+		if (ImGui::CollapsingHeader("Hardware Info"))
+		{
+			std::string amount;
+
+			amount = std::to_string(App->hardware->system.cpu_count) + " (Cache: " + std::to_string(App->hardware->system.cpu_cache) + "Kb)";
+
+			ImGui::Title("CPU:");				ImGui::TextColored(green, amount.c_str());
+
+			amount = std::to_string(App->hardware->system.sys_ram) + "Mb";
+
+			ImGui::Title("System RAM:");		ImGui::TextColored(green, amount.c_str());
+			ImGui::Title("Caps:");				ImGui::TextColored(green, App->hardware->system.caps.c_str());
+
+			ImGui::Separator();
+
+			ImGui::Title("GPU Brand:");			ImGui::TextColored(green, App->hardware->gpu.vendor.c_str());
+			ImGui::Title("Device: "); 			ImGui::TextColored(green, App->hardware->gpu.device.c_str());
+			ImGui::Title("VRAM Dedicated: ");	ImGui::TextColored(green, "%2.f Mb", App->hardware->gpu.vram_dedicated);
+			ImGui::Title("VRAM Available: "); 	ImGui::TextColored(green, "%2.f Mb", App->hardware->gpu.vram_available);
+			ImGui::Title("VRAM Current: ");		ImGui::TextColored(green, "%2.f Mb", App->hardware->gpu.vram_current);
+			ImGui::Title("VRAM Evicted: ");		ImGui::TextColored(green, "%2.f Mb", App->hardware->gpu.vram_evicted);
 
 			ImGui::Separator();
 
 			// GET DISPLAY data for every monitor
 			SDL_DisplayMode dpm;
-			// store color for highlighteds words
-			ImColor hl_color = { 255,0,255 };
+
 			for (int i = 0; i < SDL_GetNumVideoDisplays(); ++i)
 			{
 				// instead of pushing and poping styles, we can directly call ImGui::TextColored()
 				SDL_GetCurrentDisplayMode(i, &dpm);
-				ImGui::Text("Monitor:");
-				ImGui::SameLine();
-				ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)hl_color);
-				ImGui::Text("%i", i);
-				ImGui::PopStyleColor(1);
-				ImGui::SameLine();
-				ImGui::Text("Res:");
-				ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)hl_color);
-				ImGui::SameLine();
-				ImGui::Text("%dx%dpx %ibpp", dpm.w, dpm.h, SDL_BITSPERPIXEL(dpm.format));
-				ImGui::PopStyleColor(1);
-				ImGui::Text("Refresh rate:");
-				ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)hl_color);
-				ImGui::SameLine();
-				ImGui::Text("%dHz", dpm.refresh_rate);
-				ImGui::PopStyleColor(1);
+				ImGui::Title("Monitor:");		ImGui::TextColored(green, "%i", i);;
+				ImGui::Title("Res:");			ImGui::TextColored(green, "%dx%dpx %ibpp", dpm.w, dpm.h, SDL_BITSPERPIXEL(dpm.format));
+				ImGui::Title("Refresh rate:");	ImGui::TextColored(green, "%dHz", dpm.refresh_rate);
+
 				ImGui::Separator();
 			}
-
-			if (ImGui::Checkbox("Fullscreen", &fullscreen))
-			{
-				App->window->SetWindowFullscreen(fullscreen);
-			}
-			ImGui::SameLine(); App->editor->HelpMarker("Sets fullscreen with current window resolution");
-			ImGui::SameLine();
-			if (ImGui::Checkbox("Fullscreen Desktop", &fullscreen_desktop))
-			{
-				App->window->SetWindowFullscreen(false, fullscreen_desktop);
-			}
-			ImGui::SameLine(); App->editor->HelpMarker("Sets fullscreen with current desktop resolution");
-
-			// TODO: when the window is changed throught this, doesnt update current size on previous sliders (obviously)
-			if (ImGui::Checkbox("Resizable ", &resizable))
-			{
-				App->window->SetWindowResizable(resizable);
-			}
-			ImGui::SameLine(); App->editor->HelpMarker("Allow to resize the window manually");
-			ImGui::SameLine();
-			//ImGui::SameLine(test * stringLength);
-			if (ImGui::Checkbox("Borderless", &borderless))
-			{
-				App->window->SetWindowBorderless(borderless);
-			}
 		}
 
-		if (ImGui::CollapsingHeader("File System"))
-		{
-		}
+
 
 		if (ImGui::CollapsingHeader("Input"))
 		{
 			static bool auto_scroll = true;
 
-			ImGui::Text("Mouse Position:");
-			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(255, 0, 0, 255), "%i,%i", App->input->GetMouseX(), App->input->GetMouseY());
-
-			ImGui::Text("Mouse Motion:");
-			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(255, 0, 0, 255), "%i,%i", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
-
-			ImGui::Text("Mouse Wheel:");
-			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(255, 0, 0, 255), "%i", App->input->GetMouseZ());
+			ImGui::Title("Mouse Position:");	ImGui::TextColored(green, "%i,%i", App->input->GetMouseX(), App->input->GetMouseY());
+			ImGui::Title("Mouse Motion:");		ImGui::TextColored(green, "%i,%i", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
+			ImGui::Title("Mouse Wheel:");		ImGui::TextColored(green, "%i", App->input->GetMouseZ());
 
 			ImGui::Separator();
 
-			ImGui::Checkbox("Auto scroll", &auto_scroll);
-			ImGui::SameLine();
-			if (ImGui::Button("Clear console"))
-			{
-				input_buffer.clear();
-			}
-
-			ImGui::BeginChild("Input Log");
+			ImGui::Title("Auto Scroll"); ImGui::Checkbox("##Autoscroll_Input", &auto_scroll); ImGui::SameLine();  if (ImGui::Button("Clear console")) input_buffer.clear();
+	
+			ImGui::BeginChild("Input Log", ImVec2(0,0) , true, ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysUseWindowPadding);
 			ImGui::TextUnformatted(input_buffer.begin());
 
 			if (auto_scroll)
@@ -171,102 +182,11 @@ void PanelConfig::Draw()
 
 			ImGui::EndChild();
 		}
-
-		if (ImGui::CollapsingHeader("Hardware"))
+		if (ImGui::CollapsingHeader("File System"))
 		{
-			Hardware_Info info;
-
-			GetHardWareInfo(&info);
-			std::string amount;
-
-			ImGui::Text("CPU:");
-			ImGui::SameLine();
-			amount = std::to_string(info.cpu_count) + " (Cache: " + std::to_string(info.cpu_cache) + "Kb)";
-			ImGui::TextColored({ 0, 1.0f, 1.0f, 1.0f }, amount.c_str());
-
-			ImGui::Text("System RAM:");
-			ImGui::SameLine();
-			amount = std::to_string(info.sys_ram) + "Mb";
-			ImGui::TextColored({ 0, 1.0f, 1.0f, 1.0f }, amount.c_str());
-
-			ImGui::Text("Caps:");
-			ImGui::SameLine();
-			ImGui::TextColored({ 0, 1.0f, 1.0f, 1.0f }, info.caps.c_str());
-
-			ImGui::Separator();
-
-			ImGui::Text("GPU Brand:");
-			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), info.gpu_vendor.c_str());
-
-			ImGui::Text("Device: ");
-			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), info.gpu_device.c_str());
-
-			ImGui::Text("VRAM Dedicated: ");
-			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%2.f Mb", info.vram_dedicated);
-
-			ImGui::Text("VRAM Available: ");
-			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%2.f Mb", info.vram_available);
-
-			ImGui::Text("VRAM Current: ");
-			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%2.f Mb", info.vram_current);
-
-			ImGui::Text("VRAM Evicted: ");
-			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%2.f Mb", info.vram_evicted);
-
 		}
-
 	}
 	ImGui::End();
-}
-
-void PanelConfig::GetHardWareInfo(Hardware_Info* info)
-{
-	// CPU ------------------------------------
-	info->cpu_count = SDL_GetCPUCount();
-	info->cpu_cache = SDL_GetCPUCacheLineSize();
-	// RAM ------------------------------------
-	int sys_ram = SDL_GetSystemRAM();
-	// CAPS -----------------------------------
-	if (SDL_Has3DNow())
-		info->caps.append("3DNow, ");
-	if (SDL_HasAVX())
-		info->caps.append("AVX, ");
-	if (SDL_HasAVX2())
-		info->caps.append("AVX2, ");
-	if (SDL_HasMMX())
-		info->caps.append("MMX, ");
-	if (SDL_HasRDTSC())
-		info->caps.append("RDTSC, ");
-	if (SDL_HasSSE())
-		info->caps.append("SSE, ");
-	if (SDL_HasSSE2())
-		info->caps.append("SSE2, ");
-	if (SDL_HasSSE3())
-		info->caps.append("SSE3, ");
-	if (SDL_HasSSE41())
-		info->caps.append("SSE41, ");
-	if (SDL_HasSSE42())
-		info->caps.append("SSE42, ");
-	if (SDL_HasAltiVec)
-		info->caps.append("AltiVec, ");
-	// GPU ----------------------------------
-	info->gpu_device.assign((const char*)glGetString(GL_RENDERER));
-	info->gpu_vendor.assign((const char*)glGetString(GL_VENDOR));
-
-	glGetFloatv(GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, &info->vram_dedicated);
-	info->vram_dedicated /= 1024.f;
-	glGetFloatv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &info->vram_available);
-	info->vram_available /= 1024.f;
-	glGetFloatv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &info->vram_current);
-	info->vram_current /= 1024.f;
-	glGetFloatv(GL_GPU_MEMORY_INFO_EVICTED_MEMORY_NVX, &info->vram_evicted);
-	info->vram_evicted /= 1024.f;
 }
 
 void PanelConfig::AddFpsLog(const float fps, const float ms)
@@ -289,7 +209,25 @@ void PanelConfig::AddFpsLog(const float fps, const float ms)
 		stored_fps.push_back(fps);
 		stored_ms.push_back(ms);
 	}
+}
 
+void PanelConfig::AddMemoryLog(const float mem)
+{
+	// stored_fps and ms should be the same
+	if (stored_mem.size() >= MAX_STORED_FPS)
+	{
+		// iterate and shift values
+		for (uint i = 0; i < MAX_STORED_FPS - 1; ++i)
+		{
+			stored_mem[i] = stored_mem[i + 1];
+		}
+
+		stored_mem[MAX_STORED_FPS - 1] = mem;
+	}
+	else
+	{
+		stored_mem.push_back(mem);
+	}
 }
 
 // Add a input event to common buffer

@@ -1,6 +1,7 @@
 #include "Panel.h"
 #include "ModuleEditor.h"
 
+
 Panel::Panel(std::string name) : name(name)
 {}
 

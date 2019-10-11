@@ -1,6 +1,7 @@
 #ifndef __ModuleWindow_H__
 #define __ModuleWindow_H__
 
+#include "Globals.h"
 #include "Module.h"
 #include "SDL/include/SDL.h"
 
@@ -41,8 +42,8 @@ public:
 	float max_width = 1920;
 	float max_height = 1080;
 
-	uint current_w = SCREEN_WIDTH;
-	uint current_h = SCREEN_HEIGHT;
+	uint current_w = 1920;
+	uint current_h = 1080;
 
 	bool fullscreen = WIN_FULLSCREEN;
 	bool resizable = WIN_RESIZABLE;

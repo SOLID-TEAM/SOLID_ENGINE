@@ -62,7 +62,6 @@ update_status ModuleInput::PreUpdate(float dt)
 			else
 			{
 				keyboard[i] = KEY_REPEAT;
-				App->editor->config_panel->AddInputLog(i, KEY_REPEAT, 0);
 			}
 		}
 		else
@@ -97,7 +96,6 @@ update_status ModuleInput::PreUpdate(float dt)
 			else
 			{
 				mouse_buttons[i] = KEY_REPEAT;
-				App->editor->config_panel->AddInputLog(i, KEY_REPEAT, 1);
 			}
 		}
 		else
