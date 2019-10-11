@@ -43,6 +43,7 @@ public:
 	//const char* GetName() const;
 
 	bool Render();
+	bool RenderWireframe();
 
 	bool CleanUp();
 

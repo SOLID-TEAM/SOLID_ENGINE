@@ -58,9 +58,6 @@ bool ModuleEditor::Start(Config& conf)
 
 	// Create all panels --------------------------------
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
-
 	ImGuiStyle* style = &ImGui::GetStyle();
 	style->DefaultColumnWidth = DFT_COLUMN;
 

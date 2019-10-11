@@ -206,7 +206,24 @@ bool ModelData::Render()
 	//glDisableClientState(GL_COLOR_ARRAY);
 
 	return ret;
+}
 
+bool ModelData::RenderWireframe() // need very few operations
+{
+	bool ret = true;
+	
+	glEnableClientState(GL_VERTEX_ARRAY);
+	// bind and define data type vertices
+	glBindBuffer(GL_ARRAY_BUFFER, vertices_gl_id);
+	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+	// bind indices
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_gl_id);
+	// draw
+	glDrawElements(GL_TRIANGLES, _idx_size, GL_UNSIGNED_INT, (void*)0);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	return ret;
 }
 
 bool ModelData::DebugRenderVertex(float pointSize)

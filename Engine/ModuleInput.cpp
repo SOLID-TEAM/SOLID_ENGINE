@@ -166,7 +166,8 @@ update_status ModuleInput::PreUpdate(float dt)
 			}
 			if (comparer == ".png" ||
 				comparer == ".jpg" ||
-				comparer == ".DDS")
+				comparer == ".DDS" ||
+				comparer == ".tif")
 			{
 			// TODO !!!! : testing to reload model texture with the dropped one
 			// still need to reload only the desired "focused" model

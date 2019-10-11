@@ -107,7 +107,7 @@ update_status ModuleImporter::PostUpdate(float dt)
 			glLineWidth(wire_line_width);
 			glColor4fv((float*)&wire_color);
 
-			(*model)->Render();
+			(*model)->RenderWireframe();
 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
@@ -528,7 +528,7 @@ void ModuleImporter::ReloadTextureForAllModels(uint texture_id)
 		}
 		else
 		{
-			LOG("[Info] texture not found on buffers or previously freed");
+			LOG("[Info] texture not found on texture map or previously freed");
 		}
 
 		// re-assign new id
