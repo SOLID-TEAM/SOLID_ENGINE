@@ -43,6 +43,7 @@ bool ModuleEditor::Init(Config& config)
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	
 
 	config_panel = new PanelConfig("Configuration", show_configuration);
 	console_panel = new PanelConsole("Console", show_console);
@@ -304,11 +305,44 @@ update_status ModuleEditor::Update(float dt)
 
 	}
 
+
+
+
+	// ----------------------------------------------------------------------------------
+
+	//if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	//{
+	//	//App->config->SaveConfigToFile("blas.json");
+	//	Save(App->config->GetSection(name.data()));
+	//	App->config->SaveConfigToFile(App->config_filename.data());
+	//	//SaveEditorConfig(editor_filename.data());
+	//}
+	//if (App->input->GetKey(SDL_SCANCODE_KP_ENTER) == KEY_DOWN)
+	//{
+	//	//App->config->SaveConfigToFile("blasfdgfd.json");
+	//	Load(App->config->GetSection(name.data()));
+	//	/*Save(App->config->GetSection(name.data()));*/
+	//	//SaveEditorConfig(editor_filename.data());
+	//}
+
+	return UPDATE_CONTINUE;
+}
+
+void ModuleEditor::SetItemsSize(int mount)
+{
+	ImGui::PushItemWidth((ImGui::GetWindowWidth() - ImGui::GetCursorPosX())/ (float)mount);
+}
+
+update_status ModuleEditor::PostUpdate(float dt)
+{
+
+
 	// Render window -------------------------------------------
 
 	// TODO: MAKE A PANEL CLASS
 
-	
+	ImGui::Begin("main");
+
 	ImGui::Begin("Render");
 
 
@@ -323,7 +357,7 @@ update_status ModuleEditor::Update(float dt)
 	const float max_point_size = 10.0f;
 	const float min_point_size = 0.0f;
 	const float min_alpha = 0.f;
-	const float max_alpha= 1.f;
+	const float max_alpha = 1.f;
 
 	const float max_n_length = 3.0f;
 	const float min_n_length = 0.0f;
@@ -333,23 +367,23 @@ update_status ModuleEditor::Update(float dt)
 
 	if (ImGui::CollapsingHeader("Shading Modes"))
 	{
-		ImGui::Title("Fill Faces",1);	ImGui::Checkbox("##fill_mode", &App->importer->fill_faces);
-		ImGui::Title("Color", 2);		ImGui::ColorEdit4("fILL Color##2f", (float*)&App->importer->fill_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Fill Faces", 1);	ImGui::Checkbox("##fill_mode", &App->importer->fill_faces);
+		ImGui::Title("Color", 2);		ImGui::ColorEdit4("fILL Color##2f", (float*)& App->importer->fill_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
 		ImGui::Title("Alpha", 2);		ImGui::SliderFloat("##alpha_slider", &App->importer->fill_color.w, min_alpha, max_alpha, "%.1f", 1.0f);
 
 		ImGui::Separator();
 
 		ImGui::Title("Wireframe", 1);	ImGui::Checkbox("##wireframe", &App->importer->wireframe);
-		ImGui::Title("Color" , 2);		ImGui::ColorEdit4("Line Color##2f", (float*)&App->importer->wire_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Color", 2);		ImGui::ColorEdit4("Line Color##2f", (float*)& App->importer->wire_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
 		ImGui::Title("Width", 2);		ImGui::SliderFloat("##wire_line_width", &App->importer->wire_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
 	}
 
 	if (ImGui::CollapsingHeader("Debug Modes"))
 	{
-		ImGui::Title("Vertex Normals" , 1);		ImGui::Checkbox("##d_vertex_normals", &App->importer->debug_vertex_normals);
-		ImGui::Title("Point Color", 2);			ImGui::ColorEdit4("Vertex Point Color##2f", (float*)&App->importer->d_vertex_p_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Vertex Normals", 1);		ImGui::Checkbox("##d_vertex_normals", &App->importer->debug_vertex_normals);
+		ImGui::Title("Point Color", 2);			ImGui::ColorEdit4("Vertex Point Color##2f", (float*)& App->importer->d_vertex_p_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
 		ImGui::Title("Point Size", 2);			ImGui::SliderFloat("##d_vertex_p_size", &App->importer->v_point_size, min_point_size, max_point_size, "%.1f", 1.0f);
-		ImGui::Title("Line Color", 2);			ImGui::ColorEdit4("Vertex Line Color##2f", (float*)&App->importer->d_vertex_l_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Line Color", 2);			ImGui::ColorEdit4("Vertex Line Color##2f", (float*)& App->importer->d_vertex_l_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
 		ImGui::Title("Line Width", 2);			ImGui::SliderFloat("##d_vertex_line_width", &App->importer->v_n_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
 		ImGui::Title("Line Lenght", 2);
 
@@ -361,12 +395,12 @@ update_status ModuleEditor::Update(float dt)
 		ImGui::Separator();
 
 		ImGui::Title("Face Normals", 1);	ImGui::Checkbox("##d_face_normals", &App->importer->debug_face_normals);
-		ImGui::Title("Point Color", 2);		ImGui::ColorEdit4("Face Point Color##2f", (float*)&App->importer->d_vertex_face_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Point Color", 2);		ImGui::ColorEdit4("Face Point Color##2f", (float*)& App->importer->d_vertex_face_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
 		ImGui::Title("Point Size", 2);		ImGui::SliderFloat("##d_face_p_size", &App->importer->f_v_point_size, min_point_size, max_point_size, "%.1f", 1.0f);
-		ImGui::Title("Line Color", 2);		ImGui::ColorEdit4("Face Line Color##2f", (float*)&App->importer->d_vertex_face_n_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Line Color", 2);		ImGui::ColorEdit4("Face Line Color##2f", (float*)& App->importer->d_vertex_face_n_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
 		ImGui::Title("Line Width", 2);		ImGui::SliderFloat("##d_face_line_width", &App->importer->f_n_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
 		ImGui::Title("Line Lenght", 2);
-		
+
 		if (ImGui::SliderFloat("##d_face_line_lenght", &App->importer->f_n_line_length, min_n_length, max_n_length, "%.1f", 1.0f))
 		{
 			App->importer->ReComputeFacesNormals(App->importer->f_n_line_length);
@@ -376,11 +410,11 @@ update_status ModuleEditor::Update(float dt)
 
 	if (ImGui::CollapsingHeader("Grid Settings"))
 	{
-		ImGui::Title("Active",1);		ImGui::Checkbox("##active_grid", &App->test->main_grid->active);
-		ImGui::Title("Color",2);		ImGui::ColorEdit4("Grid Color##2f", (float*)&App->test->main_grid->color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-		ImGui::Title("Opacity",2);		ImGui::SliderFloat("##d_face_line_lenght", &App->test->main_grid->color.w, min_alpha, max_alpha, "%.1f", 1.0f);
-		ImGui::Title("Distance",2);     if (ImGui::SliderInt("##grid_units", &units, 1, 50)) App->test->main_grid->SetUnits(units);
-		ImGui::Title("Line Width" ,2);	ImGui::SliderFloat("##grid_width", &App->test->main_grid->width, min_line_w, max_line_w, "%.1f", 1.0f);
+		ImGui::Title("Active", 1);		ImGui::Checkbox("##active_grid", &App->test->main_grid->active);
+		ImGui::Title("Color", 2);		ImGui::ColorEdit4("Grid Color##2f", (float*)& App->test->main_grid->color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+		ImGui::Title("Opacity", 2);		ImGui::SliderFloat("##d_face_line_lenght", &App->test->main_grid->color.w, min_alpha, max_alpha, "%.1f", 1.0f);
+		ImGui::Title("Distance", 2);     if (ImGui::SliderInt("##grid_units", &units, 1, 50)) App->test->main_grid->SetUnits(units);
+		ImGui::Title("Line Width", 2);	ImGui::SliderFloat("##grid_width", &App->test->main_grid->width, min_line_w, max_line_w, "%.1f", 1.0f);
 	}
 	if (ImGui::CollapsingHeader("OpenGL Test"))
 	{
@@ -416,8 +450,10 @@ update_status ModuleEditor::Update(float dt)
 
 	//// TODO: MAKE A HIERARCHY PANEL
 
+	static bool hierarchy_ = true;
+
 	//static bool show_hierarchy = true;
-	if (ImGui::Begin("Hierarchy"))
+	if (ImGui::Begin("Hierarchy", &hierarchy_))
 	{
 		// get all the gameObjects
 		std::vector<ModelData*> vgo = App->importer->GetModels();
@@ -425,66 +461,46 @@ update_status ModuleEditor::Update(float dt)
 
 		for (; go != vgo.end(); ++go)
 		{
-			ImGui::PushID((int)*go); // to correctly "link" each element without same problems with identical name when we manage buttons etc
-			
-			if (ImGui::TreeNode((*go)->name.data()))
+			ImGui::PushID((int)* go); // to correctly "link" each element without same problems with identical name when we manage buttons etc
+
+			if (ImGui::TreeNodeEx((*go)->name.data()))
 			{
 				ImGui::Text("blabla");
-				
+
 				if (ImGui::TreeNode("Renderer Options"))
 				{
 					ImGui::Text("wip");
 					ImGui::TreePop();
 				}
-				
+
 				ImGui::TreePop();
 			}
-			
+
 			ImGui::PopID();
 		}
 	}
 
 	ImGui::End();
 
-
-
-	// ----------------------------------------------------------------------------------
-
-	//if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-	//{
-	//	//App->config->SaveConfigToFile("blas.json");
-	//	Save(App->config->GetSection(name.data()));
-	//	App->config->SaveConfigToFile(App->config_filename.data());
-	//	//SaveEditorConfig(editor_filename.data());
-	//}
-	//if (App->input->GetKey(SDL_SCANCODE_KP_ENTER) == KEY_DOWN)
-	//{
-	//	//App->config->SaveConfigToFile("blasfdgfd.json");
-	//	Load(App->config->GetSection(name.data()));
-	//	/*Save(App->config->GetSection(name.data()));*/
-	//	//SaveEditorConfig(editor_filename.data());
-	//}
-
-	return UPDATE_CONTINUE;
-}
-
-void ModuleEditor::SetItemsSize(int mount)
-{
-	ImGui::PushItemWidth((ImGui::GetWindowWidth() - ImGui::GetCursorPosX())/ (float)mount);
-}
-
-update_status ModuleEditor::PostUpdate(float dt)
-{
-
 	if (console_panel->active)
 	console_panel->Draw();
 	if (config_panel->active)
 	config_panel->Draw();
 
+	ImGui::End();
+
 	// ImGui Internal System ------------------------------
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	
+	SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+	SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+	ImGui::UpdatePlatformWindows();
+	ImGui::RenderPlatformWindowsDefault();
+	SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+	
 
 	return UPDATE_CONTINUE;
 }

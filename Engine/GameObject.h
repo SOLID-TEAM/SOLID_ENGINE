@@ -14,7 +14,7 @@ public:
 
 private:
 	std::string name;
-	std::vector<Components> components;
+	std::vector<Components*> components;
 };
 
 #endif // !_GAMEOBJECT_H__
