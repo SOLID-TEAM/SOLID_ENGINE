@@ -82,6 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="external\MathGeoLib\include\Algorithm\Random\LCG.h" />
     <ClInclude Include="external\MathGeoLib\include\Geometry\AABB.h" />
@@ -148,6 +149,7 @@
     <ClInclude Include="external\Parson\parson.h" />
     <ClInclude Include="external\par_shapes.h" />
     <ClInclude Include="external\PhysFS\include\physfs.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="HardwareInfo.h" />
@@ -186,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Algorithm\Random\LCG.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Geometry\AABB.cpp" />
@@ -221,6 +224,7 @@
     <ClCompile Include="external\MathGeoLib\include\Time\Clock.cpp" />
     <ClCompile Include="external\mmgr\mmgr.cpp" />
     <ClCompile Include="external\Parson\parson.c" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="HardwareInfo.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
