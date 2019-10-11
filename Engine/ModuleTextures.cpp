@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "ModuleTextures.h"
 
+#include "GL/glew.h"
+
 // DevIL image library
 #include "external/DevIL-1.8.0/include/IL/il.h"
 #include "external/DevIL-1.8.0/include/IL/ilu.h"
@@ -12,6 +14,7 @@
 #pragma comment(lib, "external/DevIL-1.8.0/libx86/ILUT.lib")
 
 #include <string>
+
 
 
 ModuleTextures::ModuleTextures(bool start_enabled)// : Module(start_enabled)
@@ -70,7 +73,6 @@ uint ModuleTextures::LoadTexture(const char* texture_name)
 	if (tex != textures.end())
 	{
 		LOG("[Info] Texture with same name %s already loaded into buffers", texture_name);
-		
 		return (*tex).second;
 	}
 	
@@ -100,3 +102,29 @@ uint ModuleTextures::LoadTexture(const char* texture_name)
 	else
 		return 0;
 }
+
+bool ModuleTextures::FreeTextureBuffer(uint id)
+{
+	bool ret = false;
+
+	// TODO: improve this, with map to not load textures more than 1 time, to delete from map too
+	// we need to iterate map to delete from it too before free gl buffers
+	std::map<std::string, uint>::iterator allTextures = textures.begin();
+	for (; allTextures != textures.end(); ++allTextures)
+	{
+		uint test = (*allTextures).second;
+		if ((*allTextures).second == id)
+		{
+			glDeleteTextures(1, &(*allTextures).second);
+			LOG("Freed texture buffer %s from vram", (*allTextures).first.data());
+			LOG("Deleted texture %s from map", (*allTextures).first.data());
+			textures.erase(allTextures);
+			ret = true;
+			
+			break;
+		}
+	}
+
+	return ret;
+}
+

@@ -6,6 +6,11 @@
 
 #include "ImGui/Impl/imgui_impl_sdl.h"
 
+// TODO: maybe temporal untill we get to fully work module filesystem
+// the most recommended approach to deal with paths/extensions/filenames in windows
+// before boost lib
+#include <filesystem> // for search filename extension / file name | needed c++17
+
 #define MAX_KEYS 300
 
 ModuleInput::ModuleInput(bool start_enabled) : Module(start_enabled)
@@ -138,11 +143,48 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 		case SDL_DROPFILE:
-			dropped_filedir = event.drop.file;
-			App->importer->ImportFileFromPath(dropped_filedir);
-			SDL_free(dropped_filedir);
-			break;
+		{
+			// TODO: remove this testing from here, and do specific functions/change with our filesystem ----------
+			//dropped_filedir = event.drop.file;
+			std::filesystem::path filepath = event.drop.file;
+			std::filesystem::path filename = filepath.filename();
+			std::filesystem::path extension = filepath.extension();
 
+			LOG("%s", filepath.generic_string().data());
+
+			LOG("%s", extension.generic_string().data());
+
+			std::string comparer = extension.generic_string();
+
+			if (comparer == ".fbx" ||
+				comparer == ".FBX" ||
+				comparer == ".obj" ||
+				comparer == ".solid")
+			{
+				LOG("possible 3d model");
+				App->importer->LoadFileMesh(filename.generic_string().data());
+			}
+			if (comparer == ".png" ||
+				comparer == ".jpg" ||
+				comparer == ".DDS")
+			{
+			// TODO !!!! : testing to reload model texture with the dropped one
+			// still need to reload only the desired "focused" model
+			// still need to delete previous texture buffer
+				LOG("possible texture");
+				uint new_tex_id = 0;
+				// load texture already checks if the texture is previously loaded and return its id if it, new id if not
+				new_tex_id = App->textures->LoadTexture(filename.generic_string().data());
+				
+				if (new_tex_id > 0)
+					App->importer->ReloadTextureForAllModels(new_tex_id);
+			}
+
+			//App->importer->ImportFileFromPath(dropped_filedir);
+			SDL_free(event.drop.file);
+			break;
+			// ----------------------------------------------------------------------------------------------------
+		}
 		case SDL_QUIT:
 			quit = true;
 			break;
