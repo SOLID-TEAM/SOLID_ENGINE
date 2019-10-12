@@ -166,7 +166,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 update_status ModuleRenderer3D::Update(float dt)
 {
-	if (render_config.gl_color_material)
+	// NOT NEEDED EVERY FRAME, MOVED TO PANEL RENDER
+	/*if (render_config.gl_color_material)
 		glEnable(GL_COLOR_MATERIAL);
 	else
 		glDisable(GL_COLOR_MATERIAL);
@@ -184,7 +185,7 @@ update_status ModuleRenderer3D::Update(float dt)
 	if (render_config.gl_lighting)
 		glEnable(GL_LIGHTING);
 	else
-		glDisable(GL_LIGHTING);
+		glDisable(GL_LIGHTING);*/
 
 	return UPDATE_CONTINUE;
 }

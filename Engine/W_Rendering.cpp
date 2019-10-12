@@ -1,3 +1,4 @@
+#include "GL/glew.h"
 #include "Application.h"
 #include "W_Rendering.h"
 #include "ImGui/imgui.h"
@@ -66,18 +67,50 @@ void W_Rendering::Draw()
 			ImGui::Title("Color Material");	
 			if (ImGui::Checkbox("##GL_COLOR_MATERIAL", &config.gl_color_material))
 			{
-				if (!config.gl_color_material)
+				if (config.gl_color_material)
+					glEnable(GL_COLOR_MATERIAL);
+				else
+				{
 					App->renderer3D->SetDefaultColorMaterial();
+					glDisable(GL_COLOR_MATERIAL);
+				}
 					
 			}
-			ImGui::Title("Depht Test");		ImGui::Checkbox("##GL_DEPTH_TEST", &config.gl_depth_test);
-			ImGui::Title("Cull Faces");		ImGui::Checkbox("##GL_CULL_FACE", &config.gl_cull_face);
-			ImGui::Title("Lighting");		ImGui::Checkbox("##GL_LIGHTING", &config.gl_lighting);
+			ImGui::Title("Depht Test");		
+			if (ImGui::Checkbox("##GL_DEPTH_TEST", &config.gl_depth_test))
+			{
+				if (config.gl_depth_test)
+					glEnable(GL_DEPTH_TEST);
+				else
+				{
+					glDisable(GL_DEPTH_TEST);
+				}
+			}
+			ImGui::Title("Cull Faces");		
+			if (ImGui::Checkbox("##GL_CULL_FACE", &config.gl_cull_face))
+			{
+				if (config.gl_cull_face)
+				{
+					glEnable(GL_CULL_FACE);
+				}
+				else
+					glDisable(GL_CULL_FACE);
+			}
+			ImGui::Title("Lighting");		
+			if (ImGui::Checkbox("##GL_LIGHTING", &config.gl_lighting))
+			{
+				if (config.gl_lighting)
+				{
+					glEnable(GL_LIGHTING);
+				}
+				else
+					glDisable(GL_LIGHTING);
+			}
 		}
 
 		// TODO: checker texture temporary here
 		static bool view_checker = false;
-		static int val = 512, v_min = 8, v_max = 2048;
+		static int val = 512, v_min = 16, v_max = 2048;
 		static uint tex_id = 0;
 
 		if (ImGui::CollapsingHeader("Checker Texture"))
@@ -117,7 +150,7 @@ void W_Rendering::Draw()
 					ImGui::EndCombo();
 				}
 
-				ImGui::Image((ImTextureID)tex_id, ImVec2(App->test->map(val, 0, 2048, 128, 512), App->test->map(val, 0, 2048, 128, 512)));
+				ImGui::Image((ImTextureID)tex_id, ImVec2(256,256));
 			}
 		}
 	}
