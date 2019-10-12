@@ -18,7 +18,7 @@
     "": {},
     "Textures": {},
     "ModuleImporter": {
-        "wireframe": true,
+        "wireframe": false,
         "fill_mode": true,
         "debug_vertex_normals": false,
         "debug_face_normals": false,
@@ -29,9 +29,9 @@
             1
         ],
         "wire_color": [
-            9.9999999747524271e-07,
-            9.9998999303352321e-07,
-            9.9999556368857156e-07,
+            1,
+            0.99998998641967773,
+            0.99998998641967773,
             1
         ],
         "d_vertex_p_color": [
@@ -81,7 +81,7 @@
             5,
             10
         ],
-        "show_configuration": true,
+        "show_configuration": false,
         "show_console": false
     },
     "Renderer3D": {}

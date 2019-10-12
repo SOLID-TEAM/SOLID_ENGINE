@@ -94,40 +94,7 @@ bool ModelData::UpdateBuffers()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _idx_size * 2, &debug_f_normals[0], GL_STATIC_DRAW);
 
 
-	// TESTING: checker texture needs to be moved to new moduletextures
-	// Bind and set parameters for TEXTURE_2D
-	/*if (uvs != nullptr)
-	{
-		glBindTexture(GL_TEXTURE_2D, texture_gl_id);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-		GLubyte checkImage[128][128][4];
-
-		for (int i = 0; i < 128; i++)
-		{
-			for (int j = 0; j < 128; j++)
-			{
-				int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
-				checkImage[i][j][0] = (GLubyte)c;
-				checkImage[i][j][1] = (GLubyte)c;
-				checkImage[i][j][2] = (GLubyte)c;
-				checkImage[i][j][3] = (GLubyte)255;
-			}
-		}
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
-	}*/
-	// ---------------------------------------------------------------------------------------------------------
-
-	/*glBindBuffer(GL_ARRAY_BUFFER, normals_gl_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * _v_size, &normals[0], GL_STATIC_DRAW);*/
-
-	/*glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _uv_size * 2, &uvs[0], GL_STATIC_DRAW);*/
+	//texture_gl_id = App->textures->GenerateCheckerTexture(512,512);
 
 	return ret;
 }

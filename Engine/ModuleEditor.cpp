@@ -300,10 +300,10 @@ update_status ModuleEditor::PostUpdate(float dt)
 		}
 	}
 
-	static bool gl_depth_test		= false;
-	static bool gl_cull_face		= false;
-	static bool gl_lighting			= false;
-	static bool gl_color_material	= false;
+	static bool gl_depth_test		= true;
+	static bool gl_cull_face		= true;
+	static bool gl_lighting			= true;
+	static bool gl_color_material	= true;
 	static bool wireframe			= false;
 
 	const float max_line_w = 10.0f;
@@ -370,19 +370,53 @@ update_status ModuleEditor::PostUpdate(float dt)
 	}
 	if (ImGui::CollapsingHeader("OpenGL Test"))
 	{
-		ImGui::Title("Color Material");	ImGui::Checkbox("##GL_COLOR_MATERIAL", &gl_color_material);
-		ImGui::Title("Depht Test");		ImGui::Checkbox("##GL_DEPTH_TEST", &gl_depth_test);
-		ImGui::Title("Cull Faces");		ImGui::Checkbox("##GL_CULL_FACE", &gl_cull_face);
-		ImGui::Title("Lighting");		ImGui::Checkbox("##GL_LIGHTING", &gl_lighting);
+		ImGui::Title("Color Material");	
+		if (ImGui::Checkbox("##GL_COLOR_MATERIAL", &gl_color_material))
+		{
+			if (gl_color_material)
+				glEnable(GL_COLOR_MATERIAL);
+			else
+			{
+				// TODO: when switching the material to off, we must set another color for base, if not
+				// the last active prevails
+				glColor3f(1.0f, 1.0f, 1.0f);
+				glDisable(GL_COLOR_MATERIAL);
+			}
+		}
+		ImGui::Title("Depht Test");		
+		if (ImGui::Checkbox("##GL_DEPTH_TEST", &gl_depth_test))
+		{
+			if(gl_depth_test)
+				glEnable(GL_DEPTH_TEST);
+			else
+				glDisable(GL_DEPTH_TEST);
+		}
+		ImGui::Title("Cull Faces");		
+		if (ImGui::Checkbox("##GL_CULL_FACE", &gl_cull_face))
+		{
+			if (gl_cull_face)
+				glEnable(GL_CULL_FACE);
+			else
+				glDisable(GL_CULL_FACE);
+		}
+		ImGui::Title("Lighting");		
+		if (ImGui::Checkbox("##GL_LIGHTING", &gl_lighting))
+		{
+			if (gl_lighting)
+				glEnable(GL_LIGHTING);
+			else
+				glDisable(GL_LIGHTING);
+		}
 	}
 
 
-	if (gl_color_material)
-		glEnable(GL_COLOR_MATERIAL);
-	else
-		glDisable(GL_COLOR_MATERIAL);
+	// WE dont need this every frame !!!
+	//if (gl_color_material)
+	//	glEnable(GL_COLOR_MATERIAL);
+	//else
+	//	glDisable(GL_COLOR_MATERIAL);
 
-	if (gl_depth_test)
+	/*if (gl_depth_test)
 		glEnable(GL_DEPTH_TEST);
 	else
 		glDisable(GL_DEPTH_TEST);
@@ -396,9 +430,56 @@ update_status ModuleEditor::PostUpdate(float dt)
 	if (gl_lighting)
 		glEnable(GL_LIGHTING);
 	else
-		glDisable(GL_LIGHTING);
+		glDisable(GL_LIGHTING);*/
 		
+
+	// TODO: checker texture temporary here
+	static bool view_checker = false;
+	static int val = 512, v_min = 8, v_max = 2048;
+	static uint tex_id = 0;
+
+	if (ImGui::CollapsingHeader("Checker Texture"))
+	{
+		if (ImGui::Checkbox("view uv checker", &view_checker))
+		{
+			if (view_checker)
+			{
+				// TODO: create checker texture with default size
+				tex_id = App->textures->GenerateCheckerTexture(val, val);
+			}
+			else
+			{
+				// TODO: unload texture id
+			}
+		}
+
+		if (view_checker)
+		{
+			if (ImGui::BeginCombo("Resolution", std::to_string(val).data()))
+			{
+				for (uint i = v_min; i < v_max * 2; i = i > 0 ? i * 2 : ++i)
+				{
+					ImGui::PushID(i);
+					bool is_selected;
+					if (ImGui::Selectable(std::to_string(i).data(), val == i))
+					{
+						val = i;
+
+						// TODO: delete and reload procedural checker
+
+					}
+					ImGui::PopID();
+				}
+
+				ImGui::EndCombo();
+			}
+
+			ImGui::Image((ImTextureID)tex_id, ImVec2(map(val, 0, 2048, 128, 512), map(val, 0, 2048, 128, 512)));
+		}
+	}
+
 	ImGui::End();
+
 
 	// ImGui Internal System ------------------------------
 
@@ -528,3 +609,27 @@ void ModuleEditor::Load(Config& config)
 	else
 		show_configuration = config.GetBool("show_configuration", show_configuration);
 }
+
+float ModuleEditor::map(float value, float s1, float stop1, float s2, float stop2) const
+{
+	return s2 + (stop2 - s2) * ((value - s1) / (stop1 - s1));	
+}
+
+//bool ModuleEditor::SliderIntWithSteps(const char* label, int* v, int v_min, int v_max, int v_step, const char* display_format)
+//{
+//	if (!display_format)
+//		display_format = "%.3f";
+//
+//	char text_buf[64] = {};
+//	snprintf(text_buf, sizeof(text_buf), "%i", *v);
+//
+//	// Map from [v_min,v_max] to [0,N]
+//	if (v_step == 0) v_step = 1;
+//	const int countValues = int((v_max - v_min) / v_step);
+//	int v_i = int((*v - v_min) / v_step);
+//	const bool value_changed = ImGui::SliderInt(label, &v_i, 0, countValues, text_buf);
+//
+//	// Remap from [0,N] to [v_min,v_max]
+//	*v = v_min + float(v_i) * v_step;
+//	return value_changed;
+//}

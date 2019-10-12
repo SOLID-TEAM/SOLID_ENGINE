@@ -24,8 +24,8 @@ public:
 	/*void LoadTextureFromEvent(const char* path, bool& already, uint& id);*/
 
 	bool FreeTextureBuffer(uint id);
+	uint GenerateCheckerTexture(uint w, uint h);
 
-	/*bool GenerateCheckerTexture();*/
 
 public:
 	ILuint image_test = 0;
