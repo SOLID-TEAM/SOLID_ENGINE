@@ -12,6 +12,8 @@ class Window;
 class W_Config;
 class W_Console;
 class W_Hierarchy;
+class W_Rendering;
+class W_Scene;
 
 // TODO: change this/remove define
 #define MAX_STORED_FPS 100
@@ -52,22 +54,32 @@ public:
 
 private:
 
+	bool DrawMainMenuBar();
+
+	void DrawPopUps();
+
+private:
+
 	std::vector<Window*> windows;
 
 	// General editor info ---------
 
 	std::string editor_filename;
-	bool showcase = false;
-	bool about = false;
+
+	bool show_restore_popup = false;
+	bool show_demo_imgui = false;
+	bool show_about_popup = false;
 	bool show_console = false;
 	bool show_configuration = false;
 
 public:
 
-	// Panels -----------------------
-	W_Config* w_config = nullptr;
-	W_Console* w_console = nullptr;
-	W_Hierarchy* w_hierarchy = nullptr;
+	// Windows -----------------------
+	W_Config*		w_config = nullptr;
+	W_Console*		w_console = nullptr;
+	W_Hierarchy*	w_hierarchy = nullptr;
+	W_Rendering*	w_rendering = nullptr;
+	W_Scene*		w_scene = nullptr;
 };
 
 #endif // !_MODULE_EDITOR_H__

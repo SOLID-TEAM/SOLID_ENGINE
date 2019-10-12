@@ -15,7 +15,8 @@
 #include "W_Config.h"
 #include "W_Console.h"
 #include "W_Hierarchy.h"
-
+#include "W_Rendering.h"
+#include "W_Scene.h"
 
 ModuleEditor::ModuleEditor(bool start_enabled) : Module(start_enabled)
 {
@@ -53,7 +54,6 @@ bool ModuleEditor::Init(Config& config)
 
 	ImGuiStyle* style = &ImGui::GetStyle();
 	style->DefaultColumnWidth = DFT_COLUMN;
-
 	style->WindowRounding = 0.0f;// <- Set this on init or use ImGui::PushStyleVar()
 	style->ChildRounding = 0.0f;
 	style->FrameRounding = 0.0f;
@@ -71,9 +71,11 @@ bool ModuleEditor::Start(Config& conf)
 
 	// Initial Windows -------------------------------------
 
-	w_config = new W_Config("Configuration", show_configuration);
-	w_console = new W_Console("Console", show_console);
+	w_config	= new W_Config("Configuration", show_configuration);
+	w_console	= new W_Console("Console", show_console);
 	w_hierarchy = new W_Hierarchy("Hierarchy", true);
+	w_rendering = new W_Rendering("Rendering Settings", true);
+	w_scene		= new W_Scene("Scene", true);
 
 	return ret;
 }
@@ -91,11 +93,14 @@ bool ModuleEditor::CleanUp()
 		(*itr)->CleanUp();
 		RELEASE((*itr));			// Delete object 
 	}
+
 	windows.clear();
 
-	w_config 	  = nullptr;
-	w_console	  = nullptr;
-	w_hierarchy   = nullptr;
+	w_config 	= nullptr;
+	w_console	= nullptr;
+	w_hierarchy	= nullptr;
+	w_rendering	= nullptr;
+	w_scene		= nullptr;
 
 	return true;
 }
@@ -137,158 +142,48 @@ update_status ModuleEditor::PreUpdate(float dt)
 // Update
 update_status ModuleEditor::Update(float dt)
 {
-	static bool restore_popup = false;
-
-	// Main Menu Bar ---------------------------------
-
-	ImGui::BeginMainMenuBar();
-
-	if (ImGui::BeginMenu("File"))
-	{
-		if (ImGui::MenuItem("Load editor configuration", "Ctrl+L"))
-		{
-			App->WantToLoad();
-			LOG("[Info] Succesfully loaded last valid config from memory");
-			
-		}
-
-		if (ImGui::MenuItem("Save editor configuration", "Ctrl+S"))
-		{
-			if (App->WantToSave())
-			{
-				LOG("[Info] %s succesfully saved", App->config_filename.data());
-			}
-		}
-
-		if (ImGui::MenuItem("Restore editor to default config"))
-		{
-			restore_popup = true;
-		}
-
-		if (ImGui::MenuItem("Quit", "ESC"))
-			return update_status::UPDATE_STOP;
-		
-		ImGui::EndMenu();
-	}
-
-	
-
-	if (ImGui::BeginMenu("Window"))
-	{
-		/*if (ImGui::MenuItem("Load editor windows states", "Ctrl+Alt+L"))
-			LoadEditorConfig(editor_filename.data());*/
-		//if (ImGui::MenuItem("Save editor windows states", "Ctrl+Alt+S"))
-			//SaveEditorConfig(editor_filename.data());
-
-		ImGui::EndMenu();
-	}
-
-	if (ImGui::BeginMenu("View"))
-	{
-		ImGui::MenuItem("Configuration", NULL, &w_config->active);
-		ImGui::MenuItem("Console Log", NULL, &w_console->active);
-
-		ImGui::EndMenu();
-	}
-
-	if (ImGui::BeginMenu("Help"))
-	{
-		if (ImGui::MenuItem("Gui Demo"))
-			showcase = !showcase;
-
-		// TODO: update links
-		if (ImGui::MenuItem("Documentation"))
-			App->RequestBrowser("https://github.com/SOLID-TEAM/SOLID_ENGINE");
-
-		if (ImGui::MenuItem("Download latest version"))
-			App->RequestBrowser("https://github.com/SOLID-TEAM/SOLID_ENGINE");
-
-		if (ImGui::MenuItem("Report a bug!"))
-			App->RequestBrowser("https://github.com/SOLID-TEAM/SOLID_ENGINE");
-
-		if (ImGui::MenuItem("About"))
-			about = !about;
-
-		ImGui::EndMenu();
-	}
-
-	ImGui::EndMainMenuBar();
-
-	// print active imgui elements -----------------------
-
-	if (restore_popup)
-	{
-		ImGui::OpenPopup("Are you sure?");
-		if (ImGui::BeginPopupModal("Are you sure?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-		{
-			ImGui::Text("All editor modificable values are going to reset\n" 
-						"after this, you are still capable to revert this\n" 
-						"change by loading config editor before save them");
-			ImGui::Separator();
-			if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); restore_popup = false; App->WantToLoad(true); }
-			ImGui::SameLine();
-			if (ImGui::Button("OK and save", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); restore_popup = false; App->WantToLoad(true); App->WantToSave(); }
-			ImGui::SameLine();
-			if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); restore_popup = false; }
-			ImGui::EndPopup();
-		}
-	}
-
-	if (showcase)
-		ImGui::ShowDemoWindow(&showcase);
-
-	if (about)
-	{
-		ImGui::OpenPopup("About SOLID Engine");
-
-		if (ImGui::BeginPopupModal("About SOLID Engine", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-		{
-			ImGui::Text("v0.1 - september 2019\n");
-			ImGui::Separator();
-			ImGui::BulletText("SOLID ENGINE is a project with the purpose of creating \n"
-							  "a fully functional video game engine with its own innovations and features\n"
-							  "implemented by SOLID TEAM. We are 2 Video Game Design and Development Degree students.");
-			ImGui::Separator();
-			ImGui::Text("3rd Party libs");
-			SDL_version sdl_version;
-			SDL_GetVersion(&sdl_version);
-			ImGui::BulletText("SDL   v%d.%d.%d", sdl_version.major, sdl_version.minor, sdl_version.patch);
-			ImGui::BulletText("glew  v%s", App->renderer3D->GetGlewVersionString().data());
-			ImGui::BulletText("ImGui v%s", ImGui::GetVersion());
-			ImGui::BulletText("Parson - JSON library parser");
-
-			ImVec2 buttonSize = { 120.0f, 0.f };
-			ImGuiStyle& style = ImGui::GetStyle();
-			ImGui::Indent(ImGui::GetWindowWidth() * 0.5f - (buttonSize.x * 0.5f) - style.WindowPadding.x);
-			if (ImGui::Button("OK", buttonSize)) { ImGui::CloseCurrentPopup(); about = false; }
-
-		}
-		ImGui::EndPopup();
-
-	}
-
-	// ----------------------------------------------------------------------------------
-
-	//if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-	//{
-	//	//App->config->SaveConfigToFile("blas.json");
-	//	Save(App->config->GetSection(name.data()));
-	//	App->config->SaveConfigToFile(App->config_filename.data());
-	//	//SaveEditorConfig(editor_filename.data());
-	//}
-	//if (App->input->GetKey(SDL_SCANCODE_KP_ENTER) == KEY_DOWN)
-	//{
-	//	//App->config->SaveConfigToFile("blasfdgfd.json");
-	//	Load(App->config->GetSection(name.data()));
-	//	/*Save(App->config->GetSection(name.data()));*/
-	//	//SaveEditorConfig(editor_filename.data());
-	//}
-
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleEditor::PostUpdate(float dt)
 {
+	// DockSpace ------------------------------------------
+	static bool dock_space = true;
+	static bool opt_fullscreen_persistant = true;
+	bool opt_fullscreen = opt_fullscreen_persistant;
+	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	if (opt_fullscreen)
+	{
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->Pos);
+		ImGui::SetNextWindowSize(viewport->Size);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+	}
+
+	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+		window_flags |= ImGuiWindowFlags_NoBackground;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::Begin("DockSpace", &dock_space, window_flags);
+	ImGui::PopStyleVar();
+
+	if (opt_fullscreen)
+		ImGui::PopStyleVar(2);
+
+	// DockSpace
+
+	ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+
+	// Main Menu Bar --------------------------------------
+
+	DrawMainMenuBar();
 
 	// Draw all windows ----------------------------------- 
 
@@ -300,103 +195,11 @@ update_status ModuleEditor::PostUpdate(float dt)
 		}
 	}
 
-	static bool gl_depth_test		= false;
-	static bool gl_cull_face		= false;
-	static bool gl_lighting			= false;
-	static bool gl_color_material	= false;
-	static bool wireframe			= false;
+	// Draw other elemnts ---------------------------------
 
-	const float max_line_w = 10.0f;
-	const float min_line_w = 0.0f;
-	const float max_point_size = 10.0f;
-	const float min_point_size = 0.0f;
-	const float max_n_length = 3.0f;
-	const float min_n_length = 0.0f;
-	const float min_alpha = 0.f;
-	const float max_alpha = 1.f;
+	DrawPopUps();
 
-	ImGui::Begin("Render");
-
-	if (ImGui::CollapsingHeader("Shading Modes"))
-	{
-		ImGui::Title("Fill Faces", 1);	ImGui::Checkbox("##fill_mode", &App->importer->fill_faces);
-		ImGui::Title("Color", 2);		ImGui::ColorEdit4("fILL Color##2f", (float*)&App->importer->fill_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-		ImGui::Title("Alpha", 2);		ImGui::SliderFloat("##alpha_slider", &App->importer->fill_color.w, min_alpha, max_alpha, "%.1f", 1.0f);
-
-		ImGui::Separator();
-
-		ImGui::Title("Wireframe", 1);	ImGui::Checkbox("##wireframe", &App->importer->wireframe);
-		ImGui::Title("Color", 2);		ImGui::ColorEdit4("Line Color##2f", (float*)&App->importer->wire_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-		ImGui::Title("Width", 2);		ImGui::SliderFloat("##wire_line_width", &App->importer->wire_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
-	}
-
-	if (ImGui::CollapsingHeader("Debug Modes"))
-	{
-		ImGui::Title("Vertex Normals", 1);		ImGui::Checkbox("##d_vertex_normals", &App->importer->debug_vertex_normals);
-		ImGui::Title("Point Color", 2);			ImGui::ColorEdit4("Vertex Point Color##2f", (float*)&App->importer->d_vertex_p_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-		ImGui::Title("Point Size", 2);			ImGui::SliderFloat("##d_vertex_p_size", &App->importer->v_point_size, min_point_size, max_point_size, "%.1f", 1.0f);
-		ImGui::Title("Line Color", 2);			ImGui::ColorEdit4("Vertex Line Color##2f", (float*)&App->importer->d_vertex_l_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-		ImGui::Title("Line Width", 2);			ImGui::SliderFloat("##d_vertex_line_width", &App->importer->v_n_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
-		ImGui::Title("Line Lenght", 2);
-
-		if (ImGui::SliderFloat("##d_vertex_line_lenght", &App->importer->v_n_line_length, min_n_length, max_n_length, "%.1f", 1.0f))
-		{
-			App->importer->ReComputeVertexNormals(App->importer->v_n_line_length);
-		}
-
-		ImGui::Separator();
-
-		ImGui::Title("Face Normals", 1);	ImGui::Checkbox("##d_face_normals", &App->importer->debug_face_normals);
-		ImGui::Title("Point Color", 2);		ImGui::ColorEdit4("Face Point Color##2f", (float*)&App->importer->d_vertex_face_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-		ImGui::Title("Point Size", 2);		ImGui::SliderFloat("##d_face_p_size", &App->importer->f_v_point_size, min_point_size, max_point_size, "%.1f", 1.0f);
-		ImGui::Title("Line Color", 2);		ImGui::ColorEdit4("Face Line Color##2f", (float*)&App->importer->d_vertex_face_n_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-		ImGui::Title("Line Width", 2);		ImGui::SliderFloat("##d_face_line_width", &App->importer->f_n_line_width, min_line_w, max_line_w, "%.1f", 1.0f);
-		ImGui::Title("Line Lenght", 2);
-
-		if (ImGui::SliderFloat("##d_face_line_lenght", &App->importer->f_n_line_length, min_n_length, max_n_length, "%.1f", 1.0f))
-		{
-			App->importer->ReComputeFacesNormals(App->importer->f_n_line_length);
-		}
-	}
-	static int units = 50;
-
-	if (ImGui::CollapsingHeader("Grid Settings"))
-	{
-		ImGui::Title("Active", 1);		ImGui::Checkbox("##active_grid", &App->test->main_grid->active);
-		ImGui::Title("Color", 2);		ImGui::ColorEdit4("Grid Color##2f", (float*)&App->test->main_grid->color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-		ImGui::Title("Opacity", 2);		ImGui::SliderFloat("##d_face_line_lenght", &App->test->main_grid->color.w, min_alpha, max_alpha, "%.1f", 1.0f);
-		ImGui::Title("Distance", 2);     if (ImGui::SliderInt("##grid_units", &units, 1, 50)) App->test->main_grid->SetUnits(units);
-		ImGui::Title("Line Width", 2);	ImGui::SliderFloat("##grid_width", &App->test->main_grid->width, min_line_w, max_line_w, "%.1f", 1.0f);
-	}
-	if (ImGui::CollapsingHeader("OpenGL Test"))
-	{
-		ImGui::Title("Color Material");	ImGui::Checkbox("##GL_COLOR_MATERIAL", &gl_color_material);
-		ImGui::Title("Depht Test");		ImGui::Checkbox("##GL_DEPTH_TEST", &gl_depth_test);
-		ImGui::Title("Cull Faces");		ImGui::Checkbox("##GL_CULL_FACE", &gl_cull_face);
-		ImGui::Title("Lighting");		ImGui::Checkbox("##GL_LIGHTING", &gl_lighting);
-	}
-
-
-	if (gl_color_material)
-		glEnable(GL_COLOR_MATERIAL);
-	else
-		glDisable(GL_COLOR_MATERIAL);
-
-	if (gl_depth_test)
-		glEnable(GL_DEPTH_TEST);
-	else
-		glDisable(GL_DEPTH_TEST);
-		
-	if (gl_cull_face)
-		glEnable(GL_CULL_FACE);
-	else
-		glDisable(GL_CULL_FACE);
-	
-
-	if (gl_lighting)
-		glEnable(GL_LIGHTING);
-	else
-		glDisable(GL_LIGHTING);
+	if (show_demo_imgui) ImGui::ShowDemoWindow(&show_demo_imgui);
 		
 	ImGui::End();
 
@@ -432,8 +235,8 @@ bool ModuleEditor::LoadEditorConfig(const char* path)
 	{
 		LOG("Found");
 		// TODO: iterate all members and save its states
-		showcase = json_object_get_boolean(json_object(editor_config), "showcase");
-		about = json_object_get_boolean(json_object(editor_config), "about");
+		show_demo_imgui = json_object_get_boolean(json_object(editor_config), "show_demo_imgui");
+		show_about_popup = json_object_get_boolean(json_object(editor_config), "show_about_popup");
 	}
 
 	return ret;
@@ -497,8 +300,8 @@ bool ModuleEditor::Save(Config& config)
 
 	float blabla[10] = { 0,2,0,0,0,0,4,5,5,10 };
 
-	ret = config.AddBool("about", about);
-	ret = config.AddBool("showcase", showcase);
+	ret = config.AddBool("show_about_popup", show_about_popup);
+	ret = config.AddBool("show_demo_imgui", show_demo_imgui);
 	ret = config.AddFloatArray("sdfgd", blabla, 10);
 
 	if(w_config != nullptr)
@@ -517,8 +320,8 @@ bool ModuleEditor::Save(Config& config)
 
 void ModuleEditor::Load(Config& config)
 {
-	about = config.GetBool("about", about);
-	showcase = config.GetBool("showcase", showcase);
+	show_about_popup = config.GetBool("show_about_popup", show_about_popup);
+	show_demo_imgui = config.GetBool("show_demo_imgui", show_demo_imgui);
 	if(w_console != nullptr)
 		w_console->active = config.GetBool("show_console", w_console->active);
 	else
@@ -527,4 +330,130 @@ void ModuleEditor::Load(Config& config)
 		w_config->active = config.GetBool("show_configuration", w_config->active);
 	else
 		show_configuration = config.GetBool("show_configuration", show_configuration);
+}
+
+bool ModuleEditor::DrawMainMenuBar()
+{
+	ImGui::BeginMainMenuBar();
+
+	if (ImGui::BeginMenu("File"))
+	{
+		if (ImGui::MenuItem("Load editor configuration", "Ctrl+L"))
+		{
+			App->WantToLoad();
+			LOG("[Info] Succesfully loaded last valid config from memory");
+
+		}
+
+		if (ImGui::MenuItem("Save editor configuration", "Ctrl+S"))
+		{
+			if (App->WantToSave())
+			{
+				LOG("[Info] %s succesfully saved", App->config_filename.data());
+			}
+		}
+
+		if (ImGui::MenuItem("Restore editor to default config"))
+		{
+			show_restore_popup = true;
+		}
+
+		if (ImGui::MenuItem("Quit", "ESC"))
+			return false;
+
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Window"))
+	{
+		/*if (ImGui::MenuItem("Load editor windows states", "Ctrl+Alt+L"))
+			LoadEditorConfig(editor_filename.data());*/
+			//if (ImGui::MenuItem("Save editor windows states", "Ctrl+Alt+S"))
+				//SaveEditorConfig(editor_filename.data());
+
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("View"))
+	{
+		ImGui::MenuItem("Configuration", NULL, &w_config->active);
+		ImGui::MenuItem("Console Log", NULL, &w_console->active);
+
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Help"))
+	{
+		if (ImGui::MenuItem("Gui Demo"))
+			show_demo_imgui = !show_demo_imgui;
+
+		// TODO: update links
+		if (ImGui::MenuItem("Documentation"))
+			App->RequestBrowser("https://github.com/SOLID-TEAM/SOLID_ENGINE");
+
+		if (ImGui::MenuItem("Download latest version"))
+			App->RequestBrowser("https://github.com/SOLID-TEAM/SOLID_ENGINE");
+
+		if (ImGui::MenuItem("Report a bug!"))
+			App->RequestBrowser("https://github.com/SOLID-TEAM/SOLID_ENGINE");
+
+		if (ImGui::MenuItem("About"))
+			show_about_popup = !show_about_popup;
+
+		ImGui::EndMenu();
+	}
+
+	ImGui::EndMainMenuBar();
+
+	return true;
+}
+
+void ModuleEditor::DrawPopUps()
+{
+	if (show_restore_popup)
+	{
+		ImGui::OpenPopup("Are you sure?");
+		if (ImGui::BeginPopupModal("Are you sure?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("All editor modificable values are going to reset\n"
+				"after this, you are still capable to revert this\n"
+				"change by loading config editor before save them");
+			ImGui::Separator();
+			if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); show_restore_popup = false; App->WantToLoad(true); }
+			ImGui::SameLine();
+			if (ImGui::Button("OK and save", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); show_restore_popup = false; App->WantToLoad(true); App->WantToSave(); }
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); show_restore_popup = false; }
+			ImGui::EndPopup();
+		}
+	}
+
+	if (show_about_popup)
+	{
+		ImGui::OpenPopup("About SOLID Engine");
+
+		if (ImGui::BeginPopupModal("About SOLID Engine", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("v0.1 - september 2019\n");
+			ImGui::Separator();
+			ImGui::BulletText("SOLID ENGINE is a project with the purpose of creating \n"
+				"a fully functional video game engine with its own innovations and features\n"
+				"implemented by SOLID TEAM. We are 2 Video Game Design and Development Degree students.");
+			ImGui::Separator();
+			ImGui::Text("3rd Party libs");
+			SDL_version sdl_version;
+			SDL_GetVersion(&sdl_version);
+			ImGui::BulletText("SDL   v%d.%d.%d", sdl_version.major, sdl_version.minor, sdl_version.patch);
+			ImGui::BulletText("glew  v%s", App->renderer3D->GetGlewVersionString().data());
+			ImGui::BulletText("ImGui v%s", ImGui::GetVersion());
+			ImGui::BulletText("Parson - JSON library parser");
+
+			ImVec2 buttonSize = { 120.0f, 0.f };
+			ImGuiStyle& style = ImGui::GetStyle();
+			ImGui::Indent(ImGui::GetWindowWidth() * 0.5f - (buttonSize.x * 0.5f) - style.WindowPadding.x);
+			if (ImGui::Button("OK", buttonSize)) { ImGui::CloseCurrentPopup(); show_about_popup = false; }
+
+		}
+		ImGui::EndPopup();
+	}
 }

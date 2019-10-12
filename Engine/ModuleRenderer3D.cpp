@@ -129,6 +129,8 @@ bool ModuleRenderer3D::Init(Config& config)
 	// Projection matrix for
 	OnResize(App->window->current_w, App->window->current_h);//SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	GenerateSceneBuffers();
+
 	// store version opengl/graphic drivers
 	openglGDriversVersionString.assign((const char*)glGetString(GL_VERSION));
 	// store glew version
@@ -160,6 +162,31 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+update_status ModuleRenderer3D::Update(float dt)
+{
+	if (render_config.gl_color_material)
+		glEnable(GL_COLOR_MATERIAL);
+	else
+		glDisable(GL_COLOR_MATERIAL);
+
+	if (render_config.gl_depth_test)
+		glEnable(GL_DEPTH_TEST);
+	else
+		glDisable(GL_DEPTH_TEST);
+
+	if (render_config.gl_cull_face)
+		glEnable(GL_CULL_FACE);
+	else
+		glDisable(GL_CULL_FACE);
+
+	if (render_config.gl_lighting)
+		glEnable(GL_LIGHTING);
+	else
+		glDisable(GL_LIGHTING);
+
+	return UPDATE_CONTINUE;
+}
+
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
@@ -177,6 +204,33 @@ bool ModuleRenderer3D::CleanUp()
 	return true;
 }
 
+void ModuleRenderer3D::GenerateSceneBuffers()
+{
+	// Gen frame buffer ----------------------------------------
+	glGenFramebuffers(1, &frame_buffer_id);
+	glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
+
+	// Gen texture ----------------------------------------------
+	glGenTextures(1, &render_texture_id);
+	glBindTexture(GL_TEXTURE_2D, render_texture_id);
+
+	// Config texture ------------------------------------------
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, App->window->current_w, App->window->current_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Config frame buffer --------------------------------------
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, render_texture_id, 0);
+
+	// If program can generate the texture ----------------------
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		LOG("Error creating screen buffer");
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {

@@ -7,32 +7,68 @@
 
 #define MAX_LIGHTS 8
 
+struct RenderConfig
+{
+	bool gl_depth_test = true;
+	bool gl_cull_face = true;
+	bool gl_lighting = true;
+	bool gl_color_material = true;
+	bool wireframe = true;
+
+	float max_line_w = 10.0f;
+	float min_line_w = 0.0f;
+	float max_point_size = 10.0f;
+	float min_point_size = 0.0f;
+	float max_n_length = 3.0f;
+	float min_n_length = 0.0f;
+	float min_alpha = 0.f;
+	float max_alpha = 1.f;
+};
+
 class ModuleRenderer3D : public Module
 {
 public:
+
 	ModuleRenderer3D(bool start_enabled = true);
+
 	~ModuleRenderer3D();
 
 	bool Init(Config& config);
+
 	update_status PreUpdate(float dt);
+
+	update_status Update(float dt);
+
 	update_status PostUpdate(float dt);
+
 	bool CleanUp();
 
 	bool Save(Config& config);
+
 	void Load(Config& config);
 
 	void OnResize(int width, int height);
 
 	std::string GetGlewVersionString() const;
 
-public:
+	void GenerateSceneBuffers();
 
+public:
+	
+	RenderConfig render_config;
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
+	// Buffers ID's --------------------------
+
+	uint frame_buffer_id = 0;
+	uint render_texture_id = 0;
+	
 private:
+
+	
 	std::string openglGDriversVersionString;
 	std::string glewVersionString;
 };

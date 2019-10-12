@@ -41,7 +41,7 @@ bool ModuleImporter::Init(Config& config)
 
 bool ModuleImporter::Start(Config& config)
 {
-	/*LoadFileMesh("Assets/Models/BakerHouse.fbx");*/
+	LoadFileMesh("Assets/Models/BakerHouse.fbx");
 	/*LoadFileMesh("Assets/Models/BakerHouse.fbx");*/
 
 	//LoadFileMesh("Assets/Models/hammer_low.fbx");
@@ -76,6 +76,14 @@ update_status ModuleImporter::Update(float dt)
 
 update_status ModuleImporter::PostUpdate(float dt)
 {
+	// Start Buffer Frame ----------------------------------
+	glBindFramebuffer(GL_FRAMEBUFFER, App->renderer3D->frame_buffer_id);
+	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	// -----------------------------------------------------
+
+	App->test->main_grid->Render();
+
 	std::vector<ModelData*>::iterator model = meshes.begin();
 
 	for (; model != meshes.end(); ++model)
@@ -133,6 +141,10 @@ update_status ModuleImporter::PostUpdate(float dt)
 
 	}
 
+	// End Buffer Frame ----------------------------------
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
+	// ---------------------------------------------------
 
 	return UPDATE_CONTINUE;
 }
