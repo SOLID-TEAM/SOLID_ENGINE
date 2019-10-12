@@ -24,10 +24,6 @@ Freed texture buffer checker3.png from vram
 Deleted texture checker3.png from map
 [Error] Saving checker texture file already exists
 [Info] Correctly generated and binded procedurally checker texture with 128x128 pixels size
-Freed texture buffer checker3.png from vram
-Deleted texture checker3.png from map
-[Error] Saving checker texture file already exists
-[Info] Correctly generated and binded procedurally checker texture with 1024x1024 pixels size
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

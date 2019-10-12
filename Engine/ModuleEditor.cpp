@@ -183,7 +183,8 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 	// Main Menu Bar --------------------------------------
 
-	DrawMainMenuBar();
+	if (!DrawMainMenuBar())
+		return update_status::UPDATE_STOP;
 
 	// Draw all windows ----------------------------------- 
 
@@ -334,6 +335,8 @@ void ModuleEditor::Load(Config& config)
 
 bool ModuleEditor::DrawMainMenuBar()
 {
+	bool ret = true;
+
 	ImGui::BeginMainMenuBar();
 
 	if (ImGui::BeginMenu("File"))
@@ -359,7 +362,8 @@ bool ModuleEditor::DrawMainMenuBar()
 		}
 
 		if (ImGui::MenuItem("Quit", "ESC"))
-			return false;
+			ret = false;
+	
 
 		ImGui::EndMenu();
 	}
@@ -405,7 +409,7 @@ bool ModuleEditor::DrawMainMenuBar()
 
 	ImGui::EndMainMenuBar();
 
-	return true;
+	return ret;
 }
 
 void ModuleEditor::DrawPopUps()
