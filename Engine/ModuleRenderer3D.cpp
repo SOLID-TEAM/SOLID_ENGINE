@@ -28,6 +28,7 @@ bool ModuleRenderer3D::Init(Config& config)
 	LOG("[Init] Creating 3D Renderer context");
 	bool ret = true;
 
+
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -206,30 +207,50 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::GenerateSceneBuffers()
 {
+	GLint depth_size = 24, stencil_size = 8;
+
+	// Gen depth buffer ---------------------------------------
+	glGenRenderbuffers(1, &depth_buffer_id);
+	glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer_id);
+
+	// Config depth storage -----------------------------------
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, App->window->current_w, App->window->current_h);
+	glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &depth_size);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	// Gen color texture ----------------------------------------------
+	glGenTextures(1, &texture_id);
+	glBindTexture(GL_TEXTURE_2D, texture_id);
+	
+	// Config  color texture ------------------------------------------
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE); // automatic mipmap
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, App->window->current_w, App->window->current_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 	// Gen frame buffer ----------------------------------------
 	glGenFramebuffers(1, &frame_buffer_id);
 	glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-	// Gen texture ----------------------------------------------
-	glGenTextures(1, &render_texture_id);
-	glBindTexture(GL_TEXTURE_2D, render_texture_id);
-
-	// Config texture ------------------------------------------
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, App->window->current_w, App->window->current_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	// Config frame buffer --------------------------------------
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, render_texture_id, 0);
+	// Attach texture and render buffer to frame buffer -------
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depth_buffer_id);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture_id, 0);
 
 	// If program can generate the texture ----------------------
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
-		LOG("Error creating screen buffer");
+		LOG("[Error] creating screen buffer");
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+RenderConfig& ModuleRenderer3D::GetRenderConfig()
+{
+	return render_config;
 }
 
 void ModuleRenderer3D::OnResize(int width, int height)

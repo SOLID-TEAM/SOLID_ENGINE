@@ -53,6 +53,8 @@ public:
 
 	void GenerateSceneBuffers();
 
+	RenderConfig& GetRenderConfig();
+
 public:
 	
 	RenderConfig render_config;
@@ -64,8 +66,10 @@ public:
 	// Buffers ID's --------------------------
 
 	uint frame_buffer_id = 0;
-	uint render_texture_id = 0;
-	
+	uint depth_buffer_id = 0;
+	uint stencil_buffer_id = 0;
+	uint texture_id = 0;
+
 private:
 
 	

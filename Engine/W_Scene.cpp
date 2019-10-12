@@ -9,7 +9,7 @@ void W_Scene::Draw()
 
 	if (ImGui::Begin(name.c_str(), &active))
 	{
-		ImGui::Image((ImTextureID)App->renderer3D->render_texture_id, ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((ImTextureID)App->renderer3D->texture_id, ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), ImVec2(0, 1), ImVec2(1, 0));
 	}
 	ImGui::End();
 

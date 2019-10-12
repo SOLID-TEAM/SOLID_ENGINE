@@ -5,7 +5,7 @@
 
 void W_Rendering::Draw()
 {
-	RenderConfig config = App->renderer3D->render_config;
+	RenderConfig& config = App->renderer3D->render_config;
 
 	if (ImGui::Begin(name.c_str()) )
 	{

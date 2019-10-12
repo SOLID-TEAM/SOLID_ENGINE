@@ -78,8 +78,7 @@ update_status ModuleImporter::PostUpdate(float dt)
 {
 	// Start Buffer Frame ----------------------------------
 	glBindFramebuffer(GL_FRAMEBUFFER, App->renderer3D->frame_buffer_id);
-	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// -----------------------------------------------------
 
 	App->test->main_grid->Render();
@@ -141,10 +140,15 @@ update_status ModuleImporter::PostUpdate(float dt)
 
 	}
 
-	// End Buffer Frame ----------------------------------
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
-	// ---------------------------------------------------
+
+	// trigger mipmaps generation explicitly
+	// NOTE: If GL_GENERATE_MIPMAP is set to GL_TRUE, then glCopyTexSubImage2D()
+	// triggers mipmap generation automatically. However, the texture attached
+	// onto a FBO should generate mipmaps manually via glGenerateMipmap().
+	glBindTexture(GL_TEXTURE_2D, App->renderer3D->texture_id);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	return UPDATE_CONTINUE;
 }
