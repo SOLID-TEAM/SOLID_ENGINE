@@ -28,6 +28,7 @@ bool ModuleRenderer3D::Init(Config& config)
 	LOG("[Init] Creating 3D Renderer context");
 	bool ret = true;
 
+
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -129,6 +130,8 @@ bool ModuleRenderer3D::Init(Config& config)
 	// Projection matrix for
 	OnResize(App->window->current_w, App->window->current_h);//SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	GenerateSceneBuffers();
+
 	// store version opengl/graphic drivers
 	openglGDriversVersionString.assign((const char*)glGetString(GL_VERSION));
 	// store glew version
@@ -161,6 +164,31 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+update_status ModuleRenderer3D::Update(float dt)
+{
+	if (render_config.gl_color_material)
+		glEnable(GL_COLOR_MATERIAL);
+	else
+		glDisable(GL_COLOR_MATERIAL);
+
+	if (render_config.gl_depth_test)
+		glEnable(GL_DEPTH_TEST);
+	else
+		glDisable(GL_DEPTH_TEST);
+
+	if (render_config.gl_cull_face)
+		glEnable(GL_CULL_FACE);
+	else
+		glDisable(GL_CULL_FACE);
+
+	if (render_config.gl_lighting)
+		glEnable(GL_LIGHTING);
+	else
+		glDisable(GL_LIGHTING);
+
+	return UPDATE_CONTINUE;
+}
+
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
@@ -178,6 +206,53 @@ bool ModuleRenderer3D::CleanUp()
 	return true;
 }
 
+void ModuleRenderer3D::GenerateSceneBuffers()
+{
+	GLint depth_size = 24, stencil_size = 8;
+
+	// Gen depth buffer ---------------------------------------
+	glGenRenderbuffers(1, &depth_buffer_id);
+	glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer_id);
+
+	// Config depth storage -----------------------------------
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, App->window->current_w, App->window->current_h);
+	glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &depth_size);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	// Gen color texture ----------------------------------------------
+	glGenTextures(1, &texture_id);
+	glBindTexture(GL_TEXTURE_2D, texture_id);
+	
+	// Config  color texture ------------------------------------------
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE); // automatic mipmap
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, App->window->current_w, App->window->current_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Gen frame buffer ----------------------------------------
+	glGenFramebuffers(1, &frame_buffer_id);
+	glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
+
+	// Attach texture and render buffer to frame buffer -------
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depth_buffer_id);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture_id, 0);
+
+	// If program can generate the texture ----------------------
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		LOG("[Error] creating screen buffer");
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+RenderConfig& ModuleRenderer3D::GetRenderConfig()
+{
+	return render_config;
+}
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {

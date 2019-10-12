@@ -279,7 +279,7 @@ float3x3 float3x3::ShearZ(float xFactor, float yFactor)
 
 float3x3 float3x3::Mirror(const Plane &p)
 {
-	assume(p.PassesThroughOrigin() && "A 3x3 matrix cannot represent mirroring about planes which do not pass through the origin! Use float3x4::Mirror instead!");
+	assume(p.PassesThroughOrigin() && "A 3x3 matrix cannot represent mirroring show_about_popup planes which do not pass through the origin! Use float3x4::Mirror instead!");
 	float3x3 v;
 	SetMatrix3x3LinearPlaneMirror(v, p.normal.x, p.normal.y, p.normal.z);
 	return v;

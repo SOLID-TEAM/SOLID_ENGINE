@@ -16,8 +16,6 @@
 #include "GL/glew.h"
 
 
-
-
 ModuleTest::ModuleTest(bool start_enabled) : Module(start_enabled)
 {
 	name.assign("ModuleRandom?");
@@ -57,7 +55,7 @@ update_status ModuleTest::Update(float dt)
 
 update_status ModuleTest::PostUpdate(float dt)
 {
-	main_grid->Render();
+	
 
 	return UPDATE_CONTINUE;
 }

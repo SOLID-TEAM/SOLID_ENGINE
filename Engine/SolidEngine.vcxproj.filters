@@ -369,6 +369,12 @@
     <ClInclude Include="W_Hierarchy.h">
       <Filter>Sources\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="W_Rendering.h">
+      <Filter>Sources\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="W_Scene.h">
+      <Filter>Sources\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -567,6 +573,12 @@
       <Filter>Sources\Editor</Filter>
     </ClCompile>
     <ClCompile Include="W_Hierarchy.cpp">
+      <Filter>Sources\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="W_Rendering.cpp">
+      <Filter>Sources\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="W_Scene.cpp">
       <Filter>Sources\Editor</Filter>
     </ClCompile>
   </ItemGroup>
