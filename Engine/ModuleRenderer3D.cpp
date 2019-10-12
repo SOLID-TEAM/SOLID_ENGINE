@@ -281,3 +281,8 @@ void ModuleRenderer3D::Load(Config& config)
 {
 
 }
+
+void ModuleRenderer3D::SetDefaultColorMaterial()
+{
+	glColor4fv((float*)&render_config.default_color_mat);
+}

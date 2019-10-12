@@ -23,6 +23,8 @@ struct RenderConfig
 	float min_n_length = 0.0f;
 	float min_alpha = 0.f;
 	float max_alpha = 1.f;
+
+	ImVec4 default_color_mat = { 1.0f,1.0f,1.0f,1.0f };
 };
 
 class ModuleRenderer3D : public Module
@@ -54,6 +56,8 @@ public:
 	void GenerateSceneBuffers();
 
 	RenderConfig& GetRenderConfig();
+
+	void SetDefaultColorMaterial();
 
 public:
 	

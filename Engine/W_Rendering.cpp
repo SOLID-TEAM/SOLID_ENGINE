@@ -63,13 +63,62 @@ void W_Rendering::Draw()
 		}
 		if (ImGui::CollapsingHeader("OpenGL Test"))
 		{
-			ImGui::Title("Color Material");	ImGui::Checkbox("##GL_COLOR_MATERIAL", &config.gl_color_material);
+			ImGui::Title("Color Material");	
+			if (ImGui::Checkbox("##GL_COLOR_MATERIAL", &config.gl_color_material))
+			{
+				if (!config.gl_color_material)
+					App->renderer3D->SetDefaultColorMaterial();
+					
+			}
 			ImGui::Title("Depht Test");		ImGui::Checkbox("##GL_DEPTH_TEST", &config.gl_depth_test);
 			ImGui::Title("Cull Faces");		ImGui::Checkbox("##GL_CULL_FACE", &config.gl_cull_face);
 			ImGui::Title("Lighting");		ImGui::Checkbox("##GL_LIGHTING", &config.gl_lighting);
 		}
 
+		// TODO: checker texture temporary here
+		static bool view_checker = false;
+		static int val = 512, v_min = 8, v_max = 2048;
+		static uint tex_id = 0;
 
+		if (ImGui::CollapsingHeader("Checker Texture"))
+		{
+			if (ImGui::Checkbox("view uv checker", &view_checker))
+			{
+				if (view_checker)
+				{
+					// TODO: create checker texture with default size
+					tex_id = App->textures->GenerateCheckerTexture(val, val);
+				}
+				else
+				{
+					// TODO: unload texture id
+				}
+			}
+
+			if (view_checker)
+			{
+				if (ImGui::BeginCombo("Resolution", std::to_string(val).data()))
+				{
+					for (uint i = v_min; i < v_max * 2; i = i > 0 ? i * 2 : ++i)
+					{
+						ImGui::PushID(i);
+						bool is_selected;
+						if (ImGui::Selectable(std::to_string(i).data(), val == i))
+						{
+							val = i;
+
+							// TODO: delete and reload procedural checker
+
+						}
+						ImGui::PopID();
+					}
+
+					ImGui::EndCombo();
+				}
+
+				ImGui::Image((ImTextureID)tex_id, ImVec2(App->test->map(val, 0, 2048, 128, 512), App->test->map(val, 0, 2048, 128, 512)));
+			}
+		}
 	}
 
 	ImGui::End();

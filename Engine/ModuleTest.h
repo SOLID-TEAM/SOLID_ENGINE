@@ -42,6 +42,10 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
+	// TODO: fit utilities on its own file
+	float map(float value, float s1, float stop1, float s2, float stop2) const;
+	
+
 	Grid* main_grid = nullptr;
 };
 
