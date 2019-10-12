@@ -188,6 +188,8 @@ uint ModuleTextures::GenerateCheckerTexture(uint w, uint h)
 		
 		// add to textures map
 		textures.insert({ (imgname + id + extension).data(), ret_id });
+
+		LOG("[Info] Correctly generated and binded procedurally checker texture with %ix%i pixels size", w, h);
 	}
 	else
 	{

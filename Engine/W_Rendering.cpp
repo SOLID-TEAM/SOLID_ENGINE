@@ -86,12 +86,11 @@ void W_Rendering::Draw()
 			{
 				if (view_checker)
 				{
-					// TODO: create checker texture with default size
 					tex_id = App->textures->GenerateCheckerTexture(val, val);
 				}
 				else
 				{
-					// TODO: unload texture id
+					App->textures->FreeTextureBuffer(tex_id);
 				}
 			}
 
@@ -107,8 +106,10 @@ void W_Rendering::Draw()
 						{
 							val = i;
 
-							// TODO: delete and reload procedural checker
-
+							// TODO: improve when we are capable of select gameobjects
+							App->textures->FreeTextureBuffer(tex_id);
+							tex_id = App->textures->GenerateCheckerTexture(val, val);
+							
 						}
 						ImGui::PopID();
 					}
