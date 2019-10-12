@@ -202,3 +202,8 @@ uint ModuleTextures::GenerateCheckerTexture(uint w, uint h)
 
 	return ret_id > 0 ? ret_id : 0;
 }
+
+void ModuleTextures::GetTextureSize(uint& w, uint& h) const
+{
+	//
+}

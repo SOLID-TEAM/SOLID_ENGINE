@@ -162,6 +162,7 @@
     <ClInclude Include="Imgui\imstb_rectpack.h" />
     <ClInclude Include="Imgui\imstb_textedit.h" />
     <ClInclude Include="Imgui\imstb_truetype.h" />
+    <ClInclude Include="ImGui\misc\cpp\imgui_stdlib.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="ModelData.h" />
     <ClInclude Include="ModuleCamera3D.h" />
@@ -237,6 +238,7 @@
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="ImGui\Impl\imgui_impl_opengl3.cpp" />
     <ClCompile Include="ImGui\Impl\imgui_impl_sdl.cpp" />
+    <ClCompile Include="ImGui\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />

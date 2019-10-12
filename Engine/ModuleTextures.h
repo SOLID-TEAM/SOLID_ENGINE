@@ -26,6 +26,8 @@ public:
 	bool FreeTextureBuffer(uint id);
 	uint GenerateCheckerTexture(uint w, uint h);
 
+	void GetTextureSize(uint& w, uint& h) const;
+
 
 public:
 	ILuint image_test = 0;

@@ -1,4 +1,5 @@
 #include "ImGui/imgui_plot.h"
+#include "ImGui/misc/cpp/imgui_stdlib.h" // input text wrapper for std::string
 #include "SDL/include/SDL_opengl.h"
 
 #include "Application.h"
@@ -19,16 +20,15 @@ W_Config::~W_Config()
 void W_Config::Draw()
 {
 	ImVec4 green = { 20.f / 255.f, 196.f / 255.f, 55.f / 255.f , 1.f };
-	static char app_name[40];
-	static char org_name[40];
+	std::string final_str;
 
 	if (ImGui::Begin("Configuration", &active))
 	{
 		if (ImGui::CollapsingHeader("Aplication"))
 		{
 			ImGui::Spacing();
-			ImGui::Title("Aplication"); 	ImGui::InputText("##Aplication Name", app_name, 40);
-			ImGui::Title("Organization"); 	ImGui::InputText("##Organization Name", org_name, 40);
+			ImGui::Title("Aplication"); 	ImGui::InputText("##Aplication Name", &App->app_name);
+			ImGui::Title("Organization"); 	ImGui::InputText("##Organization Name", &App->organization_name);
 			ImGui::Spacing();
 
 		}
@@ -36,7 +36,7 @@ void W_Config::Draw()
 		{
 			ImGui::Spacing();
 			static int cap = 60;
-			ImGui::Title("Framerate"); if (ImGui::SliderInt("##Framerate cap", &cap, 0, 144, "%.2f")) App->AdjustCappedMs(cap);
+			ImGui::Title("Framerate"); if (ImGui::SliderInt("##Framerate cap", &cap, 0, 144, "%f")) App->AdjustCappedMs(cap);
 			ImGui::Spacing();
 
 			ImGui::PlotConfig conf;
@@ -46,20 +46,22 @@ void W_Config::Draw()
 			conf.scale.min = -1;
 			conf.scale.max = 100;
 			conf.tooltip.show = true;
-			conf.tooltip.format = "FPS: %.2f";
+			conf.tooltip.format = "%.2f";
 			conf.grid_x.show = true;
 			conf.grid_y.show = true;
-			conf.frame_size = ImVec2(ImGui::GetContentRegionAvailWidth(), 100 );
+			conf.frame_size = ImVec2(ImGui::GetContentRegionAvailWidth(), 100 ); // OBSOLETE?
 			conf.line_thickness = 2.f;
-			conf.overlay_text = "FPS";
+			final_str.assign("FPS: " + std::to_string((int)stored_fps[stored_fps.size() - 1]));
+			conf.overlay_text = final_str.c_str();
 			conf.grid_x.show = false;
 			conf.grid_y.show = false;
 			
 			ImGui::Plot("FPS", conf);
 			ImGui::Spacing();
 
-			conf.tooltip.format = "Ms: %.2f";
-			conf.overlay_text = "Ms";
+			conf.tooltip.format = "%.2f";
+			final_str.assign("MS: " + std::to_string((int)stored_ms[stored_ms.size() - 1]));
+			conf.overlay_text = final_str.c_str();
 			conf.values.ys = &stored_ms[0];
 
 			ImGui::Plot("Ms", conf);
@@ -67,7 +69,8 @@ void W_Config::Draw()
 
 			conf.scale.max = 20000;
 			conf.tooltip.format = "Mb: %.2f";
-			conf.overlay_text = "Memory Usage";
+			final_str.assign("Mem Usage: " + std::to_string((int)stored_mem[stored_mem.size() - 1]));
+			conf.overlay_text = final_str.c_str();
 			conf.values.ys = &stored_mem[0];
 
 			ImGui::Plot("Memory Usage", conf);
@@ -184,6 +187,115 @@ void W_Config::Draw()
 		if (ImGui::CollapsingHeader("File System"))
 		{
 		}
+
+		// TODO: SEARCH A BETTER PLACE TO PUT ALL INFO FOR LOADED TEXTURES
+		if (ImGui::CollapsingHeader("Loaded Textures VRam"))
+		{
+			//ImVec2 test = ImGui::GetItemRectSize();// ImGui::GetContentRegionAvailWidth();
+
+			static bool delete_popup = false;
+			static bool h_borders = true;
+			static bool v_borders = true;
+			static int columns_count = 3;
+			static int box_w = 256;
+			const int box_min = 64;
+			const int box_max = 512;
+			uint num_textures = App->textures->textures.size();
+			ImVec2 texture_box(box_w, box_w);
+			static uint selected_tex_button_id = 0;
+			static bool flip_vertical = true;	// by default flipped (standard visor)
+			static bool flip_horizontal = true; // ""
+			ImVec2 uv0 = { 0,0 };
+			ImVec2 uv1 = { 1,1 };
+			
+			// sum required coords to flip textures
+			if (flip_horizontal && flip_vertical)
+			{
+				uv0 = { 0,1 };
+				uv1 = { 1,0 };
+			}
+			else if (flip_vertical)
+			{
+				uv0 = { 1,1 };
+				uv1 = { 0,0 };
+			}
+			else if (flip_horizontal)
+			{
+				uv0 = { 1,0 };
+				uv1 = { 0,1 };
+			}
+
+			float avail_w = ImGui::GetColumnWidth();
+
+			columns_count = (int)avail_w / (int)texture_box.x;
+
+			/*if (columns_count > num_textures) // adjust columns 
+				columns_count = num_textures;*/
+
+			if (columns_count < 1)
+				columns_count = 1;
+
+			ImGui::Text("Currently loaded: %i textures", num_textures);
+
+			ImGui::SliderInt("Miniature size", &box_w, box_min, box_max);
+
+			ImGui::Checkbox("Flip Vertical", &flip_vertical); ImGui::SameLine();
+			ImGui::Checkbox("Flip Horizontal", & flip_horizontal);
+
+			std::map<std::string, uint>::iterator textures = App->textures->textures.begin();
+			ImGui::Columns(columns_count, NULL, v_borders);
+			// TODO: center at mid of avail_w all widgets
+			int widget_id = 0;
+			for (; textures != App->textures->textures.end(); ++textures)//columns_count * num_textures; i++)
+			{
+				ImGui::PushID(widget_id++);
+				if (h_borders && ImGui::GetColumnIndex() == 0)
+					ImGui::Separator();
+
+				ImGui::Image((ImTextureID)(*textures).second, texture_box, uv0, uv1);
+				ImGui::TextColored(green, (*textures).first.c_str()); 
+				// get texture data
+				int w = 0, h = 0;// , d = 0;
+				glBindTexture(GL_TEXTURE_2D, (*textures).second);
+				glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
+				glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
+				//glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_DEPTH, &d);
+				glBindTexture(GL_TEXTURE_2D, 0);
+				ImGui::Text("Width: %i", w);
+				ImGui::Text("Height: %i", h);
+				//ImGui::Text("Depth %i", d);
+				//ImGui::Text("Offset %.2f", ImGui::GetColumnOffset());
+				
+				if (ImGui::Button("Delete" , ImVec2(box_w, 0.0f)))// ImVec2(-FLT_MIN, 0.0f)))
+				{
+					// modal popup
+					delete_popup = true;
+					selected_tex_button_id = (*textures).second;
+				}
+				ImGui::NextColumn();
+
+				ImGui::PopID();
+			}
+			ImGui::Columns(1);
+			if (h_borders)
+				ImGui::Separator();
+
+			if (delete_popup)
+			{
+				ImGui::OpenPopup("Are you sure?");
+				if (ImGui::BeginPopupModal("Are you sure?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+				{
+					ImGui::Text("Delete image from vram buffer? \n");
+					ImGui::Separator();
+					if (ImGui::Button("YES", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); delete_popup = false; App->textures->FreeTextureBuffer(selected_tex_button_id); }
+					ImGui::SameLine();
+					if (ImGui::Button("NO", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); delete_popup = false; selected_tex_button_id = 0; }
+					ImGui::EndPopup();
+				}
+			}
+		}
+
+		
 	}
 	ImGui::End();
 }

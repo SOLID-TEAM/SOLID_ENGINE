@@ -375,6 +375,9 @@
     <ClInclude Include="W_Scene.h">
       <Filter>Sources\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\misc\cpp\imgui_stdlib.h">
+      <Filter>Sources\Thirds Party\Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -580,6 +583,9 @@
     </ClCompile>
     <ClCompile Include="W_Scene.cpp">
       <Filter>Sources\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\misc\cpp\imgui_stdlib.cpp">
+      <Filter>Sources\Thirds Party\Imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
