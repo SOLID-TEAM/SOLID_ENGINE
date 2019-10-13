@@ -71,11 +71,11 @@ bool ModuleEditor::Start(Config& conf)
 
 	// Initial Windows -------------------------------------
 
-	w_config	= new W_Config("Configuration", show_configuration);
-	w_console	= new W_Console("Console", show_console);
+	w_config = new W_Config("Configuration", show_configuration);
+	w_console = new W_Console("Console", show_console);
 	w_hierarchy = new W_Hierarchy("Hierarchy", true);
 	w_rendering = new W_Rendering("Rendering Settings", true);
-	w_scene		= new W_Scene("Scene", true);
+	w_scene = new W_Scene("Scene", true);
 
 	return ret;
 }
@@ -96,11 +96,11 @@ bool ModuleEditor::CleanUp()
 
 	windows.clear();
 
-	w_config 	= nullptr;
-	w_console	= nullptr;
-	w_hierarchy	= nullptr;
-	w_rendering	= nullptr;
-	w_scene		= nullptr;
+	w_config = nullptr;
+	w_console = nullptr;
+	w_hierarchy = nullptr;
+	w_rendering = nullptr;
+	w_scene = nullptr;
 
 	return true;
 }
@@ -183,7 +183,8 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 	// Main Menu Bar --------------------------------------
 
-	DrawMainMenuBar();
+	if (!DrawMainMenuBar())
+		return update_status::UPDATE_STOP;
 
 	// Draw all windows ----------------------------------- 
 
@@ -200,7 +201,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	DrawPopUps();
 
 	if (show_demo_imgui) ImGui::ShowDemoWindow(&show_demo_imgui);
-		
+
 	ImGui::End();
 
 	// ImGui Internal System ------------------------------
@@ -213,7 +214,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
 	SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-	
+
 	// -----------------------------------------------------
 
 	return UPDATE_CONTINUE;
@@ -245,14 +246,14 @@ bool ModuleEditor::LoadEditorConfig(const char* path)
 bool ModuleEditor::SaveEditorConfig(const char* path)
 {
 	bool ret = true;
-	
+
 	// testing how array works ----
 
 	JSON_Array* arr = nullptr;
 	JSON_Value* va = json_value_init_object();
 	JSON_Object* obj = nullptr;
 	obj = json_value_get_object(va);
-	
+
 	JSON_Value* vaa = json_value_init_array();
 	json_object_set_value(obj, "blabla", vaa);
 
@@ -304,16 +305,16 @@ bool ModuleEditor::Save(Config& config)
 	ret = config.AddBool("show_demo_imgui", show_demo_imgui);
 	ret = config.AddFloatArray("sdfgd", blabla, 10);
 
-	if(w_config != nullptr)
+	if (w_config != nullptr)
 		ret = config.AddBool("show_configuration", w_config->active);
 	else
 		ret = config.AddBool("show_configuration", show_configuration);
 
-	if(w_console != nullptr)
+	if (w_console != nullptr)
 		ret = config.AddBool("show_console", w_console->active);
 	else
 		ret = config.AddBool("show_console", show_console);
-	
+
 
 	return ret;
 }
@@ -322,7 +323,7 @@ void ModuleEditor::Load(Config& config)
 {
 	show_about_popup = config.GetBool("show_about_popup", show_about_popup);
 	show_demo_imgui = config.GetBool("show_demo_imgui", show_demo_imgui);
-	if(w_console != nullptr)
+	if (w_console != nullptr)
 		w_console->active = config.GetBool("show_console", w_console->active);
 	else
 		show_console = config.GetBool("show_console", show_console);
@@ -334,6 +335,8 @@ void ModuleEditor::Load(Config& config)
 
 bool ModuleEditor::DrawMainMenuBar()
 {
+	bool ret = true;
+
 	ImGui::BeginMainMenuBar();
 
 	if (ImGui::BeginMenu("File"))
@@ -359,7 +362,8 @@ bool ModuleEditor::DrawMainMenuBar()
 		}
 
 		if (ImGui::MenuItem("Quit", "ESC"))
-			return false;
+			ret = false;
+	
 
 		ImGui::EndMenu();
 	}
@@ -405,7 +409,7 @@ bool ModuleEditor::DrawMainMenuBar()
 
 	ImGui::EndMainMenuBar();
 
-	return true;
+	return ret;
 }
 
 void ModuleEditor::DrawPopUps()

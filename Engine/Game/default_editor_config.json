@@ -67,8 +67,8 @@
         "f_n_line_length": 0.40000000596046448
     },
     "Editor": {
-        "about": false,
-        "showcase": false,
+        "show_about_popup": false,
+        "show_demo_imgui": false,
         "sdfgd": [
             0,
             2,

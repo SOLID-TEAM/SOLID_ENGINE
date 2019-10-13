@@ -9,8 +9,8 @@ Loading File System
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
 [Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 430.86
+[Info] Renderer: GeForce GTX 970/PCIe/SSE2
+[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
 [Start] Setting up the camera
@@ -18,18 +18,15 @@ Loading Test assets
 [Error] Loading scene Assets/Models/BakerHouse.fbx / no meshes
 [Start] Loading Editor
 -------------- Application Update --------------
-D:/Documentos/GitHub Projects/SOLID_ENGINE/Engine/Game/Assets/Models/BakerHouse.fbx
-.fbx
-possible 3d model
-[Info] Created new mesh Untitled.001 with 160 vertices
-[Info] Containing 324 indices for 108 triangles
-[Info] Loaded vertex normals for 160 vertices
+[Info] checker texture checker3.png correctly saved into temporary directory
+[Info] Correctly generated and binded procedurally checker texture with 256x256 pixels size
+Freed texture buffer checker3.png from vram
+Deleted texture checker3.png from map
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/Baker_house.png
+.png
+possible texture
 [Info] Image Assets/Textures/Baker_house.png correctly loaded into DevIL
 [Info] Image correctly uploaded to gl buffer
-[Info] Created new mesh Untitled with 1641 vertices
-[Info] Containing 2751 indices for 917 triangles
-[Info] Loaded vertex normals for 1641 vertices
-[Info] Texture with same name Baker_house.png already loaded into buffers
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

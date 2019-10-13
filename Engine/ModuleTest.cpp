@@ -150,3 +150,7 @@ void Grid::Destroy()
 }
 
 
+float ModuleTest::map(float value, float s1, float stop1, float s2, float stop2) const
+{
+	return s2 + (stop2 - s2) * ((value - s1) / (stop1 - s1));
+}

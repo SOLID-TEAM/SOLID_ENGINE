@@ -1,3 +1,4 @@
+#include "GL/glew.h"
 #include "Application.h"
 #include "W_Rendering.h"
 #include "ImGui/imgui.h"
@@ -63,10 +64,100 @@ void W_Rendering::Draw()
 		}
 		if (ImGui::CollapsingHeader("OpenGL Test"))
 		{
-			ImGui::Title("Color Material");	ImGui::Checkbox("##GL_COLOR_MATERIAL", &config.gl_color_material);
-			ImGui::Title("Depht Test");		ImGui::Checkbox("##GL_DEPTH_TEST", &config.gl_depth_test);
-			ImGui::Title("Cull Faces");		ImGui::Checkbox("##GL_CULL_FACE", &config.gl_cull_face);
-			ImGui::Title("Lighting");		ImGui::Checkbox("##GL_LIGHTING", &config.gl_lighting);
+			ImGui::Title("Color Material");	
+			if (ImGui::Checkbox("##GL_COLOR_MATERIAL", &config.gl_color_material))
+			{
+				if (config.gl_color_material)
+					glEnable(GL_COLOR_MATERIAL);
+				else
+				{
+					App->renderer3D->SetDefaultColorMaterial();
+					glDisable(GL_COLOR_MATERIAL);
+				}
+					
+			}
+			ImGui::Title("Depht Test");		
+			if (ImGui::Checkbox("##GL_DEPTH_TEST", &config.gl_depth_test))
+			{
+				if (config.gl_depth_test)
+					glEnable(GL_DEPTH_TEST);
+				else
+				{
+					glDisable(GL_DEPTH_TEST);
+				}
+			}
+			ImGui::Title("Cull Faces");		
+			if (ImGui::Checkbox("##GL_CULL_FACE", &config.gl_cull_face))
+			{
+				if (config.gl_cull_face)
+				{
+					glEnable(GL_CULL_FACE);
+				}
+				else
+					glDisable(GL_CULL_FACE);
+			}
+			ImGui::Title("Lighting");		
+			if (ImGui::Checkbox("##GL_LIGHTING", &config.gl_lighting))
+			{
+				if (config.gl_lighting)
+				{
+					glEnable(GL_LIGHTING);
+				}
+				else
+					glDisable(GL_LIGHTING);
+			}
+		}
+
+		// TODO: checker texture temporary here
+		static bool view_checker = false;
+		static int val = 256, v_min = 16, v_max = 2048;
+
+		if (ImGui::CollapsingHeader("Checker Texture"))
+		{
+
+			if (ImGui::Checkbox("view uv checker", &view_checker))
+			{
+				if (view_checker)
+				{
+					checker_tex_gl_id = App->textures->GenerateCheckerTexture(val, val);
+				}
+				else
+				{
+					App->textures->FreeTextureBuffer(checker_tex_gl_id);
+				}
+			}
+
+			if (view_checker)
+			{
+				if (ImGui::BeginCombo("Resolution", std::to_string(val).data()))
+				{
+					for (uint i = v_min; i < v_max * 2; i = i > 0 ? i * 2 : ++i)
+					{
+						ImGui::PushID(i);
+						bool is_selected;
+						if (ImGui::Selectable(std::to_string(i).data(), val == i))
+						{
+							val = i;
+
+							// TODO: improve when we are capable of select gameobjects
+							App->textures->FreeTextureBuffer(checker_tex_gl_id);
+							checker_tex_gl_id = App->textures->GenerateCheckerTexture(val, val);
+							
+						}
+						ImGui::PopID();
+					}
+
+					ImGui::EndCombo();
+				}
+
+				if (glIsTexture(checker_tex_gl_id))
+					ImGui::Image((ImTextureID)checker_tex_gl_id, ImVec2(256, 256));
+				else
+				{
+					view_checker = false;
+					checker_tex_gl_id = 0; // for rare circunstances
+				}
+			}
 		}
 	}
 

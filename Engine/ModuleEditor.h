@@ -48,9 +48,14 @@ public:
 	// temporaly utils for imgui prefab functions
 	void HelpMarker(const char* desc) const;
 
+	//bool SliderIntWithSteps(const char* label, int* v, int v_min, int v_max, int v_step, const char* display_format);
+
 	void AddWindow(Window* panel_to_add);
 
 	void DestroyWindow(Window* panel_to_add);
+
+	// TODO: move this utility out here
+	float map(float value, float s1, float stop1, float s2, float stop2) const;
 
 private:
 

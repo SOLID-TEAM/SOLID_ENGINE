@@ -94,40 +94,7 @@ bool ModelData::UpdateBuffers()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _idx_size * 2, &debug_f_normals[0], GL_STATIC_DRAW);
 
 
-	// TESTING: checker texture needs to be moved to new moduletextures
-	// Bind and set parameters for TEXTURE_2D
-	/*if (uvs != nullptr)
-	{
-		glBindTexture(GL_TEXTURE_2D, texture_gl_id);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-		GLubyte checkImage[128][128][4];
-
-		for (int i = 0; i < 128; i++)
-		{
-			for (int j = 0; j < 128; j++)
-			{
-				int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
-				checkImage[i][j][0] = (GLubyte)c;
-				checkImage[i][j][1] = (GLubyte)c;
-				checkImage[i][j][2] = (GLubyte)c;
-				checkImage[i][j][3] = (GLubyte)255;
-			}
-		}
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
-	}*/
-	// ---------------------------------------------------------------------------------------------------------
-
-	/*glBindBuffer(GL_ARRAY_BUFFER, normals_gl_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * _v_size, &normals[0], GL_STATIC_DRAW);*/
-
-	/*glBindBuffer(GL_ARRAY_BUFFER, uv_gl_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _uv_size * 2, &uvs[0], GL_STATIC_DRAW);*/
+	//texture_gl_id = App->textures->GenerateCheckerTexture(512,512);
 
 	return ret;
 }
@@ -161,6 +128,17 @@ bool ModelData::RefillDebugFacesNormalsBuffers()
 bool ModelData::Render()
 {
 	bool ret = true;
+
+	// TODO: implements this check on a more universal place for all render functions
+	// if we delete this linked buffer on another part and enters here without check
+	// "There is no guarantee that the names form a contiguous set of integers; however, 
+	// it is guaranteed that none of the returned names was in use immediately before the call to glGenTextures. "
+	// checks if the texture id is a valid texture id and prevents creation of no dimensionality with new binding before render
+	if (texture_gl_id != 0)
+	{
+		if (!glIsTexture(texture_gl_id))
+			texture_gl_id = 0;
+	}
 
 	// general color
 	

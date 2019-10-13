@@ -150,6 +150,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
+	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrix());
@@ -165,7 +166,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 update_status ModuleRenderer3D::Update(float dt)
 {
-	if (render_config.gl_color_material)
+	// NOT NEEDED EVERY FRAME, MOVED TO PANEL RENDER
+	/*if (render_config.gl_color_material)
 		glEnable(GL_COLOR_MATERIAL);
 	else
 		glDisable(GL_COLOR_MATERIAL);
@@ -183,7 +185,7 @@ update_status ModuleRenderer3D::Update(float dt)
 	if (render_config.gl_lighting)
 		glEnable(GL_LIGHTING);
 	else
-		glDisable(GL_LIGHTING);
+		glDisable(GL_LIGHTING);*/
 
 	return UPDATE_CONTINUE;
 }
@@ -279,4 +281,9 @@ bool ModuleRenderer3D::Save(Config& config)
 void ModuleRenderer3D::Load(Config& config)
 {
 
+}
+
+void ModuleRenderer3D::SetDefaultColorMaterial()
+{
+	glColor4fv((float*)&render_config.default_color_mat);
 }

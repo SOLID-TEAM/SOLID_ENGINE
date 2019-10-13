@@ -77,12 +77,12 @@ public:
 	ImVector<char*> console_log_aux;
 	std::string log_buffer;
 
+	std::string app_name;
+	std::string organization_name;
 private:
 
 	// General ----------------------------------
 	std::list<Module*> list_modules;
-	std::string app_name;
-	std::string organization_name;
 
 	// Framerate --------------------------------
 	Timer	ms_timer;

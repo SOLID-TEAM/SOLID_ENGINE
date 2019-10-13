@@ -225,6 +225,10 @@ ILAPI ILboolean     ILAPIENTRY ilutRenderer(ILenum Renderer);
 
 	ILAPI ILboolean	ILAPIENTRY ilutGLSetTex(GLuint TexID);  // Deprecated - use ilutGLSetTex2D.
 	ILAPI ILboolean ILAPIENTRY ilutGLSubTex(GLuint TexID, ILuint XOff, ILuint YOff);  // Use ilutGLSubTex2D.
+	
+	// SOLID TEAM implementation, wip
+	// for mag and min scale mode, use opengl standards GL_NEAREST /GL_LINEAR etc
+	ILAPI GLuint ILAPIENTRY ilutGLBindTexImageEx(int scaleMode);
 #endif//ILUT_USE_OPENGL
 
 
