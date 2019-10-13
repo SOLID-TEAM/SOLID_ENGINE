@@ -111,7 +111,6 @@ void W_Rendering::Draw()
 		// TODO: checker texture temporary here
 		static bool view_checker = false;
 		static int val = 256, v_min = 16, v_max = 2048;
-		static uint tex_id = 0;
 
 		if (ImGui::CollapsingHeader("Checker Texture"))
 		{
@@ -120,11 +119,11 @@ void W_Rendering::Draw()
 			{
 				if (view_checker)
 				{
-					tex_id = App->textures->GenerateCheckerTexture(val, val);
+					checker_tex_gl_id = App->textures->GenerateCheckerTexture(val, val);
 				}
 				else
 				{
-					App->textures->FreeTextureBuffer(tex_id);
+					App->textures->FreeTextureBuffer(checker_tex_gl_id);
 				}
 			}
 
@@ -141,8 +140,8 @@ void W_Rendering::Draw()
 							val = i;
 
 							// TODO: improve when we are capable of select gameobjects
-							App->textures->FreeTextureBuffer(tex_id);
-							tex_id = App->textures->GenerateCheckerTexture(val, val);
+							App->textures->FreeTextureBuffer(checker_tex_gl_id);
+							checker_tex_gl_id = App->textures->GenerateCheckerTexture(val, val);
 							
 						}
 						ImGui::PopID();
@@ -151,10 +150,13 @@ void W_Rendering::Draw()
 					ImGui::EndCombo();
 				}
 
-				if (glIsTexture(tex_id))
-					ImGui::Image((ImTextureID)tex_id, ImVec2(256, 256));
+				if (glIsTexture(checker_tex_gl_id))
+					ImGui::Image((ImTextureID)checker_tex_gl_id, ImVec2(256, 256));
 				else
+				{
 					view_checker = false;
+					checker_tex_gl_id = 0; // for rare circunstances
+				}
 			}
 		}
 	}

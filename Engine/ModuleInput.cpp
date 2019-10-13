@@ -3,6 +3,7 @@
 #include "ModuleInput.h"
 #include "ModuleEditor.h"
 #include "W_Config.h"
+#include "W_Rendering.h"
 
 #include "ImGui/Impl/imgui_impl_sdl.h"
 
@@ -176,6 +177,17 @@ update_status ModuleInput::PreUpdate(float dt)
 				uint new_tex_id = 0;
 				// load texture already checks if the texture is previously loaded and return its id if it, new id if not
 				new_tex_id = App->textures->LoadTexture(filename.generic_string().data());
+
+				// TODO: in rare circunstances we can delete all gl texture buffers(not necessarily all,
+				// only needs to delete one id previously associated with the checker tex). If we have
+				// checker texture active with some linked id to image visualization(active checker tex), when we load a new texture
+				// (and delete) with the panel checker texture not active, and returning to it, the image shown is not the checker
+				// previously deleted, is the new one! bad
+				// workaround | WE NEED to deal with this when we implement checker for active gameobject only
+				// if the new id texture is the same as the one we have linked to checker texture, something weird occurs, then
+				// what that means some id are deleted and another texture is loaded without returning to this panel
+				if (new_tex_id == App->editor->w_rendering->checker_tex_gl_id)
+					App->editor->w_rendering->checker_tex_gl_id = 0;
 				
 				if (new_tex_id > 0)
 					App->importer->ReloadTextureForAllModels(new_tex_id);
