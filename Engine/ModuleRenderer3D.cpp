@@ -27,23 +27,7 @@ bool ModuleRenderer3D::Init(Config& config)
 {
 	LOG("[Init] Creating 3D Renderer context");
 	bool ret = true;
-
-
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY); //SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 	
-	//Create context
-	context = SDL_GL_CreateContext(App->window->window);
-	if(context == NULL)
-	{
-		LOG("[Error] OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
-		ret = false;
-	}
-
 	// Initialize GLEW
 	glewExperimental = true; // Needed for core profile
 
@@ -129,7 +113,6 @@ bool ModuleRenderer3D::Init(Config& config)
 
 	// Projection matrix for
 	OnResize(App->window->current_w, App->window->current_h);//SCREEN_WIDTH, SCREEN_HEIGHT);
-
 	GenerateSceneBuffers();
 
 	// store version opengl/graphic drivers

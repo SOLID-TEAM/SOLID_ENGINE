@@ -93,14 +93,8 @@
     <ClInclude Include="Imgui\imstb_truetype.h">
       <Filter>Sources\Thirds Party\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Impl\imgui_impl_sdl.h">
-      <Filter>Sources\Thirds Party\Imgui</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleEditor.h">
       <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Impl\imgui_impl_opengl3.h">
-      <Filter>Sources\Thirds Party\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Primitive.h">
       <Filter>Sources\Helpers</Filter>
@@ -378,6 +372,12 @@
     <ClInclude Include="ImGui\misc\cpp\imgui_stdlib.h">
       <Filter>Sources\Thirds Party\Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Impl\imgui_impl_opengl3.h">
+      <Filter>Sources\Thirds Party\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Impl\imgui_impl_sdl.h">
+      <Filter>Sources\Thirds Party\Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -413,14 +413,8 @@
     <ClCompile Include="Imgui\imgui_widgets.cpp">
       <Filter>Sources\Thirds Party\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\Impl\imgui_impl_sdl.cpp">
-      <Filter>Sources\Thirds Party\Imgui</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleEditor.cpp">
       <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\Impl\imgui_impl_opengl3.cpp">
-      <Filter>Sources\Thirds Party\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Primitive.cpp">
       <Filter>Sources\Helpers</Filter>
@@ -585,6 +579,12 @@
       <Filter>Sources\Editor</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\misc\cpp\imgui_stdlib.cpp">
+      <Filter>Sources\Thirds Party\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\Impl\imgui_impl_opengl3.cpp">
+      <Filter>Sources\Thirds Party\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\Impl\imgui_impl_sdl.cpp">
       <Filter>Sources\Thirds Party\Imgui</Filter>
     </ClCompile>
   </ItemGroup>

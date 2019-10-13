@@ -30,6 +30,9 @@ public:
 	void SetWindowBorderless(bool borderless);
 
 public:
+	//// TODO: Delete Multiviewport Test
+	//std::vector< SDL_Window*> sub_windows;
+
 	//The window we'll be rendering to
 	SDL_Window* window = nullptr;
 

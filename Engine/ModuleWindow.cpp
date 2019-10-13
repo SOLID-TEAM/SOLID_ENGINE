@@ -24,7 +24,7 @@ bool ModuleWindow::Init(Config& config)
 	// load configuration
 	Load(config);
 
-	if(SDL_Init(SDL_INIT_VIDEO) < 0)
+	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) < 0)
 	{
 		LOG("[Error] SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
@@ -34,14 +34,7 @@ bool ModuleWindow::Init(Config& config)
 		//Create window
 		int width = current_w * SCREEN_SIZE;
 		int height = current_h * SCREEN_SIZE;
-		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
-
-		//Use OpenGL 3.3
-		/*SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);*/
-
+		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI;
 
 		if(fullscreen == true)
 		{
@@ -63,7 +56,23 @@ bool ModuleWindow::Init(Config& config)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		// GL 3.0 + GLSL 130
+		const char* glsl_version = "#version 130";
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3.2);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+
+		// Create window with graphics context
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
+		//Create context
+		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
+		App->renderer3D->context = SDL_GL_CreateContext(App->window->window);
+		SDL_GL_MakeCurrent(window, App->renderer3D->context);
+		SDL_GL_SetSwapInterval(1);
 
 		if(window == NULL)
 		{
@@ -72,14 +81,14 @@ bool ModuleWindow::Init(Config& config)
 		}
 		else
 		{
-			//Get window surface
-			screen_surface = SDL_GetWindowSurface(window);
 			SetTitle("SOLID ENGINE v0.1");
 		}
 	}
 
 	return ret;
 }
+
+
 
 // Called before quitting
 bool ModuleWindow::CleanUp()

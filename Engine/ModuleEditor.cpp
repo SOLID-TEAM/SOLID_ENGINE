@@ -40,26 +40,37 @@ bool ModuleEditor::Init(Config& config)
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
-	// Setup Platform/Renderer bindings
-	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
-	ImGui_ImplOpenGL3_Init();
 
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 
 	// ImGui Style ----------------------------------------
 
-	ImGuiStyle* style = &ImGui::GetStyle();
-	style->DefaultColumnWidth = DFT_COLUMN;
-	style->WindowRounding = 0.0f;// <- Set this on init or use ImGui::PushStyleVar()
-	style->ChildRounding = 0.0f;
-	style->FrameRounding = 0.0f;
-	style->GrabRounding = 0.0f;
-	style->PopupRounding = 0.0f;
-	style->ScrollbarRounding = 0.0f;
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.DefaultColumnWidth = DFT_COLUMN;
+	style.WindowRounding = 0.0f;// <- Set this on init or use ImGui::PushStyleVar()
+	style.ChildRounding = 0.0f;
+	style.FrameRounding = 0.0f;
+	style.GrabRounding = 0.0f;
+	style.PopupRounding = 0.0f;
+	style.ScrollbarRounding = 0.0f;
+
+	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
+	io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports;
+	io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;
+
+	// Setup Platform/Renderer bindings
+	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
+	ImGui_ImplOpenGL3_Init();
+
 	return true;
 }
 
@@ -131,6 +142,7 @@ void ModuleEditor::DestroyWindow(Window* panel_to_destroy)
 update_status ModuleEditor::PreUpdate(float dt)
 {
 	// ImGui Internal System ------------------------------
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -209,11 +221,15 @@ update_status ModuleEditor::PostUpdate(float dt)
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
-	SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
-	ImGui::UpdatePlatformWindows();
-	ImGui::RenderPlatformWindowsDefault();
-	SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+	}
 
 	// -----------------------------------------------------
 
@@ -450,6 +466,7 @@ void ModuleEditor::DrawPopUps()
 			ImGui::BulletText("SDL   v%d.%d.%d", sdl_version.major, sdl_version.minor, sdl_version.patch);
 			ImGui::BulletText("glew  v%s", App->renderer3D->GetGlewVersionString().data());
 			ImGui::BulletText("ImGui v%s", ImGui::GetVersion());
+			ImGui::BulletText("OpenGL v%s", glGetString(GL_VERSION));
 			ImGui::BulletText("Parson - JSON library parser");
 
 			ImVec2 buttonSize = { 120.0f, 0.f };
