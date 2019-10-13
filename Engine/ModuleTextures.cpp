@@ -119,6 +119,7 @@ bool ModuleTextures::FreeTextureBuffer(uint id)
 			glDeleteTextures(1, &(*allTextures).second);
 			LOG("Freed texture buffer %s from vram", (*allTextures).first.data());
 			LOG("Deleted texture %s from map", (*allTextures).first.data());
+			(*allTextures).second = 0;
 			textures.erase(allTextures);
 			ret = true;
 			
@@ -182,7 +183,7 @@ uint ModuleTextures::GenerateCheckerTexture(uint w, uint h)
 		}
 		else
 		{
-			LOG("[Error] Saving checker texture %s", iluErrorString(ilGetError()));
+			LOG("[Error] Saving checker texture: %s", iluErrorString(ilGetError()));
 		}
 		// --------------------------------------------------------------------------------------------
 		

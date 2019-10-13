@@ -110,11 +110,12 @@ void W_Rendering::Draw()
 
 		// TODO: checker texture temporary here
 		static bool view_checker = false;
-		static int val = 512, v_min = 16, v_max = 2048;
+		static int val = 256, v_min = 16, v_max = 2048;
 		static uint tex_id = 0;
 
 		if (ImGui::CollapsingHeader("Checker Texture"))
 		{
+
 			if (ImGui::Checkbox("view uv checker", &view_checker))
 			{
 				if (view_checker)
@@ -150,7 +151,10 @@ void W_Rendering::Draw()
 					ImGui::EndCombo();
 				}
 
-				ImGui::Image((ImTextureID)tex_id, ImVec2(256,256));
+				if (glIsTexture(tex_id))
+					ImGui::Image((ImTextureID)tex_id, ImVec2(256, 256));
+				else
+					view_checker = false;
 			}
 		}
 	}

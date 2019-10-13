@@ -192,8 +192,28 @@ void W_Config::Draw()
 		if (ImGui::CollapsingHeader("Loaded Textures VRam"))
 		{
 			//ImVec2 test = ImGui::GetItemRectSize();// ImGui::GetContentRegionAvailWidth();
-
 			static bool delete_popup = false;
+			static uint selected_tex_button_id = 0;
+
+			if (delete_popup)
+			{
+				ImGui::OpenPopup("Are you sure?");
+				if (ImGui::BeginPopupModal("Are you sure?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+				{
+					ImGui::Text("Delete image from vram buffer? \n");
+					ImGui::Separator();
+					if (ImGui::Button("YES", ImVec2(120, 0)))
+					{
+						delete_popup = false;
+						App->textures->FreeTextureBuffer(selected_tex_button_id);
+						ImGui::CloseCurrentPopup();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("NO", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); delete_popup = false; }
+					ImGui::EndPopup();
+				}
+			}
+			
 			static bool h_borders = true;
 			static bool v_borders = true;
 			static int columns_count = 3;
@@ -202,7 +222,7 @@ void W_Config::Draw()
 			const int box_max = 512;
 			uint num_textures = App->textures->textures.size();
 			ImVec2 texture_box(box_w, box_w);
-			static uint selected_tex_button_id = 0;
+			
 			static bool flip_vertical = true;	// by default flipped (standard visor)
 			static bool flip_horizontal = true; // ""
 			ImVec2 uv0 = { 0,0 };
@@ -246,7 +266,7 @@ void W_Config::Draw()
 			ImGui::Columns(columns_count, NULL, v_borders);
 			// TODO: center at mid of avail_w all widgets
 			int widget_id = 0;
-			for (; textures != App->textures->textures.end(); ++textures)//columns_count * num_textures; i++)
+			for (; textures != App->textures->textures.end(); ++textures)
 			{
 				ImGui::PushID(widget_id++);
 				if (h_borders && ImGui::GetColumnIndex() == 0)
@@ -263,10 +283,11 @@ void W_Config::Draw()
 				glBindTexture(GL_TEXTURE_2D, 0);
 				ImGui::Text("Width: %i", w);
 				ImGui::Text("Height: %i", h);
+				ImGui::Text("Buffer id: %i", (*textures).second);
 				//ImGui::Text("Depth %i", d);
 				//ImGui::Text("Offset %.2f", ImGui::GetColumnOffset());
 				
-				if (ImGui::Button("Delete" , ImVec2(box_w, 0.0f)))// ImVec2(-FLT_MIN, 0.0f)))
+				if (ImGui::Button("Delete" , ImVec2(box_w, 0.0f)))
 				{
 					// modal popup
 					delete_popup = true;
@@ -280,19 +301,7 @@ void W_Config::Draw()
 			if (h_borders)
 				ImGui::Separator();
 
-			if (delete_popup)
-			{
-				ImGui::OpenPopup("Are you sure?");
-				if (ImGui::BeginPopupModal("Are you sure?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-				{
-					ImGui::Text("Delete image from vram buffer? \n");
-					ImGui::Separator();
-					if (ImGui::Button("YES", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); delete_popup = false; App->textures->FreeTextureBuffer(selected_tex_button_id); }
-					ImGui::SameLine();
-					if (ImGui::Button("NO", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); delete_popup = false; selected_tex_button_id = 0; }
-					ImGui::EndPopup();
-				}
-			}
+			
 		}
 
 		

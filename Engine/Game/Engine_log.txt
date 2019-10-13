@@ -18,12 +18,56 @@ Loading Test assets
 [Error] Loading scene Assets/Models/BakerHouse.fbx / no meshes
 [Start] Loading Editor
 -------------- Application Update --------------
-[Error] Saving checker texture file already exists
-[Info] Correctly generated and binded procedurally checker texture with 512x512 pixels size
-Freed texture buffer checker3.png from vram
-Deleted texture checker3.png from map
-[Error] Saving checker texture file already exists
-[Info] Correctly generated and binded procedurally checker texture with 128x128 pixels size
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/Baker_house.png
+.png
+possible texture
+[Info] Image Assets/Textures/Baker_house.png correctly loaded into DevIL
+[Info] Image correctly uploaded to gl buffer
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/hammer_low_lambert1_BaseColor.tif
+.tif
+possible texture
+[Info] Image Assets/Textures/hammer_low_lambert1_BaseColor.tif correctly loaded into DevIL
+[Info] Image correctly uploaded to gl buffer
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/lenna.png
+.png
+possible texture
+[Info] Image Assets/Textures/lenna.png correctly loaded into DevIL
+[Info] Image correctly uploaded to gl buffer
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/hammer_low_lambert1_BaseColor.png
+.png
+possible texture
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/BakerHouse.fbx
+.fbx
+possible 3d model
+[Info] Created new mesh Untitled.001 with 160 vertices
+[Info] Containing 324 indices for 108 triangles
+[Info] Loaded vertex normals for 160 vertices
+[Info] Texture with same name Baker_house.png already loaded into buffers
+[Info] Created new mesh Untitled with 1641 vertices
+[Info] Containing 2751 indices for 917 triangles
+[Info] Loaded vertex normals for 1641 vertices
+[Info] Texture with same name Baker_house.png already loaded into buffers
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/lenna.png
+.png
+possible texture
+[Info] Texture with same name lenna.png already loaded into buffers
+Freed texture buffer Baker_house.png from vram
+Deleted texture Baker_house.png from map
+[Info] freed texture buffer of Untitled.001 model
+[Info] texture not found on texture map or previously freed
+Freed texture buffer hammer_low_lambert1_BaseColor.tif from vram
+Deleted texture hammer_low_lambert1_BaseColor.tif from map
+Freed texture buffer lenna.png from vram
+Deleted texture lenna.png from map
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/Baker_house.png
+.png
+possible texture
+[Info] Image Assets/Textures/Baker_house.png correctly loaded into DevIL
+[Info] Image correctly uploaded to gl buffer
+[Info] texture not found on texture map or previously freed
+[Info] texture not found on texture map or previously freed
+Freed texture buffer Baker_house.png from vram
+Deleted texture Baker_house.png from map
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

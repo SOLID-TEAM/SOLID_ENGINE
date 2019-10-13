@@ -129,6 +129,17 @@ bool ModelData::Render()
 {
 	bool ret = true;
 
+	// TODO: implements this check on a more universal place for all render functions
+	// if we delete this linked buffer on another part and enters here without check
+	// "There is no guarantee that the names form a contiguous set of integers; however, 
+	// it is guaranteed that none of the returned names was in use immediately before the call to glGenTextures. "
+	// checks if the texture id is a valid texture id and prevents creation of no dimensionality with new binding before render
+	if (texture_gl_id != 0)
+	{
+		if (!glIsTexture(texture_gl_id))
+			texture_gl_id = 0;
+	}
+
 	// general color
 	
 	// enable client side individual capabilities
