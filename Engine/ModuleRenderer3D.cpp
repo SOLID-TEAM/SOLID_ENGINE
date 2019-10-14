@@ -71,8 +71,9 @@ bool ModuleRenderer3D::Init(Config& config)
 		}
 		
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-		glClearDepth(1.0f);
+
 		//glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
 		
 		//Initialize clear color
@@ -103,10 +104,6 @@ bool ModuleRenderer3D::Init(Config& config)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
 	}
-
-	// Projection matrix for
-
-	OnResize(App->window->current_w, App->window->current_h);
 
 	// store version opengl/graphic drivers
 	openglGDriversVersionString.assign((const char*)glGetString(GL_VERSION));

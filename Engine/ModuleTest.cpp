@@ -33,7 +33,7 @@ bool ModuleTest::Start(Config& config)
 	App->camera->Move(vec3(1.0f, 1.0f, 1.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-	main_grid = new Grid(50);
+	main_grid = new Grid(15);
 
 	return ret;
 }

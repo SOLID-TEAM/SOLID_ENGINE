@@ -52,7 +52,7 @@ void W_Rendering::Draw()
 			}
 		}
 
-		static int units = 50;
+		static int units = 15;
 
 		if (ImGui::CollapsingHeader("Grid Settings"))
 		{

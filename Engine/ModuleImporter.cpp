@@ -79,6 +79,7 @@ update_status ModuleImporter::PostUpdate(float dt)
 	// Start Buffer Frame ----------------------------------
 	glBindFramebuffer(GL_FRAMEBUFFER, App->renderer3D->frame_buffer_id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.1, 0.1, 0.1, 1.f);
 	// -----------------------------------------------------
 
 	App->test->main_grid->Render();
