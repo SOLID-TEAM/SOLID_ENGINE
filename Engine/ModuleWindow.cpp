@@ -36,6 +36,8 @@ bool ModuleWindow::Init(Config& config)
 		int height = current_h * SCREEN_SIZE;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI;
 
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+
 		if(fullscreen == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
@@ -62,7 +64,7 @@ bool ModuleWindow::Init(Config& config)
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3.2);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-
+		
 		// Create window with graphics context
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -136,7 +138,6 @@ void ModuleWindow::SetWindowSize(int w, int h)
 	current_h = (uint)h;
 
 	SDL_SetWindowSize(window, current_w, current_h);
-	App->renderer3D->OnResize(current_w, current_h);
 }
 
 void ModuleWindow::SetWindowFullscreen(float fullscreen, bool desktop)

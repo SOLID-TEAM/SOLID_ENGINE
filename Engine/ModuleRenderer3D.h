@@ -53,7 +53,7 @@ public:
 
 	std::string GetGlewVersionString() const;
 
-	void GenerateSceneBuffers();
+	void GenSceneTextureBuffers(int width, int height);
 
 	RenderConfig& GetRenderConfig();
 
@@ -64,8 +64,9 @@ public:
 	RenderConfig render_config;
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
-	mat3x3 NormalMatrix;
-	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+	mat3x3 normal_mat;
+	mat4x4 model_mat, view_mat, projection_mat;
 
 	// Buffers ID's --------------------------
 
@@ -76,7 +77,6 @@ public:
 
 private:
 
-	
 	std::string openglGDriversVersionString;
 	std::string glewVersionString;
 };

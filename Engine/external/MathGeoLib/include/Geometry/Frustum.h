@@ -199,11 +199,11 @@ public:
 	void SetWorldMatrix(const float3x4 &worldTransform);
 
 	/// Computes the matrix that transforms from the view space to the world (global) space of this Frustum.
-	/** @note The returned matrix is the inverse of the matrix returned by ViewMatrix().
+	/** @note The returned matrix is the inverse of the matrix returned by view_mat().
 		@return An orthonormal affine matrix that performs the view->world transformation. The returned
 			matrix is built to use the convention Matrix * vector to map a point between these spaces.
 			(as opposed to the convention v*M).
-		@see ViewMatrix(), ProjectionMatrix(), ViewProjMatrix(). */
+		@see view_mat(), projection_mat(), ViewProjMatrix(). */
 	float3x4 WorldMatrix() const;
 
 	/// Computes the matrix that transforms from the world (global) space to the view space of this Frustum.
@@ -211,24 +211,24 @@ public:
 		@return An orthonormal affine matrix that performs the world->view transformation. The returned
 			matrix is built to use the convention Matrix * vector to map a point between these spaces.
 			(as opposed to the convention v*M).
-		@see WorldMatrix(), ProjectionMatrix(), ViewProjMatrix(). */
+		@see WorldMatrix(), projection_mat(), ViewProjMatrix(). */
 	float3x4 ViewMatrix() const;
 
 	/// Computes the matrix that projects from the view space to the projection space of this Frustum.
 	/** @return A projection matrix that performs the view->proj transformation. This matrix is neither
 			invertible or orthonormal. The returned matrix is built to use the convention Matrix * vector
 			to map a point between these spaces. (as opposed to the convention v*M).
-		@see WorldMatrix(), ViewMatrix(), ViewProjMatrix(). */
+		@see WorldMatrix(), view_mat(), ViewProjMatrix(). */
 	float4x4 ProjectionMatrix() const;
 
 	/// Computes the matrix that transforms from the world (global) space to the projection space of this Frustum.
-	/** The matrix computed by this function is simply the concatenation ProjectionMatrix()*ViewMatrix(). This order
+	/** The matrix computed by this function is simply the concatenation projection_mat()*view_mat(). This order
 		of concatenation follows the M*v convention of transforming vectors (as opposed to the v*M convention). This
-		multiplication order is used, since the matrices ProjectionMatrix() and ViewMatrix() also follow the M*v convention.
+		multiplication order is used, since the matrices projection_mat() and view_mat() also follow the M*v convention.
 		@return A matrix that performs the world->view->proj transformation. This matrix is neither invertible or
 			orthonormal. The returned matrix is built to use the convention Matrix * vector
 			to map a point between these spaces. (as opposed to the convention v*M).
-		@see WorldMatrix(), ViewMatrix(), ProjectionMatrix(). */
+		@see WorldMatrix(), view_mat(), projection_mat(). */
 	float4x4 ViewProjMatrix() const;
 
 	/// Finds a ray in world space that originates at the eye point and looks in the given direction inside the frustum.

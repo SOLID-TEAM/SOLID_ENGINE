@@ -32,6 +32,7 @@ bool ModuleRenderer3D::Init(Config& config)
 	glewExperimental = true; // Needed for core profile
 
 	GLenum error = glewInit();
+
 	if (error != GLEW_OK) {
 		LOG("[Error] Failed to initialize GLEW\n", glewGetErrorString(error));
 		ret = false;
@@ -70,20 +71,12 @@ bool ModuleRenderer3D::Init(Config& config)
 		}
 		
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		//glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 		glClearDepth(1.0f);
 		//glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
 		
 		//Initialize clear color
 		glClearColor(0.f, 0.f, 0.f, 1.f);
-
-		//Check for error
-		error = glGetError();
-		if(error != GL_NO_ERROR)
-		{
-			LOG("[Error] Initializing OpenGL! %s\n", gluErrorString(error));
-			ret = false;
-		}
 		
 		GLfloat LightModelAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
@@ -93,6 +86,7 @@ bool ModuleRenderer3D::Init(Config& config)
 		lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
 		lights[0].SetPos(0.0f, 0.0f, 2.5f);
 		lights[0].Init();
+		lights[0].Active(true);
 		
 		GLfloat MaterialAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
@@ -102,7 +96,6 @@ bool ModuleRenderer3D::Init(Config& config)
 		
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
@@ -112,8 +105,8 @@ bool ModuleRenderer3D::Init(Config& config)
 	}
 
 	// Projection matrix for
-	OnResize(App->window->current_w, App->window->current_h);//SCREEN_WIDTH, SCREEN_HEIGHT);
-	GenerateSceneBuffers();
+
+	OnResize(App->window->current_w, App->window->current_h);
 
 	// store version opengl/graphic drivers
 	openglGDriversVersionString.assign((const char*)glGetString(GL_VERSION));
@@ -176,6 +169,7 @@ update_status ModuleRenderer3D::Update(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
@@ -190,17 +184,14 @@ bool ModuleRenderer3D::CleanUp()
 	return true;
 }
 
-void ModuleRenderer3D::GenerateSceneBuffers()
+void ModuleRenderer3D::GenSceneTextureBuffers(int width, int height)
 {
-	GLint depth_size = 24, stencil_size = 8;
-
 	// Gen depth buffer ---------------------------------------
 	glGenRenderbuffers(1, &depth_buffer_id);
 	glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer_id);
 
 	// Config depth storage -----------------------------------
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, App->window->current_w, App->window->current_h);
-	glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &depth_size);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	// Gen color texture ----------------------------------------------
@@ -208,12 +199,12 @@ void ModuleRenderer3D::GenerateSceneBuffers()
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 	
 	// Config  color texture ------------------------------------------
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE); // automatic mipmap
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, App->window->current_w, App->window->current_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// Gen frame buffer ----------------------------------------
@@ -244,11 +235,13 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf(&ProjectionMatrix);
-
+	projection_mat = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
+	glLoadMatrixf(&projection_mat);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	GenSceneTextureBuffers(width, height);
+
 }
 
 std::string ModuleRenderer3D::GetGlewVersionString() const

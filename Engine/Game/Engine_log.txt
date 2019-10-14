@@ -18,6 +18,31 @@ Loading Test assets
 [Error] Loading scene Assets/Models/BakerHouse.fbx / no meshes
 [Start] Loading Editor
 -------------- Application Update --------------
+D:/Documentos/GitHub Projects/SOLID_ENGINE/Engine/Game/Assets/Models/Dragon 2.5_fbx.fbx
+.fbx
+possible 3d model
+[Info] Created new mesh Cube.004 with 632 vertices
+[Info] Containing 3312 indices for 1104 triangles
+[Info] Loaded vertex normals for 632 vertices
+[Error] more than 1 uv|w channel for mesh
+[Info] Image Assets/Textures/textures\Dragon_Bump_Col2.jpg correctly loaded into DevIL
+[Info] Image correctly uploaded to gl buffer
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Created new mesh Cube.004 with 278 vertices
+[Info] Containing 678 indices for 226 triangles
+[Info] Loaded vertex normals for 278 vertices
+[Error] more than 1 uv|w channel for mesh
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Created new mesh Cube.004 with 24954 vertices
+[Info] Containing 109968 indices for 36656 triangles
+[Info] Loaded vertex normals for 24954 vertices
+[Error] more than 1 uv|w channel for mesh
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
+[Info] Texture with same name textures\Dragon_Bump_Col2.jpg already loaded into buffers
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

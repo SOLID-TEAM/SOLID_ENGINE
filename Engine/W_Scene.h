@@ -11,6 +11,10 @@ public:
 
 	void Draw();
 
+private:
+
+	ImVec2 size = { 0.f, 0.f };
+
 };
 
 #endif // !_W_SCENE_H__

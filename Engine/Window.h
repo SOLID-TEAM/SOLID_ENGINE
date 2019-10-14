@@ -40,8 +40,8 @@ public:
 	bool	active = false;
 	int		pos_x   = 0;
 	int		pos_y   = 0;
-	int		width	= 0;
-	int		height	= 0;
+	int		width	= -1;
+	int		height	= -1;
 
 protected:
 
