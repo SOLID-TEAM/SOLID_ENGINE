@@ -19,9 +19,9 @@ void W_Scene::Draw()
 			App->renderer3D->OnResize(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
 			size = ImGui::GetWindowSize();
 		}
-		
 	}
-	ImGui::End();
 
+	ImGui::End();
 	ImGui::PopStyleVar();
+
 }

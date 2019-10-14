@@ -43,7 +43,6 @@ bool ModuleTest::CleanUp()
 {
 	LOG("Unloading Test scene");
 
-	
 	return true;
 }
 

@@ -44,6 +44,7 @@ public:
 
 	bool Render();
 	bool RenderWireframe();
+	bool RenderOutline();
 
 	bool CleanUp();
 

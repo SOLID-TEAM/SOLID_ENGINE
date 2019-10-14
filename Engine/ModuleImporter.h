@@ -71,7 +71,8 @@ private:
 public:
 	// TODO: maybe this vars fits better on the model itself and each model has its own properties of visualization
 	// implement when we already finish module filesystem
-	bool wireframe = true;
+	bool wireframe = false;
+	bool outline = true;
 	bool fill_faces = true;
 	bool debug_vertex_normals = true;
 	bool debug_face_normals = true;

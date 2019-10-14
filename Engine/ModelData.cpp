@@ -204,6 +204,13 @@ bool ModelData::RenderWireframe() // need very few operations
 	return ret;
 }
 
+bool ModelData::RenderOutline()
+{
+
+
+	return true;
+}
+
 bool ModelData::DebugRenderVertex(float pointSize)
 {
 	bool ret = true;

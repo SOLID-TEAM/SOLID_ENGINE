@@ -78,8 +78,11 @@ update_status ModuleImporter::PostUpdate(float dt)
 {
 	// Start Buffer Frame ----------------------------------
 	glBindFramebuffer(GL_FRAMEBUFFER, App->renderer3D->frame_buffer_id);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glClearColor(0.1, 0.1, 0.1, 1.f);
+	// Object Draw Stencil Settings ------------------------
+	glStencilFunc(GL_ALWAYS, 1, -1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	// -----------------------------------------------------
 
 	App->test->main_grid->Render();
@@ -89,6 +92,7 @@ update_status ModuleImporter::PostUpdate(float dt)
 	for (; model != meshes.end(); ++model)
 	{
 		// TODO NEXT: implement new render functionality to pass all this shit (colors, draw modes etc)
+
 		if (fill_faces && wireframe)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -101,6 +105,7 @@ update_status ModuleImporter::PostUpdate(float dt)
 
 			glLineWidth(1.0f);
 			glDisable(GL_POLYGON_OFFSET_FILL);
+
 		}
 		else if (fill_faces)
 		{
@@ -118,6 +123,22 @@ update_status ModuleImporter::PostUpdate(float dt)
 			(*model)->RenderWireframe();
 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+
+		if (outline)
+		{
+			glStencilFunc(GL_NOTEQUAL, 1, -1);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+			glLineWidth(wire_line_width);
+			glColor4fv((float*)&wire_color);
+
+			glLineWidth(7.f);
+			(*model)->RenderWireframe();
+			glLineWidth(1.f);
+
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glStencilFunc(GL_ALWAYS, 1, -1);
 		}
 
 		if (debug_vertex_normals)
@@ -141,15 +162,16 @@ update_status ModuleImporter::PostUpdate(float dt)
 
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	// Default Stencil Settings ----------------------------
+	glStencilFunc(GL_ALWAYS, 1, 0);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
-	// trigger mipmaps generation explicitly
-	// NOTE: If GL_GENERATE_MIPMAP is set to GL_TRUE, then glCopyTexSubImage2D()
-	// triggers mipmap generation automatically. However, the texture attached
-	// onto a FBO should generate mipmaps manually via glGenerateMipmap().
+	// Start Buffer Frame ----------------------------------
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, App->renderer3D->texture_id);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
+	// -----------------------------------------------------
 
 	return UPDATE_CONTINUE;
 }
