@@ -461,14 +461,34 @@ void ModuleEditor::DrawPopUps()
 				"a fully functional video game engine with its own innovations and features\n"
 				"implemented by SOLID TEAM. We are 2 Video Game Design and Development Degree students.");
 			ImGui::Separator();
-			ImGui::Text("3rd Party libs");
-			SDL_version sdl_version;
-			SDL_GetVersion(&sdl_version);
-			ImGui::BulletText("SDL   v%d.%d.%d", sdl_version.major, sdl_version.minor, sdl_version.patch);
-			ImGui::BulletText("glew  v%s", App->renderer3D->GetGlewVersionString().data());
-			ImGui::BulletText("ImGui v%s", ImGui::GetVersion());
-			ImGui::BulletText("OpenGL v%s", glGetString(GL_VERSION));
-			ImGui::BulletText("Parson - JSON library parser");
+			
+			ShowSoftwareInfo();
+
+			if(ImGui::CollapsingHeader("Show Application License"))
+			{
+				ImGui::TextColored({ 1.0f,0.0f,1.0f,1.0f },
+					"MIT License\n\n"
+
+					"Copyright(c) 2019 SOLID TEAM\n\n"
+
+					"Permission is hereby granted, free of charge, to any person obtaining a copy\n"
+					"of this softwareand associated documentation files(the 'Software'), to deal\n"
+					"in the Software without restriction, including without limitation the rights\n"
+					"to use, copy, modify, merge, publish, distribute, sublicense, and /or sell\n"
+					"copies of the Software, and to permit persons to whom the Software is\n"
+					"furnished to do so, subject to the following conditions :\n\n"
+
+					"The above copyright noticeand this permission notice shall be included in all\n"
+					"copies or substantial portions of the Software.\n\n"
+
+					"THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
+					"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
+					"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE\n"
+					"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
+					"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
+					"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n"
+					"SOFTWARE.");
+			}
 
 			ImVec2 buttonSize = { 120.0f, 0.f };
 			ImGuiStyle& style = ImGui::GetStyle();
@@ -478,4 +498,22 @@ void ModuleEditor::DrawPopUps()
 		}
 		ImGui::EndPopup();
 	}
+}
+
+void ModuleEditor::ShowSoftwareInfo() const
+{
+	ImGui::Separator();
+	ImGui::Text("3rd Party libs");
+	SDL_version sdl_version;
+	SDL_GetVersion(&sdl_version);
+	ImGui::BulletText("SDL   v%d.%d.%d", sdl_version.major, sdl_version.minor, sdl_version.patch);
+	ImGui::BulletText("glew  v%s", App->renderer3D->GetGlewVersionString().data());
+	ImGui::BulletText("ImGui v%s", ImGui::GetVersion());
+	ImGui::BulletText(ilGetString(IL_VERSION_NUM));
+	ImGui::BulletText("OpenGL (supported) v%s", glGetString(GL_VERSION));
+	ImGui::BulletText("Parson - JSON library parser");
+	ImGui::BulletText("par_shapes.h for Primitives creation");
+	// TODO: search how to query on runtime for mathgeolib, if is possible
+	ImGui::BulletText("MathGeoLib v1.5");
+	ImGui::Separator();
 }

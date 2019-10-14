@@ -158,6 +158,33 @@ void W_Config::Draw()
 
 				ImGui::Separator();
 			}
+
+			if (ImGui::CollapsingHeader("View supported GL extensions"))
+			{
+				char* gl_extensions = (char*)glGetString(GL_EXTENSIONS);
+
+				for (int i = 0; gl_extensions[i]; ++i)
+				{
+					if (gl_extensions[i] == ' ')
+					{
+						gl_extensions[i] = '\n';
+					}
+				}
+				{
+					ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+					ImGui::BeginChild("Child1", ImVec2(ImGui::GetWindowContentRegionWidth(), 300), true, window_flags);
+
+					ImGui::TextColored(green, "%s", gl_extensions);
+					ImGui::EndChild();
+				}
+			}
+
+			ImGui::Separator();
+		}
+
+		if (ImGui::CollapsingHeader("Software Info"))
+		{
+			App->editor->ShowSoftwareInfo();
 		}
 
 
