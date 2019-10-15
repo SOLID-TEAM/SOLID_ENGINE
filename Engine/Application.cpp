@@ -18,6 +18,7 @@ Application::Application()
 	editor = new ModuleEditor();
 	file_sys = new ModuleFileSystem();
 	textures = new ModuleTextures();
+	scene = new ModuleScene();
 
 	// Main Modules
 	AddModule(window);
@@ -25,6 +26,7 @@ Application::Application()
 	AddModule(input);
 	
 	// Scenes
+	AddModule(scene);
 	AddModule(test);
 
 	// Renderer last!

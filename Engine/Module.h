@@ -1,6 +1,8 @@
 #ifndef _MODULE_H__
 #define _MODULE_H__
 
+#include <string>
+
 struct PhysBody3D;
 class Config;
 

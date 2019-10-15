@@ -52,6 +52,9 @@
     <Filter Include="Sources\Game Object\Components">
       <UniqueIdentifier>{b20fa3f4-fe07-4fd6-99f3-6c8c3809e8df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\scene">
+      <UniqueIdentifier>{45354d5a-b0f0-4cd1-abba-567c02423ad6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -378,6 +381,15 @@
     <ClInclude Include="ImGui\Impl\imgui_impl_sdl.h">
       <Filter>Sources\Thirds Party\Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleScene.h">
+      <Filter>Sources\Modules\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Mesh.h">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Transform.h">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -586,6 +598,15 @@
     </ClCompile>
     <ClCompile Include="ImGui\Impl\imgui_impl_sdl.cpp">
       <Filter>Sources\Thirds Party\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScene.cpp">
+      <Filter>Sources\Modules\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="C_Mesh.cpp">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="C_Transform.cpp">
+      <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

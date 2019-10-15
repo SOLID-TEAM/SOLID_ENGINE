@@ -137,6 +137,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		projection_mat = perspective(60.0f, size.x / size.y, 0.125f, 512.0f);
 		glLoadMatrixf(&projection_mat);
 		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 
 		UpdateSceneBuffers(size.x, size.y);
 
@@ -148,6 +149,14 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrix());
+
+
+	// TODO: re-added lights until we create component light, remove from here when done
+	// light 0 on cam pos
+	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+
+	for (uint i = 0; i < MAX_LIGHTS; ++i)
+		lights[i].Render();
 
 	return UPDATE_CONTINUE;
 }

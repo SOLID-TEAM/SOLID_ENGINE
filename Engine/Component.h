@@ -1,18 +1,31 @@
 #ifndef _COMPONENT_H__
 #define _COMPONENT_H__
 
+
+enum class ComponentType
+{
+	TRANSFORM,
+	MESH,
+	MATERIAL,
+	LIGHT,
+};
+
 class GameObject;
 
 class Component
 {
 public:
-	Component();
+	Component(GameObject* go);
 	virtual void Enable();
 	virtual void Disable();
 
-private:
+	virtual bool PreUpdate(float dt);
+	virtual bool Update(float dt);
+	virtual bool PostUpdate(float dt);
 
-	GameObject* game_object = nullptr;
+private:
+	bool active = true;
+	GameObject* linked_go = nullptr;
 };
 
 
