@@ -10,15 +10,16 @@ void W_Scene::Draw()
 
 	if (ImGui::Begin(name.c_str(), &active))
 	{
-		ImVec2 region_avail = ImGui::GetContentRegionAvail();
+		ImVec2 current_viewport_size = ImGui::GetContentRegionAvail();
 		
-		ImGui::Image((ImTextureID)App->renderer3D->texture_id, ImVec2(region_avail.x, region_avail.y), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((ImTextureID)App->renderer3D->texture_id, ImVec2(current_viewport_size.x, current_viewport_size.y), ImVec2(0, 1), ImVec2(1, 0));
 
-		if (!(size == ImGui::GetWindowSize()))
+		if (!(current_viewport_size == viewport_size))
 		{
-			App->renderer3D->OnResize(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
-			size = ImGui::GetWindowSize();
+			viewport_size = current_viewport_size;
+			App->renderer3D->OnResize();
 		}
+
 	}
 
 	ImGui::End();

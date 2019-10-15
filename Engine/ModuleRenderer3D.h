@@ -49,11 +49,13 @@ public:
 
 	void Load(Config& config);
 
-	void OnResize(int width, int height);
+	void OnResize();
 
 	std::string GetGlewVersionString() const;
 
-	void GenSceneTextureBuffers(int width, int height);
+	void GenSceneBuffers();
+
+	void UpdateSceneBuffers(int width, int height);
 
 	RenderConfig& GetRenderConfig();
 
@@ -77,6 +79,7 @@ public:
 
 private:
 
+	bool on_resize = false;
 	std::string openglGDriversVersionString;
 	std::string glewVersionString;
 };

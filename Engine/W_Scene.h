@@ -11,10 +11,14 @@ public:
 
 	void Draw();
 
+	ImVec2 GetViewportSize() const
+	{
+		return viewport_size;
+	}
+
 private:
 
-	ImVec2 size = { 0.f, 0.f };
-
+	ImVec2 viewport_size = { 0.f, 0.f };
 };
 
 #endif // !_W_SCENE_H__

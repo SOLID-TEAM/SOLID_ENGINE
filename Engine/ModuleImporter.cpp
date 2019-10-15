@@ -87,6 +87,9 @@ update_status ModuleImporter::PostUpdate(float dt)
 
 	App->test->main_grid->Render();
 
+	for (uint i = 0; i < MAX_LIGHTS; ++i)
+		App->renderer3D->lights[i].Render();
+
 	std::vector<ModelData*>::iterator model = meshes.begin();
 
 	for (; model != meshes.end(); ++model)

@@ -1,7 +1,8 @@
-
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleEditor.h"
+#include "W_Scene.h"
 
 #include <gl\glew.h>
 #include "SDL\include\SDL_opengl.h"
@@ -106,9 +107,10 @@ bool ModuleRenderer3D::Init(Config& config)
 		glEnable(GL_BLEND);
 	}
 
-	// store version opengl/graphic drivers
+	// Store version opengl/graphic drivers
 	openglGDriversVersionString.assign((const char*)glGetString(GL_VERSION));
-	// store glew version
+
+	// Store glew version
 	glewVersionString.assign((const char*)glewGetString(GLEW_VERSION));
 
 	LOG("[Info] Vendor: %s", glGetString(GL_VENDOR));
@@ -116,24 +118,36 @@ bool ModuleRenderer3D::Init(Config& config)
 	LOG("[Info] OpenGL version supported: %s", openglGDriversVersionString.data());
 	LOG("[Info] GLSL: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
+	// Generate Scene Buffers -------------------------------
+	GenSceneBuffers();
+
 	return ret;
 }
 
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if (on_resize)
+	{
+		ImVec2 size = App->editor->w_scene->GetViewportSize();
+
+		glViewport(0, 0, size.x, size.y);
+
+		glMatrixMode(GL_PROJECTION);
+		projection_mat = perspective(60.0f, size.x / size.y, 0.125f, 512.0f);
+		glLoadMatrixf(&projection_mat);
+		glMatrixMode(GL_MODELVIEW);
+
+		UpdateSceneBuffers(size.x, size.y);
+
+		on_resize = false;
+	}
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glLoadIdentity();
-	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrix());
-
-	// light 0 on cam pos
-	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-
-	for(uint i = 0; i < MAX_LIGHTS; ++i)
-		lights[i].Render();
 
 	return UPDATE_CONTINUE;
 }
@@ -182,21 +196,27 @@ bool ModuleRenderer3D::CleanUp()
 	return true;
 }
 
-void ModuleRenderer3D::GenSceneTextureBuffers(int width, int height)
+void ModuleRenderer3D::GenSceneBuffers()
 {
 	// Gen depth buffer ---------------------------------------
 	glGenRenderbuffers(1, &depth_buffer_id);
-	glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer_id);
-
-	// Config depth storage -----------------------------------
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	// Gen color texture ----------------------------------------------
 	glGenTextures(1, &texture_id);
-	glBindTexture(GL_TEXTURE_2D, texture_id);
-	
+
+	// Gen frame buffer ----------------------------------------
+	glGenFramebuffers(1, &frame_buffer_id);
+}
+
+void ModuleRenderer3D::UpdateSceneBuffers(int width, int height)
+{
+	// Config depth storage -----------------------------------
+	glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer_id);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
 	// Config  color texture ------------------------------------------
+	glBindTexture(GL_TEXTURE_2D, texture_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -205,11 +225,8 @@ void ModuleRenderer3D::GenSceneTextureBuffers(int width, int height)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	// Gen frame buffer ----------------------------------------
-	glGenFramebuffers(1, &frame_buffer_id);
-	glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
-
 	// Attach texture and render buffer to frame buffer -------
+	glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depth_buffer_id);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture_id, 0);
 
@@ -222,24 +239,14 @@ void ModuleRenderer3D::GenSceneTextureBuffers(int width, int height)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void ModuleRenderer3D::OnResize()
+{
+	on_resize = true;
+}
+
 RenderConfig& ModuleRenderer3D::GetRenderConfig()
 {
 	return render_config;
-}
-
-void ModuleRenderer3D::OnResize(int width, int height)
-{
-	glViewport(0, 0, width, height);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	projection_mat = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf(&projection_mat);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	GenSceneTextureBuffers(width, height);
-
 }
 
 std::string ModuleRenderer3D::GetGlewVersionString() const
