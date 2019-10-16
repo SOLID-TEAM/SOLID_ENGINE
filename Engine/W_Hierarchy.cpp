@@ -50,32 +50,63 @@ void W_Hierarchy::Draw()
 
 void W_Hierarchy::DrawAll(GameObject* go)
 {
+	// TODO: BEWARE of linkeds go, when we deleting them
+
 	ImGuiTreeNodeFlags node_flags = 0;
-	/*const bool is_selected = (selection_mask & (1 << i)) != 0;
-	if (is_selected)
-		node_flags |= ImGuiTreeNodeFlags_Selected;*/
 
 	if (go->childs.size() == 0)
 		node_flags |= ImGuiTreeNodeFlags_Leaf;
 
-	ImGui::PushID(go);
-	if (ImGui::TreeNodeEx(go->GetName(), node_flags))
-	{
-		if (ImGui::IsItemClicked(0))
-		{
-			LOG("");
-		}
+	/*node_flags |= ImGuiTreeNodeFlags_CollapsingHeader;*/
 
+	bool selected = selected_go == go;
+	//bool hover_check = hovered_go == go;
+   
+	if (selected)
+	{
+		node_flags |= ImGuiTreeNodeFlags_Selected;
+		ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor(220, 220, 220, 255));
+		ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor(50, 255, 50, 255));
+	}
+
+	/*if (hover_check)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor(0, 0, 0, 255));
+	}*/
+
+	// "default" colors ----------------------
+	ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor(255, 0, 255, 255)); // when current clicked
+	
+	// ---------------------------------------
+	// https://github.com/ocornut/imgui/issues/2077
+	bool open = ImGui::TreeNodeEx(go->GetName(), node_flags);
+	bool clicked = ImGui::IsItemClicked(0);
+	bool hover = ImGui::IsItemHovered();
+
+	// pop colors ------------------------
+	if (selected) ImGui::PopStyleColor(2);
+	//if (hover_check) ImGui::PopStyleColor(1);
+	ImGui::PopStyleColor(1);
+	// -----------------------------------
+
+	ImGui::PushID(go->GetName());
+	// more code
+	ImGui::PopID();
+
+	if (open)
+	{
 		for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
 			DrawAll((*it));
-		
+
 		ImGui::TreePop();
 	}
 
-	if (ImGui::IsItemClicked(0))
+	if (clicked)
 	{
-		LOG("[Init] Clicked %s", go->GetName());
+		//LOG("Clicked: %s", go->GetName());
+		selected_go = go;
 	}
 
-	ImGui::PopID();
+	//if (hover) hovered_go = go;
+
 }

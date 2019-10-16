@@ -11,6 +11,11 @@ public:
 
 	void DrawAll(GameObject* go);
 
+private:
+
+	// test
+	GameObject* selected_go = nullptr;
+	GameObject* hovered_go = nullptr;
 };
 
 #endif // !_W_HIERARCHY_H__
