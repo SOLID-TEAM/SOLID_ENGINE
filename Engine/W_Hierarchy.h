@@ -9,6 +9,8 @@ public:
 	W_Hierarchy(std::string name, bool active);
 	void Draw();
 
+	void DrawAll(GameObject* go);
+
 };
 
 #endif // !_W_HIERARCHY_H__

@@ -9,15 +9,57 @@ Loading File System
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
 [Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 430.86
+[Info] Renderer: GeForce GTX 970/PCIe/SSE2
+[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-[Error] Loading scene Assets/Models/BakerHouse.fbx / no meshes
+[Info] Created new mesh pSphere1 with 439 vertices
+[Info] Containing 2280 indices for 760 triangles
+[Info] Loaded vertex normals for 439 vertices
+created mesh from 'pSphere1' node, with mesh name: pSphere1
+[Info] Created new mesh pCube2 with 24 vertices
+[Info] Containing 36 indices for 12 triangles
+[Info] Loaded vertex normals for 24 vertices
+created mesh from 'pCube2' node, with mesh name: pCube2
+[Info] Created new mesh pCone1 with 48 vertices
+[Info] Containing 114 indices for 38 triangles
+[Info] Loaded vertex normals for 48 vertices
+created mesh from 'pCone1' node, with mesh name: pCone1
+[Info] Created new mesh pTorus1 with 441 vertices
+[Info] Containing 2400 indices for 800 triangles
+[Info] Loaded vertex normals for 441 vertices
+created mesh from 'pTorus1' node, with mesh name: pTorus1
+[Info] Created new mesh pCylinder1 with 84 vertices
+[Info] Containing 240 indices for 80 triangles
+[Info] Loaded vertex normals for 84 vertices
+created mesh from 'pCylinder1' node, with mesh name: pCylinder1
+[Info] Created new mesh pCone1 with 48 vertices
+[Info] Containing 114 indices for 38 triangles
+[Info] Loaded vertex normals for 48 vertices
+created mesh from 'pCone2' node, with mesh name: pCone1
+[Info] Created new mesh pDisc1 with 61 vertices
+[Info] Containing 288 indices for 96 triangles
+[Info] Loaded vertex normals for 61 vertices
+created mesh from 'pDisc1' node, with mesh name: pDisc1
+[Info] Created new mesh pCube2 with 24 vertices
+[Info] Containing 36 indices for 12 triangles
+[Info] Loaded vertex normals for 24 vertices
+created mesh from 'pCube3' node, with mesh name: pCube2
+[Info] Created new mesh pPlatonic1 with 60 vertices
+[Info] Containing 60 indices for 20 triangles
+[Info] Loaded vertex normals for 60 vertices
+created mesh from 'pPlatonic1' node, with mesh name: pPlatonic1
 [Start] Loading Editor
 -------------- Application Update --------------
+
+[Init] Clicked pSphere1
+[Init] Clicked pCube2
+[Init] Clicked pCone1
+[Init] Clicked pTorus1
+[Init] Clicked pCone1
+
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

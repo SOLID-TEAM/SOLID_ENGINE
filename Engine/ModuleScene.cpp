@@ -55,17 +55,30 @@ update_status ModuleScene::Draw()
 	App->test->main_grid->Render();
 
 	// draw all go's last
+
 	if (root_go != nullptr)
 	{
 		std::vector<GameObject*>::iterator game_objects = root_go->childs.begin();
 
 		for (; game_objects != root_go->childs.end(); ++game_objects)
 		{
-			(*game_objects)->Draw();
+			DrawAll((*game_objects));
 		}
 	}
 
 	return UPDATE_CONTINUE;
+}
+
+void ModuleScene::DrawAll(GameObject* go)
+{
+	std::vector<GameObject*>::iterator it = go->childs.begin();
+
+	for (; it != go->childs.end(); ++it)
+	{
+		DrawAll((*it));
+	}
+
+	go->Draw();
 }
 
 bool ModuleScene::CleanUp()

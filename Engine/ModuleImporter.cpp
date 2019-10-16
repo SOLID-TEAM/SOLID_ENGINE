@@ -41,7 +41,9 @@ bool ModuleImporter::Init(Config& config)
 
 bool ModuleImporter::Start(Config& config)
 {
-	LoadFileMesh("BakerHouse.fbx");
+	/*LoadFileMesh("BakerHouse.fbx");*/
+	/*LoadFileMesh("child_test_definitive_edition_remaster.fbx");*/
+	LoadFileMesh("child_test999.fbx");
 	/*LoadFileMesh("Assets/Models/BakerHouse.fbx");*/
 
 	//LoadFileMesh("Assets/Models/hammer_low.fbx");
@@ -239,6 +241,7 @@ void ModuleImporter::CreateGoFromNodes(aiNode* node, GameObject* parent, aiMatri
 	}
 	else
 	{
+		// TODO: if we need, we can create a empty gameobject container here
 		// if no meshes, skip node but keep its transform
 		root_go = parent;
 		transform = node->mTransformation * accumulated_transform;

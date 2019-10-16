@@ -17,6 +17,10 @@ public:
 	update_status PostUpdate(float dt);
 	update_status Draw();
 
+	// TODO: improve this hierarchy draw if needed
+	// current in-out recursively (draw at return)
+	void DrawAll(GameObject* go);
+
 	GameObject* CreateGameObject(std::string name = "no_name", GameObject* parent = nullptr);
 	
 	bool CleanUp();

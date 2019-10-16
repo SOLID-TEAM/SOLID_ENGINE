@@ -135,3 +135,8 @@ bool GameObject::CleanUp()
 
 	return true;
 }
+
+const char* GameObject::GetName() const
+{
+	return name.c_str();
+}

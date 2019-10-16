@@ -20,6 +20,8 @@ public:
 	bool PostUpdate(float dt);
 	bool Draw();
 
+	const char* GetName() const;
+
 	bool CleanUp();
 
 	Component* CreateComponent(ComponentType type);
