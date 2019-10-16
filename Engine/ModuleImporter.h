@@ -13,6 +13,8 @@
 
 #include "ModelData.h"
 #include "external/par_shapes.h"
+#include "GameObject.h"
+#include "C_Mesh.h"
 
 enum PrimitiveType
 {
@@ -58,14 +60,23 @@ public:
 	std::vector<ModelData*>& GetModels();
 
 	void ImportFileFromPath(const char* path);
+	void CreateGoFromNodes(aiNode* node, GameObject* parent, aiMatrix4x4 accumulated_transform);
+	
 
 	// TODO: ONLY TEST
 	void ReloadTextureForAllModels(uint texture_id);
 
 private:
+	void CopyMesh(aiNode* node, GameObject* new_go);
+	void CopyDataToMesh(ModelData* m, aiMesh* source_mesh) const;
+
+private:
 	// TODO: for testing here, but we need to search a better place, maybe new module coming
 	std::vector<ModelData*> meshes;
 	//std::vector<ModelData*> startup_meshes;
+
+	// use from another functions
+	const aiScene* imported_scene = nullptr;
 
 // TODO: MAYBE WE NEED a specific module to store all models of the scene and draw etc
 public:

@@ -41,7 +41,7 @@ public:
 	// mat4x4 GetTransform();
 
 	//const char* GetName() const;
-
+	bool Start(float, float);
 	bool Render();
 	bool RenderWireframe();
 	bool RenderOutline();

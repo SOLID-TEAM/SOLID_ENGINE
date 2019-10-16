@@ -46,6 +46,11 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
+	virtual update_status Draw() // used only for opengl draw on viewport
+	{
+		return UPDATE_CONTINUE;
+	}
+
 	virtual bool CleanUp() 
 	{ 
 		return true; 

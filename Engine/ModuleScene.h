@@ -15,6 +15,7 @@ public:
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
+	update_status Draw();
 
 	GameObject* CreateGameObject(std::string name = "no_name", GameObject* parent = nullptr);
 	

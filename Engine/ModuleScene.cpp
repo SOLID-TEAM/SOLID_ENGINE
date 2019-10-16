@@ -1,4 +1,6 @@
 #include "ModuleScene.h"
+#include "GL/glew.h"
+#include "Application.h"
 
 ModuleScene::ModuleScene() {}
 
@@ -7,10 +9,10 @@ ModuleScene::~ModuleScene() {}
 bool ModuleScene::Init(Config& config)
 {
 	// creates a root gameobject, wich all another go are childs of it
-	root_go = new GameObject("Root_GameObject");
+	root_go = new GameObject("scene_root_gameobject");
 
-	// create one child of root go
-	GameObject* new_go = new GameObject("Child of root_go", root_go);
+	//// create one child of root go
+	//GameObject* new_go = new GameObject("Child of root_go", root_go);
 
 	return true;
 }
@@ -45,7 +47,23 @@ update_status ModuleScene::Update(float dt)
 update_status ModuleScene::PostUpdate(float dt)
 {
 
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleScene::Draw()
+{
+	App->test->main_grid->Render();
+
 	// draw all go's last
+	if (root_go != nullptr)
+	{
+		std::vector<GameObject*>::iterator game_objects = root_go->childs.begin();
+
+		for (; game_objects != root_go->childs.end(); ++game_objects)
+		{
+			(*game_objects)->Draw();
+		}
+	}
 
 	return UPDATE_CONTINUE;
 }

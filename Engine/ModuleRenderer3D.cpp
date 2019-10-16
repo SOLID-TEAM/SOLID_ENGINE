@@ -127,28 +127,12 @@ bool ModuleRenderer3D::Init(Config& config)
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
-	if (on_resize)
-	{
-		ImVec2 size = App->editor->w_scene->GetViewportSize();
 
-		glViewport(0, 0, size.x, size.y);
-
-		glMatrixMode(GL_PROJECTION);
-		projection_mat = perspective(60.0f, size.x / size.y, 0.125f, 512.0f);
-		glLoadMatrixf(&projection_mat);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		UpdateSceneBuffers(size.x, size.y);
-
-		on_resize = false;
-	}
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	/*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix());
+	glLoadMatrixf(App->camera->GetViewMatrix());*/
 
 
 	// TODO: re-added lights until we create component light, remove from here when done
@@ -157,6 +141,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
+
 
 	return UPDATE_CONTINUE;
 }
@@ -192,6 +177,62 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 
 	SDL_GL_SwapWindow(App->window->window);
+
+	// prepare for main loop Draw -----------------------------------------------
+
+	if (on_resize)
+	{
+		ImVec2 size = App->editor->w_scene->GetViewportSize();
+
+		glViewport(0, 0, size.x, size.y);
+
+		glMatrixMode(GL_PROJECTION);
+		projection_mat = perspective(60.0f, size.x / size.y, 0.125f, 512.0f);
+		glLoadMatrixf(&projection_mat);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		UpdateSceneBuffers(size.x, size.y);
+
+		on_resize = false;
+	}
+
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glLoadIdentity();
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(App->camera->GetViewMatrix());
+
+	
+	// Start Buffer Frame ----------------------------------
+	glBindFramebuffer(GL_FRAMEBUFFER, App->renderer3D->frame_buffer_id);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClearColor(0.1, 0.1, 0.1, 1.f);
+	// Object Draw Stencil Settings ------------------------
+	glStencilFunc(GL_ALWAYS, 1, -1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	// -----------------------------------------------------
+	// start last main loop draw
+	// ----------------------------------------------------------------------------
+	
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleRenderer3D::Draw()
+{
+	// Default Stencil Settings ----------------------------
+	glStencilFunc(GL_ALWAYS, 1, 0);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+	// Start Buffer Frame ----------------------------------
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, App->renderer3D->texture_id);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	// -----------------------------------------------------
+
 	return UPDATE_CONTINUE;
 }
 

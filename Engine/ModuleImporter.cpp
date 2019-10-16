@@ -41,7 +41,7 @@ bool ModuleImporter::Init(Config& config)
 
 bool ModuleImporter::Start(Config& config)
 {
-	LoadFileMesh("Assets/Models/BakerHouse.fbx");
+	LoadFileMesh("BakerHouse.fbx");
 	/*LoadFileMesh("Assets/Models/BakerHouse.fbx");*/
 
 	//LoadFileMesh("Assets/Models/hammer_low.fbx");
@@ -77,103 +77,103 @@ update_status ModuleImporter::Update(float dt)
 update_status ModuleImporter::PostUpdate(float dt)
 {
 	// Start Buffer Frame ----------------------------------
-	glBindFramebuffer(GL_FRAMEBUFFER, App->renderer3D->frame_buffer_id);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glClearColor(0.1, 0.1, 0.1, 1.f);
-	// Object Draw Stencil Settings ------------------------
-	glStencilFunc(GL_ALWAYS, 1, -1);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	//glBindFramebuffer(GL_FRAMEBUFFER, App->renderer3D->frame_buffer_id);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	//glClearColor(0.1, 0.1, 0.1, 1.f);
+	//// Object Draw Stencil Settings ------------------------
+	//glStencilFunc(GL_ALWAYS, 1, -1);
+	//glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	// -----------------------------------------------------
 
-	App->test->main_grid->Render();
+	/*App->test->main_grid->Render();
 
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
-		App->renderer3D->lights[i].Render();
+		App->renderer3D->lights[i].Render();*/
 
-	std::vector<ModelData*>::iterator model = meshes.begin();
+	//std::vector<ModelData*>::iterator model = meshes.begin();
 
-	for (; model != meshes.end(); ++model)
-	{
-		// TODO NEXT: implement new render functionality to pass all this shit (colors, draw modes etc)
+	//for (; model != meshes.end(); ++model)
+	//{
+	//	// TODO NEXT: implement new render functionality to pass all this shit (colors, draw modes etc)
 
-		if (fill_faces && wireframe)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			glEnable(GL_POLYGON_OFFSET_FILL);
-			glPolygonOffset(1.0f, 0.375f);
+	//	if (fill_faces && wireframe)
+	//	{
+	//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//		glEnable(GL_POLYGON_OFFSET_FILL);
+	//		glPolygonOffset(1.0f, 0.375f);
 
-			glColor4fv((float*)&fill_color);
+	//		glColor4fv((float*)&fill_color);
 
-			(*model)->Render();
+	//		(*model)->Render();
 
-			glLineWidth(1.0f);
-			glDisable(GL_POLYGON_OFFSET_FILL);
+	//		glLineWidth(1.0f);
+	//		glDisable(GL_POLYGON_OFFSET_FILL);
 
-		}
-		else if (fill_faces)
-		{
-			glColor4fv((float*)&fill_color);
-			(*model)->Render();
-		}
+	//	}
+	//	else if (fill_faces)
+	//	{
+	//		glColor4fv((float*)&fill_color);
+	//		(*model)->Render();
+	//	}
 
-		if (wireframe)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//	if (wireframe)
+	//	{
+	//		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-			glLineWidth(wire_line_width);
-			glColor4fv((float*)&wire_color);
+	//		glLineWidth(wire_line_width);
+	//		glColor4fv((float*)&wire_color);
 
-			(*model)->RenderWireframe();
+	//		(*model)->RenderWireframe();
 
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
+	//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//	}
 
-		if (outline)
-		{
-			glStencilFunc(GL_NOTEQUAL, 1, -1);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//	if (outline)
+	//	{
+	//		glStencilFunc(GL_NOTEQUAL, 1, -1);
+	//		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-			glLineWidth(wire_line_width);
-			glColor4fv((float*)&wire_color);
+	//		glLineWidth(wire_line_width);
+	//		glColor4fv((float*)&wire_color);
 
-			glLineWidth(7.f);
-			(*model)->RenderWireframe();
-			glLineWidth(1.f);
+	//		glLineWidth(7.f);
+	//		(*model)->RenderWireframe();
+	//		glLineWidth(1.f);
 
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			glStencilFunc(GL_ALWAYS, 1, -1);
-		}
+	//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//		glStencilFunc(GL_ALWAYS, 1, -1);
+	//	}
 
-		if (debug_vertex_normals)
-		{
-			glColor4fv((float*)&d_vertex_p_color);
-			(*model)->DebugRenderVertex(v_point_size);
-			glColor4fv((float*)&d_vertex_l_color);
-			(*model)->DebugRenderVertexNormals(v_n_line_width);
-		}
-		//glColor3f(1.0f, 1.0f, 0.0f);
-		if (debug_face_normals)
-		{
-			glColor4fv((float*)&d_vertex_face_color);
-			(*model)->DebugRenderFacesVertex(f_v_point_size);
-			glColor4fv((float*)&d_vertex_face_n_color);
-			(*model)->DebugRenderFacesNormals(f_n_line_width);
-		}
+	//	if (debug_vertex_normals)
+	//	{
+	//		glColor4fv((float*)&d_vertex_p_color);
+	//		(*model)->DebugRenderVertex(v_point_size);
+	//		glColor4fv((float*)&d_vertex_l_color);
+	//		(*model)->DebugRenderVertexNormals(v_n_line_width);
+	//	}
+	//	//glColor3f(1.0f, 1.0f, 0.0f);
+	//	if (debug_face_normals)
+	//	{
+	//		glColor4fv((float*)&d_vertex_face_color);
+	//		(*model)->DebugRenderFacesVertex(f_v_point_size);
+	//		glColor4fv((float*)&d_vertex_face_n_color);
+	//		(*model)->DebugRenderFacesNormals(f_n_line_width);
+	//	}
 
-		/*for (int i = 0; i < (*model)->_idx_size; ++i)
-			LOG("%u", (*model)->indices[i]);*/
+	//	/*for (int i = 0; i < (*model)->_idx_size; ++i)
+	//		LOG("%u", (*model)->indices[i]);*/
 
-	}
+	//}
 
 	// Default Stencil Settings ----------------------------
-	glStencilFunc(GL_ALWAYS, 1, 0);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	//glStencilFunc(GL_ALWAYS, 1, 0);
+	//glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
-	// Start Buffer Frame ----------------------------------
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glBindTexture(GL_TEXTURE_2D, App->renderer3D->texture_id);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//// Start Buffer Frame ----------------------------------
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glBindTexture(GL_TEXTURE_2D, App->renderer3D->texture_id);
+	//glGenerateMipmap(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 	// -----------------------------------------------------
 
 	return UPDATE_CONTINUE;
@@ -205,117 +205,133 @@ bool ModuleImporter::LoadFileMesh(const char* path)
 
 	const aiScene* scene = aiImportFile(final_path.data(), aiProcessPreset_TargetRealtime_MaxQuality);
 
-	if (scene != nullptr && scene->HasMeshes())
+	if(scene != nullptr && scene->HasMeshes())
 	{
-		for (uint i = 0; i < scene->mNumMeshes; ++i)
-		{
-			ModelData* m = new ModelData();
+		// link
+		imported_scene = scene;
+		// create separate gameobjects from nodes
+		CreateGoFromNodes(scene->mRootNode, App->scene->root_go, scene->mRootNode->mTransformation);
 
-			// TODO: divide this on separate functions
-			// AND: improve to load all needed data only in one array for vertex,normals,uvs, and another for indices
-			// to later use stride before filled the buffers
-
-			aiMesh* assMesh = scene->mMeshes[i]; // :)
-
-			m->name.assign(assMesh->mName.data);
-			m->_v_size = assMesh->mNumVertices;
-			m->vertices = new float[m->_v_size * 3];
-			// the part of i * 3 doesnt make sense, we not store more meshes in one "modelData"
-			// instead for each mesh we create other modeldata right now -> removed &m->vertices[i*3]
-			memcpy(m->vertices, assMesh->mVertices, sizeof(float) * m->_v_size * 3);
-			LOG("[Info] Created new mesh %s with %d vertices", assMesh->mName.data, m->_v_size);
-			// LOAD triangle faces indices
-			if (assMesh->HasFaces())
-			{
-				m->_idx_size = assMesh->mNumFaces * 3;
-				m->indices = new uint[m->_idx_size];
-
-				for (uint i = 0; i < assMesh->mNumFaces; ++i)
-				{
-					if (assMesh->mFaces[i].mNumIndices != 3)
-					{
-						LOG("[Error] Detected face with != 3 indices");
-						// TODO: rework this, we need to research how to load models with != 3 vertex per face
-						// prevention for index accessor from computevertex and faces normals functions
-						memset(&m->indices[i * 3], 0, sizeof(uint) * 3);
-					}
-					else
-						memcpy(&m->indices[i * 3], &assMesh->mFaces[i].mIndices[0], sizeof(uint) * 3);
-				}
-
-				LOG("[Info] Containing %i indices for %i triangles", m->_idx_size, assMesh->mNumFaces);
-			}
-
-			// LOAD vertex normals
-			if (assMesh->HasNormals())
-			{
-				m->normals = new float[assMesh->mNumVertices * 3];
-				memcpy(m->normals, assMesh->mNormals, sizeof(float) * assMesh->mNumVertices * 3);
-				LOG("[Info] Loaded vertex normals for %i vertices", assMesh->mNumVertices);
-			}
-
-			// LOAD uv coords
-			uint num_uv_channels = assMesh->GetNumUVChannels();
-			if (num_uv_channels > 0)
-			{
-				if (num_uv_channels > 1)
-					LOG("[Error] more than 1 uv|w channel for mesh");
-
-				if (assMesh->HasTextureCoords(0)) // TODO: support more texture coord channels if needed
-				{
-					m->_uv_num_components = assMesh->mNumUVComponents[0]; // num of components for text coord channel 0
-					m->uvs = new float[m->_uv_num_components * m->_v_size];
-
-					// we need a for loop if we want to improve memory performance, assimp stores its uvs in 3d vectors for uv/w 
-
-					for (uint i = 0; i < m->_v_size; ++i)
-					{
-						memcpy(&m->uvs[i * m->_uv_num_components], &assMesh->mTextureCoords[0][i], sizeof(float) * m->_uv_num_components);
-					}
-				}
-			}
-
-			// LOAD material texture/s
-			// TODO: ONLY diffuse for now
-			if (scene->HasMaterials())
-			{
-				for (uint i = 0; i < scene->mNumMaterials; ++i)
-				{
-					uint diffuse_tex_count = scene->mMaterials[assMesh->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE);
-
-					assert(diffuse_tex_count <= 1); // WARNING: not tested with models with more than 1 diffuse, needs to improve and test*
-
-					for (int j = 0; j < diffuse_tex_count; ++j)
-					{
-						aiString tex_path;
-						scene->mMaterials[assMesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, j, &tex_path); // * not tested j
-						m->texture_gl_id = App->textures->LoadTexture(tex_path.data); // * more gl index
-					}
-				}
-			}
-
-			m->GenerateBuffers();
-
-			m->ComputeVertexNormals(v_n_line_length); // for debug draw purposes | BEFORE UPDATE BUFFERS!! to compute debugdraw normals before we fill the buffers
-			m->ComputeFacesNormals(f_n_line_length);
-
-			m->UpdateBuffers();
-
-			meshes.push_back(m);
-			//startup_meshes.push_back(&m);
-		}
-
-		if (scene != nullptr && scene->HasTextures()) // embedded textures into file
-		{
-			LOG("[Error] scene contains embedded textures, improve the loader to load it!");
-		}
-
+		// free the imported scene
 		aiReleaseImport(scene);
+		imported_scene = nullptr;
 	}
 	else
 		LOG("[Error] Loading scene %s / no meshes", path);
 
 	return ret;
+}
+
+void ModuleImporter::CreateGoFromNodes(aiNode* node, GameObject* parent, aiMatrix4x4 accumulated_transform)
+{
+	GameObject* root_go = nullptr;
+	aiMatrix4x4 transform;
+
+	if (node->mNumMeshes > 0)
+	{
+		GameObject* new_go = new GameObject(node->mName.data, parent); // gameobject adds itself as child of parent
+		// copy meshes
+		CopyMesh(node, new_go);
+		// TODO: copy materials
+		
+		// new go is the parent for all childs
+		root_go = new_go;
+	}
+	else
+	{
+		// if no meshes, skip node but keep its transform
+		root_go = parent;
+		transform = node->mTransformation * accumulated_transform;
+	}
+
+	// recursively continue for all child nodes
+	for (uint i = 0; i < node->mNumChildren; ++i)
+	{
+		CreateGoFromNodes(node->mChildren[i], root_go, transform);
+	}
+
+}
+
+void ModuleImporter::CopyMesh(aiNode* node, GameObject* new_go)
+{
+	for (uint i = 0; i < node->mNumMeshes; ++i)
+	{
+		aiMesh* assMesh = imported_scene->mMeshes[node->mMeshes[i]]; // access scene mesh data from node indices
+
+		// Create new component mesh for this gameobject
+		ComponentMesh* cm = (ComponentMesh*)new_go->CreateComponent(ComponentType::MESH);
+		ModelData* m = cm->mesh;
+
+		CopyDataToMesh(cm->mesh, imported_scene->mMeshes[node->mMeshes[i]]);
+
+		// TODO: change how the length for debug normals are passed, maybe store on another place
+		m->Start(v_n_line_length, f_n_line_length);
+		
+		LOG("created mesh from '%s' node, with mesh name: %s", node->mName.C_Str(), m->name.c_str());
+	}
+
+}
+
+void ModuleImporter::CopyDataToMesh(ModelData* m, aiMesh* assMesh) const
+{
+	m->name.assign(assMesh->mName.C_Str());
+
+	m->_v_size = assMesh->mNumVertices;
+	m->vertices = new float[m->_v_size * 3];
+	memcpy(m->vertices, assMesh->mVertices, sizeof(float) * m->_v_size * 3);
+
+	LOG("[Info] Created new mesh %s with %d vertices", assMesh->mName.data, m->_v_size);
+
+	// LOAD triangle faces indices
+	if (assMesh->HasFaces())
+	{
+		m->_idx_size = assMesh->mNumFaces * 3;
+		m->indices = new uint[m->_idx_size];
+
+		for (uint i = 0; i < assMesh->mNumFaces; ++i)
+		{
+			if (assMesh->mFaces[i].mNumIndices != 3)
+			{
+				LOG("[Error] Detected face with != 3 indices");
+				// TODO: rework this, we need to research how to load models with != 3 vertex per face
+				// prevention for index accessor from computevertex and faces normals functions
+				memset(&m->indices[i * 3], 0, sizeof(uint) * 3);
+			}
+			else
+				memcpy(&m->indices[i * 3], &assMesh->mFaces[i].mIndices[0], sizeof(uint) * 3);
+		}
+
+		LOG("[Info] Containing %i indices for %i triangles", m->_idx_size, assMesh->mNumFaces);
+	}
+
+	// LOAD vertex normals
+	if (assMesh->HasNormals())
+	{
+		m->normals = new float[assMesh->mNumVertices * 3];
+		memcpy(m->normals, assMesh->mNormals, sizeof(float) * assMesh->mNumVertices * 3);
+		LOG("[Info] Loaded vertex normals for %i vertices", assMesh->mNumVertices);
+	}
+
+	// LOAD uv coords
+	uint num_uv_channels = assMesh->GetNumUVChannels();
+	if (num_uv_channels > 0)
+	{
+		if (num_uv_channels > 1)
+			LOG("[Error] more than 1 uv|w channel for mesh");
+
+		if (assMesh->HasTextureCoords(0)) // TODO: support more texture coord channels if needed
+		{
+			m->_uv_num_components = assMesh->mNumUVComponents[0]; // num of components for text coord channel 0
+			m->uvs = new float[m->_uv_num_components * m->_v_size];
+
+			// we need a for loop if we want to improve memory performance, assimp stores its uvs in 3d vectors for uv/w 
+
+			for (uint i = 0; i < m->_v_size; ++i)
+			{
+				memcpy(&m->uvs[i * m->_uv_num_components], &assMesh->mTextureCoords[0][i], sizeof(float) * m->_uv_num_components);
+			}
+		}
+	}
 }
 
 bool ModuleImporter::ReComputeVertexNormals(float length)

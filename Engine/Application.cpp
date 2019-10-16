@@ -195,6 +195,14 @@ update_status Application::Update()
 		++item;
 	}
 
+	item = list_modules.begin();
+
+	while (item != list_modules.end() && ret == UPDATE_CONTINUE)
+	{
+		ret = (*item)->Draw();
+		++item;
+	}
+
 	FinishUpdate();
 	return ret;
 }

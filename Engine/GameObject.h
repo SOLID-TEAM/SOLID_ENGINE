@@ -18,6 +18,7 @@ public:
 	bool Enable();
 	bool Update(float dt);
 	bool PostUpdate(float dt);
+	bool Draw();
 
 	bool CleanUp();
 

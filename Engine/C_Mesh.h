@@ -10,6 +10,9 @@ public:
 	~ComponentMesh();
 
 	bool Update(float dt);
+	bool PostUpdate(float dt);
+	bool Draw();
+	bool CleanUp();
 
 public:
 	// TODO: for now only one mesh for gameObject

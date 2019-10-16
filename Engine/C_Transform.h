@@ -18,6 +18,7 @@ private:
 	float3 position = position.zero;
 	float3 rotation = rotation.zero;
 	float3 scale = scale.zero;
+	Quat rot = rot.identity;
 
 	float4x4 local_matrix = local_matrix.identity;
 	float4x4 global_matrix = global_matrix.identity;

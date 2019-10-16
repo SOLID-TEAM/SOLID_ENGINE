@@ -43,6 +43,8 @@ public:
 
 	update_status PostUpdate(float dt);
 
+	update_status Draw();
+
 	bool CleanUp();
 
 	bool Save(Config& config);

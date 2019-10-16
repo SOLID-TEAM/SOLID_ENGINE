@@ -34,7 +34,22 @@ ModelData::ModelData(float* vertices, uint* indices, float* normals, float* uvs,
 	UpdateBuffers();
 }
 
-ModelData::~ModelData() {}
+bool ModelData::Start(float v_n_line_length, float f_n_line_length)
+{
+	GenerateBuffers();
+
+	ComputeVertexNormals(v_n_line_length); // for debug draw purposes | BEFORE UPDATE BUFFERS!! to compute debugdraw normals before we fill the buffers
+	ComputeFacesNormals(f_n_line_length);
+
+	UpdateBuffers();
+
+	return true;
+}
+
+ModelData::~ModelData() 
+{
+	CleanUp();
+}
 
 bool ModelData::GenerateBuffers()
 {
@@ -316,6 +331,7 @@ bool ModelData::CleanUp()
 	delete[] debug_v_normals;
 	delete[] debug_f_vertices;
 	delete[] debug_f_normals;
+	
 
 	return ret;
 }

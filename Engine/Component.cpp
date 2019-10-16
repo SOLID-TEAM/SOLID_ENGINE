@@ -29,3 +29,13 @@ bool Component::PostUpdate(float dt)
 {
 	return true;
 }
+
+bool Component::Draw()
+{
+	return true;
+}
+
+bool Component::CleanUp()
+{
+	return true;
+}

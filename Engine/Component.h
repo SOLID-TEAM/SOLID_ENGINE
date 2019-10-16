@@ -22,6 +22,9 @@ public:
 	virtual bool PreUpdate(float dt);
 	virtual bool Update(float dt);
 	virtual bool PostUpdate(float dt);
+	virtual bool Draw();
+
+	virtual bool CleanUp();
 
 private:
 	bool active = true;

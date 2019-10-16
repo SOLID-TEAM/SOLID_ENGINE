@@ -75,6 +75,20 @@ bool GameObject::PostUpdate(float dt)
 	return ret;
 }
 
+bool GameObject::Draw()
+{
+	bool ret = true;
+
+	std::vector<Component*>::iterator component = components.begin();
+
+	for (; component != components.end(); ++component)
+	{
+		ret = (*component)->Draw();
+	}
+
+	return ret;
+}
+
 Component* GameObject::CreateComponent(ComponentType type)
 {
 	Component* new_component = nullptr;
@@ -105,5 +119,19 @@ Component* GameObject::CreateComponent(ComponentType type)
 
 bool GameObject::CleanUp()
 {
+	// delete components
+	std::vector<Component*>::iterator compo = components.begin();
+
+	for (; compo != components.end(); ++compo)
+	{
+		(*compo)->CleanUp();
+	}
+	
+	/*std::vector<GameObject*>::iterator it = childs.begin();
+	for (; it != childs.end(); ++it)
+	{
+		(*it)->CleanUp();
+	}*/
+
 	return true;
 }
