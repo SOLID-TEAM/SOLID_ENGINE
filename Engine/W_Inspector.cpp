@@ -1,3 +1,4 @@
+#include "Application.h"
 #include "W_Inspector.h"
 #include "ImGui/imgui.h"
 #include "GameObject.h"
@@ -6,18 +7,29 @@
 
 void W_Inspector::Draw()
 {
-	if (ImGui::Begin(name.c_str(), &active))
+	//if (ImGui::Begin(name.c_str(), &active))
+	//{
+	//	if (selected_go == nullptr)
+	//	{
+	//		ImGui::End();
+	//		return;
+	//	}
+	//	
+	//	for (std::vector<Component*>::iterator itr = selected_go->components.begin(); itr != selected_go->components.end(); ++itr)
+	//	{
+	//		(*itr)->InspectorDraw();
+	//	}
+	//}
+	//ImGui::End();
+
+
+	if (ImGui::Begin("Inspector"))
 	{
-		if (selected_go == nullptr)
+		if (ImGui::CollapsingHeader("BLABLA"))
 		{
-			ImGui::End();
-			return;
-		}
-		
-		for (std::vector<Component*>::iterator itr = selected_go->components.begin(); itr != selected_go->components.end(); ++itr)
-		{
-			(*itr)->InspectorDraw();
+
 		}
 	}
+
 	ImGui::End();
 }

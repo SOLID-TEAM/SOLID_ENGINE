@@ -21,4 +21,3 @@ private:
 
 #endif // !_W_INSPECTOR_H__
 
-

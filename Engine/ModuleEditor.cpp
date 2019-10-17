@@ -114,6 +114,7 @@ bool ModuleEditor::CleanUp()
 	w_hierarchy = nullptr;
 	w_rendering = nullptr;
 	w_scene = nullptr;
+	w_inspector = nullptr;
 
 	return true;
 }
