@@ -47,7 +47,13 @@ update_status ModuleScene::Update(float dt)
 update_status ModuleScene::PostUpdate(float dt)
 {
 
+
 	return UPDATE_CONTINUE;
+}
+
+void ModuleScene::DrawAllComponentsPanelInfo()
+{
+
 }
 
 update_status ModuleScene::Draw()

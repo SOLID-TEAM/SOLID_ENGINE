@@ -19,30 +19,6 @@ void W_Hierarchy::Draw()
 			for(std::vector<GameObject*>::iterator it = root->childs.begin(); it != root->childs.end(); ++it)
 				DrawAll(*it);
 		}
-
-		//// get all the gameObjects
-		//std::vector<ModelData*> vgo = App->importer->GetModels();
-		//std::vector<ModelData*>::iterator go = vgo.begin();
-
-		//for (; go != vgo.end(); ++go)
-		//{
-		//	ImGui::PushID((int)*go); // to correctly "link" each element without same problems with identical name when we manage buttons etc
-
-		//	if (ImGui::TreeNode((*go)->name.data()))
-		//	{
-		//		ImGui::Text("blabla");
-
-		//		if (ImGui::TreeNode("Renderer Options"))
-		//		{
-		//			ImGui::Text("wip");
-		//			ImGui::TreePop();
-		//		}
-
-		//		ImGui::TreePop();
-		//	}
-
-		//	ImGui::PopID();
-		//}
 	}
 
 	ImGui::End();
@@ -59,7 +35,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 
 	/*node_flags |= ImGuiTreeNodeFlags_CollapsingHeader;*/
 
-	bool selected = selected_go == go;
+	bool selected = App->editor->selected_go == go;
 	//bool hover_check = hovered_go == go;
    
 	if (selected)
@@ -77,6 +53,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 	// "default" colors ----------------------
 	ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor(255, 0, 255, 255)); // when current clicked
 	
+	node_flags |= ImGuiTreeNodeFlags_SpanAvailWidth; // allows click on it on full box width
 	// ---------------------------------------
 	// https://github.com/ocornut/imgui/issues/2077
 	bool open = ImGui::TreeNodeEx(go->GetName(), node_flags);
@@ -104,7 +81,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 	if (clicked)
 	{
 		//LOG("Clicked: %s", go->GetName());
-		selected_go = go;
+		App->editor->selected_go = go;
 	}
 
 	//if (hover) hovered_go = go;

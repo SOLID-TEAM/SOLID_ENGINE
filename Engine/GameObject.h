@@ -21,6 +21,7 @@ public:
 	bool Draw();
 
 	const char* GetName() const;
+	const std::vector<Component*>& GetComponents() const;
 
 	bool CleanUp();
 

@@ -1,9 +1,11 @@
 #include "C_Mesh.h"
 #include "Application.h"
 #include "GL/glew.h"
+#include "ImGui/imgui.h"
 
 ComponentMesh::ComponentMesh(GameObject* parent) : Component(parent)
 {
+	name.assign("Mesh");
 	mesh = new ModelData();
 }
 
