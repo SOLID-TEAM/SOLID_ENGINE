@@ -23,6 +23,7 @@ public:
 	virtual bool Update(float dt);
 	virtual bool PostUpdate(float dt);
 	virtual bool Draw();
+	virtual bool InspectorDraw() { return true; };
 
 	virtual bool CleanUp();
 

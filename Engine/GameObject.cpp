@@ -4,6 +4,8 @@
 #include "C_Transform.h"
 #include "C_Mesh.h"
 
+#include "W_Inspector.h"
+
 //GameObject::GameObject() 
 //{
 //	// adds a component transform by default
