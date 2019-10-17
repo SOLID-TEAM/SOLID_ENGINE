@@ -11,13 +11,26 @@ ComponentTransform::ComponentTransform(GameObject* parent) : Component(parent)
 ComponentTransform::~ComponentTransform()
 {}
 
-bool ComponentTransform::DrawPanelInfo()
+bool ComponentTransform::InspectorDraw()
 {
-	ImGui::DragFloat3("Position", (float*)&position, 0.01f, -math::inf, math::inf);
-	// TODO: improve visualization --
-	ImGui::DragFloat3("Rotation", (float*)&rotation, 0.01f, -math::inf, math::inf);
-	// ------------------------------
-	ImGui::DragFloat3("Scale", (float*)&scale, 0.01f, -math::inf, math::inf);
+
+	const char* names[3] = { "X", "Y", "Z" };
+	static float position[3] = { 0.f, 0.f, 0.f };
+	static float rotation[3] = { 0.f, 0.f, 0.f };
+	static float scale[3] = { 0.f, 0.f, 0.f };
+
+	bool aux = false;
+
+	aux = ImGui::CollapsingHeader("Transform"); ImGui::SetItemAllowOverlap(); ImGui::SameLine(); ImGui::Button("Reset");
+
+	if (aux)
+	{
+		ImGui::Spacing();
+		ImGui::Title("Position", 1);	ImGui::DragFloatNEx(names, (float*)&position, 3);
+		ImGui::Title("Rotation", 1);	ImGui::DragFloatNEx(names, (float*)&rotation, 3);
+		ImGui::Title("Scale", 1);		ImGui::DragFloatNEx(names, (float*)&scale, 3);
+		ImGui::Spacing();
+	}
 
 	return true;
 }

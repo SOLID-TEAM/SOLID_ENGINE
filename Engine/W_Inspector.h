@@ -13,10 +13,6 @@ public:
 
 	void Draw();
 
-private:
-
-	GameObject* selected_go = nullptr;
-
 };
 
 #endif // !_W_INSPECTOR_H__
