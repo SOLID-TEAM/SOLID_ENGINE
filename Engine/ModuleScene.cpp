@@ -51,11 +51,6 @@ update_status ModuleScene::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleScene::DrawAllComponentsPanelInfo()
-{
-
-}
-
 update_status ModuleScene::Draw()
 {
 	App->test->main_grid->Render();

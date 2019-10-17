@@ -47,7 +47,6 @@ void W_Inspector::Draw()
 					(*components)->collapsed = true;*/
 			}
 		}
-
-		ImGui::End();
 	}
+	ImGui::End();
 }

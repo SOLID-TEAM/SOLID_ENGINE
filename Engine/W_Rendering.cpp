@@ -10,7 +10,7 @@ void W_Rendering::Draw()
 
 	if (ImGui::Begin(name.c_str()) )
 	{
-		if (ImGui::CollapsingHeader("Shading Modes"))
+		/*if (ImGui::CollapsingHeader("Shading Modes"))
 		{
 			ImGui::Title("Fill Faces", 1);	ImGui::Checkbox("##fill_mode", &App->importer->fill_faces);
 			ImGui::Title("Color", 2);		ImGui::ColorEdit4("fILL Color##2f", (float*)&App->importer->fill_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
@@ -21,9 +21,9 @@ void W_Rendering::Draw()
 			ImGui::Title("Wireframe", 1);	ImGui::Checkbox("##wireframe", &App->importer->wireframe);
 			ImGui::Title("Color", 2);		ImGui::ColorEdit4("Line Color##2f", (float*)&App->importer->wire_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
 			ImGui::Title("Width", 2);		ImGui::SliderFloat("##wire_line_width", &App->importer->wire_line_width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
-		}
+		}*/
 
-		if (ImGui::CollapsingHeader("Debug Modes"))
+		/*if (ImGui::CollapsingHeader("Debug Modes"))
 		{
 			ImGui::Title("Vertex Normals", 1);		ImGui::Checkbox("##d_vertex_normals", &App->importer->debug_vertex_normals);
 			ImGui::Title("Point Color", 2);			ImGui::ColorEdit4("Vertex Point Color##2f", (float*)&App->importer->d_vertex_p_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
@@ -50,7 +50,7 @@ void W_Rendering::Draw()
 			{
 				App->importer->ReComputeFacesNormals(App->importer->f_n_line_length);
 			}
-		}
+		}*/
 
 		static int units = 15;
 

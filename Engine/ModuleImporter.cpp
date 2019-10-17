@@ -465,7 +465,7 @@ bool ModuleImporter::Save(Config& config)
 {
 	bool ret = true;
 
-	ret = config.AddBool("wireframe", wireframe);
+	/*ret = config.AddBool("wireframe", wireframe);
 	ret = config.AddBool("fill_mode", fill_faces);
 	ret = config.AddBool("debug_vertex_normals", debug_vertex_normals);
 	ret = config.AddBool("debug_face_normals", debug_face_normals);
@@ -484,7 +484,7 @@ bool ModuleImporter::Save(Config& config)
 	ret = config.AddFloat("f_n_line_width", f_n_line_width);
 
 	ret = config.AddFloat("v_n_line_length", v_n_line_length);
-	ret = config.AddFloat("f_n_line_length", f_n_line_length);
+	ret = config.AddFloat("f_n_line_length", f_n_line_length);*/
 
 	return ret;
 }
@@ -492,60 +492,60 @@ bool ModuleImporter::Save(Config& config)
 void ModuleImporter::Load(Config& config)
 {
 
-	wireframe = config.GetBool("wireframe", wireframe);
-	fill_faces = config.GetBool("fill_mode", fill_faces);
-	debug_vertex_normals = config.GetBool("debug_vertex_normals", debug_vertex_normals);
-	debug_face_normals = config.GetBool("debug_face_normals", debug_face_normals);
+	//wireframe = config.GetBool("wireframe", wireframe);
+	//fill_faces = config.GetBool("fill_mode", fill_faces);
+	//debug_vertex_normals = config.GetBool("debug_vertex_normals", debug_vertex_normals);
+	//debug_face_normals = config.GetBool("debug_face_normals", debug_face_normals);
 
-	// load colors ----------------------------------------------------------------------------------
-	fill_color.x = config.GetFloat("fill_color", fill_color.x, 0);
-	fill_color.y = config.GetFloat("fill_color", fill_color.y, 1);
-	fill_color.z = config.GetFloat("fill_color", fill_color.z, 2);
-	fill_color.w = config.GetFloat("fill_color", fill_color.w, 3);
+	//// load colors ----------------------------------------------------------------------------------
+	//fill_color.x = config.GetFloat("fill_color", fill_color.x, 0);
+	//fill_color.y = config.GetFloat("fill_color", fill_color.y, 1);
+	//fill_color.z = config.GetFloat("fill_color", fill_color.z, 2);
+	//fill_color.w = config.GetFloat("fill_color", fill_color.w, 3);
 
-	wire_color.x = config.GetFloat("wire_color", wire_color.x, 0);
-	wire_color.y = config.GetFloat("wire_color", wire_color.y, 1);
-	wire_color.z = config.GetFloat("wire_color", wire_color.z, 2);
-	wire_color.w = config.GetFloat("wire_color", wire_color.w, 3);
+	//wire_color.x = config.GetFloat("wire_color", wire_color.x, 0);
+	//wire_color.y = config.GetFloat("wire_color", wire_color.y, 1);
+	//wire_color.z = config.GetFloat("wire_color", wire_color.z, 2);
+	//wire_color.w = config.GetFloat("wire_color", wire_color.w, 3);
 
-	d_vertex_p_color.x = config.GetFloat("d_vertex_p_color", d_vertex_p_color.x, 0);
-	d_vertex_p_color.y = config.GetFloat("d_vertex_p_color", d_vertex_p_color.y, 1);
-	d_vertex_p_color.z = config.GetFloat("d_vertex_p_color", d_vertex_p_color.z, 2);
-	d_vertex_p_color.w = config.GetFloat("d_vertex_p_color", d_vertex_p_color.w, 3);
+	//d_vertex_p_color.x = config.GetFloat("d_vertex_p_color", d_vertex_p_color.x, 0);
+	//d_vertex_p_color.y = config.GetFloat("d_vertex_p_color", d_vertex_p_color.y, 1);
+	//d_vertex_p_color.z = config.GetFloat("d_vertex_p_color", d_vertex_p_color.z, 2);
+	//d_vertex_p_color.w = config.GetFloat("d_vertex_p_color", d_vertex_p_color.w, 3);
 
-	d_vertex_l_color.x = config.GetFloat("d_vertex_l_color", d_vertex_l_color.x, 0);
-	d_vertex_l_color.y = config.GetFloat("d_vertex_l_color", d_vertex_l_color.y, 1);
-	d_vertex_l_color.z = config.GetFloat("d_vertex_l_color", d_vertex_l_color.z, 2);
-	d_vertex_l_color.w = config.GetFloat("d_vertex_l_color", d_vertex_l_color.w, 3);
+	//d_vertex_l_color.x = config.GetFloat("d_vertex_l_color", d_vertex_l_color.x, 0);
+	//d_vertex_l_color.y = config.GetFloat("d_vertex_l_color", d_vertex_l_color.y, 1);
+	//d_vertex_l_color.z = config.GetFloat("d_vertex_l_color", d_vertex_l_color.z, 2);
+	//d_vertex_l_color.w = config.GetFloat("d_vertex_l_color", d_vertex_l_color.w, 3);
 
-	d_vertex_face_color.x = config.GetFloat("d_vertex_face_color", d_vertex_face_color.x, 0);
-	d_vertex_face_color.y = config.GetFloat("d_vertex_face_color", d_vertex_face_color.y, 1);
-	d_vertex_face_color.z = config.GetFloat("d_vertex_face_color", d_vertex_face_color.z, 2);
-	d_vertex_face_color.w = config.GetFloat("d_vertex_face_color", d_vertex_face_color.w, 3);
+	//d_vertex_face_color.x = config.GetFloat("d_vertex_face_color", d_vertex_face_color.x, 0);
+	//d_vertex_face_color.y = config.GetFloat("d_vertex_face_color", d_vertex_face_color.y, 1);
+	//d_vertex_face_color.z = config.GetFloat("d_vertex_face_color", d_vertex_face_color.z, 2);
+	//d_vertex_face_color.w = config.GetFloat("d_vertex_face_color", d_vertex_face_color.w, 3);
 
-	d_vertex_face_n_color.x = config.GetFloat("d_vertex_face_n_color", d_vertex_face_color.x, 0);
-	d_vertex_face_n_color.y = config.GetFloat("d_vertex_face_n_color", d_vertex_face_color.y, 1);
-	d_vertex_face_n_color.z = config.GetFloat("d_vertex_face_n_color", d_vertex_face_color.z, 2);
-	d_vertex_face_n_color.w = config.GetFloat("d_vertex_face_n_color", d_vertex_face_color.w, 3);
-	// -----------------------------------------------------------------------------------------------
+	//d_vertex_face_n_color.x = config.GetFloat("d_vertex_face_n_color", d_vertex_face_color.x, 0);
+	//d_vertex_face_n_color.y = config.GetFloat("d_vertex_face_n_color", d_vertex_face_color.y, 1);
+	//d_vertex_face_n_color.z = config.GetFloat("d_vertex_face_n_color", d_vertex_face_color.z, 2);
+	//d_vertex_face_n_color.w = config.GetFloat("d_vertex_face_n_color", d_vertex_face_color.w, 3);
+	//// -----------------------------------------------------------------------------------------------
 
-	wire_line_width = config.GetFloat("wire_line_width", wire_line_width);
-	v_point_size = config.GetFloat("v_point_size", v_point_size);
-	f_v_point_size = config.GetFloat("f_v_point_size", f_v_point_size);
-	v_n_line_width = config.GetFloat("v_n_line_width", v_n_line_width);
-	f_n_line_width = config.GetFloat("f_n_line_width", f_n_line_width);
+	//wire_line_width = config.GetFloat("wire_line_width", wire_line_width);
+	//v_point_size = config.GetFloat("v_point_size", v_point_size);
+	//f_v_point_size = config.GetFloat("f_v_point_size", f_v_point_size);
+	//v_n_line_width = config.GetFloat("v_n_line_width", v_n_line_width);
+	//f_n_line_width = config.GetFloat("f_n_line_width", f_n_line_width);
 
-	// if we have meshes, and line length doesnt match, recompute normals ----
-	float temp_v = v_n_line_length;
-	v_n_line_length = config.GetFloat("v_n_line_length", v_n_line_length);
-	if (temp_v != v_n_line_length)
-		ReComputeVertexNormals(v_n_line_length);
+	//// if we have meshes, and line length doesnt match, recompute normals ----
+	//float temp_v = v_n_line_length;
+	//v_n_line_length = config.GetFloat("v_n_line_length", v_n_line_length);
+	//if (temp_v != v_n_line_length)
+	//	ReComputeVertexNormals(v_n_line_length);
 
-	float temp_f = f_n_line_length;
-	f_n_line_length = config.GetFloat("f_n_line_length", f_n_line_length);
-	if (temp_f != f_n_line_length)
-		ReComputeFacesNormals(f_n_line_length);
-	// -----------------------------------------------------------------------
+	//float temp_f = f_n_line_length;
+	//f_n_line_length = config.GetFloat("f_n_line_length", f_n_line_length);
+	//if (temp_f != f_n_line_length)
+	//	ReComputeFacesNormals(f_n_line_length);
+	//// -----------------------------------------------------------------------
 
 }
 
