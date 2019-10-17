@@ -35,7 +35,7 @@ bool Component::Draw()
 	return true;
 }
 
-bool Component::InspectorDraw()
+bool Component::DrawPanelInfo()
 {
 	return true;
 }
