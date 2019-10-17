@@ -33,8 +33,7 @@ ModuleEditor::~ModuleEditor()
 
 bool ModuleEditor::Init(Config& config)
 {
-
-	// load values from json
+	// Load values from json
 	Load(config);
 
 	// DEAR IMGUI SETUP ---------------------------------------------------------- 

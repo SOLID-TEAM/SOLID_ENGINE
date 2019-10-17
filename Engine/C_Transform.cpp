@@ -9,16 +9,25 @@ ComponentTransform::ComponentTransform(GameObject* parent) : Component(parent)
 }
 
 ComponentTransform::~ComponentTransform()
-{}
+{
+}
 
 bool ComponentTransform::DrawPanelInfo()
 {
+	//bool aux = false;
 
-	ImGui::DragFloat3("Position", (float*)&position, 0.01f, -math::inf, math::inf);
-	// TODO: improve visualization --
-	ImGui::DragFloat3("Rotation", (float*)&rotation, 0.01f, -math::inf, math::inf);
-	// ------------------------------
-	ImGui::DragFloat3("Scale", (float*)&scale, 0.01f, -math::inf, math::inf);
+	//aux = ImGui::CollapsingHeader("Transform"); ImGui::SetItemAllowOverlap(); ImGui::SameLine(); ImGui::Button("Reset");
+
+
+
+	//if (aux)
+	//{
+		ImGui::Spacing();
+		ImGui::Title("Position", 1);	ImGui::DragFloat3("##position", (float*)&position );
+		ImGui::Title("Rotation", 1);	ImGui::DragFloat3("##rotation", (float*)&rotation );
+		ImGui::Title("Scale", 1);		ImGui::DragFloat3("##scale	 ", (float*)&scale);
+		ImGui::Spacing();
+	//}
 
 	return true;
 }
