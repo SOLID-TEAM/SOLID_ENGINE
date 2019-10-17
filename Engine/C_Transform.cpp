@@ -10,6 +10,7 @@ ComponentTransform::ComponentTransform(GameObject* parent) : Component(parent)
 
 ComponentTransform::~ComponentTransform()
 {
+
 }
 
 bool ComponentTransform::DrawPanelInfo()
@@ -17,8 +18,6 @@ bool ComponentTransform::DrawPanelInfo()
 	//bool aux = false;
 
 	//aux = ImGui::CollapsingHeader("Transform"); ImGui::SetItemAllowOverlap(); ImGui::SameLine(); ImGui::Button("Reset");
-
-
 
 	//if (aux)
 	//{
