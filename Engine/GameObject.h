@@ -6,6 +6,8 @@
 
 #include "Component.h"
 
+class W_Inspector;
+
 class GameObject
 {
 public:
@@ -33,6 +35,8 @@ private:
 	bool active = true;
 	std::string name;
 	std::vector<Component*> components;
+
+	friend W_Inspector;
 };
 
 #endif // !_GAMEOBJECT_H__

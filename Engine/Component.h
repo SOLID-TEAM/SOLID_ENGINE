@@ -23,6 +23,7 @@ public:
 	virtual bool PreUpdate(float dt);
 	virtual bool Update(float dt);
 	virtual bool PostUpdate(float dt);
+
 	virtual bool Draw(); // draw something on viewport (components) called from gameobjects draw (last game loop)
 	virtual bool DrawPanelInfo(); // draw something on the editor panels loop (components) called from editor
 
