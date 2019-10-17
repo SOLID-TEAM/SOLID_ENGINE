@@ -17,6 +17,7 @@
 #include "W_Hierarchy.h"
 #include "W_Rendering.h"
 #include "W_Scene.h"
+#include "W_Inspector.h"
 
 ModuleEditor::ModuleEditor(bool start_enabled) : Module(start_enabled)
 {
@@ -87,6 +88,7 @@ bool ModuleEditor::Start(Config& conf)
 	w_hierarchy = new W_Hierarchy("Hierarchy", true);
 	w_rendering = new W_Rendering("Rendering Settings", true);
 	w_scene = new W_Scene("Scene", true);
+	w_inspector = new W_Inspector("Inspector", true);
 
 	return ret;
 }
@@ -112,6 +114,7 @@ bool ModuleEditor::CleanUp()
 	w_hierarchy = nullptr;
 	w_rendering = nullptr;
 	w_scene = nullptr;
+	w_inspector = nullptr;
 
 	return true;
 }

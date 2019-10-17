@@ -190,6 +190,7 @@
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="W_Inspector.h" />
     <ClInclude Include="W_Rendering.h" />
     <ClInclude Include="W_Scene.h" />
   </ItemGroup>
@@ -264,6 +265,7 @@
     <ClCompile Include="W_Hierarchy.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="W_Inspector.cpp" />
     <ClCompile Include="W_Rendering.cpp" />
     <ClCompile Include="W_Scene.cpp" />
   </ItemGroup>
