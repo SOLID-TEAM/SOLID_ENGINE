@@ -13,7 +13,7 @@ public:
 	~ComponentTransform();
 
 	//bool Update(float dt);
-	bool DrawPanelInfo();
+	bool InspectorDraw();
 
 private:
 	float3 position = position.zero;

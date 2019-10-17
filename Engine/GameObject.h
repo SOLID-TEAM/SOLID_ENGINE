@@ -29,9 +29,12 @@ public:
 
 	Component* CreateComponent(ComponentType type);
 public:
+
 	std::vector<GameObject*> childs;
 	GameObject* parent = nullptr;
+
 private:
+
 	bool active = true;
 	std::string name;
 	std::vector<Component*> components;

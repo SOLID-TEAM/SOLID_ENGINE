@@ -25,7 +25,7 @@ public:
 	virtual bool PostUpdate(float dt);
 
 	virtual bool Draw(); // draw something on viewport (components) called from gameobjects draw (last game loop)
-	virtual bool DrawPanelInfo(); // draw something on the editor panels loop (components) called from editor
+	virtual bool InspectorDraw(); // draw something on the editor panels loop (components) called from editor
 
 	virtual bool CleanUp();
 public:
