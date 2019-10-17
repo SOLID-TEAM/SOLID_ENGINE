@@ -20,6 +20,7 @@ public:
 	// TODO: improve this hierarchy draw if needed
 	// current in-out recursively (draw at return)
 	void DrawAll(GameObject* go);
+	void DrawAllComponentsPanelInfo();
 
 	GameObject* CreateGameObject(std::string name = "no_name", GameObject* parent = nullptr);
 	

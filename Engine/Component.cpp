@@ -35,6 +35,11 @@ bool Component::Draw()
 	return true;
 }
 
+bool Component::DrawPanelInfo()
+{
+	return true;
+}
+
 bool Component::CleanUp()
 {
 	return true;

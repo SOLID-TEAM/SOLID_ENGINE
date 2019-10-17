@@ -10,39 +10,41 @@ void W_Inspector::Draw()
 
 	if (ImGui::Begin(name.c_str(), &active))
 	{
-		//if (selected_go == nullptr)
-		//{
-		//	ImGui::End();
-		//	return;
-		//}
-
-		//for (std::vector<Component*>::iterator itr = selected_go->components.begin(); itr != selected_go->components.end(); ++itr)
-		//{
-		//	(*itr)->InspectorDraw();
-		//}
-
-		static char go_name[40] = "GameObject";
-
-		ImGui::Spacing();
-		ImGui::Checkbox("##active", /*&selected_go->active*/&active); ImGui::SameLine(); ImGui::InputText("##go_name", go_name, 40);
-		ImGui::Spacing();
-
-		const char* names[3] = { "X", "Y", "Z" };
-		static float position[3] = { 0.f, 0.f, 0.f };
-		static float rotation[3]= { 0.f, 0.f, 0.f };
-		static float scale[3] = { 0.f, 0.f, 0.f };
-
-		bool aux = false;
-
-		aux = ImGui::CollapsingHeader("Transform"); ImGui::SetItemAllowOverlap(); ImGui::SameLine(); ImGui::Button("Reset");
-
-		if (aux)
+		// Print all info using components
+		// each component already has a draw elements for its own data
+		// here only call this
+		if (App->editor->selected_go != nullptr)
 		{
+			GameObject* go = App->editor->selected_go;
+
+			char* go_name = new char[200 + 1];
+			std::copy(go->name.begin(), go->name.end(), go_name);
+			go_name[200] = '\0';
+
+
 			ImGui::Spacing();
-			ImGui::Title("Position", 1);	ImGui::DragFloatNEx(names, position, 3);
-			ImGui::Title("Rotation", 1);	ImGui::DragFloatNEx(names, rotation, 3);
-			ImGui::Title("Scale", 1);		ImGui::DragFloatNEx(names, scale, 3);
+			ImGui::Checkbox("##active", &go->active); ImGui::SameLine(); ImGui::InputText("##go_name", go_name, 200);
 			ImGui::Spacing();
+
+			go->name.clear();
+			go->name.assign(go_name);
+
+			delete[]go_name;
+
+			// iterate each component and draw if it contains something to draw
+			for (std::vector<Component*>::const_iterator components = go->GetComponents().begin();
+				components != go->GetComponents().end(); ++components)
+			{
+				// TODO: find another way to store individual go opened/closed collapsingheader
+				//ImGui::SetNextTreeNodeOpen(!(*components)->collapsed); 
+				//if (ImGui::CollapsingHeader((*components)->name.c_str(), (*components)->flags))
+				//{
+					(*components)->InspectorDraw();
+					//(*components)->collapsed = false;
+				//}
+				/*else
+					(*components)->collapsed = true;*/
+			}
 		}
 	}
 

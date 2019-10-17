@@ -142,3 +142,8 @@ const char* GameObject::GetName() const
 {
 	return name.c_str();
 }
+
+const std::vector<Component*>& GameObject::GetComponents() const
+{
+	return components;
+}

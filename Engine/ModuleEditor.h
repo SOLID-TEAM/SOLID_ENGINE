@@ -7,6 +7,7 @@
 #include "external/Parson/parson.h"
 #include <string>
 #include <vector>
+#include "GameObject.h"
 
 class Window;
 class W_Config;
@@ -88,6 +89,9 @@ public:
 	W_Rendering*	w_rendering = nullptr;
 	W_Scene*		w_scene = nullptr;
 	W_Inspector*	w_inspector = nullptr;
+
+	// hierarchy / selected go
+	GameObject* selected_go = nullptr;
 };
 
 #endif // !_MODULE_EDITOR_H__
