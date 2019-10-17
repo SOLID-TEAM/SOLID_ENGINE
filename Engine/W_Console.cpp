@@ -23,8 +23,9 @@ void W_Console::Draw()
 		ImGui::SameLine();
 		if (ImGui::Button("Clear console"))
 		{
-			for (int i = 0; i < console_log.Size; i++)
-				delete(console_log[i]);
+			// TODO: Code exception here
+			//for (int i = 0; i < console_log.Size; i++)
+			//	delete(console_log[i]);
 			console_log.clear();
 		}
 
