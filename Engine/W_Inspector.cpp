@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Component.h"
 #include <vector>
+#include "ImGui/misc/cpp/imgui_stdlib.h" // input text wrapper for std::string
 
 void W_Inspector::Draw()
 {
@@ -17,21 +18,9 @@ void W_Inspector::Draw()
 		{
 			GameObject* go = App->editor->selected_go;
 
-			// TODO: Change method fix ----------------------------------------
-
-			char* go_name = new char[200 + 1];
-			std::copy(go->name.begin(), go->name.end(), go_name);
-			go_name[go->name.size()] = '\0';
-
-
 			ImGui::Spacing();
-			ImGui::Checkbox("##active", &go->active); ImGui::SameLine(); ImGui::InputText("##go_name", go_name, 200);
+			ImGui::Checkbox("##active", &go->active); ImGui::SameLine(); ImGui::InputText("##etc", &go->name);
 			ImGui::Spacing();
-
-			go->name.clear();
-			go->name.assign(go_name);
-
-			delete[]go_name;
 
 			// -----------------------------------------------------------------
 
@@ -41,11 +30,11 @@ void W_Inspector::Draw()
 			{
 				// TODO: find another way to store individual go opened/closed collapsingheader
 				//ImGui::SetNextTreeNodeOpen(!(*components)->collapsed); 
-				//if (ImGui::CollapsingHeader((*components)->name.c_str(), (*components)->flags))
-				//{
+				if (ImGui::CollapsingHeader((*components)->name.c_str(), (*components)->flags))
+				{
 					(*components)->DrawPanelInfo();
 					//(*components)->collapsed = false;
-				//}
+				}
 				/*else
 					(*components)->collapsed = true;*/
 			}
