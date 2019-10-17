@@ -17,9 +17,11 @@ void W_Inspector::Draw()
 		{
 			GameObject* go = App->editor->selected_go;
 
+			// TODO: Change method fix ----------------------------------------
+
 			char* go_name = new char[200 + 1];
 			std::copy(go->name.begin(), go->name.end(), go_name);
-			go_name[200] = '\0';
+			go_name[go->name.size()] = '\0';
 
 
 			ImGui::Spacing();
@@ -30,6 +32,8 @@ void W_Inspector::Draw()
 			go->name.assign(go_name);
 
 			delete[]go_name;
+
+			// -----------------------------------------------------------------
 
 			// iterate each component and draw if it contains something to draw
 			for (std::vector<Component*>::const_iterator components = go->GetComponents().begin();
