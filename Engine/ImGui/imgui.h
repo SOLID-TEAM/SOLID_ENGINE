@@ -220,6 +220,8 @@ namespace ImGui
     IMGUI_API void          Title(const char* title , int hierarchy = 1);
     IMGUI_API void          PushColumnWidth(float width);
     IMGUI_API void          PopColumnWidth();
+    IMGUI_API void          PushMultiItemsWidthsAndLabels(const char* labels[], int components, float w_full);
+    IMGUI_API void          DragFloatNEx(const char* labels[], float* v, int components, float v_speed = 1.f, float v_min = 0.f, float v_max = 0.f, const char* display_format = "%.2f", float power = 1.f);
 
     // Context creation and access
     // Each context create its own ImFontAtlas by default. You may instance one yourself and pass it to CreateContext() to share a font atlas between imgui contexts.
