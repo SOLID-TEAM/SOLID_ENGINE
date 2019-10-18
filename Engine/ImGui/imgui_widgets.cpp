@@ -7734,7 +7734,7 @@ void ImGui::SetSeparationType(ImGuiSeparationType type)
 void ImGui::Title(const char* title , int hierarchy) // Type 1: Panel | 2: Menu
 {
     ImGuiStyle style = ImGui::GetStyle();
-    std::string final_title(title);
+    ImVec4 color;
 
     if (hierarchy < 1)
         hierarchy = 1;
@@ -7744,16 +7744,15 @@ void ImGui::Title(const char* title , int hierarchy) // Type 1: Panel | 2: Menu
     if (hierarchy == 1)
     {
         ImGui::SameLine(style.TitleSeparation);
-        //final_title = std::string("   ") + final_title;
+        color = { 1.f, 1.f ,1.f ,1.f };
     }
     else
     {
         ImGui::SameLine(style.TitleSeparation + style.SubTitleSeparation * (hierarchy - 1));
-        //final_title = std::string("      ") + final_title;
+        color = { .8f, .8f ,.8f ,.8f };
     }
 
     float window_width = ImGui::GetWindowContentRegionWidth();
-
     float separation;
 
     if (style.SeparationType == ImGuiSeparationType::ImGui_WindowSeparation)
@@ -7773,7 +7772,7 @@ void ImGui::Title(const char* title , int hierarchy) // Type 1: Panel | 2: Menu
     }
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text(final_title.c_str() ); ImGui::SameLine(separation);   // Fake column
+    ImGui::TextColored(color, title); ImGui::SameLine(separation);   // Fake column
     ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());        // Next Item Width
 }
 

@@ -8,14 +8,13 @@ void W_Scene::Draw()
 	// --------------------
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
 
-	if (ImGui::Begin(name.c_str(), &active , ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar ))
+	if (ImGui::Begin(name.c_str(), &active , ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize))
 	{
 		if (ImGui::BeginMenuBar())
 		{
-			ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(10.f, 10.f));
 			ImGui::SetSeparationType(ImGuiSeparationType::ImGui_MenuSeparation);
-
-			ImGui::SetNextWindowContentWidth(300.f);
+			ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(10.f, 10.f));
+			
 
 			if (ImGui::BeginMenu("Debug"))
 			{
@@ -28,9 +27,9 @@ void W_Scene::Draw()
 				ImGui::EndMenu();
 			}
 
-			ImGui::PopStyleVar();
 			ImGui::EndMenuBar();
 
+			ImGui::PopStyleVar();
 			ImGui::SetSeparationType(ImGuiSeparationType::ImGui_WindowSeparation);
 		}
 
@@ -88,7 +87,7 @@ void W_Scene::GridMenu()
 
 	ImGui::Title("Active", 1);		ImGui::Checkbox("##active_grid", &App->test->main_grid->active);
 	ImGui::Title("Color", 2);		ImGui::ColorEdit4("Grid Color##2f", (float*)&App->test->main_grid->color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-	ImGui::Title("Opacity", 2);		ImGui::SliderFloat("##d_face_line_lenght", &App->test->main_grid->color.w, config.min_alpha, config.max_alpha, "%.1f", 1.0f);
+	ImGui::Title("Opacity", 2);		ImGui::SetNextItemWidth(150);  ImGui::SliderFloat("##d_face_line_lenght", &App->test->main_grid->color.w, config.min_alpha, config.max_alpha, "%.1f", 1.0f);
 	ImGui::Title("Distance", 2);     if (ImGui::SliderInt("##grid_units", &units, 1, 50)) App->test->main_grid->SetUnits(units);
 	ImGui::Title("Line Width", 2);	ImGui::SliderFloat("##grid_width", &App->test->main_grid->width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
 	
@@ -101,7 +100,7 @@ void W_Scene::DebugMenu()
 
 	ImGui::Title("Vertex Normals", 1);		ImGui::Checkbox("##d_vertex_normals", &vp.debug_vertex_normals);
 	ImGui::Title("Point Color", 2);			ImGui::ColorEdit4("Vertex Point Color##2f", (float*)&vp.d_vertex_p_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-	ImGui::Title("Point Size", 2);			ImGui::SliderFloat("##d_vertex_p_size", &vp.v_point_size, config.min_point_size, config.max_point_size, "%.1f", 1.0f);
+	ImGui::Title("Point Size", 2);			ImGui::SetNextItemWidth(150);  ImGui::SliderFloat("##d_vertex_p_size", &vp.v_point_size, config.min_point_size, config.max_point_size, "%.1f", 1.0f);
 	ImGui::Title("Line Color", 2);			ImGui::ColorEdit4("Vertex Line Color##2f", (float*)&vp.d_vertex_l_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
 	ImGui::Title("Line Width", 2);			ImGui::SliderFloat("##d_vertex_line_width", &vp.v_n_line_width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
 	ImGui::Title("Line Lenght", 2);
