@@ -1,3 +1,4 @@
+#include "GL/glew.h"
 #include "SDL/include/SDL_opengl.h"
 
 #include "Globals.h"
@@ -115,6 +116,13 @@ bool ModuleEditor::CleanUp()
 	w_scene = nullptr;
 	w_inspector = nullptr;
 
+	// debug data mesh ---
+	if (ddmesh != nullptr)
+		ddmesh->Clean();
+
+	delete ddmesh;
+	// -------------------
+
 	return true;
 }
 
@@ -157,6 +165,60 @@ update_status ModuleEditor::PreUpdate(float dt)
 // Update
 update_status ModuleEditor::Update(float dt)
 {
+	// check if we need to show debug normals on selected go
+	if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
+	{
+	
+		if (last_go_precalc != selected_go)
+		{
+			// check if the gameobject has meshes
+			bool hasmeshes = false;
+			ModelData* smesh = selected_go->GetMeshes();
+			if (smesh != nullptr)
+				hasmeshes = true;
+
+			// we calc the two modes at once for the selected go
+			// but we filter what to print from bools cols
+			if (hasmeshes)
+			{
+				LOG("[Init] Info: hey, i need to recompute the normals!");
+				
+				// delete previous data and free opengl buffers
+				if (ddmesh != nullptr)
+				{
+					ddmesh->Clean();
+					// re-assign num v and i
+					ddmesh->SetSizes(smesh->_v_size, smesh->_idx_size);
+				}
+				else // if not exists, create one
+					ddmesh = new DebugDataMesh(smesh->_v_size, smesh->_idx_size);
+				
+				// recompute data from selected_go
+				ddmesh->ComputeVertexNormals(smesh, viewport_options.v_n_line_length);
+				ddmesh->ComputeFacesNormals(smesh, viewport_options.f_n_line_length);
+
+				// generate opengl buffers and fill -------------------------
+
+				ddmesh->GenAndFillBuffers();
+			}
+			else
+				LOG("[Error] Warning: gameobject without meshes to debug");
+			// -----------------------------------------------------------
+			// assign new precalc
+			last_go_precalc = selected_go;
+		}
+	}
+	else if (!viewport_options.debug_face_normals && !viewport_options.debug_vertex_normals) // when the two debug options are off and still have a ddmesh
+	{
+		if (ddmesh != nullptr)
+		{
+			ddmesh->Clean();
+			delete ddmesh;
+			ddmesh = nullptr;
+			last_go_precalc = nullptr;
+		}
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -239,61 +301,88 @@ update_status ModuleEditor::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+update_status ModuleEditor::Draw()
+{
+	if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
+	{
+		if (ddmesh != nullptr)
+		{
+			if (viewport_options.debug_vertex_normals)
+			{
+				glColor4fv((float*)&viewport_options.d_vertex_p_color);
+				ddmesh->DebugRenderVertex(viewport_options.v_point_size);
+				glColor4fv((float*)&viewport_options.d_vertex_l_color);
+				ddmesh->DebugRenderVertexNormals(viewport_options.v_n_line_width);
+			}
+			//glColor3f(1.0f, 1.0f, 0.0f);
+			if (viewport_options.debug_face_normals)
+			{
+				glColor4fv((float*)&viewport_options.d_vertex_face_color);
+				ddmesh->DebugRenderFacesVertex(viewport_options.f_v_point_size);
+				glColor4fv((float*)&viewport_options.d_vertex_face_n_color);
+				ddmesh->DebugRenderFacesNormals(viewport_options.f_n_line_width);
+			}
+		}
+	}
+
+	return UPDATE_CONTINUE;
+}
+
 // TODO: improve this methods when we get the windows class helper --------------
 
-bool ModuleEditor::LoadEditorConfig(const char* path)
-{
-	bool ret = true;
+//bool ModuleEditor::LoadEditorConfig(const char* path)
+//{
+//	bool ret = true;
+//
+//	JSON_Value* editor_config = json_parse_file(path);
+//
+//	if (editor_config == NULL)
+//	{
+//		LOG("Editor file configuration %s not found", path);
+//	}
+//	else
+//	{
+//		LOG("Found");
+//		// TODO: iterate all members and save its states
+//		show_demo_imgui = json_object_get_boolean(json_object(editor_config), "show_demo_imgui");
+//		show_about_popup = json_object_get_boolean(json_object(editor_config), "show_about_popup");
+//	}
+//
+//	return ret;
+//}
 
-	JSON_Value* editor_config = json_parse_file(path);
-
-	if (editor_config == NULL)
-	{
-		LOG("Editor file configuration %s not found", path);
-	}
-	else
-	{
-		LOG("Found");
-		// TODO: iterate all members and save its states
-		show_demo_imgui = json_object_get_boolean(json_object(editor_config), "show_demo_imgui");
-		show_about_popup = json_object_get_boolean(json_object(editor_config), "show_about_popup");
-	}
-
-	return ret;
-}
-
-bool ModuleEditor::SaveEditorConfig(const char* path)
-{
-	bool ret = true;
-
-	// testing how array works ----
-
-	JSON_Array* arr = nullptr;
-	JSON_Value* va = json_value_init_object();
-	JSON_Object* obj = nullptr;
-	obj = json_value_get_object(va);
-
-	JSON_Value* vaa = json_value_init_array();
-	json_object_set_value(obj, "blabla", vaa);
-
-	//va = json_value_init_array();
-	//arr = json_value_get_array(vaa);
-
-	/*json_array_append_boolean(arr, true);
-	json_array_append_boolean(arr, true);
-	json_array_append_boolean(arr, false);
-	json_array_append_boolean(arr, true);
-	json_array_append_boolean(arr, true);*/
-
-	json_array_append_boolean(json_value_get_array(vaa), true);
-	json_array_append_boolean(json_value_get_array(vaa), true);
-	json_array_append_boolean(json_value_get_array(vaa), true);
-	json_array_append_boolean(json_value_get_array(vaa), true);
-
-	json_serialize_to_file_pretty(va, "testingArray.json");
-
-	return ret;
-}
+//bool ModuleEditor::SaveEditorConfig(const char* path)
+//{
+//	bool ret = true;
+//
+//	// testing how array works ----
+//
+//	JSON_Array* arr = nullptr;
+//	JSON_Value* va = json_value_init_object();
+//	JSON_Object* obj = nullptr;
+//	obj = json_value_get_object(va);
+//
+//	JSON_Value* vaa = json_value_init_array();
+//	json_object_set_value(obj, "blabla", vaa);
+//
+//	//va = json_value_init_array();
+//	//arr = json_value_get_array(vaa);
+//
+//	/*json_array_append_boolean(arr, true);
+//	json_array_append_boolean(arr, true);
+//	json_array_append_boolean(arr, false);
+//	json_array_append_boolean(arr, true);
+//	json_array_append_boolean(arr, true);*/
+//
+//	json_array_append_boolean(json_value_get_array(vaa), true);
+//	json_array_append_boolean(json_value_get_array(vaa), true);
+//	json_array_append_boolean(json_value_get_array(vaa), true);
+//	json_array_append_boolean(json_value_get_array(vaa), true);
+//
+//	json_serialize_to_file_pretty(va, "testingArray.json");
+//
+//	return ret;
+//}
 
 // ----------------------------------------------------------------------------
 
@@ -600,4 +689,229 @@ void ModuleEditor::ShowSoftwareInfo() const
 	// TODO: search how to query on runtime for mathgeolib, if is possible
 	ImGui::BulletText("MathGeoLib v1.5");
 	ImGui::Separator();
+}
+
+// DEBUG DATA MESH CLASS HELPER ----------------------------------------------------------------------------------------------------------
+
+//DebugDataMesh::DebugDataMesh() {}
+
+DebugDataMesh::DebugDataMesh(uint n_v, uint n_i) : n_vertices(n_v), n_idx(n_i) {}
+
+DebugDataMesh::~DebugDataMesh() {}
+
+void DebugDataMesh::GenAndFillBuffers()
+{
+	// gen --------------
+	glGenBuffers(1, &debug_v_normals_gl_id);
+	// debug draw faces normals buffers
+	glGenBuffers(1, &debug_f_vertices_gl_id);
+	glGenBuffers(1, &debug_f_normals_gl_id);
+
+	// FILL -------------
+	// WARNING: FOR NORMALS DEBUG ONLY, the normals for other calculations remains on normals float pointer ----
+	glBindBuffer(GL_ARRAY_BUFFER, debug_v_normals_gl_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * n_vertices, &debug_v_normals[0], GL_STATIC_DRAW);
+
+	// TODO: 2nd warning, be careful, since we only load and print triangulated faces this is good
+	glBindBuffer(GL_ARRAY_BUFFER, debug_f_vertices_gl_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * n_idx, &debug_f_vertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, debug_f_normals_gl_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * n_idx * 2, &debug_f_normals[0], GL_STATIC_DRAW);
+}
+
+void DebugDataMesh::ComputeVertexNormals(ModelData* goMesh, float length)
+{
+	// to draw lines, we need an array ready to what expects gldrawarrays
+	// start point and finish point
+	// TODO: improve this, thinking in deepth if this is possible with memcpy
+
+	if (debug_v_normals != nullptr) delete[] debug_v_normals;
+
+	debug_v_normals = new float[n_vertices * 6]; // 3 for startpoint, 3 more for endpoint
+
+	uint n_count = 0;
+	for (uint i = 0; i < n_vertices * 3; i += 3)
+	{
+		debug_v_normals[n_count] = goMesh->vertices[i]; // x
+		debug_v_normals[n_count + 1] = goMesh->vertices[i + 1]; // y
+		debug_v_normals[n_count + 2] = goMesh->vertices[i + 2]; //z
+
+		debug_v_normals[n_count + 3] = goMesh->vertices[i] + goMesh->normals[i] * length; // x
+		debug_v_normals[n_count + 4] = goMesh->vertices[i + 1] + goMesh->normals[i + 1] * length; // y
+		debug_v_normals[n_count + 5] = goMesh->vertices[i + 2] + goMesh->normals[i + 2] * length; // z
+
+		n_count += 6;
+	}
+
+}
+
+bool DebugDataMesh::ComputeFacesNormals(ModelData* goMesh, float length)
+{
+
+	if (n_idx % 3 != 0)
+	{
+		LOG("[Error] Could not compute face normals, faces with != 3 vertex");
+		return false;
+	}
+
+	if (debug_f_vertices != nullptr) delete[] debug_f_vertices;
+	if (debug_f_normals != nullptr) delete[] debug_f_normals;
+
+	debug_f_vertices = new float[n_idx];
+	debug_f_normals = new float[n_idx * 2];
+
+	uint i = 0;
+	uint n_count = 0;
+	for (; i < n_idx; i += 3)
+	{
+		// find the midface averaged vertex
+
+		float* v1 = &goMesh->vertices[goMesh->indices[i] * 3];     // get first face vertex
+		float* v2 = &goMesh->vertices[goMesh->indices[i + 1] * 3]; // get second face vertex
+		float* v3 = &goMesh->vertices[goMesh->indices[i + 2] * 3]; // get third face vertex
+
+		debug_f_vertices[i] = (v1[0] + v2[0] + v3[0]) / 3.0f; // x coord
+		debug_f_vertices[i + 1] = (v1[1] + v2[1] + v3[1]) / 3.0f; // y coord
+		debug_f_vertices[i + 2] = (v1[2] + v2[2] + v3[2]) / 3.0f; // z coord
+
+		// compute the averaged normal of the 3 vertex of each face
+
+		float* n1 = &goMesh->normals[goMesh->indices[i] * 3];     // get first face vertex normal
+		float* n2 = &goMesh->normals[goMesh->indices[i + 1] * 3]; // get second face vertex normal
+		float* n3 = &goMesh->normals[goMesh->indices[i + 2] * 3]; // get third face vertex normal
+
+		float avg_n[3];
+		avg_n[0] = (n1[0] + n2[0] + n3[0]) / 3.0f; // x coord
+		avg_n[1] = (n1[1] + n2[1] + n3[1]) / 3.0f; // y coord
+		avg_n[2] = (n1[2] + n2[2] + n3[2]) / 3.0f; // z coord
+
+		debug_f_normals[n_count] = debug_f_vertices[i]; // x
+		debug_f_normals[n_count + 1] = debug_f_vertices[i + 1]; // y
+		debug_f_normals[n_count + 2] = debug_f_vertices[i + 2]; //z
+
+		debug_f_normals[n_count + 3] = debug_f_vertices[i] + avg_n[0] * length; // x
+		debug_f_normals[n_count + 4] = debug_f_vertices[i + 1] + avg_n[1] * length; // y
+		debug_f_normals[n_count + 5] = debug_f_vertices[i + 2] + avg_n[2] * length; // z
+
+		n_count += 6;
+	}
+
+	return true;
+}
+
+bool DebugDataMesh::Clean()
+{
+
+	glDeleteBuffers(1, &debug_v_normals_gl_id);
+	glDeleteBuffers(1, &debug_f_vertices_gl_id);
+	glDeleteBuffers(1, &debug_f_normals_gl_id);
+
+	// delete all stored data
+
+	delete[] debug_v_normals;
+	delete[] debug_f_vertices;
+	delete[] debug_f_normals;
+
+	debug_v_normals = nullptr;
+	debug_f_vertices = nullptr;
+	debug_f_normals = nullptr;
+
+	debug_v_normals_gl_id = 0;
+	debug_f_vertices_gl_id = 0;
+	debug_f_normals_gl_id = 0;
+
+	return true;
+}
+
+bool DebugDataMesh::DebugRenderVertex(float pointSize)
+{
+	bool ret = true;
+
+	// draw points
+	glPointSize(pointSize);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glBindBuffer(GL_ARRAY_BUFFER, debug_v_normals_gl_id);
+	glVertexPointer(3, GL_FLOAT, 24, (void*)0); // stride: 4 bytes * 6 floats between each "vertex start point"
+
+	glDrawArrays(GL_POINTS, 0, n_vertices);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glPointSize(1.0f);
+
+	return ret;
+}
+
+bool DebugDataMesh::DebugRenderVertexNormals(float lineWidth)
+{
+	bool ret = true;
+
+	glLineWidth(lineWidth);
+
+	// draw normals lines
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glBindBuffer(GL_ARRAY_BUFFER, debug_v_normals_gl_id);
+	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+
+	glDrawArrays(GL_LINES, 0, n_vertices * 2);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glLineWidth(1.0f);
+
+	return ret;
+}
+
+bool DebugDataMesh::DebugRenderFacesVertex(float pointSize)
+{
+	bool ret = true;
+
+	// TODO: USE STRIDE with debug_f_normals_gl_id
+	// and delete debug_f_vertices data
+
+	glPointSize(pointSize);
+
+	// draw points
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glBindBuffer(GL_ARRAY_BUFFER, debug_f_vertices_gl_id);
+	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+
+	glDrawArrays(GL_POINTS, 0, n_idx);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glPointSize(1.0f);
+
+	return ret;
+}
+
+bool DebugDataMesh::DebugRenderFacesNormals(float lineWidth)
+{
+	bool ret = true;
+
+	glLineWidth(lineWidth);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	// draw lines
+	glBindBuffer(GL_ARRAY_BUFFER, debug_f_normals_gl_id);
+	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+
+	glDrawArrays(GL_LINES, 0, n_idx * 2);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glLineWidth(1.0f); // returns to default line width
+
+	return ret;
+}
+
+void DebugDataMesh::SetSizes(uint n_vx, uint n_indices)
+{
+	n_vertices = n_vx;
+	n_idx = n_indices;
 }

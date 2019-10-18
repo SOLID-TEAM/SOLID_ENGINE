@@ -24,13 +24,13 @@ public:
 	//UpdateTexture2DUVBuffer(uint uvs_id);
 	//UseShaderID(uint shader_program_id); 
 
-	bool DebugRenderVertex(float pointSize = 5.0f);
+	/*bool DebugRenderVertex(float pointSize = 5.0f);
 	bool DebugRenderVertexNormals(float lineWidth = 1.0f);
 	bool DebugRenderFacesVertex(float pointSize = 5.0f);
 	bool DebugRenderFacesNormals(float lineWidth = 1.0f);
 
 	void ComputeVertexNormals(float length = 0.4f);
-	bool ComputeFacesNormals(float length = 0.4f);
+	bool ComputeFacesNormals(float length = 0.4f);*/
 
 	bool RefillDebugVertexNormalsBuffers();
 	bool RefillDebugFacesNormalsBuffers();
@@ -64,10 +64,10 @@ public:
 	float* uvs = nullptr;
 	float* normals = nullptr;
 	// debug draw normals data ------
-	float* debug_v_normals = nullptr;
-	// maybe we dont need this for nothing more than debug ----
-	float* debug_f_vertices = nullptr; // this array should store 1 computed vertex(for draw the point on midface) for each face
-	float* debug_f_normals = nullptr; // and 3 startpoint and 3 endpoint of each face
+	//float* debug_v_normals = nullptr;
+	//// maybe we dont need this for nothing more than debug ----
+	//float* debug_f_vertices = nullptr; // this array should store 1 computed vertex(for draw the point on midface) for each face
+	//float* debug_f_normals = nullptr; // and 3 startpoint and 3 endpoint of each face
 	// --------------------------
 	// gl buffer ----------------
 	uint vertices_gl_id = 0;
@@ -75,25 +75,25 @@ public:
 	
 	uint uv_gl_id = 0;
 	uint normals_gl_id = 0;
-	// DEBUG DRAW PURPOSES BUFFERS ids -------------------------------
-	uint debug_v_normals_gl_id = 0;
-	// for debug draw faces points and line normals
-	// TODO: implement this with stride in one float array (debug_f_vertices and debug_f_normals float arrays)
-	uint debug_f_vertices_gl_id = 0;
-	uint debug_f_normals_gl_id = 0;
+	//// DEBUG DRAW PURPOSES BUFFERS ids -------------------------------
+	//uint debug_v_normals_gl_id = 0;
+	//// for debug draw faces points and line normals
+	//// TODO: implement this with stride in one float array (debug_f_vertices and debug_f_normals float arrays)
+	//uint debug_f_vertices_gl_id = 0;
+	//uint debug_f_normals_gl_id = 0;
 	// ---------------------------------------------------------------
 	uint texture_gl_id = 0;
 	//
 	float color[3] = { 1.0f,0.0f,1.0f };
 	// --------------------------
 	// world --------------------
-	mat4x4 transform;
-	vec4 position;
-	vec4 direction;
+	//mat4x4 transform;
+	//vec4 position;
+	//vec4 direction;
 
-	// TODO: testing here, print points and lines for vertex and faces normals debug draw
-	bool debug_vertex_normals = true;
-	bool debug_faces_normals = false;
+	//// TODO: testing here, print points and lines for vertex and faces normals debug draw
+	//bool debug_vertex_normals = true;
+	//bool debug_faces_normals = false;
 
 private:
 	// containers

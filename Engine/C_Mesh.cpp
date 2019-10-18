@@ -77,21 +77,21 @@ bool ComponentMesh::Draw()
 			glStencilFunc(GL_ALWAYS, 1, -1);
 		}
 
-		if (vp.debug_vertex_normals)
-		{
-			glColor4fv((float*)&vp.d_vertex_p_color);
-			mesh->DebugRenderVertex(vp.v_point_size);
-			glColor4fv((float*)&vp.d_vertex_l_color);
-			mesh->DebugRenderVertexNormals(vp.v_n_line_width);
-		}
-		//glColor3f(1.0f, 1.0f, 0.0f);
-		if (vp.debug_face_normals)
-		{
-			glColor4fv((float*)&vp.d_vertex_face_color);
-			mesh->DebugRenderFacesVertex(vp.f_v_point_size);
-			glColor4fv((float*)&vp.d_vertex_face_n_color);
-			mesh->DebugRenderFacesNormals(vp.f_n_line_width);
-		}
+		//if (vp.debug_vertex_normals)
+		//{
+		//	glColor4fv((float*)&vp.d_vertex_p_color);
+		//	mesh->DebugRenderVertex(vp.v_point_size);
+		//	glColor4fv((float*)&vp.d_vertex_l_color);
+		//	mesh->DebugRenderVertexNormals(vp.v_n_line_width);
+		//}
+		////glColor3f(1.0f, 1.0f, 0.0f);
+		//if (vp.debug_face_normals)
+		//{
+		//	glColor4fv((float*)&vp.d_vertex_face_color);
+		//	mesh->DebugRenderFacesVertex(vp.f_v_point_size);
+		//	glColor4fv((float*)&vp.d_vertex_face_n_color);
+		//	mesh->DebugRenderFacesNormals(vp.f_n_line_width);
+		//}
 	}
 
 	return true;

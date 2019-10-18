@@ -341,7 +341,7 @@ bool ModuleImporter::ReComputeVertexNormals(float length)
 {
 	bool ret = true;
 
-	std::vector<ModelData*>::const_iterator models = meshes.begin();
+	/*std::vector<ModelData*>::const_iterator models = meshes.begin();
 
 	for (; models != meshes.end(); ++models)
 	{
@@ -349,7 +349,7 @@ bool ModuleImporter::ReComputeVertexNormals(float length)
 		(*models)->RefillDebugVertexNormalsBuffers();
 	}
 
-	v_n_line_length = length;
+	v_n_line_length = length;*/
 
 	return ret;
 }
@@ -358,7 +358,7 @@ bool ModuleImporter::ReComputeFacesNormals(float length)
 {
 	bool ret = true;
 
-	std::vector<ModelData*>::const_iterator models = meshes.begin();
+	/*std::vector<ModelData*>::const_iterator models = meshes.begin();
 
 	for (; models != meshes.end(); ++models)
 	{
@@ -366,7 +366,7 @@ bool ModuleImporter::ReComputeFacesNormals(float length)
 		(*models)->RefillDebugFacesNormalsBuffers();
 	}
 
-	f_n_line_length = length;
+	f_n_line_length = length;*/
 
 	return ret;
 }

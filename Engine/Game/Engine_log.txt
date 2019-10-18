@@ -53,7 +53,20 @@ created mesh from 'pCube3' node, with mesh name: pCube2
 created mesh from 'pPlatonic1' node, with mesh name: pPlatonic1
 [Start] Loading Editor
 -------------- Application Update --------------
-[Info] Succesfully loaded last valid config from memory
+mesh found
+[Init] Info: hey, i need to recompute the normals!
+mesh found
+[Init] Info: hey, i need to recompute the normals!
+mesh found
+[Init] Info: hey, i need to recompute the normals!
+mesh found
+[Init] Info: hey, i need to recompute the normals!
+mesh found
+[Init] Info: hey, i need to recompute the normals!
+mesh found
+[Init] Info: hey, i need to recompute the normals!
+mesh found
+[Init] Info: hey, i need to recompute the normals!
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor
