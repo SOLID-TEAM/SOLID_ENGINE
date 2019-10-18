@@ -393,6 +393,9 @@
     <ClInclude Include="W_Inspector.h">
       <Filter>Sources\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="C_Material.h">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -613,6 +616,9 @@
     </ClCompile>
     <ClCompile Include="W_Inspector.cpp">
       <Filter>Sources\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="C_Material.cpp">
+      <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

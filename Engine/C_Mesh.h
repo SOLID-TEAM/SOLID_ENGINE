@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _C_MESH_H__
+#define _C_MESH_H__
 
 #include "Component.h"
 #include "ModelData.h"
@@ -40,3 +41,5 @@ public:
 	float v_n_line_length = 0.4f;
 	float f_n_line_length = 0.4f;
 };
+
+#endif // !_C_MESH_H__

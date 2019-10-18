@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _C_TRANSFORM_H__
+#define _C_TRANSFORM_H__
 
 #include "Component.h"
 
@@ -24,3 +25,8 @@ private:
 	float4x4 local_matrix = local_matrix.identity;
 	float4x4 global_matrix = global_matrix.identity;
 };
+
+#endif // !_C_TRANSFORM_H__
+
+
+
