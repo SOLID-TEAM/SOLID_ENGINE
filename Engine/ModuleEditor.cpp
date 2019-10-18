@@ -167,30 +167,7 @@ update_status ModuleEditor::Update(float dt)
 {
 	// check if we need to show debug normals on selected go
 	if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
-	{
-		// re-check for any change on line length while one option remains unchecked and
-		// the user modifies its length, but when we re-activate them only :)
-		if (last_go_precalc == selected_go && ddmesh != nullptr)
-		{
-			if (viewport_options.debug_vertex_normals)
-			{
-				if (ddmesh->v_last_ll != viewport_options.v_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
-				{
-					ddmesh->ComputeVertexNormals(selected_go->GetMeshes(), viewport_options.v_n_line_length);
-					ddmesh->FillVertexBuffer();
-				}
-			}
-
-			if (viewport_options.debug_face_normals)
-			{
-				if (ddmesh->f_last_ll != viewport_options.f_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
-				{
-					ddmesh->ComputeFacesNormals(selected_go->GetMeshes(), viewport_options.f_n_line_length);
-					ddmesh->FillFacesBuffer();
-				}
-			}
-		}
-	
+	{	
 		if (last_go_precalc != selected_go)
 		{
 			// check if the gameobject has meshes
@@ -317,6 +294,37 @@ update_status ModuleEditor::PostUpdate(float dt)
 	}
 
 	// -----------------------------------------------------
+
+	// CHECK BEFORE Render but after all editor logic --------------------------------------------------------------------------------------------
+	// -this block must to be moved and the end of this module (editor) or anyhere but before starts Draw loop -----------------------------------
+	// when a certain line goes to tall to short, last frame is printed before this calc ocurrs, something uggly but nothing wrong ---------------
+	// -------------------------------------------------------------------------------------------------------------------------------------------
+	// re-check for any change on line length while one option remains unchecked and
+	// the user modifies its length, but when we re-activate them only :)
+	// -------------------------------------------------------------------------------------------------------------------------------------------
+	if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
+	{
+		if (last_go_precalc == selected_go && ddmesh != nullptr)
+		{
+			if (viewport_options.debug_vertex_normals)
+			{
+				if (ddmesh->v_last_ll != viewport_options.v_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
+				{
+					ddmesh->ComputeVertexNormals(selected_go->GetMeshes(), viewport_options.v_n_line_length);
+					ddmesh->FillVertexBuffer();
+				}
+			}
+
+			if (viewport_options.debug_face_normals)
+			{
+				if (ddmesh->f_last_ll != viewport_options.f_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
+				{
+					ddmesh->ComputeFacesNormals(selected_go->GetMeshes(), viewport_options.f_n_line_length);
+					ddmesh->FillFacesBuffer();
+				}
+			}
+		}
+	}
 
 	return UPDATE_CONTINUE;
 }
