@@ -14,11 +14,28 @@
     },
     "Camera3D": {},
     "Input": {},
-    "ModuleRandom?": {},
     "": {},
+    "ModuleRandom?": {},
     "Textures": {},
-    "ModuleImporter": {
-        "wireframe": true,
+    "ModuleImporter": {},
+    "Editor": {
+        "show_about_popup": false,
+        "show_demo_imgui": false,
+        "sdfgd": [
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            4,
+            5,
+            5,
+            10
+        ],
+        "show_configuration": false,
+        "show_console": false,
+        "wireframe": false,
         "fill_mode": true,
         "debug_vertex_normals": true,
         "debug_face_normals": true,
@@ -65,24 +82,6 @@
         "f_n_line_width": 1,
         "v_n_line_length": 0.40000000596046448,
         "f_n_line_length": 0.40000000596046448
-    },
-    "Editor": {
-        "show_about_popup": false,
-        "show_demo_imgui": false,
-        "sdfgd": [
-            0,
-            2,
-            0,
-            0,
-            0,
-            0,
-            4,
-            5,
-            5,
-            10
-        ],
-        "show_configuration": false,
-        "show_console": false
     },
     "Renderer3D": {}
 }

@@ -7,6 +7,7 @@
 #include "Component.h"
 
 class W_Inspector;
+class ModelData;
 
 class GameObject
 {
@@ -24,6 +25,7 @@ public:
 
 	const char* GetName() const;
 	const std::vector<Component*>& GetComponents() const;
+	ModelData* GetMeshes() const;
 
 	bool CleanUp();
 

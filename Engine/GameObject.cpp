@@ -147,3 +147,22 @@ const std::vector<Component*>& GameObject::GetComponents() const
 {
 	return components;
 }
+
+// TODO: search and return a filled vector with all meshes
+ModelData* GameObject::GetMeshes() const
+{
+	// TODO: find if is another better way than search by name
+	for (std::vector<Component*>::const_iterator c = components.begin();
+		c != components.end(); ++c)
+	{
+		if ((*c)->name == "Mesh")
+		{
+			LOG("mesh found");
+			ComponentMesh* cm = dynamic_cast<ComponentMesh*>(*c);
+			
+			return cm->mesh;
+		}
+	}
+
+	return nullptr;
+}

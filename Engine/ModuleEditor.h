@@ -20,6 +20,73 @@ class W_Inspector;
 // TODO: change this/remove define
 #define MAX_STORED_FPS 100
 
+struct ViewPortOptions
+{
+	bool wireframe = false;
+	bool outline = false;
+	bool fill_faces = true;
+	bool debug_vertex_normals = true;
+	bool debug_face_normals = true;
+	ImVec4 fill_color = ImVec4(1.0f, 0.35f, 1.0f, 1.0f);
+	ImVec4 wire_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);;
+	ImVec4 d_vertex_p_color = ImVec4(0.59f, 0.22f, 1.0f, 1.0f);
+	ImVec4 d_vertex_l_color = ImVec4(0.2f, 1.0f, 0.0f, 1.0f);
+	ImVec4 d_vertex_face_color = ImVec4(1.0f, 0.5f, 0.2f, 1.0f);
+	ImVec4 d_vertex_face_n_color = ImVec4(0.0f, 0.5f, 1.0f, 1.0f);
+
+	float wire_line_width = 1.0f;
+	float v_point_size = 5.0f;
+	float f_v_point_size = 5.0f;
+	float v_n_line_width = 1.0f;
+	float f_n_line_width = 1.0f;
+
+	float v_n_line_length = 0.4f;
+	float f_n_line_length = 0.4f;
+};
+
+class DebugDataMesh
+{
+public:
+	//DebugDataMesh();
+	DebugDataMesh(uint n_vertices, uint n_indices);
+	~DebugDataMesh();
+
+	// needs to be called when all normals are computed
+	void GenAndFillBuffers();
+
+	bool Clean();
+
+	void ComputeVertexNormals(ModelData* goMesh, float length);
+	bool ComputeFacesNormals(ModelData* goMesh, float length);
+
+	bool DebugRenderVertex(float pointSize);
+	bool DebugRenderVertexNormals(float lineWidth);
+	bool DebugRenderFacesVertex(float pointSize);
+	bool DebugRenderFacesNormals(float lineWidth);
+
+	void SetSizes(uint n_vertices, uint n_indices);
+
+private:
+	// meshes debug visualization (vertex and face normals)
+	uint n_vertices = 0;
+	uint n_idx = 0;
+	// debug draw normals data ------
+	float* debug_v_normals = nullptr;
+	// maybe we dont need this for nothing more than debug ----
+	float* debug_f_vertices = nullptr; // this array should store 1 computed vertex(for draw the point on midface) for each face
+	float* debug_f_normals = nullptr; // and 3 startpoint and 3 endpoint of each face
+	// DEBUG DRAW PURPOSES BUFFERS ids -------------------------------
+	uint debug_v_normals_gl_id = 0;
+	// for debug draw faces points and line normals
+	// TODO: implement this with stride in one float array (debug_f_vertices and debug_f_normals float arrays)
+	uint debug_f_vertices_gl_id = 0;
+	uint debug_f_normals_gl_id = 0;
+
+	//// TODO: testing here, print points and lines for vertex and faces normals debug draw
+	//bool debug_vertex_normals = true;
+	//bool debug_faces_normals = false;
+};
+
 class ModuleEditor : public Module
 {
 public:
@@ -39,13 +106,15 @@ public:
 
 	update_status PostUpdate(float dt);
 
+	update_status Draw(); // for viewport draw loop
+
 	bool Save(Config& config);
 
 	void Load(Config& config);
 
-	bool SaveEditorConfig(const char* path);
+	/*bool SaveEditorConfig(const char* path);
 
-	bool LoadEditorConfig(const char* path);
+	bool LoadEditorConfig(const char* path);*/
 
 	// temporaly utils for imgui prefab functions
 	void HelpMarker(const char* desc) const;
@@ -77,7 +146,7 @@ private:
 	bool show_restore_popup = false;
 	bool show_demo_imgui = false;
 	bool show_about_popup = false;
-	bool show_console = false;
+	bool show_console = true;
 	bool show_configuration = false;
 
 public:
@@ -90,8 +159,16 @@ public:
 	W_Scene*		w_scene = nullptr;
 	W_Inspector*	w_inspector = nullptr;
 
+	// WARNING: TODO: when we delete gameobjects, remember to unlink all pointers
 	// hierarchy / selected go
 	GameObject* selected_go = nullptr;
+	ViewPortOptions viewport_options;
+	// if we need store more debug data, pass this to a vector/list
+	DebugDataMesh* ddmesh = nullptr; // debug data mesh
+	// if the gameobject itself has more than one mesh (not its childs)
+	std::vector<DebugDataMesh*> ddmeshes;
+	// store last precalculated go from debug normals
+	GameObject* last_go_precalc = nullptr;
 };
 
 #endif // !_MODULE_EDITOR_H__

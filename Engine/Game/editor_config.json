@@ -14,24 +14,41 @@
     },
     "Camera3D": {},
     "Input": {},
-    "ModuleRandom?": {},
     "": {},
+    "ModuleRandom?": {},
     "Textures": {},
-    "ModuleImporter": {
-        "wireframe": true,
+    "ModuleImporter": {},
+    "Editor": {
+        "show_about_popup": false,
+        "show_demo_imgui": false,
+        "sdfgd": [
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            4,
+            5,
+            5,
+            10
+        ],
+        "show_configuration": false,
+        "show_console": true,
+        "wireframe": false,
         "fill_mode": true,
-        "debug_vertex_normals": false,
-        "debug_face_normals": false,
+        "debug_vertex_normals": true,
+        "debug_face_normals": true,
         "fill_color": [
             1,
-            0.99998998641967773,
+            0.34999999403953552,
             1,
             1
         ],
         "wire_color": [
             1,
-            0,
-            0.85294103622436523,
+            1,
+            1,
             1
         ],
         "d_vertex_p_color": [
@@ -65,24 +82,6 @@
         "f_n_line_width": 1,
         "v_n_line_length": 0.40000000596046448,
         "f_n_line_length": 0.40000000596046448
-    },
-    "Editor": {
-        "show_about_popup": false,
-        "show_demo_imgui": false,
-        "sdfgd": [
-            0,
-            2,
-            0,
-            0,
-            0,
-            0,
-            4,
-            5,
-            5,
-            10
-        ],
-        "show_configuration": true,
-        "show_console": true
     },
     "Renderer3D": {}
 }
