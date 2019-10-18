@@ -74,7 +74,14 @@ void W_Scene::DebugMenu()
 	ImGui::SetNextItemWidth(150);
 	if (ImGui::SliderFloat("##d_vertex_line_lenght", &vp.v_n_line_length, config.min_n_length, config.max_n_length, "%.1f", 1.0f))
 	{
-		App->importer->ReComputeVertexNormals(vp.v_n_line_length);
+		if (vp.debug_vertex_normals)
+		{
+			if (App->editor->ddmesh != nullptr)
+			{
+				App->editor->ddmesh->ComputeVertexNormals(App->editor->selected_go->GetMeshes(), vp.v_n_line_length);
+				App->editor->ddmesh->FillVertexBuffer();
+			}
+		}
 	}
 
 	ImGui::Separator();
@@ -89,6 +96,13 @@ void W_Scene::DebugMenu()
 	ImGui::SetNextItemWidth(150);
 	if (ImGui::SliderFloat("##d_face_line_lenght", &vp.f_n_line_length, config.min_n_length, config.max_n_length, "%.1f", 1.0f))
 	{
-		App->importer->ReComputeFacesNormals(vp.f_n_line_length);
+		if (vp.debug_face_normals)
+		{
+			if (App->editor->ddmesh != nullptr)
+			{
+				App->editor->ddmesh->ComputeFacesNormals(App->editor->selected_go->GetMeshes(), vp.f_n_line_length);
+				App->editor->ddmesh->FillFacesBuffer();
+			}
+		}
 	}
 }

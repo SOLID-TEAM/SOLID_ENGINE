@@ -157,12 +157,13 @@ ModelData* GameObject::GetMeshes() const
 	{
 		if ((*c)->name == "Mesh")
 		{
-			LOG("mesh found");
+			/*LOG("mesh found");*/
 			ComponentMesh* cm = dynamic_cast<ComponentMesh*>(*c);
 			
 			return cm->mesh;
 		}
 	}
+	LOG("selected go doesn't have any meshes");
 
 	return nullptr;
 }

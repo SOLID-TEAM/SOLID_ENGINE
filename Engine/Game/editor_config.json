@@ -33,7 +33,7 @@
             5,
             10
         ],
-        "show_configuration": false,
+        "show_configuration": true,
         "show_console": true,
         "wireframe": false,
         "fill_mode": true,

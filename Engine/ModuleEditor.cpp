@@ -172,14 +172,11 @@ update_status ModuleEditor::Update(float dt)
 		if (last_go_precalc != selected_go)
 		{
 			// check if the gameobject has meshes
-			bool hasmeshes = false;
 			ModelData* smesh = selected_go->GetMeshes();
-			if (smesh != nullptr)
-				hasmeshes = true;
 
 			// we calc the two modes at once for the selected go
 			// but we filter what to print from bools cols
-			if (hasmeshes)
+			if (smesh != nullptr)
 			{
 				LOG("[Init] Info: hey, i need to recompute the normals!");
 				
@@ -198,8 +195,9 @@ update_status ModuleEditor::Update(float dt)
 				ddmesh->ComputeFacesNormals(smesh, viewport_options.f_n_line_length);
 
 				// generate opengl buffers and fill -------------------------
-
-				ddmesh->GenAndFillBuffers();
+				ddmesh->GenBuffers();
+				ddmesh->FillVertexBuffer();
+				ddmesh->FillFacesBuffer();
 			}
 			else
 				LOG("[Error] Warning: gameobject without meshes to debug");
@@ -507,17 +505,22 @@ void ModuleEditor::Load(Config& config)
 	viewport_options.v_n_line_width = config.GetFloat("v_n_line_width", viewport_options.v_n_line_width);
 	viewport_options.f_n_line_width = config.GetFloat("f_n_line_width", viewport_options.f_n_line_width);
 
-	// TODO!!!!
 	// if we have meshes, and line length doesnt match, recompute normals ----
-	/*float temp_v = viewport_options.v_n_line_length;
+	float temp_v = viewport_options.v_n_line_length;
 	viewport_options.v_n_line_length = config.GetFloat("v_n_line_length", viewport_options.v_n_line_length);
-	if (temp_v != viewport_options.v_n_line_length)
-		ReComputeVertexNormals(viewport_options.v_n_line_length);
+	if (temp_v != viewport_options.v_n_line_length && ddmesh != nullptr && selected_go != nullptr)
+	{
+		 ddmesh->ComputeVertexNormals(selected_go->GetMeshes(),viewport_options.v_n_line_length);
+		 ddmesh->FillVertexBuffer();
+	}
 
 	float temp_f = viewport_options.f_n_line_length;
 	viewport_options.f_n_line_length = config.GetFloat("f_n_line_length", viewport_options.f_n_line_length);
-	if (temp_f != f_n_line_length)
-		ReComputeFacesNormals(viewport_options.f_n_line_length);*/
+	if (temp_f != viewport_options.f_n_line_length && ddmesh != nullptr && selected_go != nullptr)
+	{
+		ddmesh->ComputeFacesNormals(selected_go->GetMeshes(),viewport_options.f_n_line_length);
+		ddmesh->FillFacesBuffer();
+	}
 	// -----------------------------------------------------------------------
 
 
@@ -699,22 +702,28 @@ DebugDataMesh::DebugDataMesh(uint n_v, uint n_i) : n_vertices(n_v), n_idx(n_i) {
 
 DebugDataMesh::~DebugDataMesh() {}
 
-void DebugDataMesh::GenAndFillBuffers()
+void DebugDataMesh::GenBuffers()
 {
 	// gen --------------
 	glGenBuffers(1, &debug_v_normals_gl_id);
 	// debug draw faces normals buffers
-	glGenBuffers(1, &debug_f_vertices_gl_id);
+	//glGenBuffers(1, &debug_f_vertices_gl_id);
 	glGenBuffers(1, &debug_f_normals_gl_id);
+}
 
+void DebugDataMesh::FillVertexBuffer()
+{
 	// FILL -------------
 	// WARNING: FOR NORMALS DEBUG ONLY, the normals for other calculations remains on normals float pointer ----
 	glBindBuffer(GL_ARRAY_BUFFER, debug_v_normals_gl_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * n_vertices, &debug_v_normals[0], GL_STATIC_DRAW);
+}
 
+void DebugDataMesh::FillFacesBuffer()
+{
 	// TODO: 2nd warning, be careful, since we only load and print triangulated faces this is good
-	glBindBuffer(GL_ARRAY_BUFFER, debug_f_vertices_gl_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * n_idx, &debug_f_vertices[0], GL_STATIC_DRAW);
+	////glBindBuffer(GL_ARRAY_BUFFER, debug_f_vertices_gl_id);
+	////glBufferData(GL_ARRAY_BUFFER, sizeof(float) * n_idx, &debug_f_vertices[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, debug_f_normals_gl_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * n_idx * 2, &debug_f_normals[0], GL_STATIC_DRAW);
 }
@@ -754,10 +763,10 @@ bool DebugDataMesh::ComputeFacesNormals(ModelData* goMesh, float length)
 		return false;
 	}
 
-	if (debug_f_vertices != nullptr) delete[] debug_f_vertices;
+	/*if (debug_f_vertices != nullptr) delete[] debug_f_vertices;*/
 	if (debug_f_normals != nullptr) delete[] debug_f_normals;
 
-	debug_f_vertices = new float[n_idx];
+	//debug_f_vertices = new float[n_idx];
 	debug_f_normals = new float[n_idx * 2];
 
 	uint i = 0;
@@ -770,9 +779,10 @@ bool DebugDataMesh::ComputeFacesNormals(ModelData* goMesh, float length)
 		float* v2 = &goMesh->vertices[goMesh->indices[i + 1] * 3]; // get second face vertex
 		float* v3 = &goMesh->vertices[goMesh->indices[i + 2] * 3]; // get third face vertex
 
-		debug_f_vertices[i] = (v1[0] + v2[0] + v3[0]) / 3.0f; // x coord
-		debug_f_vertices[i + 1] = (v1[1] + v2[1] + v3[1]) / 3.0f; // y coord
-		debug_f_vertices[i + 2] = (v1[2] + v2[2] + v3[2]) / 3.0f; // z coord
+		float debug_f_vertices[3];
+		debug_f_vertices[0] = (v1[0] + v2[0] + v3[0]) / 3.0f; // x coord
+		debug_f_vertices[1] = (v1[1] + v2[1] + v3[1]) / 3.0f; // y coord
+		debug_f_vertices[2] = (v1[2] + v2[2] + v3[2]) / 3.0f; // z coord
 
 		// compute the averaged normal of the 3 vertex of each face
 
@@ -785,13 +795,13 @@ bool DebugDataMesh::ComputeFacesNormals(ModelData* goMesh, float length)
 		avg_n[1] = (n1[1] + n2[1] + n3[1]) / 3.0f; // y coord
 		avg_n[2] = (n1[2] + n2[2] + n3[2]) / 3.0f; // z coord
 
-		debug_f_normals[n_count] = debug_f_vertices[i]; // x
-		debug_f_normals[n_count + 1] = debug_f_vertices[i + 1]; // y
-		debug_f_normals[n_count + 2] = debug_f_vertices[i + 2]; //z
+		debug_f_normals[n_count] = debug_f_vertices[0]; // x
+		debug_f_normals[n_count + 1] = debug_f_vertices[1]; // y
+		debug_f_normals[n_count + 2] = debug_f_vertices[2]; //z
 
-		debug_f_normals[n_count + 3] = debug_f_vertices[i] + avg_n[0] * length; // x
-		debug_f_normals[n_count + 4] = debug_f_vertices[i + 1] + avg_n[1] * length; // y
-		debug_f_normals[n_count + 5] = debug_f_vertices[i + 2] + avg_n[2] * length; // z
+		debug_f_normals[n_count + 3] = debug_f_vertices[0] + avg_n[0] * length; // x
+		debug_f_normals[n_count + 4] = debug_f_vertices[1] + avg_n[1] * length; // y
+		debug_f_normals[n_count + 5] = debug_f_vertices[2] + avg_n[2] * length; // z
 
 		n_count += 6;
 	}
@@ -803,21 +813,21 @@ bool DebugDataMesh::Clean()
 {
 
 	glDeleteBuffers(1, &debug_v_normals_gl_id);
-	glDeleteBuffers(1, &debug_f_vertices_gl_id);
+	//glDeleteBuffers(1, &debug_f_vertices_gl_id);
 	glDeleteBuffers(1, &debug_f_normals_gl_id);
 
 	// delete all stored data
 
 	delete[] debug_v_normals;
-	delete[] debug_f_vertices;
+	//delete[] debug_f_vertices;
 	delete[] debug_f_normals;
 
 	debug_v_normals = nullptr;
-	debug_f_vertices = nullptr;
+	//debug_f_vertices = nullptr;
 	debug_f_normals = nullptr;
 
 	debug_v_normals_gl_id = 0;
-	debug_f_vertices_gl_id = 0;
+	//debug_f_vertices_gl_id = 0;
 	debug_f_normals_gl_id = 0;
 
 	return true;
@@ -869,16 +879,13 @@ bool DebugDataMesh::DebugRenderFacesVertex(float pointSize)
 {
 	bool ret = true;
 
-	// TODO: USE STRIDE with debug_f_normals_gl_id
-	// and delete debug_f_vertices data
-
 	glPointSize(pointSize);
 
 	// draw points
 	glEnableClientState(GL_VERTEX_ARRAY);
 
-	glBindBuffer(GL_ARRAY_BUFFER, debug_f_vertices_gl_id);
-	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, debug_f_normals_gl_id);
+	glVertexPointer(3, GL_FLOAT, 24, (void*)0);
 
 	glDrawArrays(GL_POINTS, 0, n_idx);
 
