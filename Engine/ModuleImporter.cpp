@@ -63,134 +63,18 @@ bool ModuleImporter::Start(Config& config)
 
 update_status ModuleImporter::Update(float dt)
 {
-	//std::vector<ModelData*>::iterator start_meshes = startup_meshes.begin();
-	//for (; start_meshes != startup_meshes.end(); ++start_meshes)
-	//{
-	//	(*start_meshes)->GenerateBuffers(); // gen
-	//	(*start_meshes)->UpdateBuffers(); // fill
-	//}
-
-	//if(startup_meshes.size() > 0)
-	//	startup_meshes.clear();
-
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleImporter::PostUpdate(float dt)
 {
-	// Start Buffer Frame ----------------------------------
-	//glBindFramebuffer(GL_FRAMEBUFFER, App->renderer3D->frame_buffer_id);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	//glClearColor(0.1, 0.1, 0.1, 1.f);
-	//// Object Draw Stencil Settings ------------------------
-	//glStencilFunc(GL_ALWAYS, 1, -1);
-	//glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-	// -----------------------------------------------------
-
-	/*App->test->main_grid->Render();
-
-	for (uint i = 0; i < MAX_LIGHTS; ++i)
-		App->renderer3D->lights[i].Render();*/
-
-	//std::vector<ModelData*>::iterator model = meshes.begin();
-
-	//for (; model != meshes.end(); ++model)
-	//{
-	//	// TODO NEXT: implement new render functionality to pass all this shit (colors, draw modes etc)
-
-	//	if (fill_faces && wireframe)
-	//	{
-	//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//		glEnable(GL_POLYGON_OFFSET_FILL);
-	//		glPolygonOffset(1.0f, 0.375f);
-
-	//		glColor4fv((float*)&fill_color);
-
-	//		(*model)->Render();
-
-	//		glLineWidth(1.0f);
-	//		glDisable(GL_POLYGON_OFFSET_FILL);
-
-	//	}
-	//	else if (fill_faces)
-	//	{
-	//		glColor4fv((float*)&fill_color);
-	//		(*model)->Render();
-	//	}
-
-	//	if (wireframe)
-	//	{
-	//		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	//		glLineWidth(wire_line_width);
-	//		glColor4fv((float*)&wire_color);
-
-	//		(*model)->RenderWireframe();
-
-	//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//	}
-
-	//	if (outline)
-	//	{
-	//		glStencilFunc(GL_NOTEQUAL, 1, -1);
-	//		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	//		glLineWidth(wire_line_width);
-	//		glColor4fv((float*)&wire_color);
-
-	//		glLineWidth(7.f);
-	//		(*model)->RenderWireframe();
-	//		glLineWidth(1.f);
-
-	//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//		glStencilFunc(GL_ALWAYS, 1, -1);
-	//	}
-
-	//	if (debug_vertex_normals)
-	//	{
-	//		glColor4fv((float*)&d_vertex_p_color);
-	//		(*model)->DebugRenderVertex(v_point_size);
-	//		glColor4fv((float*)&d_vertex_l_color);
-	//		(*model)->DebugRenderVertexNormals(v_n_line_width);
-	//	}
-	//	//glColor3f(1.0f, 1.0f, 0.0f);
-	//	if (debug_face_normals)
-	//	{
-	//		glColor4fv((float*)&d_vertex_face_color);
-	//		(*model)->DebugRenderFacesVertex(f_v_point_size);
-	//		glColor4fv((float*)&d_vertex_face_n_color);
-	//		(*model)->DebugRenderFacesNormals(f_n_line_width);
-	//	}
-
-	//	/*for (int i = 0; i < (*model)->_idx_size; ++i)
-	//		LOG("%u", (*model)->indices[i]);*/
-
-	//}
-
-	// Default Stencil Settings ----------------------------
-	//glStencilFunc(GL_ALWAYS, 1, 0);
-	//glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-
-	//// Start Buffer Frame ----------------------------------
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//glBindTexture(GL_TEXTURE_2D, App->renderer3D->texture_id);
-	//glGenerateMipmap(GL_TEXTURE_2D);
-	//glBindTexture(GL_TEXTURE_2D, 0);
-	// -----------------------------------------------------
-
+	
 	return UPDATE_CONTINUE;
 }
 
 bool ModuleImporter::CleanUp()
 {
-	/*std::vector<ModelData*>::iterator it = meshes.begin();
-
-	uint count = 0;
-	for (; it != meshes.end(); ++it)
-	{
-		delete meshes[count];
-		++count;
-	}*/
+	
 
 	aiDetachAllLogStreams();
 
@@ -267,8 +151,9 @@ void ModuleImporter::CopyMesh(aiNode* node, GameObject* new_go)
 
 		CopyDataToMesh(cm->mesh, imported_scene->mMeshes[node->mMeshes[i]]);
 
-		// TODO: change how the length for debug normals are passed, maybe store on another place
-		m->Start(v_n_line_length, f_n_line_length);
+
+		// start mesh (gen buffers and fill)
+		m->Start();
 		
 		LOG("created mesh from '%s' node, with mesh name: %s", node->mName.C_Str(), m->name.c_str());
 	}
@@ -337,39 +222,6 @@ void ModuleImporter::CopyDataToMesh(ModelData* m, aiMesh* assMesh) const
 	}
 }
 
-bool ModuleImporter::ReComputeVertexNormals(float length)
-{
-	bool ret = true;
-
-	/*std::vector<ModelData*>::const_iterator models = meshes.begin();
-
-	for (; models != meshes.end(); ++models)
-	{
-		(*models)->ComputeVertexNormals(length);
-		(*models)->RefillDebugVertexNormalsBuffers();
-	}
-
-	v_n_line_length = length;*/
-
-	return ret;
-}
-
-bool ModuleImporter::ReComputeFacesNormals(float length)
-{
-	bool ret = true;
-
-	/*std::vector<ModelData*>::const_iterator models = meshes.begin();
-
-	for (; models != meshes.end(); ++models)
-	{
-		(*models)->ComputeFacesNormals(length);
-		(*models)->RefillDebugFacesNormalsBuffers();
-	}
-
-	f_n_line_length = length;*/
-
-	return ret;
-}
 
 ModelData* ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, vec3 size)
 {
@@ -465,87 +317,12 @@ bool ModuleImporter::Save(Config& config)
 {
 	bool ret = true;
 
-	/*ret = config.AddBool("wireframe", wireframe);
-	ret = config.AddBool("fill_mode", fill_faces);
-	ret = config.AddBool("debug_vertex_normals", debug_vertex_normals);
-	ret = config.AddBool("debug_face_normals", debug_face_normals);
-
-	ret = config.AddFloatArray("fill_color", (float*)&fill_color, 4);
-	ret = config.AddFloatArray("wire_color", (float*)&wire_color, 4);
-	ret = config.AddFloatArray("d_vertex_p_color", (float*)&d_vertex_p_color, 4);
-	ret = config.AddFloatArray("d_vertex_l_color", (float*)&d_vertex_l_color, 4);
-	ret = config.AddFloatArray("d_vertex_face_color", (float*)&d_vertex_face_color, 4);
-	ret = config.AddFloatArray("d_vertex_face_n_color", (float*)&d_vertex_face_n_color, 4);
-
-	ret = config.AddFloat("wire_line_width", wire_line_width);
-	ret = config.AddFloat("v_point_size", v_point_size);
-	ret = config.AddFloat("f_v_point_size", f_v_point_size);
-	ret = config.AddFloat("v_n_line_width", v_n_line_width);
-	ret = config.AddFloat("f_n_line_width", f_n_line_width);
-
-	ret = config.AddFloat("v_n_line_length", v_n_line_length);
-	ret = config.AddFloat("f_n_line_length", f_n_line_length);*/
 
 	return ret;
 }
 
 void ModuleImporter::Load(Config& config)
 {
-
-	//wireframe = config.GetBool("wireframe", wireframe);
-	//fill_faces = config.GetBool("fill_mode", fill_faces);
-	//debug_vertex_normals = config.GetBool("debug_vertex_normals", debug_vertex_normals);
-	//debug_face_normals = config.GetBool("debug_face_normals", debug_face_normals);
-
-	//// load colors ----------------------------------------------------------------------------------
-	//fill_color.x = config.GetFloat("fill_color", fill_color.x, 0);
-	//fill_color.y = config.GetFloat("fill_color", fill_color.y, 1);
-	//fill_color.z = config.GetFloat("fill_color", fill_color.z, 2);
-	//fill_color.w = config.GetFloat("fill_color", fill_color.w, 3);
-
-	//wire_color.x = config.GetFloat("wire_color", wire_color.x, 0);
-	//wire_color.y = config.GetFloat("wire_color", wire_color.y, 1);
-	//wire_color.z = config.GetFloat("wire_color", wire_color.z, 2);
-	//wire_color.w = config.GetFloat("wire_color", wire_color.w, 3);
-
-	//d_vertex_p_color.x = config.GetFloat("d_vertex_p_color", d_vertex_p_color.x, 0);
-	//d_vertex_p_color.y = config.GetFloat("d_vertex_p_color", d_vertex_p_color.y, 1);
-	//d_vertex_p_color.z = config.GetFloat("d_vertex_p_color", d_vertex_p_color.z, 2);
-	//d_vertex_p_color.w = config.GetFloat("d_vertex_p_color", d_vertex_p_color.w, 3);
-
-	//d_vertex_l_color.x = config.GetFloat("d_vertex_l_color", d_vertex_l_color.x, 0);
-	//d_vertex_l_color.y = config.GetFloat("d_vertex_l_color", d_vertex_l_color.y, 1);
-	//d_vertex_l_color.z = config.GetFloat("d_vertex_l_color", d_vertex_l_color.z, 2);
-	//d_vertex_l_color.w = config.GetFloat("d_vertex_l_color", d_vertex_l_color.w, 3);
-
-	//d_vertex_face_color.x = config.GetFloat("d_vertex_face_color", d_vertex_face_color.x, 0);
-	//d_vertex_face_color.y = config.GetFloat("d_vertex_face_color", d_vertex_face_color.y, 1);
-	//d_vertex_face_color.z = config.GetFloat("d_vertex_face_color", d_vertex_face_color.z, 2);
-	//d_vertex_face_color.w = config.GetFloat("d_vertex_face_color", d_vertex_face_color.w, 3);
-
-	//d_vertex_face_n_color.x = config.GetFloat("d_vertex_face_n_color", d_vertex_face_color.x, 0);
-	//d_vertex_face_n_color.y = config.GetFloat("d_vertex_face_n_color", d_vertex_face_color.y, 1);
-	//d_vertex_face_n_color.z = config.GetFloat("d_vertex_face_n_color", d_vertex_face_color.z, 2);
-	//d_vertex_face_n_color.w = config.GetFloat("d_vertex_face_n_color", d_vertex_face_color.w, 3);
-	//// -----------------------------------------------------------------------------------------------
-
-	//wire_line_width = config.GetFloat("wire_line_width", wire_line_width);
-	//v_point_size = config.GetFloat("v_point_size", v_point_size);
-	//f_v_point_size = config.GetFloat("f_v_point_size", f_v_point_size);
-	//v_n_line_width = config.GetFloat("v_n_line_width", v_n_line_width);
-	//f_n_line_width = config.GetFloat("f_n_line_width", f_n_line_width);
-
-	//// if we have meshes, and line length doesnt match, recompute normals ----
-	//float temp_v = v_n_line_length;
-	//v_n_line_length = config.GetFloat("v_n_line_length", v_n_line_length);
-	//if (temp_v != v_n_line_length)
-	//	ReComputeVertexNormals(v_n_line_length);
-
-	//float temp_f = f_n_line_length;
-	//f_n_line_length = config.GetFloat("f_n_line_length", f_n_line_length);
-	//if (temp_f != f_n_line_length)
-	//	ReComputeFacesNormals(f_n_line_length);
-	//// -----------------------------------------------------------------------
 
 }
 

@@ -52,7 +52,9 @@ public:
 	~DebugDataMesh();
 
 	// needs to be called when all normals are computed
-	void GenAndFillBuffers();
+	void GenBuffers();
+	void FillVertexBuffer();
+	void FillFacesBuffer();
 
 	bool Clean();
 
@@ -73,18 +75,25 @@ private:
 	// debug draw normals data ------
 	float* debug_v_normals = nullptr;
 	// maybe we dont need this for nothing more than debug ----
-	float* debug_f_vertices = nullptr; // this array should store 1 computed vertex(for draw the point on midface) for each face
+	//float* debug_f_vertices = nullptr; // this array should store 1 computed vertex(for draw the point on midface) for each face
 	float* debug_f_normals = nullptr; // and 3 startpoint and 3 endpoint of each face
 	// DEBUG DRAW PURPOSES BUFFERS ids -------------------------------
 	uint debug_v_normals_gl_id = 0;
 	// for debug draw faces points and line normals
 	// TODO: implement this with stride in one float array (debug_f_vertices and debug_f_normals float arrays)
-	uint debug_f_vertices_gl_id = 0;
+	//uint debug_f_vertices_gl_id = 0;
 	uint debug_f_normals_gl_id = 0;
 
-	//// TODO: testing here, print points and lines for vertex and faces normals debug draw
-	//bool debug_vertex_normals = true;
-	//bool debug_faces_normals = false;
+public:
+	// store last line lengths for vertex and faces normals
+	// evades when a user check one of the two modes, and change line length
+	// for the deactivated one
+	// Since we calc both when one option are switched to on, we need to perform
+	// a second check if the ddmesh is still active for same go
+	// and the precalculated length doesn't match with the current one
+	float f_last_ll = 0.0f;
+	float v_last_ll = 0.0f;
+	
 };
 
 class ModuleEditor : public Module
