@@ -7726,35 +7726,65 @@ void ImGui::Columns(int columns_count, const char* id, bool border)
 
 #include <string>
 
-void ImGui::Title(const char* title , int hierarchy)
+void ImGui::SetSeparationType(ImGuiSeparationType type)
 {
+    ImGui::GetStyle().SeparationType = type;
+}
+
+void ImGui::Title(const char* title , int hierarchy) // Type 1: Panel | 2: Menu
+{
+    ImGuiStyle style = ImGui::GetStyle();
     std::string final_title(title);
 
-    if (hierarchy != 1 && hierarchy != 2)
+    if (hierarchy < 1)
         hierarchy = 1;
 
-    switch (hierarchy)
+    ImGui::NewLine();
+
+    if (hierarchy == 1)
     {
-    case 1:
-        final_title = std::string("   ") + final_title;
-        break;
-    case 2:
-        final_title = std::string("      ") + final_title;
-        break;
+        ImGui::SameLine(style.TitleSeparation);
+        //final_title = std::string("   ") + final_title;
     }
+    else
+    {
+        ImGui::SameLine(style.TitleSeparation + style.SubTitleSeparation * (hierarchy - 1));
+        //final_title = std::string("      ") + final_title;
+    }
+
+    float window_width = ImGui::GetWindowContentRegionWidth();
+
+    float separation;
+
+    if (style.SeparationType == ImGuiSeparationType::ImGui_WindowSeparation)
+    {
+        if (window_width < 318)
+        {
+            separation = window_width - 168;
+        }
+        else
+        {
+            separation = 150;
+        }
+    }
+    else if (style.SeparationType == ImGuiSeparationType::ImGui_MenuSeparation)
+    {
+        separation = 150;
+    }
+
     ImGui::AlignTextToFramePadding();
-    ImGui::Text(final_title.c_str() ); ImGui::SameLine(ImGui::GetStyle().DefaultColumnWidth);   // Fake column
+    ImGui::Text(final_title.c_str() ); ImGui::SameLine(separation);   // Fake column
     ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());        // Next Item Width
 }
 
 void ImGui::PushColumnWidth( float width)
 {
-    ImGui::GetStyle().DefaultColumnWidth = width;
+    ImGui::GetStyle().MaxColumnSeparation = width;
 }
 
 void ImGui::PopColumnWidth()
 {
-    ImGui::GetStyle().DefaultColumnWidth = DFT_COLUMN;
+    ImGui::GetStyle().MaxColumnSeparation = DFT_COLUMN_SEP;
 }
 
 void  ImGui::PushMultiItemsWidthsAndLabels(const char* labels[], int components, float w_full)

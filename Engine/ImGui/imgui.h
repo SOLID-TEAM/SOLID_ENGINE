@@ -162,6 +162,7 @@ typedef int ImGuiTabItemFlags;      // -> enum ImGuiTabItemFlags_    // Flags: f
 typedef int ImGuiTreeNodeFlags;     // -> enum ImGuiTreeNodeFlags_   // Flags: for TreeNode(), TreeNodeEx(), CollapsingHeader()
 typedef int ImGuiViewportFlags;     // -> enum ImGuiViewportFlags_   // Flags: for ImGuiViewport
 typedef int ImGuiWindowFlags;       // -> enum ImGuiWindowFlags_     // Flags: for Begin(), BeginChild()
+
 typedef int (*ImGuiInputTextCallback)(ImGuiInputTextCallbackData *data);
 typedef void (*ImGuiSizeCallback)(ImGuiSizeCallbackData* data);
 
@@ -215,6 +216,8 @@ struct ImVec4
 // (Inside a namespace so you can add extra functions in your own separate file. Please don't modify imgui.cpp/.h!)
 //-----------------------------------------------------------------------------
 
+enum ImGuiSeparationType;
+
 namespace ImGui
 {
     // Solid Team Implementation
@@ -223,6 +226,7 @@ namespace ImGui
     IMGUI_API void          PopColumnWidth();
     IMGUI_API void          PushMultiItemsWidthsAndLabels(const char* labels[], int components, float w_full);
     IMGUI_API void          DragFloatNEx(const char* labels[], float* v, int components, float v_speed = 1.f, float v_min = 0.f, float v_max = 0.f, const char* display_format = "%.2f", float power = 1.f);
+    IMGUI_API void          SetSeparationType(ImGuiSeparationType type);
 
     // Context creation and access
     // Each context create its own ImFontAtlas by default. You may instance one yourself and pass it to CreateContext() to share a font atlas between imgui contexts.
@@ -1367,8 +1371,25 @@ struct ImVector
 // and ImGui::PushStyleColor(ImGuiCol_XXX)/PopStyleColor() for colors.
 //-----------------------------------------------------------------------------
 
+#define DFT_COLUMN_SEP 150.f
+#define DFT_TITLE_SEP 30.F
+#define DFT_SUB_TITLE_SEP 10.F
+
+enum ImGuiSeparationType
+{
+    ImGui_MenuSeparation,
+    ImGui_WindowSeparation
+};
+
 struct ImGuiStyle
 {
+    // Team Solid ------------------
+    float               MaxColumnSeparation;
+    float               TitleSeparation;
+    float               SubTitleSeparation;
+    ImGuiSeparationType     SeparationType;
+    // ------------------------------
+
     float       Alpha;                      // Global alpha applies to everything in Dear ImGui.
     ImVec2      WindowPadding;              // Padding within a window.
     float       WindowRounding;             // Radius of window corners rounding. Set to 0.0f to have rectangular windows.
@@ -1405,10 +1426,6 @@ struct ImGuiStyle
     float       CurveTessellationTol;       // Tessellation tolerance when using PathBezierCurveTo() without a specific number of segments. Decrease for highly tessellated curves (higher quality, more polygons), increase to reduce quality.
     ImVec4      Colors[ImGuiCol_COUNT];
 
-    // Team Solid ------------------
-    float       DefaultColumnWidth;
-
-    // ------------------------------
     IMGUI_API ImGuiStyle();
     IMGUI_API void ScaleAllSizes(float scale_factor);
 };
@@ -1419,7 +1436,7 @@ struct ImGuiStyle
 // Access via ImGui::GetIO(). Read 'Programmer guide' section in .cpp file for general usage.
 //-----------------------------------------------------------------------------
 
-#define DFT_COLUMN 160.f
+
 
 struct ImGuiIO
 {

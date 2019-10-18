@@ -50,7 +50,14 @@ bool ModuleEditor::Init(Config& config)
 	// ImGui Style ----------------------------------------
 
 	ImGuiStyle& style = ImGui::GetStyle();
-	style.DefaultColumnWidth = DFT_COLUMN;
+
+	// Panels Style ----------------------------------
+	style.MaxColumnSeparation = DFT_COLUMN_SEP;
+	style.TitleSeparation = DFT_TITLE_SEP;
+	style.SubTitleSeparation = DFT_SUB_TITLE_SEP;
+	style.SeparationType = ImGuiSeparationType::ImGui_WindowSeparation;
+	// -----------------------------------------------
+	style.WindowMinSize = ImVec2(278.f, 278.f);
 	style.WindowRounding = 0.0f;// <- Set this on init or use ImGui::PushStyleVar()
 	style.ChildRounding = 0.0f;
 	style.FrameRounding = 0.0f;

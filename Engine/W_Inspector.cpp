@@ -31,8 +31,6 @@ void W_Inspector::Draw()
 				// TODO: find another way to store individual go opened/closed collapsingheader
 				//ImGui::SetNextTreeNodeOpen(!(*components)->collapsed); 
 
-
-
 				if (ImGui::CollapsingHeader((*components)->name.c_str(), (*components)->flags))
 				{
 					(*components)->DrawPanelInfo();
@@ -43,5 +41,6 @@ void W_Inspector::Draw()
 			}
 		}
 	}
+
 	ImGui::End();
 }
