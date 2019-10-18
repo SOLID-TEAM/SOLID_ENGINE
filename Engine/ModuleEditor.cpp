@@ -168,6 +168,28 @@ update_status ModuleEditor::Update(float dt)
 	// check if we need to show debug normals on selected go
 	if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
 	{
+		// re-check for any change on line length while one option remains unchecked and
+		// the user modifies its length, but when we re-activate them only :)
+		if (last_go_precalc == selected_go && ddmesh != nullptr)
+		{
+			if (viewport_options.debug_vertex_normals)
+			{
+				if (ddmesh->v_last_ll != viewport_options.v_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
+				{
+					ddmesh->ComputeVertexNormals(selected_go->GetMeshes(), viewport_options.v_n_line_length);
+					ddmesh->FillVertexBuffer();
+				}
+			}
+
+			if (viewport_options.debug_face_normals)
+			{
+				if (ddmesh->f_last_ll != viewport_options.f_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
+				{
+					ddmesh->ComputeFacesNormals(selected_go->GetMeshes(), viewport_options.f_n_line_length);
+					ddmesh->FillFacesBuffer();
+				}
+			}
+		}
 	
 		if (last_go_precalc != selected_go)
 		{
@@ -752,6 +774,9 @@ void DebugDataMesh::ComputeVertexNormals(ModelData* goMesh, float length)
 		n_count += 6;
 	}
 
+	// updates internal line length
+	v_last_ll = length;
+
 }
 
 bool DebugDataMesh::ComputeFacesNormals(ModelData* goMesh, float length)
@@ -805,6 +830,9 @@ bool DebugDataMesh::ComputeFacesNormals(ModelData* goMesh, float length)
 
 		n_count += 6;
 	}
+
+	// updates internal line length
+	f_last_ll = length;
 
 	return true;
 }

@@ -84,10 +84,16 @@ private:
 	//uint debug_f_vertices_gl_id = 0;
 	uint debug_f_normals_gl_id = 0;
 
-	//// TODO: testing here, print points and lines for vertex and faces normals debug draw
-	//bool debug_vertex_normals = true;
-	//bool debug_faces_normals = false;
-
+public:
+	// store last line lengths for vertex and faces normals
+	// evades when a user check one of the two modes, and change line length
+	// for the deactivated one
+	// Since we calc both when one option are switched to on, we need to perform
+	// a second check if the ddmesh is still active for same go
+	// and the precalculated length doesn't match with the current one
+	float f_last_ll = 0.0f;
+	float v_last_ll = 0.0f;
+	
 };
 
 class ModuleEditor : public Module
