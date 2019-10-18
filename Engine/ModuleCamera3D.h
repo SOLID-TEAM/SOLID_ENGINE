@@ -27,9 +27,11 @@ private:
 
 public:
 	
+	bool mouse_right_presed = false;
+	bool enable_keys_input = false;
+	bool enable_mouse_input = false;
 	vec3 X, Y, Z, Position, Reference;
 
 private:
-
 	mat4x4 ViewMatrix, ViewMatrixInverse;
 };
