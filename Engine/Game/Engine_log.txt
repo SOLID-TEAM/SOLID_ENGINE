@@ -54,7 +54,8 @@ created mesh from 'pPlatonic1' node, with mesh name: pPlatonic1
 [Start] Loading Editor
 -------------- Application Update --------------
 [Init] Info: hey, i need to recompute the normals!
-[Info] Succesfully loaded last valid config from memory
+[Init] Info: hey, i need to recompute the normals!
+[Init] Info: hey, i need to recompute the normals!
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor
