@@ -19,7 +19,7 @@ public:
 public:
 	ModelData* mesh = nullptr;
 
-	bool wireframe = false;
+	/*bool wireframe = false;
 	bool outline = false;
 	bool fill_faces = true;
 	bool debug_vertex_normals = true;
@@ -38,5 +38,5 @@ public:
 	float f_n_line_width = 1.0f;
 
 	float v_n_line_length = 0.4f;
-	float f_n_line_length = 0.4f;
+	float f_n_line_length = 0.4f;*/
 };

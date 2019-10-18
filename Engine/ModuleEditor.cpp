@@ -334,6 +334,28 @@ bool ModuleEditor::Save(Config& config)
 	else
 		ret = config.AddBool("show_console", show_console);
 
+	// DEBUG VIEWPORT OPTIONS
+	ret = config.AddBool("wireframe", viewport_options.wireframe);
+	ret = config.AddBool("fill_mode", viewport_options.fill_faces);
+	ret = config.AddBool("debug_vertex_normals", viewport_options.debug_vertex_normals);
+	ret = config.AddBool("debug_face_normals", viewport_options.debug_face_normals);
+
+	ret = config.AddFloatArray("fill_color", (float*)&viewport_options.fill_color, 4);
+	ret = config.AddFloatArray("wire_color", (float*)&viewport_options.wire_color, 4);
+	ret = config.AddFloatArray("d_vertex_p_color", (float*)&viewport_options.d_vertex_p_color, 4);
+	ret = config.AddFloatArray("d_vertex_l_color", (float*)&viewport_options.d_vertex_l_color, 4);
+	ret = config.AddFloatArray("d_vertex_face_color", (float*)&viewport_options.d_vertex_face_color, 4);
+	ret = config.AddFloatArray("d_vertex_face_n_color", (float*)&viewport_options.d_vertex_face_n_color, 4);
+
+	ret = config.AddFloat("wire_line_width", viewport_options.wire_line_width);
+	ret = config.AddFloat("v_point_size", viewport_options.v_point_size);
+	ret = config.AddFloat("f_v_point_size", viewport_options.f_v_point_size);
+	ret = config.AddFloat("v_n_line_width", viewport_options.v_n_line_width);
+	ret = config.AddFloat("f_n_line_width", viewport_options.f_n_line_width);
+
+	ret = config.AddFloat("v_n_line_length", viewport_options.v_n_line_length);
+	ret = config.AddFloat("f_n_line_length", viewport_options.f_n_line_length);
+
 
 	return ret;
 }
@@ -350,6 +372,66 @@ void ModuleEditor::Load(Config& config)
 		w_config->active = config.GetBool("show_configuration", w_config->active);
 	else
 		show_configuration = config.GetBool("show_configuration", show_configuration);
+
+	// viewport options
+	
+	viewport_options.wireframe = config.GetBool("wireframe", viewport_options.wireframe);
+	viewport_options.fill_faces = config.GetBool("fill_mode", viewport_options.fill_faces);
+	viewport_options.debug_vertex_normals = config.GetBool("debug_vertex_normals", viewport_options.debug_vertex_normals);
+	viewport_options.debug_face_normals = config.GetBool("debug_face_normals", viewport_options.debug_face_normals);
+	
+	// load colors ----------------------------------------------------------------------------------
+	viewport_options.fill_color.x = config.GetFloat("fill_color", viewport_options.fill_color.x, 0);
+	viewport_options.fill_color.y = config.GetFloat("fill_color", viewport_options.fill_color.y, 1);
+	viewport_options.fill_color.z = config.GetFloat("fill_color", viewport_options.fill_color.z, 2);
+	viewport_options.fill_color.w = config.GetFloat("fill_color", viewport_options.fill_color.w, 3);
+
+	viewport_options.wire_color.x = config.GetFloat("wire_color", viewport_options.wire_color.x, 0);
+	viewport_options.wire_color.y = config.GetFloat("wire_color", viewport_options.wire_color.y, 1);
+	viewport_options.wire_color.z = config.GetFloat("wire_color", viewport_options.wire_color.z, 2);
+	viewport_options.wire_color.w = config.GetFloat("wire_color", viewport_options.wire_color.w, 3);
+	
+	viewport_options.d_vertex_p_color.x = config.GetFloat("d_vertex_p_color", viewport_options.d_vertex_p_color.x, 0);
+	viewport_options.d_vertex_p_color.y = config.GetFloat("d_vertex_p_color", viewport_options.d_vertex_p_color.y, 1);
+	viewport_options.d_vertex_p_color.z = config.GetFloat("d_vertex_p_color", viewport_options.d_vertex_p_color.z, 2);
+	viewport_options.d_vertex_p_color.w = config.GetFloat("d_vertex_p_color", viewport_options.d_vertex_p_color.w, 3);
+	
+	viewport_options.d_vertex_l_color.x = config.GetFloat("d_vertex_l_color", viewport_options.d_vertex_l_color.x, 0);
+	viewport_options.d_vertex_l_color.y = config.GetFloat("d_vertex_l_color", viewport_options.d_vertex_l_color.y, 1);
+	viewport_options.d_vertex_l_color.z = config.GetFloat("d_vertex_l_color", viewport_options.d_vertex_l_color.z, 2);
+	viewport_options.d_vertex_l_color.w = config.GetFloat("d_vertex_l_color", viewport_options.d_vertex_l_color.w, 3);
+
+	viewport_options.d_vertex_face_color.x = config.GetFloat("d_vertex_face_color", viewport_options.d_vertex_face_color.x, 0);
+	viewport_options.d_vertex_face_color.y = config.GetFloat("d_vertex_face_color", viewport_options.d_vertex_face_color.y, 1);
+	viewport_options.d_vertex_face_color.z = config.GetFloat("d_vertex_face_color", viewport_options.d_vertex_face_color.z, 2);
+	viewport_options.d_vertex_face_color.w = config.GetFloat("d_vertex_face_color", viewport_options.d_vertex_face_color.w, 3);
+	
+	viewport_options.d_vertex_face_n_color.x = config.GetFloat("d_vertex_face_n_color", viewport_options.d_vertex_face_color.x, 0);
+	viewport_options.d_vertex_face_n_color.y = config.GetFloat("d_vertex_face_n_color", viewport_options.d_vertex_face_color.y, 1);
+	viewport_options.d_vertex_face_n_color.z = config.GetFloat("d_vertex_face_n_color", viewport_options.d_vertex_face_color.z, 2);
+	viewport_options.d_vertex_face_n_color.w = config.GetFloat("d_vertex_face_n_color", viewport_options.d_vertex_face_color.w, 3);
+	// -----------------------------------------------------------------------------------------------
+
+	viewport_options.wire_line_width = config.GetFloat("wire_line_width", viewport_options.wire_line_width);
+	viewport_options.v_point_size = config.GetFloat("v_point_size", viewport_options.v_point_size);
+	viewport_options.f_v_point_size = config.GetFloat("f_v_point_size", viewport_options.f_v_point_size);
+	viewport_options.v_n_line_width = config.GetFloat("v_n_line_width", viewport_options.v_n_line_width);
+	viewport_options.f_n_line_width = config.GetFloat("f_n_line_width", viewport_options.f_n_line_width);
+
+	// TODO!!!!
+	// if we have meshes, and line length doesnt match, recompute normals ----
+	/*float temp_v = viewport_options.v_n_line_length;
+	viewport_options.v_n_line_length = config.GetFloat("v_n_line_length", viewport_options.v_n_line_length);
+	if (temp_v != viewport_options.v_n_line_length)
+		ReComputeVertexNormals(viewport_options.v_n_line_length);
+
+	float temp_f = viewport_options.f_n_line_length;
+	viewport_options.f_n_line_length = config.GetFloat("f_n_line_length", viewport_options.f_n_line_length);
+	if (temp_f != f_n_line_length)
+		ReComputeFacesNormals(viewport_options.f_n_line_length);*/
+	// -----------------------------------------------------------------------
+
+
 }
 
 bool ModuleEditor::DrawMainMenuBar()

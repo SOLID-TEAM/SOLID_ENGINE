@@ -11,6 +11,8 @@ public:
 
 	void Draw();
 
+	void DebugMenu();
+
 	ImVec2 GetViewportSize() const
 	{
 		return viewport_size;
@@ -19,6 +21,9 @@ public:
 private:
 
 	ImVec2 viewport_size = { 0.f, 0.f };
+
+	
+
 };
 
 #endif // !_W_SCENE_H__
