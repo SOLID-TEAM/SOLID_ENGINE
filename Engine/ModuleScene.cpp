@@ -72,6 +72,8 @@ update_status ModuleScene::Draw()
 
 void ModuleScene::DrawAll(GameObject* go)
 {
+	go->PostUpdate(0.0f);
+
 	std::vector<GameObject*>::iterator it = go->childs.begin();
 
 	for (; it != go->childs.end(); ++it)
@@ -79,7 +81,8 @@ void ModuleScene::DrawAll(GameObject* go)
 		DrawAll((*it));
 	}
 
-	go->Draw();
+	
+
 }
 
 bool ModuleScene::CleanUp()

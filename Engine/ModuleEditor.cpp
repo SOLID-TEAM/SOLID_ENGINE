@@ -1,15 +1,17 @@
-#include "GL/glew.h"
-#include "SDL/include/SDL_opengl.h"
-
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleEditor.h"
 #include "Config.h"
 
+#include "GL/glew.h"
+#include "SDL/include/SDL_opengl.h"
+
 #include "ImGui/imgui.h"
 #include "ImGui/Impl/imgui_impl_sdl.h"
 #include "ImGui/Impl/imgui_impl_opengl3.h"
 
+// TODO:: Change site
+#include "D_Mesh.h"
 
 // Windows include 
 
@@ -123,7 +125,7 @@ bool ModuleEditor::CleanUp()
 	w_scene = nullptr;
 	w_inspector = nullptr;
 
-	// debug data mesh ---
+	// debug data data ---
 	if (ddmesh != nullptr)
 		ddmesh->Clean();
 
@@ -178,7 +180,7 @@ update_status ModuleEditor::Update(float dt)
 		if (last_go_precalc != selected_go)
 		{
 			// check if the gameobject has meshes
-			ModelData* smesh = selected_go->GetMeshes();
+			D_Mesh* smesh = selected_go->GetMeshes();
 
 			// we calc the two modes at once for the selected go
 			// but we filter what to print from bools cols
@@ -191,10 +193,10 @@ update_status ModuleEditor::Update(float dt)
 				{
 					ddmesh->Clean();
 					// re-assign num v and i
-					ddmesh->SetSizes(smesh->_v_size, smesh->_idx_size);
+					ddmesh->SetSizes(smesh->buffers_size[D_Mesh::VERTICES], smesh->buffers_size[D_Mesh::INDICES]);
 				}
 				else // if not exists, create one
-					ddmesh = new DebugDataMesh(smesh->_v_size, smesh->_idx_size);
+					ddmesh = new DebugDataMesh(smesh->buffers_size[D_Mesh::VERTICES], smesh->buffers_size[D_Mesh::INDICES]);
 				
 				// recompute data from selected_go
 				ddmesh->ComputeVertexNormals(smesh, viewport_options.v_n_line_length);
@@ -765,7 +767,7 @@ void DebugDataMesh::FillFacesBuffer()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * n_idx * 2, &debug_f_normals[0], GL_STATIC_DRAW);
 }
 
-void DebugDataMesh::ComputeVertexNormals(ModelData* goMesh, float length)
+void DebugDataMesh::ComputeVertexNormals(D_Mesh* goMesh, float length)
 {
 	// to draw lines, we need an array ready to what expects gldrawarrays
 	// start point and finish point
@@ -794,7 +796,7 @@ void DebugDataMesh::ComputeVertexNormals(ModelData* goMesh, float length)
 
 }
 
-bool DebugDataMesh::ComputeFacesNormals(ModelData* goMesh, float length)
+bool DebugDataMesh::ComputeFacesNormals(D_Mesh* goMesh, float length)
 {
 
 	if (n_idx % 3 != 0)

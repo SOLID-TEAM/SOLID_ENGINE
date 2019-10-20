@@ -1,7 +1,7 @@
 #include "Component.h"
 #include "GameObject.h"
 
-Component::Component(GameObject* go) : linked_go(go) {}
+Component::Component(GameObject* go, ComponentType type) : linked_go(go), type(type) {}
 
 void Component::Enable()
 {
@@ -26,11 +26,6 @@ bool Component::Update(float dt)
 }
 
 bool Component::PostUpdate(float dt)
-{
-	return true;
-}
-
-bool Component::Draw()
 {
 	return true;
 }

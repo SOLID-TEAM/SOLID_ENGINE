@@ -62,6 +62,11 @@ public:
 		return mouse_y_motion;
 	}
 
+	void SetMouseState( int button , KEY_STATE state)
+	{
+		mouse_buttons[button] = state;
+	}
+
 private:
 
 	KEY_STATE* keyboard;

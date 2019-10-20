@@ -86,7 +86,11 @@
     <ClInclude Include="C_Material.h" />
     <ClInclude Include="C_Mesh.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="C_MeshRenderer.h" />
     <ClInclude Include="C_Transform.h" />
+    <ClInclude Include="Data.h" />
+    <ClInclude Include="D_Material.h" />
+    <ClInclude Include="D_Texture.h" />
     <ClInclude Include="external\MathGeoLib\include\Algorithm\Random\LCG.h" />
     <ClInclude Include="external\MathGeoLib\include\Geometry\AABB.h" />
     <ClInclude Include="external\MathGeoLib\include\Geometry\AABB2D.h" />
@@ -167,7 +171,7 @@
     <ClInclude Include="Imgui\imstb_truetype.h" />
     <ClInclude Include="ImGui\misc\cpp\imgui_stdlib.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="ModelData.h" />
+    <ClInclude Include="D_Mesh.h" />
     <ClInclude Include="ModuleCamera3D.h" />
     <ClInclude Include="ModuleEditor.h" />
     <ClInclude Include="ModuleFileSystem.h" />
@@ -200,8 +204,12 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="C_Material.cpp" />
     <ClCompile Include="C_Mesh.cpp" />
+    <ClCompile Include="C_MeshRenderer.cpp" />
     <ClCompile Include="C_Transform.cpp" />
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="Data.cpp" />
+    <ClCompile Include="D_Material.cpp" />
+    <ClCompile Include="D_Texture.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Algorithm\Random\LCG.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Geometry\AABB.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Geometry\Capsule.cpp" />
@@ -250,7 +258,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="ModelData.cpp" />
+    <ClCompile Include="D_Mesh.cpp" />
     <ClCompile Include="ModuleCamera3D.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
     <ClCompile Include="ModuleImporter.cpp" />

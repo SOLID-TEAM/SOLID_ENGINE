@@ -23,7 +23,7 @@
 //
 //void Primitive::Scale(float x, float y, float z)
 //{
-//	par_shapes_scale(mesh, x, y, z);
+//	par_shapes_scale(data, x, y, z);
 //	GenBuffer();
 //}
 //
@@ -32,12 +32,12 @@
 //	//generate buffer for vertices
 //	glGenBuffers(1, &vector_id);
 //	glBindBuffer(GL_ARRAY_BUFFER, vector_id);
-//	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * mesh->npoints, &mesh->points[0], GL_STATIC_DRAW);
+//	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * data->npoints, &data->points[0], GL_STATIC_DRAW);
 //
 //	// generate buffer for indices
 //	glGenBuffers(1, &elements_id);
 //	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elements_id);
-//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->ntriangles * 3, &mesh->triangles[0], GL_STATIC_DRAW);
+//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * data->ntriangles * 3, &data->triangles[0], GL_STATIC_DRAW);
 //}
 //
 //void Primitive::Render()
@@ -55,7 +55,7 @@
 //	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 //
 //	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elements_id);
-//	glDrawElements(GL_TRIANGLES, mesh->ntriangles * 3, GL_UNSIGNED_INT, (void*)0);
+//	glDrawElements(GL_TRIANGLES, data->ntriangles * 3, GL_UNSIGNED_INT, (void*)0);
 //
 //	glDisableClientState(GL_VERTEX_ARRAY);
 //}
@@ -64,8 +64,8 @@
 //
 //S_Cube::S_Cube(float x, float y, float z) : Primitive()
 //{
-//	mesh = par_shapes_create_cube();
-//	//par_shapes_translate(mesh, x, y, z);
+//	data = par_shapes_create_cube();
+//	//par_shapes_translate(data, x, y, z);
 //	GenBuffer();
 //}
 //
@@ -73,8 +73,8 @@
 //
 //S_Sphere::S_Sphere(float x, float y, float z ,float radius) : Primitive(), radius(radius)
 //{
-//	mesh = par_shapes_create_parametric_sphere(20, 20);
-//	par_shapes_translate(mesh, x, y, z);
+//	data = par_shapes_create_parametric_sphere(20, 20);
+//	par_shapes_translate(data, x, y, z);
 //	GenBuffer();
 //}
 //
@@ -82,7 +82,7 @@
 //
 //S_Plane::S_Plane(float x, float y, float z)
 //{
-//	mesh = par_shapes_create_plane(4, 4);
-//	par_shapes_translate(mesh, x, y, z);
+//	data = par_shapes_create_plane(4, 4);
+//	par_shapes_translate(data, x, y, z);
 //	GenBuffer();
 //}

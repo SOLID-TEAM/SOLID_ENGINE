@@ -7,38 +7,50 @@
 #include "Component.h"
 
 class W_Inspector;
-class ModelData;
+class D_Mesh;
 
 class GameObject
 {
 public:
-	//GameObject();
-	//GameObject(std::string name);
+
 	GameObject(std::string name = "no_name", GameObject* parent = nullptr);
+
 	~GameObject();
 
-	bool Disable();
 	bool Enable();
+
+	bool Disable();
+
 	bool Update(float dt);
+
 	bool PostUpdate(float dt);
-	bool Draw();
 
 	const char* GetName() const;
-	const std::vector<Component*>& GetComponents() const;
-	ModelData* GetMeshes() const;
 
 	bool CleanUp();
 
+	// Components Funtions -------------------------------------------
+
 	Component* CreateComponent(ComponentType type);
+
+	Component* GetComponentsByType(ComponentType type);
+
+	const std::vector<Component*>& GetComponents() const;
+
+	D_Mesh* GetMeshes();
+
 public:
 
 	std::vector<GameObject*> childs;
+
 	GameObject* parent = nullptr;
 
 private:
 
 	bool active = true;
+
 	std::string name;
+
 	std::vector<Component*> components;
 
 	friend W_Inspector;
@@ -46,3 +58,4 @@ private:
 
 #endif // !_GAMEOBJECT_H__
 
+//bool Draw();

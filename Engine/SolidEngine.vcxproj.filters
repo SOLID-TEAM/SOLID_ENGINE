@@ -52,8 +52,11 @@
     <Filter Include="Sources\Game Object\Components">
       <UniqueIdentifier>{b20fa3f4-fe07-4fd6-99f3-6c8c3809e8df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Modules\scene">
+    <Filter Include="Sources\Modules\Scene">
       <UniqueIdentifier>{45354d5a-b0f0-4cd1-abba-567c02423ad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Data">
+      <UniqueIdentifier>{cf84c64d-fec2-41af-afa0-2ea3d34dbaa9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -324,9 +327,6 @@
     <ClInclude Include="par_shapes.h">
       <Filter>Sources\Thirds Party</Filter>
     </ClInclude>
-    <ClInclude Include="ModelData.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="glmath.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
@@ -382,7 +382,7 @@
       <Filter>Sources\Thirds Party\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="ModuleScene.h">
-      <Filter>Sources\Modules\scene</Filter>
+      <Filter>Sources\Modules\Scene</Filter>
     </ClInclude>
     <ClInclude Include="C_Mesh.h">
       <Filter>Sources\Game Object\Components</Filter>
@@ -394,6 +394,21 @@
       <Filter>Sources\Editor</Filter>
     </ClInclude>
     <ClInclude Include="C_Material.h">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="D_Mesh.h">
+      <Filter>Sources\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Data.h">
+      <Filter>Sources\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="D_Material.h">
+      <Filter>Sources\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="D_Texture.h">
+      <Filter>Sources\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="C_MeshRenderer.h">
       <Filter>Sources\Game Object\Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -551,9 +566,6 @@
     <ClCompile Include="ModuleTextures.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="ModelData.cpp">
-      <Filter>Sources\Containers</Filter>
-    </ClCompile>
     <ClCompile Include="glmath.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
@@ -606,7 +618,7 @@
       <Filter>Sources\Thirds Party\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="ModuleScene.cpp">
-      <Filter>Sources\Modules\scene</Filter>
+      <Filter>Sources\Modules\Scene</Filter>
     </ClCompile>
     <ClCompile Include="C_Mesh.cpp">
       <Filter>Sources\Game Object\Components</Filter>
@@ -618,6 +630,21 @@
       <Filter>Sources\Editor</Filter>
     </ClCompile>
     <ClCompile Include="C_Material.cpp">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="D_Mesh.cpp">
+      <Filter>Sources\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Data.cpp">
+      <Filter>Sources\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="D_Material.cpp">
+      <Filter>Sources\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="D_Texture.cpp">
+      <Filter>Sources\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="C_MeshRenderer.cpp">
       <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
   </ItemGroup>

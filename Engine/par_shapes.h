@@ -4,15 +4,15 @@
 // The API is divided into three sections:
 //
 //   - Generators.  Create parametric surfaces, platonic solids, etc.
-//   - Queries.     Ask a mesh for its axis-aligned bounding box, etc.
-//   - Transforms.  Rotate a mesh, merge it with another, add normals, etc.
+//   - Queries.     Ask a data for its axis-aligned bounding box, etc.
+//   - Transforms.  Rotate a data, merge it with another, add normals, etc.
 //
 // In addition to the comment block above each function declaration, the API
 // has informal documentation here:
 //
 //     https://prideout.net/shapes
 //
-// For our purposes, a "mesh" is a list of points and a list of triangles; the
+// For our purposes, a "data" is a list of points and a list of triangles; the
 // former is a flattened list of three-tuples (32-bit floats) and the latter is
 // also a flattened list of three-tuples (16-bit uints).  Triangles are always
 // oriented such that their front face winds counter-clockwise.
@@ -135,8 +135,8 @@ extern "C" {
 	// Take a pointer to 6 floats and set them to min xyz, max xyz.
 	void par_shapes_compute_aabb(par_shapes_mesh const* mesh, float* aabb);
 
-	// Make a deep copy of a mesh.  To make a brand new copy, pass null to "target".
-	// To avoid memory churn, pass an existing mesh to "target".
+	// Make a deep copy of a data.  To make a brand new copy, pass null to "target".
+	// To avoid memory churn, pass an existing data to "target".
 	par_shapes_mesh* par_shapes_clone(par_shapes_mesh const* mesh,
 		par_shapes_mesh* target);
 
@@ -149,7 +149,7 @@ extern "C" {
 	void par_shapes_merge_and_free(par_shapes_mesh* dst, par_shapes_mesh* src);
 
 	// Reverse the winding of a run of faces.  Useful when drawing the inside of
-	// a Cornell Box.  Pass 0 for nfaces to reverse every face in the mesh.
+	// a Cornell Box.  Pass 0 for nfaces to reverse every face in the data.
 	void par_shapes_invert(par_shapes_mesh*, int startface, int nfaces);
 
 	// Remove all triangles whose area is less than minarea.
@@ -161,7 +161,7 @@ extern "C" {
 	void par_shapes_unweld(par_shapes_mesh* mesh, bool create_indices);
 
 	// Merge colocated verts, build a new index buffer, and return the
-	// optimized mesh.  Epsilon is the maximum distance to consider when
+	// optimized data.  Epsilon is the maximum distance to consider when
 	// welding vertices. The mapping argument can be null, or a pointer to
 	// npoints integers, which gets filled with the mapping from old vertex
 	// indices to new indices.

@@ -1381,7 +1381,7 @@ ASSIMP_API C_ENUM aiReturn aiGetMaterialProperty(
  * @code
  * aiUVTransform trafo;
  * unsigned int max = sizeof(aiUVTransform);
- * if (AI_SUCCESS != aiGetMaterialFloatArray(mat, AI_MATKEY_UVTRANSFORM(aiTextureType_DIFFUSE,0),
+ * if (AI_SUCCESS != aiGetMaterialFloatArray(d_mat, AI_MATKEY_UVTRANSFORM(aiTextureType_DIFFUSE,0),
  *    (float*)&trafo, &max) || sizeof(aiUVTransform) != max)
  * {
  *   // error handling
@@ -1416,7 +1416,7 @@ ASSIMP_API C_ENUM aiReturn aiGetMaterialFloatArray(
 * example reads the #AI_MATKEY_SHININESS_STRENGTH property of the first diffuse texture)
 * @code
 * float specStrength = 1.f; // default value, remains unmodified if we fail.
-* aiGetMaterialFloat(mat, AI_MATKEY_SHININESS_STRENGTH,
+* aiGetMaterialFloat(d_mat, AI_MATKEY_SHININESS_STRENGTH,
 *    (float*)&specStrength);
 * @endcode
 *
@@ -1536,7 +1536,7 @@ ASSIMP_API unsigned int aiGetMaterialTextureCount(const C_STRUCT aiMaterial* pMa
  *  texture by parsing all of its properties manually. This function bundles
  *  all of them in a huge function monster.
  *
- *  @param[in] mat Pointer to the input material. May not be NULL
+ *  @param[in] d_mat Pointer to the input material. May not be NULL
  *  @param[in] type Specifies the texture stack to read from (e.g. diffuse,
  *     specular, height map ...).
  *  @param[in] index Index of the texture. The function fails if the

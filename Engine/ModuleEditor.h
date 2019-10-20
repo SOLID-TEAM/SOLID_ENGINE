@@ -20,14 +20,15 @@ class W_Inspector;
 // TODO: change this/remove define
 #define MAX_STORED_FPS 100
 
-struct ViewPortOptions
+struct ViewportOptions
 {
 	bool wireframe = false;
 	bool outline = false;
 	bool fill_faces = true;
+
 	bool debug_vertex_normals = true;
 	bool debug_face_normals = true;
-	ImVec4 fill_color = ImVec4(1.0f, 0.35f, 1.0f, 1.0f);
+	ImVec4 fill_color = ImVec4(0.f, 0.f, 0.f, 0.f);
 	ImVec4 wire_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);;
 	ImVec4 d_vertex_p_color = ImVec4(0.59f, 0.22f, 1.0f, 1.0f);
 	ImVec4 d_vertex_l_color = ImVec4(0.2f, 1.0f, 0.0f, 1.0f);
@@ -58,8 +59,8 @@ public:
 
 	bool Clean();
 
-	void ComputeVertexNormals(ModelData* goMesh, float length);
-	bool ComputeFacesNormals(ModelData* goMesh, float length);
+	void ComputeVertexNormals(D_Mesh* goMesh, float length);
+	bool ComputeFacesNormals(D_Mesh* goMesh, float length);
 
 	bool DebugRenderVertex(float pointSize);
 	bool DebugRenderVertexNormals(float lineWidth);
@@ -171,10 +172,10 @@ public:
 	// WARNING: TODO: when we delete gameobjects, remember to unlink all pointers
 	// hierarchy / selected go
 	GameObject* selected_go = nullptr;
-	ViewPortOptions viewport_options;
+	ViewportOptions viewport_options;
 	// if we need store more debug data, pass this to a vector/list
-	DebugDataMesh* ddmesh = nullptr; // debug data mesh
-	// if the gameobject itself has more than one mesh (not its childs)
+	DebugDataMesh* ddmesh = nullptr; // debug data data
+	// if the gameobject itself has more than one data (not its childs)
 	std::vector<DebugDataMesh*> ddmeshes;
 	// store last precalculated go from debug normals
 	GameObject* last_go_precalc = nullptr;

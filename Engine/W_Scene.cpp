@@ -1,7 +1,10 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleInput.h"
 #include "ModuleCamera3D.h"
 #include "W_Scene.h"
+#include <math.h>
+
 
 void W_Scene::Draw()
 {
@@ -55,11 +58,37 @@ void W_Scene::Draw()
 		//}
 
 		// Input camera ----------------------------------------------------
+		ImVec2 min = ImGui::GetCursorScreenPos();
+		ImVec2 max = ImGui::GetCursorScreenPos() + ImGui::GetContentRegionAvail();
+
+		//POINT   cursorPos;
+		//GetCursorPos(&cursorPos);
+		//float x = cursorPos.x, y = cursorPos.y;
+
+		//if ((y < max.y) && (y > min.y) && (x < max.x) && (x > min.x))
+		//{
+		//	if (App->window->IsFocused())
+		//	{
+		//		SDL_RaiseWindow(App->window->window);
+		//	}
+		//}
+		//HWND GetTopWindow(GW_HWNDFIRST);
+
+
+		bool mouse_is_hovering = ImGui::IsMouseHoveringRect(min, max);
+
 		App->camera->enable_keys_input = ImGui::IsWindowFocused();
 
 		if (!App->camera->mouse_right_presed)
 		{
-			App->camera->enable_mouse_input = ImGui::IsMouseHoveringRect(ImGui::GetCursorScreenPos(), ImGui::GetCursorScreenPos() + ImGui::GetContentRegionAvail());
+			App->camera->enable_mouse_input = mouse_is_hovering;
+		}
+		else
+		{
+			if (mouse_is_hovering)
+			{
+				ImGui::SetWindowFocus();
+			}
 		}
 
 		// Attach texture to window ----------------------------------------
@@ -96,7 +125,7 @@ void W_Scene::GridMenu()
 void W_Scene::DebugMenu()
 {
 	RenderConfig& config = App->renderer3D->render_config;
-	ViewPortOptions& vp = App->editor->viewport_options;
+	ViewportOptions& vp = App->editor->viewport_options;
 
 	ImGui::Title("Vertex Normals", 1);		ImGui::Checkbox("##d_vertex_normals", &vp.debug_vertex_normals);
 	ImGui::Title("Point Color", 2);			ImGui::ColorEdit4("Vertex Point Color##2f", (float*)&vp.d_vertex_p_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);

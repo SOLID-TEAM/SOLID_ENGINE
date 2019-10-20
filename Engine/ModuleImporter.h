@@ -3,19 +3,22 @@
 
 #include "Globals.h"
 #include "Module.h"
+#include <vector>
+#include <string>
+#include "glmath.h"
 
-#include "external/Assimp/include/cimport.h"
-#include "external/Assimp/include/scene.h"
-#include "external/Assimp/include/postprocess.h"
-#include "external/Assimp/include/cfileio.h"
+struct aiScene;
+struct aiNode;
+struct aiMesh;
+struct aiMaterial;
 
-#pragma comment (lib, "external/Assimp/libx86/assimp.lib")
+class vec3;
+class GameObject;
+class D_Mesh;
+class D_Material;
+class D_Texture;
 
-#include "ModelData.h"
-#include "external/par_shapes.h"
-#include "GameObject.h"
-#include "C_Mesh.h"
-
+// TODO: add more types if needed
 enum PrimitiveType
 {
 	CUBE,
@@ -28,7 +31,6 @@ enum PrimitiveType
 	CYLINDER,
 	CONE,
 	TORUS,
-	// TODO: add more types if needed
 	MAX
 };
 
@@ -47,52 +49,38 @@ public:
 	bool Save(Config& config);
 	void Load(Config& config);
 
-	bool LoadFileMesh(const char* path);
-
 	// TODO: think where to fit this better
-	bool ReComputeVertexNormals(float length = 0.4f);
-	bool ReComputeFacesNormals(float length = 0.4f);
+	//bool ReComputeVertexNormals(float length = 0.4f);
+	//bool ReComputeFacesNormals(float length = 0.4f);
 
 	// Create primitives with par_shapes tool
-	ModelData* CreatePrimitive(PrimitiveType type, vec3 position = { 0,0,0 }, vec3 size = { 1,1,1 });
+	void  CreatePrimitive(PrimitiveType type, vec3 position = { 0,0,0 }, vec3 size = { 1,1,1 });
 
 	// TODO: implement base class gameObjects (for future components addition)
-	std::vector<ModelData*>& GetModels();
+	std::vector<D_Mesh*>& GetModels();
 
 	void ImportFileFromPath(const char* path);
-	void CreateGoFromNodes(aiNode* node, GameObject* parent, aiMatrix4x4 accumulated_transform);
+	void CreateGoFromNodes(const aiScene* scene , aiNode* node, GameObject* parent);
 	
+	// Import file types -----------------------------
+	bool ImportModelFile(const char* path);
 
 	// TODO: ONLY TEST
 	void ReloadTextureForAllModels(uint texture_id);
 
 private:
-	void CopyMesh(aiNode* node, GameObject* new_go);
-	void CopyDataToMesh(ModelData* m, aiMesh* source_mesh) const;
+
+	D_Mesh*			ImportMesh(const aiMesh* mesh, const char* name);
+	D_Material*		ImportMaterial(const aiMaterial* material, const char* name);
+	D_Texture*		ImportTexture(const char* path);
 
 private:
+
+	// TODO: MAYBE WE NEED a specific module to store all models of the scene and draw etc
 	// TODO: for testing here, but we need to search a better place, maybe new module coming
-	std::vector<ModelData*> meshes;
-	//std::vector<ModelData*> startup_meshes;
+	std::vector<D_Mesh*> meshes;
 
-	// use from another functions
-	const aiScene* imported_scene = nullptr;
-
-// TODO: MAYBE WE NEED a specific module to store all models of the scene and draw etc
 public:
-	// TODO: maybe this vars fits better on the model itself and each model has its own properties of visualization
-	// implement when we already finish module filesystem
-	/*bool wireframe = false;
-	bool outline = false;
-	bool fill_faces = true;
-	bool debug_vertex_normals = true;
-	bool debug_face_normals = true;*/
-	/*ImVec4 fill_color = ImVec4(1.0f, 0.35f, 1.0f , 1.0f);
-	ImVec4 wire_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);;
-	ImVec4 d_vertex_p_color = ImVec4(0.59f, 0.22f, 1.0f, 1.0f);
-	ImVec4 d_vertex_l_color = ImVec4(0.2f, 1.0f, 0.0f, 1.0f);
-	ImVec4 d_vertex_face_color = ImVec4(1.0f, 0.5f, 0.2f,1.0f);
-	ImVec4 d_vertex_face_n_color = ImVec4(0.0f, 0.5f, 1.0f, 1.0f);*/
 
 	float wire_line_width = 1.0f;
 	float v_point_size   = 5.0f;
@@ -105,3 +93,4 @@ public:
 };
 
 #endif // !__MODULE_IMPORTER_H__
+

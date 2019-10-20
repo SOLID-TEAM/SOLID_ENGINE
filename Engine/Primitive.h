@@ -23,7 +23,7 @@
 //	uint vector_id = 0u;
 //	uint elements_id = 0u;
 //
-//	par_shapes_mesh* mesh = nullptr;
+//	par_shapes_mesh* data = nullptr;
 //	mat4x4 transform;
 //};
 //

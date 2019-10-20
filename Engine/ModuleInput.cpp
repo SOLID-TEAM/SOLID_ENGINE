@@ -163,7 +163,7 @@ update_status ModuleInput::PreUpdate(float dt)
 				comparer == ".solid")
 			{
 				LOG("possible 3d model");
-				App->importer->LoadFileMesh(filename.generic_string().data());
+				App->importer->ImportModelFile(filename.generic_string().data());
 			}
 			if (comparer == ".png" ||
 				comparer == ".jpg" ||
@@ -193,8 +193,8 @@ update_status ModuleInput::PreUpdate(float dt)
 					App->importer->ReloadTextureForAllModels(new_tex_id);
 			}
 
-			//App->importer->ImportFileFromPath(dropped_filedir);
 			SDL_free(event.drop.file);
+
 			break;
 			// ----------------------------------------------------------------------------------------------------
 		}
@@ -203,7 +203,21 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 		case SDL_WINDOWEVENT:
-			if (event.window.event == SDL_WINDOWEVENT_RESIZED){}
+
+			if (event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED)
+			{
+				App->window->window_focused = true;
+			}
+
+			else if (event.window.event == SDL_WINDOWEVENT_TAKE_FOCUS)
+			{
+				App->window->window_focused = true;
+			}
+
+			else if (event.window.event == SDL_WINDOWEVENT_FOCUS_LOST)
+			{
+				App->window->window_focused = false;
+			}
 		}
 	}
 

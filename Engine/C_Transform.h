@@ -7,11 +7,11 @@
 //#include "external/MathGeoLib/include/Math/float3.h"
 #include "external/MathGeoLib/include/MathGeoLib.h"
 
-class ComponentTransform : public Component
+class C_Transform : public Component
 {
 public:
-	ComponentTransform(GameObject* parent);
-	~ComponentTransform();
+	C_Transform(GameObject* parent);
+	~C_Transform();
 
 	//bool Update(float dt);
 	bool DrawPanelInfo();

@@ -1,19 +1,18 @@
 #include "C_Transform.h"
 #include "ImGui/imgui.h"
 
-ComponentTransform::ComponentTransform(GameObject* parent) : Component(parent)
+C_Transform::C_Transform(GameObject* parent) : Component(parent, ComponentType::TRANSFORM)
 {
 	name.assign("Transform");
-	// imgui flags
 	flags |= ImGuiTreeNodeFlags_DefaultOpen;
 }
 
-ComponentTransform::~ComponentTransform()
+C_Transform::~C_Transform()
 {
 
 }
 
-bool ComponentTransform::DrawPanelInfo()
+bool C_Transform::DrawPanelInfo()
 {
 	//bool aux = false;
 

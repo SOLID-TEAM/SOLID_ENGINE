@@ -28,6 +28,7 @@ public:
 	void SetWindowFullscreen(float fullscreen, bool desktop = false);
 	void SetWindowResizable(bool resizable);
 	void SetWindowBorderless(bool borderless);
+	bool IsFocused() { return window_focused; }
 
 public:
 	//// TODO: Delete Multiviewport Test
@@ -52,6 +53,7 @@ public:
 	bool resizable = WIN_RESIZABLE;
 	bool fullscreen_desktop = WIN_FULLSCREEN_DESKTOP;
 	bool borderless = WIN_BORDERLESS;
+	bool window_focused = false;
 
 };
 

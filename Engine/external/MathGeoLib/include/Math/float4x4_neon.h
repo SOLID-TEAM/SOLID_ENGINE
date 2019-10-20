@@ -24,7 +24,7 @@
 #include "float4_neon.h"
 
 #if !defined(ANDROID) ///\bug Android GCC 4.6.6 gives internal compiler error!
-// Multiplies mat * vec, where mat is a matrix in row-major format.
+// Multiplies d_mat * vec, where d_mat is a matrix in row-major format.
 FORCE_INLINE simd4f mat4x4_mul_vec4(const simd4f *mat, simd4f vec)
 {
 #ifdef MATH_NEON
@@ -42,7 +42,7 @@ FORCE_INLINE simd4f mat4x4_mul_vec4(const simd4f *mat, simd4f vec)
 }
 #endif
 
-// Multiplies vec * mat, where mat is a matrix in row-major format.
+// Multiplies vec * d_mat, where d_mat is a matrix in row-major format.
 FORCE_INLINE simd4f vec4_mul_mat4x4(simd4f vec, const simd4f *mat)
 {
 #ifdef MATH_NEON

@@ -1,10 +1,11 @@
 #include "GameObject.h"
 #include "Component.h"
+#include "W_Inspector.h"
 
 #include "C_Transform.h"
 #include "C_Mesh.h"
-
-#include "W_Inspector.h"
+#include "C_Material.h"
+#include "C_MeshRenderer.h"
 
 //GameObject::GameObject() 
 //{
@@ -14,9 +15,10 @@
 
 GameObject::GameObject(std::string name, GameObject* parent) : name(name), parent(parent)
 {
-	// adds a component transform by default
+	// Adds a component transform ---------------------
 	CreateComponent(ComponentType::TRANSFORM);
 
+	// Add to its parent childs ----------------------
 	if (parent != nullptr)
 		parent->childs.push_back(this);
 }
@@ -25,27 +27,27 @@ GameObject::~GameObject()
 {
 }
 
-bool GameObject::Enable()
+bool GameObject::CleanUp()
 {
-	std::vector<Component*>::iterator component = components.begin();
+	std::vector<Component*>::iterator compo = components.begin();
 
-	for (; component != components.end(); ++component)
+	for (; compo != components.end(); ++compo)
 	{
-		(*component)->Enable();
+		(*compo)->CleanUp();
 	}
 
 	return true;
 }
 
+bool GameObject::Enable()
+{
+	active = true;
+	return true;
+}
+
 bool GameObject::Disable()
 {
-	std::vector<Component*>::iterator component = components.begin();
-
-	for (; component != components.end(); ++component)
-	{
-		(*component)->Disable();
-	}
-
+	active = false;
 	return true;
 }
 
@@ -77,20 +79,6 @@ bool GameObject::PostUpdate(float dt)
 	return ret;
 }
 
-bool GameObject::Draw()
-{
-	bool ret = true;
-
-	std::vector<Component*>::iterator component = components.begin();
-
-	for (; component != components.end(); ++component)
-	{
-		ret = (*component)->Draw();
-	}
-
-	return ret;
-}
-
 Component* GameObject::CreateComponent(ComponentType type)
 {
 	Component* new_component = nullptr;
@@ -99,18 +87,23 @@ Component* GameObject::CreateComponent(ComponentType type)
 	{
 	case ComponentType::TRANSFORM:
 	{
-		components.push_back(new_component = new ComponentTransform(this));
+		components.push_back(new_component = new C_Transform(this));
 		break;
 	}
 	case ComponentType::MESH:
 	{
-		components.push_back(new_component = new ComponentMesh(this));
+		components.push_back(new_component = new C_Mesh(this));
 		break;
 	}
 	case ComponentType::MATERIAL:
+
+		components.push_back(new_component = new C_Material(this));
 		break;
-	case ComponentType::LIGHT:
+
+	case ComponentType::MESH_RENDERER:
+		components.push_back(new_component = new C_MeshRenderer(this));
 		break;
+
 	default:
 		break;
 	}
@@ -119,23 +112,16 @@ Component* GameObject::CreateComponent(ComponentType type)
 	return new_component;
 }
 
-bool GameObject::CleanUp()
+Component* GameObject::GetComponentsByType(ComponentType type) 
 {
-	// delete components
-	std::vector<Component*>::iterator compo = components.begin();
+	std::vector<Component*>::iterator component = components.begin();
 
-	for (; compo != components.end(); ++compo)
+	for (; component != components.end(); ++component)
 	{
-		(*compo)->CleanUp();
+		if ((*component)->type == type) return  (*component);
 	}
-	
-	/*std::vector<GameObject*>::iterator it = childs.begin();
-	for (; it != childs.end(); ++it)
-	{
-		(*it)->CleanUp();
-	}*/
 
-	return true;
+	return nullptr;
 }
 
 const char* GameObject::GetName() const
@@ -148,22 +134,33 @@ const std::vector<Component*>& GameObject::GetComponents() const
 	return components;
 }
 
-// TODO: search and return a filled vector with all meshes
-ModelData* GameObject::GetMeshes() const
+D_Mesh* GameObject::GetMeshes()
 {
-	// TODO: find if is another better way than search by name
-	for (std::vector<Component*>::const_iterator c = components.begin();
-		c != components.end(); ++c)
+	std::vector<Component*>::iterator component = components.begin();
+
+	for (; component != components.end(); ++component)
 	{
-		if ((*c)->name == "Mesh")
+		if ((*component)->type == ComponentType::MESH)
 		{
-			/*LOG("mesh found");*/
-			ComponentMesh* cm = dynamic_cast<ComponentMesh*>(*c);
-			
-			return cm->mesh;
+			C_Mesh* cm = dynamic_cast<C_Mesh*>(*component);
+
+			return cm->data;
 		}
 	}
-	LOG("selected go doesn't have any meshes");
 
 	return nullptr;
 }
+
+//bool GameObject::Draw()
+//{
+//	bool ret = true;
+//
+//	std::vector<Component*>::iterator component = components.begin();
+//
+//	for (; component != components.end(); ++component)
+//	{
+//		ret = (*component)->Draw();
+//	}
+//
+//	return ret;
+//}

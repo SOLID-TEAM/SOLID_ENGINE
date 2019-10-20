@@ -70,6 +70,7 @@ uint ModuleTextures::LoadTexture(const char* texture_name)
 	// first find if the texture are previously loaded into buffers
 	std::map<std::string, uint>::iterator tex;
 	tex = textures.find(texture_name);
+
 	if (tex != textures.end())
 	{
 		LOG("[Info] Texture with same name %s already loaded into buffers", texture_name);

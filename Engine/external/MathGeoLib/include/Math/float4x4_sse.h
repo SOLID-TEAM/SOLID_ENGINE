@@ -458,10 +458,10 @@ FORCE_INLINE float mat4x4_inverse(const __m128 *mat, __m128 *out)
 /// Inverts a 3x4 affine transformation matrix (in row-major format) that only consists of rotation (+possibly mirroring) and translation.
 FORCE_INLINE void mat3x4_inverse_orthonormal(__m128 *mat, __m128 *out)
 {
-	// mat[0]: [tx,02,01,00]
-	// mat[1]: [ty,12,11,10]
-	// mat[2]: [tz,22,21,20]
-	// mat[3]: assumed to be [1,0,0,0] - not read.
+	// d_mat[0]: [tx,02,01,00]
+	// d_mat[1]: [ty,12,11,10]
+	// d_mat[2]: [tz,22,21,20]
+	// d_mat[3]: assumed to be [1,0,0,0] - not read.
 
 	// First get the translation part (tx,ty,tz) from the original matrix,
 	// and compute T=-M^(-1).

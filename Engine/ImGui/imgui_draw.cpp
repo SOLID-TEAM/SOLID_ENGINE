@@ -525,7 +525,7 @@ void ImDrawList::PopTextureID()
 // NB: this can be called with negative count for removing primitives (as long as the result does not underflow)
 void ImDrawList::PrimReserve(int idx_count, int vtx_count)
 {
-    // Large mesh support (when enabled)
+    // Large data support (when enabled)
     if (sizeof(ImDrawIdx) == 2 && (_VtxCurrentIdx + vtx_count >= (1 << 16)) && (Flags & ImDrawListFlags_AllowVtxOffset))
     {
         _VtxCurrentOffset = VtxBuffer.Size;

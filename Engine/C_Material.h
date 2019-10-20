@@ -3,24 +3,19 @@
 
 #include "Component.h"
 
-class GameObject;
+class D_Material;
 
-class ComponentMaterial : public Component
+class C_Material : public Component
 {
 public:
 
-	ComponentMaterial(GameObject* go);
+	C_Material(GameObject* go);
 
-	//bool PreUpdate(float dt);
+	bool DrawPanelInfo();
 
-	//bool Update(float dt);
+public:
 
-	//bool PostUpdate(float dt);
-
-	//bool Draw(); // draw something on viewport (components) called from gameobjects draw (last game loop)
-
-	//bool DrawPanelInfo(); // draw something on the editor panels loop (components) called from editor
-
+	D_Material* data = nullptr;
 };
 
 #endif // !_C_MATERIAL_H__
