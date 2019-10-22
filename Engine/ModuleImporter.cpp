@@ -109,8 +109,22 @@ bool ModuleImporter::ImportModelFile(const char* path)
 
 	if(scene != nullptr)
 	{
+		GameObject* root = nullptr;
+
+		// If first node has more than 1 mesh ------------
+		if (scene->mRootNode->mNumMeshes == 0u)
+		{
+			std::string name("");
+			App->file_sys->SplitFilePath(path, &(std::string("")), &name);
+			root = new GameObject(name, App->scene->root_go);
+		}
+		else
+		{
+			root = App->scene->root_go;
+		}
+
 		// Create separate gameobjects from nodes
-		CreateGoFromNodes(scene, scene->mRootNode, App->scene->root_go);
+		CreateGoFromNodes(scene, scene->mRootNode, root);
 
 		// Free the imported scene
 		aiReleaseImport(scene);
@@ -155,7 +169,7 @@ void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, Game
 
 			//  Add Component Mesh -------------
 
-			C_Mesh* c_mesh = (C_Mesh*)new_go->CreateComponent(ComponentType::MESH);
+ 			C_Mesh* c_mesh = (C_Mesh*)new_go->CreateComponent(ComponentType::MESH);
 			c_mesh->data = ImportMesh( ai_mesh, ai_mesh->mName.C_Str() );
 
 			// Add Component Material ----------
@@ -249,6 +263,7 @@ D_Mesh*  ModuleImporter::ImportMesh(const aiMesh* mesh, const char* name)
 	// Load uvs data ----------------------------------------------------------
 	
 	uint num_uv_channels = mesh->GetNumUVChannels();
+	d_mesh->uv_num_channels = num_uv_channels;
 
 	if (num_uv_channels > 0)
 	{
@@ -284,7 +299,7 @@ D_Material* ModuleImporter::ImportMaterial(const aiMaterial* material , const ch
 	// Set albedo color ----------------------------------------------------------
 
 	aiColor4D color;
-	material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+	material->Get(AI_MATKEY_COLOR_DIFFUSE,color);
 	d_material->albedo_color = Color(color.r, color.g, color.b, color.a);
 
 	// Get assimp path and normalize --------

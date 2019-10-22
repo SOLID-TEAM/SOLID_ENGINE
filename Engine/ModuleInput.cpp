@@ -152,7 +152,6 @@ update_status ModuleInput::PreUpdate(float dt)
 			std::filesystem::path extension = filepath.extension();
 
 			LOG("%s", filepath.generic_string().data());
-
 			LOG("%s", extension.generic_string().data());
 
 			std::string comparer = extension.generic_string();
@@ -162,7 +161,7 @@ update_status ModuleInput::PreUpdate(float dt)
 				comparer == ".obj" ||
 				comparer == ".solid")
 			{
-				LOG("possible 3d model");
+				LOG("[Info] Possible %s model", comparer);
 				App->importer->ImportModelFile(filename.generic_string().data());
 			}
 			if (comparer == ".png" ||

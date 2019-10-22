@@ -15,6 +15,21 @@ Loading File System
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
+[Info] Loading mesh data : Ü™
+[Info] Vertices:    160 
+[Info] Indices:    324
+[Info] Triangles:  108
+[Info] Normals:   160
+Created mesh data: Untitled.001
+[Info] Image Assets/Textures/Baker_house.png correctly loaded into DevIL
+[Info] Image correctly uploaded to gl buffer
+[Info] Loading mesh data : ôš
+[Info] Vertices:    1641 
+[Info] Indices:    2751
+[Info] Triangles:  917
+[Info] Normals:   1641
+Created mesh data: Untitled
+[Info] Texture with same name Baker_house.png already loaded into buffers
 [Start] Loading Editor
 -------------- Application Update --------------
 -------------- Application CleanUp --------------

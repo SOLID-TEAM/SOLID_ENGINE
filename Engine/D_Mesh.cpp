@@ -73,7 +73,7 @@ void D_Mesh::Load()
 	if (buffers_size[UVS] != 0)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, buffers_id[UVS]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buffers_size[UVS] *2, uvs, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buffers_size[UVS] * 2, uvs, GL_STATIC_DRAW);
 	}
 
 	CreateAABB();

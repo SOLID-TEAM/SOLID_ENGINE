@@ -45,10 +45,11 @@ public:
 	uint buffers_id[BufferType::MAX];
 	uint buffers_size[BufferType::MAX];
 
-	uint* indices = nullptr;
-	float* vertices = nullptr;
-	float* normals = nullptr;
-	float* uvs = nullptr;
+	uint*	indices = nullptr;
+	float*	vertices = nullptr;
+	float*	normals = nullptr;
+	float*	uvs = nullptr;
+	uint	uv_num_channels = 0;
 
 	// ---------------------------------------------------------------
 	// TODO: MOVE TO MATERIAL, when finished
