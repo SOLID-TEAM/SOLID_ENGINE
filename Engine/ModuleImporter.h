@@ -59,7 +59,7 @@ public:
 	// TODO: implement base class gameObjects (for future components addition)
 	std::vector<D_Mesh*>& GetModels();
 
-	void ImportFileFromPath(const char* path);
+	//void ImportFileFromPath(const char* path);
 	void CreateGoFromNodes(const aiScene* scene , aiNode* node, GameObject* parent);
 	
 	// Import file types -----------------------------
@@ -79,6 +79,8 @@ private:
 	// TODO: MAYBE WE NEED a specific module to store all models of the scene and draw etc
 	// TODO: for testing here, but we need to search a better place, maybe new module coming
 	std::vector<D_Mesh*> meshes;
+
+	std::string relative_path_from_model;
 
 public:
 

@@ -156,28 +156,32 @@ update_status ModuleInput::PreUpdate(float dt)
 
 			std::string comparer = extension.generic_string();
 
+			std::transform(comparer.begin(), comparer.end(), comparer.begin(), [](unsigned char c) { return std::tolower(c); });
+
 			if (comparer == ".fbx" ||
-				comparer == ".FBX" ||
 				comparer == ".obj" ||
 				comparer == ".solid")
 			{
-				LOG("[Info] Possible %s model", comparer);
-				App->importer->ImportModelFile(filename.generic_string().data());
+				LOG("// ---------------------------------------------------");
+				LOG("[Info] Possible 3D %s model", comparer.data());
+				LOG("// ---------------------------------------------------");
+				App->importer->ImportModelFile(filepath.generic_string().data());
 			}
 			if (comparer == ".png" ||
 				comparer == ".jpg" ||
-				comparer == ".DDS" ||
+				comparer == ".dds" ||
 				comparer == ".tif")
 			{
 			// TODO !!!! : testing to reload model texture with the dropped one
 			// still need to reload only the desired "focused" model
 			// still need to delete previous texture buffer
-				LOG("possible texture");
+				LOG("// ---------------------------------------------------");
+				LOG("[Info] Possible texture");
 				uint new_tex_id = 0;
 				// load texture already checks if the texture is previously loaded and return its id if it, new id if not
-				new_tex_id = App->textures->LoadTexture(filename.generic_string().data());
+				new_tex_id = App->textures->LoadTexture(filepath.generic_string().data());
 
-				// TODO: in rare circunstances we can delete all gl texture buffers(not necessarily all,
+				// TODO- FIXED(go specific): in rare circunstances we can delete all gl texture buffers(not necessarily all,
 				// only needs to delete one id previously associated with the checker tex). If we have
 				// checker texture active with some linked id to image visualization(active checker tex), when we load a new texture
 				// (and delete) with the panel checker texture not active, and returning to it, the image shown is not the checker
@@ -185,11 +189,12 @@ update_status ModuleInput::PreUpdate(float dt)
 				// workaround | WE NEED to deal with this when we implement checker for active gameobject only
 				// if the new id texture is the same as the one we have linked to checker texture, something weird occurs, then
 				// what that means some id are deleted and another texture is loaded without returning to this panel
-				if (new_tex_id == App->editor->w_rendering->checker_tex_gl_id)
-					App->editor->w_rendering->checker_tex_gl_id = 0;
+				// FIXED ---
+				/*if (new_tex_id == App->editor->w_rendering->checker_tex_gl_id)
+					App->editor->w_rendering->checker_tex_gl_id = 0;*/
 				
-				if (new_tex_id > 0)
-					App->importer->ReloadTextureForAllModels(new_tex_id);
+				/*if (new_tex_id > 0)
+					App->importer->ReloadTextureForAllModels(new_tex_id);*/
 			}
 
 			SDL_free(event.drop.file);

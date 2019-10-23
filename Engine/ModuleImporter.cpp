@@ -101,14 +101,15 @@ bool ModuleImporter::ImportModelFile(const char* path)
 {
 	bool ret = true;
 
-	// TODO: filesystem
-	std::string working_dir("Assets/Models/");
-	std::string final_path(working_dir + path);
+	// TODO: duplicate model file whatever we want on internal files
 
-	const aiScene* scene = aiImportFile(final_path.data(), aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if(scene != nullptr)
 	{
+		// reassign relative path (for texture loading)
+		App->file_sys->SplitFilePath(path, &relative_path_from_model);
+
 		GameObject* root = nullptr;
 
 		// If first node has more than 1 mesh ------------
@@ -210,7 +211,7 @@ D_Mesh*  ModuleImporter::ImportMesh(const aiMesh* mesh, const char* name)
 	D_Mesh* d_mesh = new  D_Mesh();
 	d_mesh->GetName().assign(name);
 
-	LOG("[Info] Loading mesh data : %s", d_mesh->GetName());
+	LOG("[Info] Loading mesh data : %s", d_mesh->GetName().data());
 
 	// Load vertices data -----------------------------------------------------
 
@@ -311,7 +312,7 @@ D_Material* ModuleImporter::ImportMaterial(const aiMaterial* material , const ch
 
 	material->GetTexture(aiTextureType_DIFFUSE, 0, &ai_path);   
 	App->file_sys->SplitFilePath(ai_path.C_Str(), nullptr, &file_name, &file_ex);
-	file = file_name + "." + file_ex;
+	file = relative_path_from_model + file_name + "." + file_ex;
 
 	// Load material textures -------------------------------------------------  // TODO: Only diffuse currently , if we have to do shaders get more textures :)
 
@@ -439,19 +440,19 @@ std::vector<D_Mesh*>& ModuleImporter::GetModels()
 	return meshes;
 }
 
-void ModuleImporter::ImportFileFromPath(const char* path)
-{
-	std::string normalized_path = App->file_sys->NormalizePath(path);
-	std::string final_path;
-
-	// Duplicate file to the indicated internal path 
-	if (App->file_sys->DuplicateFile(normalized_path.c_str(), "Project/Assets", final_path))
-	{
-		// Load asset and create meta data 
-		// If is a data import and add to scene 
-		ImportModelFile(normalized_path.c_str()); // Model test
-	}
-}
+//void ModuleImporter::ImportFileFromPath(const char* path)
+//{
+//	std::string normalized_path = App->file_sys->NormalizePath(path);
+//	std::string final_path;
+//
+//	// Duplicate file to the indicated internal path 
+//	if (App->file_sys->DuplicateFile(normalized_path.c_str(), "Project/Assets", final_path))
+//	{
+//		// Load asset and create meta data 
+//		// If is a data import and add to scene 
+//		ImportModelFile(normalized_path.c_str()); // Model test
+//	}
+//}
 
 void ModuleImporter::ReloadTextureForAllModels(uint texture_id)
 {

@@ -16,7 +16,6 @@
 #include <string>
 
 
-
 ModuleTextures::ModuleTextures(bool start_enabled)// : Module(start_enabled)
 {
 	name.assign("Textures");
@@ -62,10 +61,17 @@ bool ModuleTextures::CleanUp()
 	return true;
 }
 
-uint ModuleTextures::LoadTexture(const char* texture_name)
+uint ModuleTextures::LoadTexture(const char* texture_path)
 {
 	/*ilGenImages(1, &image_test);
 	ilBindImage(image_test);*/
+
+	std::string texture_name;
+	std::string extension;
+	std::string path;
+	App->file_sys->SplitFilePath(texture_path, &path, &texture_name, &extension);
+
+	texture_name = texture_name + '.' + extension;
 
 	// first find if the texture are previously loaded into buffers
 	std::map<std::string, uint>::iterator tex;
@@ -73,16 +79,23 @@ uint ModuleTextures::LoadTexture(const char* texture_name)
 
 	if (tex != textures.end())
 	{
-		LOG("[Info] Texture with same name %s already loaded into buffers", texture_name);
+		LOG("// ---------------------------------------------------");
+		LOG("[Info] Texture with same name %s already loaded into buffers", texture_name.data());
+		LOG("[Info] returning stored texture id");
+		LOG("// ---------------------------------------------------");
 		return (*tex).second;
 	}
 	
-	std::string tex_name(texture_name);
-	std::string final_path(texture_path + tex_name);
+	// TODO: maybe we want to modify how this path are passed (applicable to other loading methods)
+	// First: check filetype and decide what to call
+	// Sec: duplicate the file on desired directory for the extension file
+	// 3: pass the path of the "internal copied file"
 
-	if (ilLoadImage(final_path.data()))
+	if (ilLoadImage(texture_path))
 	{
-		LOG("[Info] Image %s correctly loaded into DevIL", final_path.data());
+		LOG("// ---------------------------------------------------");
+		LOG("[Info] Image %s correctly loaded into DevIL", texture_name.data());
+		LOG("[Info] from filepath %s", path.data());
 
 		GLuint texture = 0;
 
@@ -92,17 +105,25 @@ uint ModuleTextures::LoadTexture(const char* texture_name)
 		{
 			LOG("[Info] Image correctly uploaded to gl buffer");
 			// add to map
-			textures.insert({ tex_name, texture });
+			textures.insert({ texture_name, texture });
+			LOG("[Info] Added image %s to texture map", texture_name.data());
 			// unbind from gpu
 			glBindTexture(GL_TEXTURE_2D, 0);
 			// delete devil data
 			ilDeleteImage(texture);
+			LOG("[Info] Image deleted from DevIL");
 		}
+
+		LOG("// ---------------------------------------------------");
 		
 		return texture > 0 ? texture : NULL;
 	}
 	else
+	{
+		LOG("[Error] Loading texture: %s", iluErrorString(ilGetError()));
+		LOG("[Error] name %s from path %s", texture_name.data(), path.data());
 		return 0;
+	}
 }
 
 bool ModuleTextures::FreeTextureBuffer(uint id)

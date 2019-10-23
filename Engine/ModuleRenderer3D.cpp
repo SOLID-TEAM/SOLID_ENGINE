@@ -206,7 +206,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	
 	// Start Buffer Frame ----------------------------------
-	glBindFramebuffer(GL_FRAMEBUFFER, App->renderer3D->frame_buffer_id);
+	glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glClearColor(0.1, 0.1, 0.1, 1.f);
 	// Object Draw Stencil Settings ------------------------
@@ -228,7 +228,7 @@ update_status ModuleRenderer3D::Draw()
 
 	// Start Buffer Frame ----------------------------------
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glBindTexture(GL_TEXTURE_2D, App->renderer3D->texture_id);
+	glBindTexture(GL_TEXTURE_2D, texture_id);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	// -----------------------------------------------------
