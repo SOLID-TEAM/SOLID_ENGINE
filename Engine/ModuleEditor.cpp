@@ -733,6 +733,61 @@ void ModuleEditor::ShowSoftwareInfo() const
 	ImGui::Separator();
 }
 
+void ModuleEditor::ShowCheckerTexture(uint& checker_id, bool& active) const
+{
+
+	static int val = 256, v_min = 16, v_max = 2048;
+
+	/*if (ImGui::CollapsingHeader("Checker Texture"))
+	{*/
+
+		ImGui::Title("View UV checker", 1);
+		if (ImGui::Checkbox("##view uv checker", &active))
+		{
+			if (active)
+			{
+				checker_id = App->textures->GenerateCheckerTexture(val, val);
+			}
+			else
+			{
+				App->textures->FreeTextureBuffer(checker_id);
+				checker_id = 0;
+			}
+		}
+
+		if (active)
+		{
+			if (ImGui::BeginCombo("Resolution", std::to_string(val).data()))
+			{
+				for (uint i = v_min; i < v_max * 2; i = i > 0 ? i * 2 : ++i)
+				{
+					ImGui::PushID(i);
+					bool is_selected;
+					if (ImGui::Selectable(std::to_string(i).data(), val == i))
+					{
+						val = i;
+
+						App->textures->FreeTextureBuffer(checker_id);
+						checker_id = App->textures->GenerateCheckerTexture(val, val);
+
+					}
+					ImGui::PopID();
+				}
+
+				ImGui::EndCombo();
+			}
+
+			if (glIsTexture(checker_id))
+				ImGui::Image((ImTextureID)checker_id, ImVec2(256, 256));
+			else
+			{
+				active = false;
+				checker_id = 0; // for rare circumstances
+			}
+		}
+	//}
+}
+
 // DEBUG DATA MESH CLASS HELPER ----------------------------------------------------------------------------------------------------------
 
 //DebugDataMesh::DebugDataMesh() {}

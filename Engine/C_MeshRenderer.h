@@ -22,7 +22,7 @@ public:
 
 private:
 
-	bool Render();
+	bool Render(const uint custom_tex = 0);
 
 	bool RenderWireframe();
 

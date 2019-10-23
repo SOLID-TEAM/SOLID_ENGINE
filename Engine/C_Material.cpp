@@ -24,6 +24,11 @@ bool C_Material::DrawPanelInfo()
 	ImGui::Title("Color", 2);		ImGui::ColorEdit4("Line Color##2f", (float*)&vp.wire_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
 	ImGui::Title("Width", 2);		ImGui::SliderFloat("##wire_line_width", &vp.wire_line_width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
 	
+	ImGui::Separator();
+	ImGui::Title("Textured", 1);	ImGui::Checkbox("##textured", &textured);
+	
+	ImGui::Separator();
+	App->editor->ShowCheckerTexture(checker_gl_id, view_checker);
 
 	return true;
 }

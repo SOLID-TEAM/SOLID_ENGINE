@@ -23,6 +23,8 @@ bool C_MeshRenderer::PostUpdate(float dt)
 {
 	// Get Data from components ----------------------------
 
+	// TODO: i think assign data every frame is not needed, instead, link with the parent component once ---------
+	// ------
 	C_Mesh* c_mesh = (C_Mesh*)linked_go->GetComponentsByType(ComponentType::MESH);
 	C_Material* c_mat = (C_Material*)linked_go->GetComponentsByType(ComponentType::MATERIAL);
 
@@ -34,9 +36,32 @@ bool C_MeshRenderer::PostUpdate(float dt)
 	{
 		d_mat = c_mat->data;
 	}
+	// -------
+	// -------------------------------------------------------------------------------------------------------------
+
+	uint custom_tex_id = 0;
 
 	if (c_mesh != nullptr)
 	{
+		if (c_mat != nullptr)
+		{
+			if (c_mat->view_checker)
+			{
+				// check if checker still is valid (not deleted gl buffer on the way)
+				if(glIsTexture(c_mat->checker_gl_id))
+				{ 
+					custom_tex_id = c_mat->checker_gl_id;
+				}
+				else
+				{
+					if (c_mat->checker_gl_id != 0)
+						c_mat->checker_gl_id = 0;
+				}
+				
+			}
+				
+		}
+
 		// TODO NEXT: implement new render functionality to pass all this shit (colors, draw modes etc)
 
 		ViewportOptions& vp = App->editor->viewport_options;
@@ -49,7 +74,7 @@ bool C_MeshRenderer::PostUpdate(float dt)
 
 			glColor4fv((float*)&vp.fill_color);
 
-			Render();
+			Render(custom_tex_id);
 
 			glLineWidth(1.0f);
 			glDisable(GL_POLYGON_OFFSET_FILL);
@@ -58,7 +83,7 @@ bool C_MeshRenderer::PostUpdate(float dt)
 		else if (vp.fill_faces)
 		{
 			glColor4fv((float*)&vp.fill_color);
-			Render();
+			Render(custom_tex_id);
 		}
 
 		if (vp.wireframe)
@@ -93,7 +118,7 @@ bool C_MeshRenderer::PostUpdate(float dt)
 	return true;
 }
 
-bool C_MeshRenderer::Render()
+bool C_MeshRenderer::Render(uint custom_tex_id)
 {
 	bool ret = true;
 
@@ -123,7 +148,11 @@ bool C_MeshRenderer::Render()
 	// UV's & Texture --------------------------------
 	if (d_mesh->buffers_size[D_Mesh::UVS] != 0 && d_mat != nullptr)
 	{
-		glBindTexture(GL_TEXTURE_2D, d_mat->textures[D_Material::DIFFUSE]->buffer_id);
+		if (custom_tex_id != 0)
+			glBindTexture(GL_TEXTURE_2D, custom_tex_id);
+		else
+			glBindTexture(GL_TEXTURE_2D, d_mat->textures[D_Material::DIFFUSE]->buffer_id);
+
 		glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::UVS]);
 		glTexCoordPointer(2, GL_FLOAT, 0, (void*)0);
 	}

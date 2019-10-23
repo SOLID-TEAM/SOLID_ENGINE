@@ -129,6 +129,7 @@ public:
 	// temporaly utils for imgui prefab functions
 	void HelpMarker(const char* desc) const;
 	void ShowSoftwareInfo() const;
+	void ShowCheckerTexture(uint& checker_tex, bool& active) const;
 
 	//bool SliderIntWithSteps(const char* label, int* v, int v_min, int v_max, int v_step, const char* display_format);
 

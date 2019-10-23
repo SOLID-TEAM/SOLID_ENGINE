@@ -16,6 +16,10 @@ public:
 public:
 
 	D_Material* data = nullptr;
+	bool textured = true;
+	bool view_checker = false;
+	uint checker_gl_id = 0;
+
 };
 
 #endif // !_C_MATERIAL_H__
