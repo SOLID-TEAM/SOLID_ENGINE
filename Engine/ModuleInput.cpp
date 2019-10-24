@@ -147,9 +147,9 @@ update_status ModuleInput::PreUpdate(float dt)
 		{
 			// TODO: remove this testing from here, and do specific functions/change with our filesystem ----------
 			//dropped_filedir = event.drop.file;
-			std::experimental::filesystem::path filepath = event.drop.file;
-			std::experimental::filesystem::path filename = filepath.filename();
-			std::experimental::filesystem::path extension = filepath.extension();
+			std::filesystem::path filepath = event.drop.file;
+			std::filesystem::path filename = filepath.filename();
+			std::filesystem::path extension = filepath.extension();
 
 			LOG("%s", filepath.generic_string().data());
 			LOG("%s", extension.generic_string().data());
