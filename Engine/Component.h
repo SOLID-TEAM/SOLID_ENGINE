@@ -2,6 +2,8 @@
 #define _COMPONENT_H__
 
 #include "ModuleImporter.h"
+#include "W_Inspector.h"
+
 #include <string>
 
 enum class ComponentType
@@ -21,6 +23,7 @@ class Component
 public :
 
 	friend ModuleImporter;
+	friend W_Inspector;
 	friend GameObject;
 
 public:

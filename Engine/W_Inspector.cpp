@@ -31,7 +31,16 @@ void W_Inspector::Draw()
 				// TODO: find another way to store individual go opened/closed collapsingheader
 				//ImGui::SetNextTreeNodeOpen(!(*components)->collapsed); 
 
-				if (ImGui::CollapsingHeader((*components)->name.c_str(), (*components)->flags))
+				
+
+				bool aux = ImGui::CollapsingHeader(("   " + (*components)->name).c_str(), (*components)->flags);
+
+				if ((*components)->flags & ImGuiTreeNodeFlags_AllowItemOverlap)
+				{
+					ImGui::SameLine(30.f);  ImGui::Checkbox(("##active" + (*components)->name).c_str(), &(*components)->active);
+				}
+		
+				if ( aux )
 				{
 					(*components)->DrawPanelInfo();
 					//(*components)->collapsed = false;
