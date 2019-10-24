@@ -101,7 +101,7 @@ bool ModuleImporter::ImportModelFile(const char* path)
 
 	// TODO: duplicate model file whatever we want on internal files
 
-	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_Triangulate  | aiProcess_GenSmoothNormals | aiProcess_GenBoundingBoxes);
+	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_GenBoundingBoxes); // not needed, already included on quality | max quality preset
 
 	if(scene != nullptr)
 	{
