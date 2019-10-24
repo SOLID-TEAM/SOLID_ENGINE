@@ -243,6 +243,8 @@ bool ModuleRenderer3D::CleanUp()
 
 	SDL_GL_DeleteContext(context);
 
+	DeleteSceneBuffers();
+
 	return true;
 }
 
@@ -256,6 +258,20 @@ void ModuleRenderer3D::GenSceneBuffers()
 
 	// Gen frame buffer ----------------------------------------
 	glGenFramebuffers(1, &frame_buffer_id);
+}
+
+bool ModuleRenderer3D::DeleteSceneBuffers()
+{
+	// Delete depth buffer ---------------------------------------
+	glDeleteRenderbuffers(1, &depth_buffer_id);
+
+	// Delete color texture --------------------------------------
+	glDeleteTextures(1, &texture_id);
+
+	// Delete frame buffer ---------------------------------------
+	glDeleteFramebuffers(1, &frame_buffer_id);
+
+	return true;
 }
 
 void ModuleRenderer3D::UpdateSceneBuffers(int width, int height)

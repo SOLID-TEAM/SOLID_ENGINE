@@ -56,6 +56,7 @@ public:
 	std::string GetGlewVersionString() const;
 
 	void GenSceneBuffers();
+	bool DeleteSceneBuffers();
 
 	void UpdateSceneBuffers(int width, int height);
 
@@ -76,7 +77,7 @@ public:
 
 	uint frame_buffer_id = 0;
 	uint depth_buffer_id = 0;
-	uint stencil_buffer_id = 0;
+	//uint stencil_buffer_id = 0;
 	uint texture_id = 0;
 
 private:
