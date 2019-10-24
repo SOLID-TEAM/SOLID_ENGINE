@@ -137,7 +137,7 @@ update_status ModuleCamera3D::Update(float dt)
 					Y = final_rot * Y;
 					X = Cross(Y, Z);
 
-					position = reference + Z * distance;
+					position = reference + Z.Normalized() * distance;
 				}
 			}
 		}
