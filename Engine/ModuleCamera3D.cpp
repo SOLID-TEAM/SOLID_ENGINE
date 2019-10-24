@@ -41,6 +41,59 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
+	// Mouse motion ------------------------------
+
+	mouse_right_presed = (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN);
+
+	if (enable_mouse_input)
+	{
+		// Look Around ----------------------------------------------------------------
+
+		if (mouse_right_presed)
+		{
+			float dx = -App->input->GetMouseXMotion();
+			float dy = -App->input->GetMouseYMotion();
+
+			//position -= reference;
+
+			if (dx != 0 || dy != 0)
+			{
+				float rotation_speed = 10.f * dt;
+				float yaw = dx * rotation_speed;
+				float pitch = dy * rotation_speed;
+
+				math::Quat rot_x = math::Quat::RotateAxisAngle(math::float3::unitY, yaw * DEGTORAD);
+				math::Quat rot_y = math::Quat::RotateAxisAngle(math::Cross(Y, Z), pitch * DEGTORAD);
+				math::Quat final_rot = rot_x * rot_y;
+
+				Z = final_rot * Z;
+				Y = final_rot * Y;
+				X = Cross(Y, Z);
+			}
+
+			//position = reference ;
+		}
+
+		// Zoom ---------------------------------------------------------------------
+
+		float mouse_z = -App->input->GetMouseZ();
+
+		if (mouse_z != 0)
+		{
+			float zoom_speed = 50.f * dt;
+
+			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT)
+			{
+				zoom_speed *= 4.f;
+			}
+
+			math::float3 offset = zoom_speed * Z * mouse_z;
+			position += offset;
+			reference += offset;
+		}
+
+	}
+
 	// Keys motion ----------------------------------
 
 	if (enable_keys_input)
@@ -68,58 +121,7 @@ update_status ModuleCamera3D::Update(float dt)
 		reference += offset;
 	}
 
-	// Mouse motion ------------------------------
-
-	mouse_right_presed = (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN);
-
-	if (enable_mouse_input)
-	{
-		// Look Around ----------------------------------------------------------------
-
-		if (mouse_right_presed)
-		{
-			float dx = -App->input->GetMouseXMotion(); 
-			float dy = -App->input->GetMouseYMotion(); 
-
-			//position -= reference;
-
-			if (dx != 0 || dy != 0)
-			{
-				float rotation_speed = 10.f * dt;
-				float yaw = dx * rotation_speed;
-				float pitch = dy * rotation_speed;
-
-				math::Quat rot_x = math::Quat::RotateAxisAngle(math::float3::unitY , -yaw * DEGTORAD);
-				math::Quat rot_y = math::Quat::RotateAxisAngle(math::Cross(Z, Y), -pitch * DEGTORAD);
-				math::Quat final_rot = rot_x * rot_y;
-
-				Z = final_rot * Z;
-				Y = final_rot * Y;
-				X = math::Cross(Z, Y);
-			}
-
-			//position = reference ;
-		}
-
-		// Zoom ---------------------------------------------------------------------
-
-		float mouse_z = - App->input->GetMouseZ();
-
-		if (mouse_z != 0)
-		{
-			float zoom_speed = 50.f * dt;
-
-			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT)
-			{
-				zoom_speed *= 4.f; 
-			}
-
-			math::float3 offset = zoom_speed * Z * mouse_z ;
-			position += offset;
-			reference += offset;
-		}	
-
-	}
+	
 
 	// Recalculate matrix -------------
 
