@@ -16,7 +16,7 @@
 GameObject::GameObject(std::string name, GameObject* parent) : name(name), parent(parent)
 {
 	// Adds a component transform ---------------------
-	CreateComponent(ComponentType::TRANSFORM);
+	transform = (C_Transform*)CreateComponent(ComponentType::TRANSFORM);
 
 	// Add to its parent childs ----------------------
 	if (parent != nullptr)

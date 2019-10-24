@@ -79,7 +79,7 @@ void W_Scene::Draw()
 
 		App->camera->enable_keys_input = ImGui::IsWindowFocused();
 
-		if (!App->camera->mouse_right_presed)
+		if (!App->camera->mouse_right_pressed)
 		{
 			App->camera->enable_mouse_input = mouse_is_hovering;
 		}

@@ -18,8 +18,6 @@ public:
 
 	void Load(Config& config);
 	bool Save(Config& config);
-
-	void Look(const math::float3 & pos, const math::float3 & Reference, bool RotateAroundReference = false);
 	void LookAt(const math::float3&  Spot);
 	void Move(const math::float3& Movement);
 	float* GetViewMatrix();
@@ -30,11 +28,23 @@ private:
 
 public:
 	
-	bool mouse_right_presed = false;
+	enum CameraState
+	{
+		ORBIT,
+		LOOK_AROUND,
+		IDLE
+	} state = IDLE;
+
+	float distance = 0;
+
+	bool mouse_right_pressed = false;
+	bool mouse_left_pressed = false;
+	bool alt_pressed = false;
+
 	bool enable_keys_input = false;
 	bool enable_mouse_input = false;
 	math::float3 X, Y, Z, position, reference;
 
 private:
-	mat4x4 ViewMatrix, ViewMatrixInverse;
+	mat4x4 view_matrix;
 };

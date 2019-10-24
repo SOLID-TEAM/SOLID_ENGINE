@@ -15,13 +15,6 @@ Loading File System
 -------------- Application Start --------------
 [Start] Setting up the camera
 Loading Test assets
-[Start] Loading Editor
--------------- Application Update --------------
-D:/Documentos/GitHub Projects/SOLID_ENGINE/Engine/Game/Assets/Models/BakerHouse.fbx
-.fbx
-// ---------------------------------------------------
-[Info] Possible 3D .fbx model
-// ---------------------------------------------------
 [Info] Loading mesh data : Untitled.001
 [Info] Vertices:    160 
 [Info] Indices:    324
@@ -30,7 +23,7 @@ D:/Documentos/GitHub Projects/SOLID_ENGINE/Engine/Game/Assets/Models/BakerHouse.
 Created mesh data: Untitled.001
 // ---------------------------------------------------
 [Info] Image Baker_house.png correctly loaded into DevIL
-[Info] from filepath D:/Documentos/GitHub Projects/SOLID_ENGINE/Engine/Game/Assets/Models/
+[Info] from filepath Assets/Models/
 [Info] Image correctly uploaded to gl buffer
 [Info] Added image Baker_house.png to texture map
 [Info] Image deleted from DevIL
@@ -45,6 +38,8 @@ Created mesh data: Untitled
 [Info] Texture with same name Baker_house.png already loaded into buffers
 [Info] returning stored texture id
 // ---------------------------------------------------
+[Start] Loading Editor
+-------------- Application Update --------------
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

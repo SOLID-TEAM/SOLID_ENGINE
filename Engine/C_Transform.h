@@ -16,7 +16,8 @@ public:
 	//bool Update(float dt);
 	bool DrawPanelInfo();
 
-private:
+public:
+
 	float3 position = position.zero;
 	float3 rotation = rotation.zero;
 	float3 scale = scale.zero;

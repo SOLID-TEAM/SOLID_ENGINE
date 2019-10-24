@@ -75,8 +75,6 @@ void D_Mesh::Load()
 		glBindBuffer(GL_ARRAY_BUFFER, buffers_id[UVS]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buffers_size[UVS] * 2, uvs, GL_STATIC_DRAW);
 	}
-
-	CreateAABB();
 }
 
 
@@ -92,11 +90,6 @@ void D_Mesh::Unload()
 	delete[] uvs;
 }
 
-void D_Mesh::CreateAABB()
-{
-	aabb.SetNegativeInfinity();
-	aabb.Enclose( (math::float3*) vertices, buffers_size[VERTICES]);
-}
 
 //texture_id = App->textures->GenerateCheckerTexture(512,512);
 

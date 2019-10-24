@@ -22,10 +22,6 @@ public:
 
 	void Unload();
 
-private:
-
-	void CreateAABB();
-
 public:
 
 	enum  BufferType

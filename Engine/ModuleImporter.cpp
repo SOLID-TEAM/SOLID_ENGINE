@@ -57,11 +57,9 @@ bool ModuleImporter::Start(Config& config)
 {
 
 	//ImportModelFile("child_test999.fbx");
-
-	//ImportModelFile("BakerHouse.fbx");
 	//ImportModelFile("child_test_definitive_edition_remaster.fbx");
 
-	//ImportModelFile("Assets/Models/BakerHouse.fbx");
+	ImportModelFile("Assets/Models/BakerHouse.fbx");
 
 	//ImportModelFile("Assets/Models/hammer_low.fbx");
 	//ImportModelFile("Assets/Models/suzanne.solid");
@@ -131,7 +129,7 @@ bool ModuleImporter::ImportModelFile(const char* path)
 		aiReleaseImport(scene);
 	}
 	else
-		LOG("[Error] Loading scene %s / no meshes", path);
+		LOG("[Error] Loading scene %s ", path);
 
 	return ret;
 }
@@ -285,7 +283,20 @@ D_Mesh*  ModuleImporter::ImportMesh(const aiMesh* mesh, const char* name)
 		}
 	}
 
+	// Load aabb ---------------------------------------------------------------
+
+	d_mesh->aabb.SetNegativeInfinity();
+	
+	d_mesh->aabb.minPoint.x = mesh->mAABB.mMin.x;
+	d_mesh->aabb.minPoint.y = mesh->mAABB.mMin.y;
+	d_mesh->aabb.minPoint.z = mesh->mAABB.mMin.z;
+
+	d_mesh->aabb.maxPoint.x = mesh->mAABB.mMax.x;
+	d_mesh->aabb.maxPoint.y = mesh->mAABB.mMax.y;
+	d_mesh->aabb.maxPoint.z = mesh->mAABB.mMax.z;
+
 	d_mesh->Load();
+
 	LOG("Created mesh data: %s", d_mesh->GetName().c_str());
 
 	return d_mesh;

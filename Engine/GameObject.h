@@ -8,6 +8,7 @@
 
 class W_Inspector;
 class D_Mesh;
+class C_Transform;
 
 class GameObject
 {
@@ -44,6 +45,8 @@ public:
 	std::vector<GameObject*> childs;
 
 	GameObject* parent = nullptr;
+
+	C_Transform* transform = nullptr;
 
 private:
 
