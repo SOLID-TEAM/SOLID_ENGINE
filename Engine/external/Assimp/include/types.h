@@ -151,7 +151,7 @@ struct aiRay {
 
 #endif // !__cplusplus
 
-    //! Position and direction of the ray
+    //! position and direction of the ray
     C_STRUCT aiVector3D pos, dir;
 }; // !struct aiRay
 

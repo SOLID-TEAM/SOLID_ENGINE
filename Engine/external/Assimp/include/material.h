@@ -708,7 +708,7 @@ public:
     * @param type Specifies the type of the texture to be retrieved (
     *    e.g. diffuse, specular, height map ...)
     * @param idx Index of the texture to be retrieved.
-     * @param pOut Reference to receive the output value
+     * @param pOut reference to receive the output value
      */
     template <typename Type>
     aiReturn Get(const char* pKey,unsigned int type,

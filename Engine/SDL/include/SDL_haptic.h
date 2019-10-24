@@ -620,7 +620,7 @@ typedef struct SDL_HapticCondition
     Sint16 right_coeff[3];  /**< How fast to increase the force towards the positive side. */
     Sint16 left_coeff[3];   /**< How fast to increase the force towards the negative side. */
     Uint16 deadband[3];     /**< Size of the dead zone; max 0xFFFF: whole axis-range when 0-centered. */
-    Sint16 center[3];       /**< Position of the dead zone. */
+    Sint16 center[3];       /**< position of the dead zone. */
 } SDL_HapticCondition;
 
 /**

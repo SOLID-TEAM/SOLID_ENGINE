@@ -1557,7 +1557,7 @@ struct ImGuiIO
     //------------------------------------------------------------------
 
     ImVec2      MousePosPrev;                   // Previous mouse position (note that MouseDelta is not necessary == MousePos-MousePosPrev, in case either position is invalid)
-    ImVec2      MouseClickedPos[5];             // Position at time of clicking
+    ImVec2      MouseClickedPos[5];             // position at time of clicking
     double      MouseClickedTime[5];            // Time of last click (used to figure out double-click)
     bool        MouseClicked[5];                // Mouse button went from !Down to Down
     bool        MouseDoubleClicked[5];          // Has mouse button been double-clicked?
@@ -2453,7 +2453,7 @@ struct ImGuiViewport
 {
     ImGuiID             ID;                     // Unique identifier for the viewport
     ImGuiViewportFlags  Flags;                  // See ImGuiViewportFlags_
-    ImVec2              Pos;                    // Position of viewport both in imgui space and in OS desktop/native space
+    ImVec2              Pos;                    // position of viewport both in imgui space and in OS desktop/native space
     ImVec2              Size;                   // Size of viewport in pixel
     float               DpiScale;               // 1.0f = 96 DPI = No extra scale
     ImDrawData*         DrawData;               // The ImDrawData corresponding to this viewport. Valid after Render() and until the next call to NewFrame().
