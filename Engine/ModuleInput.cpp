@@ -154,7 +154,8 @@ update_status ModuleInput::PreUpdate(float dt)
 			LOG("%s", filepath.c_str());
 			LOG("%s", extension.c_str());
 
-			std::transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c) { return std::tolower(c); });
+			for (uint i = 0; i < strlen(extension.c_str()); ++i)
+				extension[i] = std::tolower(extension[i]);
 
 			if (extension == "fbx" ||
 				extension == "obj" ||
