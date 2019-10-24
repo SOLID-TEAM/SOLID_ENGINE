@@ -26,6 +26,9 @@ bool C_Material::DrawPanelInfo()
 	
 	ImGui::Separator();
 	ImGui::Title("Textured", 1);	ImGui::Checkbox("##textured", &textured);
+
+	ImGui::Separator();
+	ImGui::Title("Material color", 1); ImGui::ColorEdit4("Color##2f", (float*)&data->albedo_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
 	
 	ImGui::Separator();
 	App->editor->ShowCheckerTexture(checker_gl_id, view_checker);

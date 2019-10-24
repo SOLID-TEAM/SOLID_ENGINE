@@ -46,6 +46,7 @@ public:
 	float*	normals = nullptr;
 	float*	uvs = nullptr;
 	uint	uv_num_channels = 0;
+	uint    uv_num_components = 0;
 
 	// ---------------------------------------------------------------
 	// TODO: MOVE TO MATERIAL, when finished

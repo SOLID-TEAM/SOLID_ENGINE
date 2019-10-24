@@ -59,14 +59,14 @@ bool ModuleImporter::Start(Config& config)
 	//ImportModelFile("child_test999.fbx");
 	//ImportModelFile("child_test_definitive_edition_remaster.fbx");
 
-	ImportModelFile("Assets/Models/BakerHouse.fbx");
+	//ImportModelFile("Assets/Models/BakerHouse.fbx");
 
 	//ImportModelFile("Assets/Models/hammer_low.fbx");
 	//ImportModelFile("Assets/Models/suzanne.solid");
 	////ImportModelFile("Assets/Models/warrior.FBX");
 
-	/*CreatePrimitive(CUBE, { 2,0,0 }, { 1,1,1 });
-	CreatePrimitive(SPHERE, { -3,0,0 }, { 1,1,1 });
+	//CreatePrimitive(CUBE, { 0,0,0 }, { 1,1,1 }); 
+	/*CreatePrimitive(SPHERE, { -3,0,0 }, { 1,1,1 });
 	CreatePrimitive(TETRAHEDRON, { 0,1,0 }, { 1,1.2f,1 });
 	CreatePrimitive(ICOSAHEDRON, { 4.5f,0,0 }, { 1,1,1 });*/
 
@@ -271,14 +271,15 @@ D_Mesh*  ModuleImporter::ImportMesh(const aiMesh* mesh, const char* name)
 
 		if (mesh->HasTextureCoords(0)) // TODO: support more texture coord channels if needed
 		{
+			d_mesh->uv_num_components = mesh->mNumUVComponents[0]; // num uv componenets for channel 0, if we expand this, we need to rework this too
 			d_mesh->buffers_size[D_Mesh::UVS] = mesh->mNumVertices;
-			d_mesh->uvs = new float[mesh->mNumVertices * 2];
+			d_mesh->uvs = new float[mesh->mNumVertices * d_mesh->uv_num_components];
 
 			// we need a for loop if we want to improve memory performance, assimp stores its uvs in 3d vectors for uv/w 
 
 			for (uint i = 0; i < mesh->mNumVertices; ++i)
 			{
-				memcpy(&d_mesh->uvs[i * 2], &mesh->mTextureCoords[0][i], sizeof(float) * 2);
+				memcpy(&d_mesh->uvs[i * d_mesh->uv_num_components], &mesh->mTextureCoords[0][i], sizeof(float) * 2);
 			}
 		}
 	}
@@ -321,15 +322,29 @@ D_Material* ModuleImporter::ImportMaterial(const aiMaterial* material , const ch
 	std::string file_ex;
 	aiString	ai_path;
 
-	material->GetTexture(aiTextureType_DIFFUSE, 0, &ai_path);   
-	App->file_sys->SplitFilePath(ai_path.C_Str(), nullptr, &file_name, &file_ex);
-	file = relative_path_from_model + file_name + "." + file_ex;
+	material->GetTexture(aiTextureType_DIFFUSE, 0, &ai_path);  
 
-	// Load material textures -------------------------------------------------  // TODO: Only diffuse currently , if we have to do shaders get more textures :)
+	if (ai_path.length > 0)
+	{
+		App->file_sys->SplitFilePath(ai_path.C_Str(), nullptr, &file_name, &file_ex);
+		file = relative_path_from_model + file_name + "." + file_ex;
 
-	d_material->textures[D_Material::DIFFUSE] = ImportTexture(file.c_str());
+		// Load material textures -------------------------------------------------  // TODO: Only diffuse currently , if we have to do shaders get more textures :)
+
+		d_material->textures[D_Material::DIFFUSE] = ImportTexture(file.c_str());
+	}
+	else
+	{
+		LOG("[Error] NO TEXTURE ON MODEL");
+	}
+
 
 	return d_material;
+}
+
+D_Material* ModuleImporter::CreateDefaultMaterial(const char* name, vec4 color) const
+{
+	return  new D_Material(name, color);
 }
 
 
@@ -403,10 +418,10 @@ void ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, vec3 siz
 		break;
 	}
 
-	if (p_mesh == nullptr)
+	/*if (p_mesh == nullptr)
 	{
 		return;
-	}
+	}*/
 	
 
 	if (isPlatonic)
@@ -427,6 +442,9 @@ void ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, vec3 siz
 	c_mesh->data = new D_Mesh(p_mesh->points, p_mesh->triangles, p_mesh->normals, p_mesh->tcoords, p_mesh->npoints, p_mesh->ntriangles);
 	c_mesh->data->name.assign(name.data());
 	c_mesh->data->Load();
+
+	C_Material* c_material = (C_Material*)gameobject->CreateComponent(ComponentType::MATERIAL);
+	c_material->data = CreateDefaultMaterial("default material", {1.0f,1.0f,1.0f,1.0f});
 
 	C_MeshRenderer* c_renderer = (C_MeshRenderer*)gameobject->CreateComponent(ComponentType::MESH_RENDERER);
 

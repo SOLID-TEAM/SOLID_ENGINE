@@ -72,6 +72,7 @@ private:
 
 	D_Mesh*			ImportMesh(const aiMesh* mesh, const char* name);
 	D_Material*		ImportMaterial(const aiMaterial* material, const char* name);
+	D_Material*		CreateDefaultMaterial(const char* name, vec4 color) const;
 	D_Texture*		ImportTexture(const char* path);
 
 private:

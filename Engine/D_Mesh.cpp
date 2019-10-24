@@ -16,9 +16,11 @@ D_Mesh::D_Mesh() : Data( DataType::MESH )
 	}
 }
 
-D_Mesh::D_Mesh(float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices) : Data(DataType::MESH), 
-vertices(vertices), indices(indices),  uvs(uvs)
+D_Mesh::D_Mesh(float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices) : Data(DataType::MESH)
 { 
+	// par_shapes meshes fixed num uv components per uv = 2
+	this->uv_num_components = 2;
+
 	for (uint i = 0; i < BufferType::MAX; i++)
 	{
 		buffers_id[i] = 0;
@@ -26,7 +28,9 @@ vertices(vertices), indices(indices),  uvs(uvs)
 	}
 
 	buffers_size[BufferType::VERTICES] = n_vertices;
-	buffers_size[BufferType::INDICES] = n_indices;
+	buffers_size[BufferType::INDICES] = n_indices * 3;
+	buffers_size[BufferType::NORMALS] = n_vertices;
+	buffers_size[BufferType::UVS] = n_vertices;
 
 	this->vertices = new float[n_vertices * 3];
 	this->indices = new uint[n_indices * 3];
@@ -51,6 +55,7 @@ D_Mesh::~D_Mesh()
 
 void D_Mesh::Load()
 {
+	// TODO: REWORK THIS, not all meshes has all this components
 	// Generate Buffers --------------------------------
 	glGenBuffers(4, buffers_id);
 
@@ -73,7 +78,7 @@ void D_Mesh::Load()
 	if (buffers_size[UVS] != 0)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, buffers_id[UVS]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buffers_size[UVS] * 2, uvs, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buffers_size[UVS] * uv_num_components, uvs, GL_STATIC_DRAW);
 	}
 }
 

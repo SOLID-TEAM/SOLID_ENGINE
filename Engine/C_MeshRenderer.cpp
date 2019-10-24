@@ -28,28 +28,34 @@ bool C_MeshRenderer::PostUpdate(float dt)
 	C_Mesh* c_mesh = (C_Mesh*)linked_go->GetComponentsByType(ComponentType::MESH);
 	C_Material* c_mat = (C_Material*)linked_go->GetComponentsByType(ComponentType::MATERIAL);
 
-	if (c_mesh != nullptr)
+	if (c_mesh == nullptr)
 	{
-		d_mesh = c_mesh->data;
+		LOG("[Error] no component mesh attached to this mesh renderer");
+		return false;
 	}
-	if (c_mat != nullptr)
+	if (c_mat == nullptr)
 	{
-		d_mat = c_mat->data;
+		LOG("[Error] no component material attached to this mesh renderer");
+		return false;
 	}
+
+	d_mesh = c_mesh->data;
+	d_mat = c_mat->data;
+
 	// -------
 	// -------------------------------------------------------------------------------------------------------------
 
 	uint custom_tex_id = 0;
 
-	if (c_mesh != nullptr)
+	if (c_mesh != nullptr) // TODO: delete this checks, the checks on top of this blinds this code
 	{
 		if (c_mat != nullptr)
 		{
 			if (c_mat->view_checker)
 			{
 				// check if checker still is valid (not deleted gl buffer on the way)
-				if(glIsTexture(c_mat->checker_gl_id))
-				{ 
+				if (glIsTexture(c_mat->checker_gl_id))
+				{
 					custom_tex_id = c_mat->checker_gl_id;
 				}
 				else
@@ -57,9 +63,7 @@ bool C_MeshRenderer::PostUpdate(float dt)
 					if (c_mat->checker_gl_id != 0)
 						c_mat->checker_gl_id = 0;
 				}
-				
 			}
-				
 		}
 
 		// TODO NEXT: implement new render functionality to pass all this shit (colors, draw modes etc)
@@ -72,7 +76,7 @@ bool C_MeshRenderer::PostUpdate(float dt)
 			glEnable(GL_POLYGON_OFFSET_FILL);
 			glPolygonOffset(1.0f, 0.375f);
 
-			glColor4fv((float*)&vp.fill_color);
+			glColor4fv((float*)&d_mat->albedo_color);
 
 			Render(custom_tex_id);
 
@@ -82,7 +86,7 @@ bool C_MeshRenderer::PostUpdate(float dt)
 		}
 		else if (vp.fill_faces)
 		{
-			glColor4fv((float*)&vp.fill_color);
+			glColor4fv((float*)&d_mat->albedo_color);
 			Render(custom_tex_id);
 		}
 
@@ -128,16 +132,20 @@ bool C_MeshRenderer::Render(uint custom_tex_id)
 	// it is guaranteed that none of the returned names was in use immediately before the call to glGenTextures. "
 	// checks if the texture id is a valid texture id and prevents creation of no dimensionality with new binding before render
 
-	if (d_mat != nullptr && d_mat->textures[D_Material::DIFFUSE]->buffer_id != 0)
+	if (d_mat->textures[D_Material::DIFFUSE] != nullptr) // TODO: clean this and perform for possible another textures
 	{
-		if (!glIsTexture(d_mat->textures[D_Material::DIFFUSE]->buffer_id))
-			d_mat->textures[D_Material::DIFFUSE]->buffer_id = 0;
+		if (d_mat->textures[D_Material::DIFFUSE]->buffer_id != 0)
+		{
+			if (!glIsTexture(d_mat->textures[D_Material::DIFFUSE]->buffer_id))
+				d_mat->textures[D_Material::DIFFUSE]->buffer_id = 0;
+		}
 	}
 
 	// Enable client side individual capabilities
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	if(d_mesh->buffers_size[D_Mesh::UVS] != 0)
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glClientActiveTexture(GL_TEXTURE0);
 	//glEnableClientState(GL_COLOR_ARRAY); to colorize each vertex with an array of colors
 
@@ -151,10 +159,13 @@ bool C_MeshRenderer::Render(uint custom_tex_id)
 		if (custom_tex_id != 0)
 			glBindTexture(GL_TEXTURE_2D, custom_tex_id);
 		else
-			glBindTexture(GL_TEXTURE_2D, d_mat->textures[D_Material::DIFFUSE]->buffer_id);
+		{
+			if(d_mat->textures[D_Material::DIFFUSE] != nullptr)
+				glBindTexture(GL_TEXTURE_2D, d_mat->textures[D_Material::DIFFUSE]->buffer_id);
+		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::UVS]);
-		glTexCoordPointer(2, GL_FLOAT, 0, (void*)0);
+		glTexCoordPointer(d_mesh->uv_num_components, GL_FLOAT, 0, (void*)0);
 	}
 	// Nomrals ---------------------------------------
 
@@ -170,8 +181,8 @@ bool C_MeshRenderer::Render(uint custom_tex_id)
 	glDrawElements(GL_TRIANGLES, d_mesh->buffers_size[D_Mesh::INDICES], GL_UNSIGNED_INT, (void*)0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	// unbind texture
 	glBindTexture(GL_TEXTURE_2D, 0);
