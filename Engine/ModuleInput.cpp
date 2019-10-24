@@ -10,7 +10,7 @@
 // TODO: maybe temporal untill we get to fully work module filesystem
 // the most recommended approach to deal with paths/extensions/filenames in windows
 // before boost lib
-#include <filesystem> // for search filename extension / file name | needed c++17
+//#include <filesystem> // for search filename extension / file name | needed c++17
 
 #define MAX_KEYS 300
 
@@ -146,32 +146,31 @@ update_status ModuleInput::PreUpdate(float dt)
 		case SDL_DROPFILE:
 		{
 			// TODO: remove this testing from here, and do specific functions/change with our filesystem ----------
-			//dropped_filedir = event.drop.file;
-			std::filesystem::path filepath = event.drop.file;
-			std::filesystem::path filename = filepath.filename();
-			std::filesystem::path extension = filepath.extension();
+			
+			std::string filepath = App->file_sys->NormalizePath(event.drop.file);
+			std::string extension;
+			App->file_sys->SplitFilePath(filepath.c_str(), nullptr, nullptr, &extension);
 
-			LOG("%s", filepath.generic_string().data());
-			LOG("%s", extension.generic_string().data());
+			LOG("%s", filepath.c_str());
+			LOG("%s", extension.c_str());
 
-			std::string comparer = extension.generic_string();
+			std::transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c) { return std::tolower(c); });
 
-			std::transform(comparer.begin(), comparer.end(), comparer.begin(), [](unsigned char c) { return std::tolower(c); });
-
-			if (comparer == ".fbx" ||
-				comparer == ".obj" ||
-				comparer == ".solid")
+			if (extension == "fbx" ||
+				extension == "obj" ||
+				extension == "solid")
 			{
 				LOG("// ---------------------------------------------------");
-				LOG("[Info] Possible 3D %s model", comparer.data());
+				LOG("[Info] Possible 3D %s model", extension.c_str());
 				LOG("// ---------------------------------------------------");
-				App->importer->ImportModelFile(filepath.generic_string().data());
+				App->importer->ImportModelFile(filepath.c_str());
 			}
-			if (comparer == ".png" ||
-				comparer == ".jpg" ||
-				comparer == ".dds" ||
-				comparer == ".tif")
+			if (extension == "png" ||
+				extension == "jpg" ||
+				extension == "dds" ||
+				extension == "tif")
 			{
+
 			// TODO !!!! : testing to reload model texture with the dropped one
 			// still need to reload only the desired "focused" model
 			// still need to delete previous texture buffer
@@ -179,7 +178,7 @@ update_status ModuleInput::PreUpdate(float dt)
 				LOG("[Info] Possible texture");
 				uint new_tex_id = 0;
 				// load texture already checks if the texture is previously loaded and return its id if it, new id if not
-				new_tex_id = App->textures->LoadTexture(filepath.generic_string().data());
+				new_tex_id = App->textures->LoadTexture(filepath.c_str());
 
 				// TODO- FIXED(go specific): in rare circunstances we can delete all gl texture buffers(not necessarily all,
 				// only needs to delete one id previously associated with the checker tex). If we have
@@ -196,6 +195,8 @@ update_status ModuleInput::PreUpdate(float dt)
 				/*if (new_tex_id > 0)
 					App->importer->ReloadTextureForAllModels(new_tex_id);*/
 			}
+
+			LOG("extension: %s", extension.c_str());
 
 			SDL_free(event.drop.file);
 
