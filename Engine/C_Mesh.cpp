@@ -12,6 +12,11 @@ C_Mesh::C_Mesh(GameObject* parent) : Component(parent, ComponentType::MESH)
 C_Mesh::~C_Mesh() {}
 
 
+bool C_Mesh::Update(float dt)
+{
+	return true;
+}
+
 bool C_Mesh::DrawPanelInfo()
 {
 	ImGui::Spacing();

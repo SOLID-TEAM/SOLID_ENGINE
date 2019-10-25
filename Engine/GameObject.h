@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Component.h"
+#include "external/MathGeoLib/include/Geometry/AABB.h"
 
 class W_Inspector;
 class D_Mesh;
@@ -39,6 +40,12 @@ public:
 	const std::vector<Component*>& GetComponents() const;
 
 	D_Mesh* GetMeshes();
+
+	void GetBoundingBox(math::AABB& aabb); // From all components
+
+private:
+
+	void GenerateGlobalBoundingBox(GameObject* go, math::AABB* aabb);
 
 public:
 

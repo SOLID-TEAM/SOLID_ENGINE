@@ -59,7 +59,7 @@ bool ModuleImporter::Start(Config& config)
 	//ImportModelFile("child_test999.fbx");
 	//ImportModelFile("child_test_definitive_edition_remaster.fbx");
 
-	//ImportModelFile("Assets/Models/BakerHouse.fbx");
+	ImportModelFile("Assets/Models/BakerHouse.fbx");
 
 	//ImportModelFile("Assets/Models/hammer_low.fbx");
 	//ImportModelFile("Assets/Models/suzanne.solid");
@@ -442,6 +442,7 @@ void ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, vec3 siz
 	c_mesh->data = new D_Mesh(p_mesh->points, p_mesh->triangles, p_mesh->normals, p_mesh->tcoords, p_mesh->npoints, p_mesh->ntriangles);
 	c_mesh->data->name.assign(name.data());
 	c_mesh->data->Load();
+	c_mesh->data->CreateAABB();
 
 	C_Material* c_material = (C_Material*)gameobject->CreateComponent(ComponentType::MATERIAL);
 	c_material->data = CreateDefaultMaterial("default material", {1.0f,1.0f,1.0f,1.0f});

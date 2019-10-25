@@ -16,6 +16,7 @@ public:
 	C_Mesh(GameObject* parent);
 	~C_Mesh();
 
+	bool Update(float dt);
 	bool DrawPanelInfo();
 	bool CleanUp();
 

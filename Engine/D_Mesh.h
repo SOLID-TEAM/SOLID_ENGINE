@@ -20,6 +20,8 @@ public:
 
 	void Load();
 
+	void CreateAABB();
+
 	void Unload();
 
 public:
