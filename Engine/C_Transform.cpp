@@ -136,15 +136,15 @@ bool C_Transform::DrawPanelInfo()
 
 
 	ImGui::Spacing();
-	ImGui::Title("Position", 1);	if (ImGui::DragFloat3("##position", (float*)&pos,  0.01f, 0.0f, 0.0f, "%.2f" , 0.05f)) {   SetPosition(pos); UpdateLocalTransform(); update_local_transform = true;};
-	ImGui::Title("Rotation", 1);	if (ImGui::DragFloat3("##rotation", (float*)&rot,  0.05f, 0.0f, 0.0f, "%.2f",  0.05f))	{	SetRotation(rot); UpdateLocalTransform(); update_local_transform = true;};
-	ImGui::Title("Scale", 1);		if (ImGui::DragFloat3("##scale	 ", (float*)&scal, 0.01f, 0.0f, 0.0f, "%.2f", 0.05f))	{	SetScale(scal);	  UpdateLocalTransform(); update_local_transform = true;};
+	ImGui::Title("Position", 1);	if (ImGui::DragFloat3("##position", (float*)&pos,  0.01f, 0.0f, 0.0f, "%.2f" , 0.05f)) {   SetPosition(pos); ; update_local_transform = true;};
+	ImGui::Title("Rotation", 1);	if (ImGui::DragFloat3("##rotation", (float*)&rot,  0.1f, 0.0f, 0.0f, "%.2f",  0.05f))	{	SetRotation(rot); update_local_transform = true;};
+	ImGui::Title("Scale", 1);		if (ImGui::DragFloat3("##scale	 ", (float*)&scal, 0.01f, 0.0f, 0.0f, "%.2f", 0.05f))	{	SetScale(scal);	 update_local_transform = true;};
 	ImGui::Spacing();
 
-	//if (update_local_transform)
-	//{
-	//	UpdateLocalTransform();
-	//}
+	if (update_local_transform)
+	{
+		UpdateLocalTransform();
+	}
 
 
 	return true;

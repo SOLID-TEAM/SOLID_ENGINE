@@ -39,6 +39,55 @@ Created mesh data: Untitled
 [Info] returning stored texture id
 // ---------------------------------------------------
 [Start] Loading Editor
+// ---------------------------------------------------
+[Info] Image cube.png correctly loaded into DevIL
+[Info] from filepath Project/Editor/Images/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image cube.png to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+// ---------------------------------------------------
+[Info] Image sphere.png correctly loaded into DevIL
+[Info] from filepath Project/Editor/Images/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image sphere.png to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+// ---------------------------------------------------
+[Info] Image icosphere.png correctly loaded into DevIL
+[Info] from filepath Project/Editor/Images/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image icosphere.png to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+// ---------------------------------------------------
+[Info] Image plane.png correctly loaded into DevIL
+[Info] from filepath Project/Editor/Images/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image plane.png to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+// ---------------------------------------------------
+[Info] Image cylinder.png correctly loaded into DevIL
+[Info] from filepath Project/Editor/Images/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image cylinder.png to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+// ---------------------------------------------------
+[Info] Image connus.png correctly loaded into DevIL
+[Info] from filepath Project/Editor/Images/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image connus.png to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+// ---------------------------------------------------
+[Info] Image torus.png correctly loaded into DevIL
+[Info] from filepath Project/Editor/Images/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image torus.png to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
 -------------- Application Update --------------
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
