@@ -224,6 +224,12 @@ update_status ModuleInput::PreUpdate(float dt)
 			{
 				App->window->window_focused = false;
 			}
+
+			if (event.window.event == SDL_WINDOWEVENT_MAXIMIZED)
+				App->window->maximized = true;
+
+			if (event.window.event == SDL_WINDOWEVENT_RESTORED)
+				App->window->maximized = false;
 		}
 	}
 

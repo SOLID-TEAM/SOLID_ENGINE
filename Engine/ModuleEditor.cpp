@@ -604,6 +604,17 @@ bool ModuleEditor::DrawMainMenuBar()
 		ImGui::EndMenu();
 	}
 
+	if (ImGui::BeginMenu("Windows"))
+	{
+		ImGui::MenuItem("Inspector", NULL, &w_inspector->active);
+		ImGui::MenuItem("Hierarchy", NULL, &w_hierarchy->active);
+		ImGui::MenuItem("Configuration", NULL, &w_config->active);
+		ImGui::MenuItem("Console Log", NULL, &w_console->active);
+		ImGui::MenuItem("Rendering settings", NULL, &w_rendering->active); // TODO: probably obsolete window, maybe we could add more render options
+
+		ImGui::EndMenu();
+	}
+
 	if (ImGui::BeginMenu("GameObject"))
 	{
 		/*if (ImGui::MenuItem("Load editor windows states", "Ctrl+Alt+L"))
@@ -616,13 +627,13 @@ bool ModuleEditor::DrawMainMenuBar()
 		ImGui::EndMenu();
 	}
 
-	if (ImGui::BeginMenu("View"))
+	/*if (ImGui::BeginMenu("View"))
 	{
 		ImGui::MenuItem("Configuration", NULL, &w_config->active);
 		ImGui::MenuItem("Console Log", NULL, &w_console->active);
 
 		ImGui::EndMenu();
-	}
+	}*/
 
 	if (ImGui::BeginMenu("Help"))
 	{

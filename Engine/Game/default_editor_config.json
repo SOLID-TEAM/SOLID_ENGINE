@@ -10,10 +10,11 @@
         "fullscreen": false,
         "fullscreen_desktop": false,
         "resizable": true,
-        "borderless": false
+        "borderless": false,
+        "maximized": true
     },
-    "Camera3D": {},
     "Input": {},
+    "Camera3D": {},
     "": {},
     "ModuleRandom?": {},
     "Textures": {},
@@ -34,16 +35,16 @@
             10
         ],
         "show_configuration": false,
-        "show_console": false,
+        "show_console": true,
         "wireframe": false,
         "fill_mode": true,
         "debug_vertex_normals": true,
         "debug_face_normals": true,
         "fill_color": [
-            1,
-            0.34999999403953552,
-            1,
-            1
+            0,
+            0,
+            0,
+            0
         ],
         "wire_color": [
             1,

@@ -58,6 +58,11 @@ bool ModuleWindow::Init(Config& config)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
+		if (maximized == true)
+		{
+			flags |= SDL_WINDOW_MAXIMIZED;
+		}
+
 		// GL 3.0 + GLSL 130
 		const char* glsl_version = "#version 130";
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
@@ -155,6 +160,16 @@ void ModuleWindow::SetWindowFullscreen(float fullscreen, bool desktop)
 	SDL_SetWindowFullscreen(window, flags);
 }
 
+void ModuleWindow::SetWindowMaximized(bool maximized)
+{
+	if (maximized)
+		SDL_MaximizeWindow(window);
+	else
+		SDL_RestoreWindow(window);
+
+	this->maximized = maximized;
+}
+
 void ModuleWindow::SetWindowResizable(bool resizable)
 {
 	this->resizable = resizable;
@@ -178,6 +193,7 @@ bool ModuleWindow::Save(Config& config)
 	ret = config.AddBool("fullscreen_desktop", fullscreen_desktop);
 	ret = config.AddBool("resizable", resizable);
 	ret = config.AddBool("borderless", borderless);
+	ret = config.AddBool("maximized", maximized);
 
 	return true;
 }
@@ -191,4 +207,5 @@ void ModuleWindow::Load(Config& config)
 	SetWindowFullscreen(config.GetBool("fullscreen", fullscreen), config.GetBool("fullscreen_desktop", fullscreen_desktop));
 	SetWindowResizable(config.GetBool("resizable", resizable));
 	SetWindowBorderless(config.GetBool("borderless", borderless));
+	SetWindowMaximized(config.GetBool("maximized", maximized));
 }

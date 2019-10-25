@@ -28,6 +28,7 @@ public:
 	void SetWindowFullscreen(float fullscreen, bool desktop = false);
 	void SetWindowResizable(bool resizable);
 	void SetWindowBorderless(bool borderless);
+	void SetWindowMaximized(bool maximized);
 	bool IsFocused() { return window_focused; }
 
 public:
@@ -54,6 +55,7 @@ public:
 	bool fullscreen_desktop = WIN_FULLSCREEN_DESKTOP;
 	bool borderless = WIN_BORDERLESS;
 	bool window_focused = false;
+	bool maximized = true;
 
 };
 

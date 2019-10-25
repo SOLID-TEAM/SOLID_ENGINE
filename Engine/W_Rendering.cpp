@@ -8,7 +8,7 @@ void W_Rendering::Draw()
 {
 	RenderConfig& config = App->renderer3D->render_config;
 
-	if (ImGui::Begin(name.c_str()) )
+	if (ImGui::Begin(name.c_str(), &active))
 	{
 		/*if (ImGui::CollapsingHeader("Shading Modes"))
 		{
@@ -62,7 +62,7 @@ void W_Rendering::Draw()
 			ImGui::Title("Distance", 2);     if (ImGui::SliderInt("##grid_units", &units, 1, 50)) App->test->main_grid->SetUnits(units);
 			ImGui::Title("Line Width", 2);	ImGui::SliderFloat("##grid_width", &App->test->main_grid->width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
 		}
-		if (ImGui::CollapsingHeader("OpenGL Test"))
+		if (ImGui::CollapsingHeader("OpenGL Test", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::Title("Color Material");	
 			if (ImGui::Checkbox("##GL_COLOR_MATERIAL", &config.gl_color_material))

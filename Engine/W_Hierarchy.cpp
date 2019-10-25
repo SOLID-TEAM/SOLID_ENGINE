@@ -11,7 +11,7 @@ void W_Hierarchy::Draw()
 {
 	//static bool show_hierarchy = true;
 
-	if (ImGui::Begin("Hierarchy"))
+	if (ImGui::Begin("Hierarchy", &active))
 	{
 		GameObject* root = App->scene->root_go;
 		if (root != nullptr)

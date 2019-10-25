@@ -106,12 +106,14 @@ void W_Config::Draw()
 			bool fullscreen_desktop = App->window->fullscreen_desktop;
 			bool resizable = App->window->resizable;
 			bool borderless = App->window->borderless;
+			bool maximized = App->window->maximized;
 			// -----------------------------------------------------------------------
 			ImGui::Spacing();
 			ImGui::Title("Fullscreen");			if (ImGui::Checkbox("##Fullscreen", &fullscreen)) App->window->SetWindowFullscreen(fullscreen);
 			ImGui::Title("Desktop");			if (ImGui::Checkbox("##Fullscreen Desktop", &fullscreen_desktop)) App->window->SetWindowFullscreen(false, fullscreen_desktop);
 			ImGui::Title("Resizable");			if (ImGui::Checkbox("##Resizable ", &resizable)) App->window->SetWindowResizable(resizable);
 			ImGui::Title("Borderless");			if (ImGui::Checkbox("##Borderless", &borderless)) App->window->SetWindowBorderless(borderless);
+			ImGui::Title("Maximized");			if (ImGui::Checkbox("##Maximized", &maximized)) App->window->SetWindowMaximized(maximized);
 
 			ImGui::Spacing();
 			ImGui::Title("Screen Brightness "); if (ImGui::SliderFloat("##Screen Brightness", &brightness, 0.0f, 1.0f)) &App->window->SetBrightness(&brightness);
@@ -244,7 +246,7 @@ void W_Config::Draw()
 			static bool h_borders = true;
 			static bool v_borders = true;
 			static int columns_count = 3;
-			static int box_w = 256;
+			static int box_w = 175;
 			const int box_min = 64;
 			const int box_max = 512;
 			uint num_textures = App->textures->textures.size();
