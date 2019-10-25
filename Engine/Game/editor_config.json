@@ -35,7 +35,7 @@
         ],
         "show_configuration": true,
         "show_console": true,
-        "wireframe": false,
+        "wireframe": true,
         "fill_mode": true,
         "debug_vertex_normals": false,
         "debug_face_normals": false,
@@ -46,9 +46,9 @@
             1
         ],
         "wire_color": [
+            0.029761791229248047,
             1,
-            1,
-            1,
+            0,
             1
         ],
         "d_vertex_p_color": [
@@ -75,7 +75,7 @@
             1,
             1
         ],
-        "wire_line_width": 1,
+        "wire_line_width": 1.5,
         "v_point_size": 5,
         "f_v_point_size": 5,
         "v_n_line_width": 1,

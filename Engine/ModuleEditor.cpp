@@ -21,6 +21,7 @@
 #include "W_Rendering.h"
 #include "W_Scene.h"
 #include "W_Inspector.h"
+#include "W_Primitives.h"
 
 ModuleEditor::ModuleEditor(bool start_enabled) : Module(start_enabled)
 {
@@ -59,7 +60,8 @@ bool ModuleEditor::Init(Config& config)
 	style.SubTitleSeparation = DFT_SUB_TITLE_SEP;
 	style.SeparationType = ImGuiSeparationType::ImGui_WindowSeparation;
 	// -----------------------------------------------
-	style.WindowMinSize = ImVec2(278.f, 278.f);
+	// TODO: rework individual window size constraints
+	style.WindowMinSize = ImVec2(240.f, 278.f);//ImVec2(278.f, 278.f);
 	style.WindowRounding = 0.0f;// <- Set this on init or use ImGui::PushStyleVar()
 	style.ChildRounding = 0.0f;
 	style.FrameRounding = 0.0f;
@@ -98,6 +100,7 @@ bool ModuleEditor::Start(Config& conf)
 	w_rendering = new W_Rendering("Rendering Settings", true);
 	w_scene = new W_Scene("Scene", true);
 	w_inspector = new W_Inspector("Inspector", true);
+	w_primitives = new W_Primitives("Primitives", false);
 
 	return ret;
 }
@@ -124,6 +127,7 @@ bool ModuleEditor::CleanUp()
 	w_rendering = nullptr;
 	w_scene = nullptr;
 	w_inspector = nullptr;
+	w_primitives = nullptr;
 
 	// debug data data ---
 	if (ddmesh != nullptr)
@@ -600,12 +604,14 @@ bool ModuleEditor::DrawMainMenuBar()
 		ImGui::EndMenu();
 	}
 
-	if (ImGui::BeginMenu("Window"))
+	if (ImGui::BeginMenu("GameObject"))
 	{
 		/*if (ImGui::MenuItem("Load editor windows states", "Ctrl+Alt+L"))
 			LoadEditorConfig(editor_filename.data());*/
 			//if (ImGui::MenuItem("Save editor windows states", "Ctrl+Alt+S"))
 				//SaveEditorConfig(editor_filename.data());
+
+		ImGui::MenuItem("Primitives", NULL, &w_primitives->active);
 
 		ImGui::EndMenu();
 	}

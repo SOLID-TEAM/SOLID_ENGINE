@@ -22,12 +22,9 @@ class D_Texture;
 enum PrimitiveType
 {
 	CUBE,
-	DODECAHEDRON,
-	TETRAHEDRON,
-	OCTOHEDRON,
-	ICOSAHEDRON,
-	PLANE,
 	SPHERE,
+	ICOSPHERE,
+	PLANE,
 	CYLINDER,
 	CONE,
 	TORUS,
@@ -54,7 +51,7 @@ public:
 	//bool ReComputeFacesNormals(float length = 0.4f);
 
 	// Create primitives with par_shapes tool
-	void  CreatePrimitive(PrimitiveType type, vec3 position = { 0,0,0 }, vec3 size = { 1,1,1 });
+	GameObject* CreatePrimitive(PrimitiveType type, vec3 position = { 0,0,0 }, vec3 size = { 1,1,1 }, vec2 slicesStacks = { 10,10 }, vec4 color = {1.0f,1.0f,1.0f,1.0f});
 
 	// TODO: implement base class gameObjects (for future components addition)
 	std::vector<D_Mesh*>& GetModels();

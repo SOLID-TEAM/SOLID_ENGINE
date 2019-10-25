@@ -358,15 +358,11 @@ D_Texture* ModuleImporter::ImportTexture(const char* path)
 	return d_texture;
 }
 
-void ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, vec3 size)
+GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, vec3 size, vec2 slicesStacks, vec4 color)
 {
 	bool isPlatonic = false; // par_shapes weld its vertices on creation and needs to be unwelded to compute normals
 	std::string name;
 	par_shapes_mesh* p_mesh = nullptr;
-
-	// TODO: from the panel decide the division slices and stacks of all parametric primitives
-	int slices = 20;
-	int stacks = 20;
 
 	switch (type)
 	{
@@ -375,44 +371,30 @@ void ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, vec3 siz
 		isPlatonic = true;
 		name.assign("Cube");
 		break;
-	case DODECAHEDRON:
-		p_mesh = par_shapes_create_dodecahedron();
-		isPlatonic = true;
-		name.assign("Dodecahedron");
-		break;
-	case TETRAHEDRON:
-		p_mesh = par_shapes_create_tetrahedron();
-		isPlatonic = true;
-		name.assign("Tetrahedron");
-		break;
-	case OCTOHEDRON:
-		p_mesh = par_shapes_create_octahedron();
-		isPlatonic = true;
-		name.assign("Octohedron");
-		break;
-	case ICOSAHEDRON:
-		p_mesh = par_shapes_create_icosahedron();
-		isPlatonic = true;
-		name.assign("Icosahedron");
+	case ICOSPHERE:
+		/*p_mesh = par_shapes_create_icosahedron();*/
+		p_mesh = par_shapes_create_subdivided_sphere(1);
+		//isPlatonic = true;
+		name.assign("Icosphere");
 		break;
 	case PLANE:
-		p_mesh = par_shapes_create_plane(slices, stacks);
+		p_mesh = par_shapes_create_plane(slicesStacks.x, slicesStacks.y);
 		name.assign("Plane");
 		break;
 	case SPHERE:
-		p_mesh = par_shapes_create_parametric_sphere(slices, stacks);
+		p_mesh = par_shapes_create_parametric_sphere(slicesStacks.x, slicesStacks.y);
 		name.assign("Sphere");
 		break;
 	case CYLINDER:
-		p_mesh = par_shapes_create_cylinder(slices, stacks);
+		p_mesh = par_shapes_create_cylinder(slicesStacks.x, slicesStacks.y);
 		name.assign("Cylinder");
 		break;
 	case CONE:
-		p_mesh = par_shapes_create_cone(slices, stacks);
+		p_mesh = par_shapes_create_cone(slicesStacks.x, slicesStacks.y);
 		name.assign("Cone");
 		break;
 	case TORUS:
-		p_mesh = par_shapes_create_torus(slices, stacks, size.x * 0.5f); // Gets the radius from the size x component
+		p_mesh = par_shapes_create_torus(slicesStacks.x, slicesStacks.y, size.x * 0.5f); // Gets the radius from the size x component
 		name.assign("Torus");
 		break;
 	case MAX:
@@ -447,11 +429,14 @@ void ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, vec3 siz
 	c_mesh->data->Load();
 
 	C_Material* c_material = (C_Material*)gameobject->CreateComponent(ComponentType::MATERIAL);
-	c_material->data = CreateDefaultMaterial("default material", {1.0f,1.0f,1.0f,1.0f});
+	c_material->data = CreateDefaultMaterial("default material", color);
+	c_material->textured = false;
 
 	C_MeshRenderer* c_renderer = (C_MeshRenderer*)gameobject->CreateComponent(ComponentType::MESH_RENDERER);
 
 	par_shapes_free_mesh(p_mesh);
+
+	return gameobject;
 }
 
 bool ModuleImporter::Save(Config& config)
