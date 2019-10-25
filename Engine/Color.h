@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "ImGui/imgui.h"
+
 struct Color
 {
 	float r, g, b, a;
@@ -17,6 +19,10 @@ struct Color
 		this->g = g;
 		this->b = b;
 		this->a = a;
+	}
+
+	void operator=(ImVec4 c) { 
+		memcpy(this, &c, sizeof(float) * 4);
 	}
 
 	float* operator & ()
