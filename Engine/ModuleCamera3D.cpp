@@ -60,6 +60,29 @@ update_status ModuleCamera3D::Update(float dt)
 
 	if (enable_mouse_input)
 	{
+
+		// Keys motion ----------------------------------
+
+		if (enable_keys_input)
+		{
+			math::float3 offset(0, 0, 0);
+
+			float speed = 5.f * dt;
+
+			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+			{
+				speed *= 2;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) offset -= Z * speed;
+			if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) offset += Z * speed;
+
+			if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) offset -= X * speed;
+			if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) offset += X * speed;
+
+			position += offset;
+		}
+
 		// Look Around -------------------------------------
 
 		if (mouse_right_pressed)
@@ -82,28 +105,6 @@ update_status ModuleCamera3D::Update(float dt)
 				Z = final_rot * Z;
 				Y = final_rot * Y;
 				X = Cross(Y, Z);
-			}
-
-			// Keys motion ----------------------------------
-
-			if (enable_keys_input)
-			{
-				math::float3 offset(0, 0, 0);
-
-				float speed = 5.f * dt;
-
-				if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-				{
-					speed *= 2;
-				}
-
-				if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) offset -= Z * speed;
-				if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) offset += Z * speed;
-
-				if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) offset -= X * speed;
-				if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) offset += X * speed;
-
-				position += offset;
 			}
 		}
 

@@ -14,12 +14,13 @@ public:
 	bool Start(Config& config);
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
+	void UpdateAll(float dt, GameObject*);
 	update_status PostUpdate(float dt);
 	update_status Draw();
 
 	// TODO: improve this hierarchy draw if needed
 	// current in-out recursively (draw at return)
-	void DrawAll(GameObject* go);
+	void RenderAll(GameObject* go);
 
 	GameObject* CreateGameObject(std::string name = "no_name", GameObject* parent = nullptr);
 	

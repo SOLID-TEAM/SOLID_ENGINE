@@ -2,6 +2,7 @@
 #include "GL/glew.h"
 #include "ImGui/imgui.h"
 
+#include "C_Transform.h"
 #include "C_MeshRenderer.h"
 #include "C_Mesh.h"
 #include "C_Material.h"
@@ -20,7 +21,7 @@ C_MeshRenderer::~C_MeshRenderer()
 
 }
 
-bool C_MeshRenderer::PostUpdate(float dt)
+bool C_MeshRenderer::Render()
 {
 	// Get Data from components ----------------------------
 
@@ -43,7 +44,16 @@ bool C_MeshRenderer::PostUpdate(float dt)
 	d_mesh = c_mesh->data;
 	d_mat = c_mat->data;
 
-	// -------
+
+	if (linked_go->transform->HasNegativeScale())
+	{
+		glFrontFace(GL_CW);
+	}
+
+	glPushMatrix();
+	glMultMatrixf((float*)&linked_go->transform->global_transform.Transposed());
+
+
 	// -------------------------------------------------------------------------------------------------------------
 
 	uint custom_tex_id = 0;
@@ -86,7 +96,7 @@ bool C_MeshRenderer::PostUpdate(float dt)
 
 			glColor4fv((float*)&fill_color);
 
-			Render(custom_tex_id, c_mat->textured);
+			RenderMesh(custom_tex_id, c_mat->textured);
 
 			glLineWidth(1.0f);
 			glDisable(GL_POLYGON_OFFSET_FILL);
@@ -95,7 +105,7 @@ bool C_MeshRenderer::PostUpdate(float dt)
 		else if (vp.fill_faces)
 		{
 			glColor4fv((float*)&fill_color);
-			Render(custom_tex_id, c_mat->textured);
+			RenderMesh(custom_tex_id, c_mat->textured);
 		}
 
 		if (vp.wireframe)
@@ -126,11 +136,13 @@ bool C_MeshRenderer::PostUpdate(float dt)
 			glStencilFunc(GL_ALWAYS, 1, -1);
 		}
 	}
+	glFrontFace(GL_CCW);
+	glPopMatrix();
 
 	return true;
 }
 
-bool C_MeshRenderer::Render(uint custom_tex_id, bool textured)
+bool C_MeshRenderer::RenderMesh(uint custom_tex_id, bool textured)
 {
 	bool ret = true;
 

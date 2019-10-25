@@ -67,7 +67,8 @@ bool GameObject::Update(float dt)
 	return ret;
 }
 
-bool GameObject::PostUpdate(float dt)
+
+bool GameObject::Render()
 {
 	bool ret = true;
 
@@ -75,7 +76,7 @@ bool GameObject::PostUpdate(float dt)
 
 	for (; component != components.end(); ++component)
 	{
-		ret = (*component)->PostUpdate(dt);
+		ret = (*component)->Render();
 	}
 
 	return ret;

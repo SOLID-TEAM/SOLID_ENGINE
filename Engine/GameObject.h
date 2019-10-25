@@ -25,7 +25,7 @@ public:
 
 	bool Update(float dt);
 
-	bool PostUpdate(float dt);
+	bool Render();
 
 	const char* GetName() const;
 

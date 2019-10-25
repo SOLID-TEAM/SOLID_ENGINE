@@ -2,6 +2,8 @@
 #include "GL/glew.h"
 #include "Application.h"
 
+#include "C_Transform.h"
+#include "external/MathGeoLib/include/Math/MathAll.h"
 ModuleScene::ModuleScene() {}
 
 ModuleScene::~ModuleScene() {}
@@ -10,10 +12,6 @@ bool ModuleScene::Init(Config& config)
 {
 	// creates a root gameobject, wich all another go are childs of it
 	root_go = new GameObject("scene_root_gameobject");
-
-	//// create one child of root go
-	//GameObject* new_go = new GameObject("Child of root_go", root_go);
-
 	return true;
 }
 
@@ -25,7 +23,6 @@ bool ModuleScene::Start(Config& config)
 
 update_status ModuleScene::PreUpdate(float dt)
 {
-
 	return UPDATE_CONTINUE;
 }
 
@@ -33,21 +30,25 @@ update_status ModuleScene::Update(float dt)
 {
 	if (root_go != nullptr)
 	{
-		std::vector<GameObject*>::iterator game_objects = root_go->childs.begin();
-		
-		for (; game_objects != root_go->childs.end(); ++game_objects)
-		{
-			(*game_objects)->Update(dt);
-		}
+		UpdateAll(dt, root_go);
 	}
-
 	return UPDATE_CONTINUE;
 }
 
+
+void ModuleScene::UpdateAll(float dt, GameObject* go)
+{
+	go->Update(dt);
+
+	for (std::vector<GameObject*>::iterator child = go->childs.begin(); child != go->childs.end(); ++child)
+	{
+		UpdateAll(dt , (*child));
+	}
+}
+
+
 update_status ModuleScene::PostUpdate(float dt)
 {
-
-
 	return UPDATE_CONTINUE;
 }
 
@@ -59,30 +60,20 @@ update_status ModuleScene::Draw()
 
 	if (root_go != nullptr)
 	{
-		std::vector<GameObject*>::iterator game_objects = root_go->childs.begin();
-
-		for (; game_objects != root_go->childs.end(); ++game_objects)
-		{
-			DrawAll((*game_objects));
-		}
+		RenderAll(root_go);
 	}
 
 	return UPDATE_CONTINUE;
 }
 
-void ModuleScene::DrawAll(GameObject* go)
+void ModuleScene::RenderAll(GameObject* go)
 {
-	go->PostUpdate(0.0f);
+	go->Render();
 
-	std::vector<GameObject*>::iterator it = go->childs.begin();
-
-	for (; it != go->childs.end(); ++it)
+	for (std::vector<GameObject*>::iterator child = go->childs.begin() ; child != go->childs.end(); ++child)
 	{
-		DrawAll((*it));
+		RenderAll((*child));
 	}
-
-	
-
 }
 
 bool ModuleScene::CleanUp()

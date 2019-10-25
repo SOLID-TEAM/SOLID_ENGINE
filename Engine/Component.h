@@ -34,11 +34,9 @@ public:
 
 	virtual void Disable();
 
-	virtual bool PreUpdate(float dt);
-
 	virtual bool Update(float dt);
 
-	virtual bool PostUpdate(float dt);
+	virtual bool Render();
 
 	virtual bool DrawPanelInfo(); // draw something on the editor panels loop (components) called from editor
 

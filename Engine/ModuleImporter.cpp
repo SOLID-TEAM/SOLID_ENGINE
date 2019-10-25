@@ -148,7 +148,7 @@ void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, Game
 	node->mTransformation.Decompose(scaling, rotation, translation);
 	float3	position(translation.x, translation.y, translation.z);
 	float3	scale(scaling.x, scaling.y, scaling.z);
-	//Quat	rotation(rotation.x, rotation.y, rotation.z, rotation.w);
+	Quat	quad_rotation(rotation.x, rotation.y, rotation.z, rotation.w);
 
 
 	GameObject* new_go;

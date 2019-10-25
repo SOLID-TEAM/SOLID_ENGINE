@@ -18,11 +18,11 @@ public:
 
 	~C_MeshRenderer();
 
-	bool PostUpdate(float dt);
+	bool Render();
 
 private:
 
-	bool Render(const uint custom_tex = 0, bool textured = true);
+	bool RenderMesh(const uint custom_tex = 0, bool textured = true);
 
 	bool RenderWireframe();
 

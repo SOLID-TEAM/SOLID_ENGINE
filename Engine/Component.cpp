@@ -15,19 +15,14 @@ void Component::Disable()
 		active = !active;
 }
 
-bool Component::PreUpdate(float dt)
-{
-	return true;
-}
-
 bool Component::Update(float dt)
 {
 	return true;
 }
 
-bool Component::PostUpdate(float dt)
+bool Component::Render()
 {
-	return true;
+	return false;
 }
 
 bool Component::DrawPanelInfo()
