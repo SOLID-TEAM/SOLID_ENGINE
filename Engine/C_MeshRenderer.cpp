@@ -67,6 +67,13 @@ bool C_MeshRenderer::PostUpdate(float dt)
 			}
 		}
 
+		// CHECK if textured for apply or not default albedo color for mesh data
+		Color fill_color = { 1.0f,1.0f,1.0f,1.0f }; // TODO: change variable type if needed
+		if (!c_mat->textured)
+		{
+			fill_color = d_mat->albedo_color;
+		}
+
 		// TODO NEXT: implement new render functionality to pass all this shit (colors, draw modes etc)
 
 		ViewportOptions& vp = App->editor->viewport_options;
@@ -77,9 +84,9 @@ bool C_MeshRenderer::PostUpdate(float dt)
 			glEnable(GL_POLYGON_OFFSET_FILL);
 			glPolygonOffset(1.0f, 0.375f);
 
-			glColor4fv((float*)&d_mat->albedo_color);
+			glColor4fv((float*)&fill_color);
 
-			Render(custom_tex_id);
+			Render(custom_tex_id, c_mat->textured);
 
 			glLineWidth(1.0f);
 			glDisable(GL_POLYGON_OFFSET_FILL);
@@ -87,8 +94,8 @@ bool C_MeshRenderer::PostUpdate(float dt)
 		}
 		else if (vp.fill_faces)
 		{
-			glColor4fv((float*)&d_mat->albedo_color);
-			Render(custom_tex_id);
+			glColor4fv((float*)&fill_color);
+			Render(custom_tex_id, c_mat->textured);
 		}
 
 		if (vp.wireframe)
@@ -123,7 +130,7 @@ bool C_MeshRenderer::PostUpdate(float dt)
 	return true;
 }
 
-bool C_MeshRenderer::Render(uint custom_tex_id)
+bool C_MeshRenderer::Render(uint custom_tex_id, bool textured)
 {
 	bool ret = true;
 
@@ -147,7 +154,8 @@ bool C_MeshRenderer::Render(uint custom_tex_id)
 	glEnableClientState(GL_NORMAL_ARRAY);
 	if(d_mesh->buffers_size[D_Mesh::UVS] != 0)
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glClientActiveTexture(GL_TEXTURE0);
+	if(textured)
+		glClientActiveTexture(GL_TEXTURE0);
 	//glEnableClientState(GL_COLOR_ARRAY); to colorize each vertex with an array of colors
 
 	// Vertices --------------------------------------
@@ -157,12 +165,15 @@ bool C_MeshRenderer::Render(uint custom_tex_id)
 	// UV's & Texture --------------------------------
 	if (d_mesh->buffers_size[D_Mesh::UVS] != 0 && d_mat != nullptr)
 	{
-		if (custom_tex_id != 0)
-			glBindTexture(GL_TEXTURE_2D, custom_tex_id);
-		else
+		if (textured)
 		{
-			if(d_mat->textures[D_Material::DIFFUSE] != nullptr)
-				glBindTexture(GL_TEXTURE_2D, d_mat->textures[D_Material::DIFFUSE]->buffer_id);
+			if (custom_tex_id != 0)
+				glBindTexture(GL_TEXTURE_2D, custom_tex_id);
+			else
+			{
+				if (d_mat->textures[D_Material::DIFFUSE] != nullptr)
+					glBindTexture(GL_TEXTURE_2D, d_mat->textures[D_Material::DIFFUSE]->buffer_id);
+			}
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::UVS]);

@@ -175,6 +175,9 @@ void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, Game
 
 			C_Material* c_material = (C_Material*)new_go->CreateComponent(ComponentType::MATERIAL);
 			c_material->data = ImportMaterial(ai_material, ai_material->GetName().C_Str());
+			// check if the data contains texture data, if not, uncheck textured by default on c_mesh
+			if (c_material->data->textures[0] == nullptr) // TODO: ON DIFFUSE CHANNEL FOR NOW
+				c_material->textured = false;
 
 			// Add Component Mesh Renderer -----
 
