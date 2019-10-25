@@ -136,6 +136,7 @@ bool C_MeshRenderer::Render()
 			glStencilFunc(GL_ALWAYS, 1, -1);
 		}
 	}
+
 	glFrontFace(GL_CCW);
 	glPopMatrix();
 

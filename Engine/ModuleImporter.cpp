@@ -420,7 +420,18 @@ GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, v
 
 	// Create GameObject -------------------------------------
 
-	GameObject* gameobject = new GameObject(name, App->scene->root_go);
+	GameObject* gameobject;
+
+
+	if (App->editor->selected_go != nullptr)
+	{
+		gameobject = new GameObject(name, App->editor->selected_go);
+	}
+	else
+	{
+		gameobject = new GameObject(name, App->scene->root_go);
+	}
+	
 
 	// Components --------------------------------------------
 	C_Mesh* c_mesh = (C_Mesh*)gameobject->CreateComponent(ComponentType::MESH);

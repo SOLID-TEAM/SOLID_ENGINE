@@ -35,7 +35,7 @@
         ],
         "show_configuration": true,
         "show_console": true,
-        "wireframe": true,
+        "wireframe": false,
         "fill_mode": true,
         "debug_vertex_normals": false,
         "debug_face_normals": false,

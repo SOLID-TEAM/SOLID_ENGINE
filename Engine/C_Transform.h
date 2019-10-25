@@ -39,21 +39,17 @@ public:
 
 	math::float4x4 GetGlobalTransform() const;
 
-	bool HasNegativeScale() const { return negative_scale;  };
+	bool HasNegativeScale();
 	 
 private:
 
 	void UpdateTRS();
 
-	void UpdateEaFromQuat();
-
-	void UpdateQuatFromEa();
 
 public:
 
 	float3		position;
-	float3		ea_rotation;
-	Quat		quat_rotation;
+	Quat		rotation;
 	float3		scale;
 
 	float4x4	local_transform;
