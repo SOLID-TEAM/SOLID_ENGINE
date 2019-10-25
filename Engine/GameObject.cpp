@@ -7,6 +7,8 @@
 #include "C_Material.h"
 #include "C_MeshRenderer.h"
 
+#include "D_Mesh.h"
+
 //GameObject::GameObject() 
 //{
 //	// adds a component transform by default
@@ -149,6 +151,45 @@ D_Mesh* GameObject::GetMeshes()
 	}
 
 	return nullptr;
+}
+
+void GameObject::GetBoundingBox(math::AABB& aabb)
+{
+	C_Mesh* c_mesh = (C_Mesh*)GetComponentsByType(ComponentType::MESH);
+
+	if (c_mesh)
+	{
+		aabb = c_mesh->data->aabb;
+	}
+	else
+	{
+		aabb.maxPoint = transform->position;
+		aabb.minPoint = transform->position;
+	}
+
+	GenerateGlobalBoundingBox(this, &aabb);
+}
+
+
+void GameObject::GenerateGlobalBoundingBox( GameObject* go, math::AABB* aabb)
+{
+	for (std::vector<GameObject*>::iterator child = go->childs.begin() ;  child != go->childs.end(); ++child)
+	{
+		GenerateGlobalBoundingBox( *child, aabb);
+		
+		C_Mesh* c_mesh = (C_Mesh*) (*child)->GetComponentsByType(ComponentType::MESH);
+
+		if (c_mesh != nullptr)
+		{
+			aabb->maxPoint = aabb->maxPoint.Max(c_mesh->data->aabb.maxPoint);
+			aabb->minPoint = aabb->minPoint.Min(c_mesh->data->aabb.minPoint);
+		}
+		else
+		{
+			aabb->maxPoint = aabb->maxPoint.Max((*child)->transform->position);
+			aabb->minPoint = aabb->minPoint.Min((*child)->transform->position);
+		}
+	}
 }
 
 //bool GameObject::Draw()

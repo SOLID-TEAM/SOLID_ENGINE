@@ -82,6 +82,11 @@ void D_Mesh::Load()
 	}
 }
 
+void D_Mesh::CreateAABB()
+{
+	aabb.SetNegativeInfinity();
+	aabb.Enclose((math::float3*) vertices, buffers_size[VERTICES]);
+}
 
 void D_Mesh::Unload()
 {

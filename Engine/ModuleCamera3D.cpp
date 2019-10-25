@@ -170,15 +170,35 @@ update_status ModuleCamera3D::Update(float dt)
 
 			if (selected != nullptr && App->scene->root_go != selected)
 			{
-				C_Mesh* c_mesh = (C_Mesh * )selected->GetComponentsByType(ComponentType::MESH);
+				AABB general_aabb;
+				selected->GetBoundingBox(general_aabb);
 
-				if (c_mesh != nullptr)
+				if (general_aabb.Diagonal().Length() != 0)
 				{
-					distance = c_mesh->data->aabb.Diagonal().Length() * 1.2F;
+					distance = general_aabb.Diagonal().Length() * 1.2F;
 					float3 d_vector = Z * distance;
-					reference = c_mesh->data->aabb.CenterPoint();
+					reference = general_aabb.CenterPoint();
 					position = reference + d_vector;
 				}
+				else
+				{
+					distance = 3.f;
+					float3 d_vector = Z * distance;
+					reference = selected->transform->position;
+					position = reference + d_vector;
+				}
+
+				
+
+				//C_Mesh* c_mesh = (C_Mesh * )selected->GetComponentsByType(ComponentType::MESH);
+
+				//if (c_mesh != nullptr)
+				//{
+				//	distance = c_mesh->data->aabb.Diagonal().Length() * 1.2F;
+				//	float3 d_vector = Z * distance;
+				//	reference = c_mesh->data->aabb.CenterPoint();
+				//	position = reference + d_vector;
+				//}
 			}
 		}
 
