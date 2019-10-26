@@ -50,8 +50,6 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	// Mouse motion -------------------------------------------------------------
-
 	mouse_right_pressed = (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN);
 	mouse_left_pressed = (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN);
 	alt_pressed = (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RALT) == KEY_REPEAT  || App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN|| App->input->GetKey(SDL_SCANCODE_RALT) == KEY_DOWN);
@@ -60,33 +58,10 @@ update_status ModuleCamera3D::Update(float dt)
 
 	if (enable_mouse_input)
 	{
-
-		// Keys motion ----------------------------------
-
-		if (enable_keys_input)
-		{
-			math::float3 offset(0, 0, 0);
-
-			float speed = 5.f * dt;
-
-			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-			{
-				speed *= 2;
-			}
-
-			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) offset -= Z * speed;
-			if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) offset += Z * speed;
-
-			if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) offset -= X * speed;
-			if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) offset += X * speed;
-
-			position += offset;
-		}
-
-		// Look Around -------------------------------------
-
 		if (mouse_right_pressed)
 		{
+			// Look Around -------------------------------------
+
 			state = LOOK_AROUND;
 
 			float dx = -App->input->GetMouseXMotion();
@@ -98,13 +73,38 @@ update_status ModuleCamera3D::Update(float dt)
 				float yaw = dx * rotation_speed;
 				float pitch = dy * rotation_speed;
 
-				math::Quat rot_x = math::Quat::RotateAxisAngle(math::float3::unitY, yaw * DEGTORAD);
-				math::Quat rot_y = math::Quat::RotateAxisAngle(math::Cross(Y, Z), pitch * DEGTORAD);
-				math::Quat final_rot = rot_x * rot_y;
+				math::Quat rot_y = math::Quat::RotateAxisAngle(math::float3::unitY, yaw * DEGTORAD);
+				math::Quat rot_x = math::Quat::RotateAxisAngle(math::Cross(Y, Z), pitch * DEGTORAD);
+				math::Quat final_rot = rot_y * rot_x;
 
 				Z = final_rot * Z;
 				Y = final_rot * Y;
 				X = Cross(Y, Z);
+			}
+
+			// Keys motion ----------------------------------
+
+			if (enable_keys_input)
+			{
+				math::float3 offset(0, 0, 0);
+
+				float speed = 5.f * dt;
+
+				if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+				{
+					speed *= 2;
+				}
+
+				if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) offset -= Z * speed;
+				if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) offset += Z * speed;
+
+				if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) offset -= X * speed;
+				if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) offset += X * speed;
+
+				if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) offset -= Y * speed;
+				if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) offset += Y * speed;
+
+				position += offset;
 			}
 		}
 
@@ -130,9 +130,9 @@ update_status ModuleCamera3D::Update(float dt)
 					float yaw = dx * rotation_speed;
 					float pitch = dy * rotation_speed;
 
-					math::Quat rot_x = math::Quat::RotateAxisAngle(math::float3::unitY, yaw * DEGTORAD);
-					math::Quat rot_y = math::Quat::RotateAxisAngle(math::Cross(Y, Z), pitch * DEGTORAD);
-					math::Quat final_rot = rot_x * rot_y;
+					math::Quat rot_y = math::Quat::RotateAxisAngle(math::float3::unitY, yaw * DEGTORAD);
+					math::Quat rot_x = math::Quat::RotateAxisAngle(math::Cross(Y, Z), pitch * DEGTORAD);
+					math::Quat final_rot = rot_y * rot_x;
 
 					Z = final_rot * Z;
 					Y = final_rot * Y;
@@ -163,7 +163,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		}
 
-		// Look at -----------------------------------------------------------------
+		// Focus -----------------------------------------------------------------
 
 		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && state == IDLE)
 		{
@@ -173,10 +173,11 @@ update_status ModuleCamera3D::Update(float dt)
 			{
 				AABB general_aabb;
 				selected->GetBoundingBox(general_aabb);
+				Sphere sphere = general_aabb.MinimalEnclosingSphere();
 
-				if (general_aabb.Diagonal().Length() != 0)
+				if (sphere.Diameter() != 0)
 				{
-					distance = general_aabb.Diagonal().Length() * 1.2F;
+					distance = sphere.Diameter() * 1.2f;
 					float3 d_vector = Z * distance;
 					reference = general_aabb.CenterPoint();
 					position = reference + d_vector;

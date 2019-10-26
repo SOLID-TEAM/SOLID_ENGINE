@@ -33,7 +33,12 @@ bool ModuleTest::Start(Config& config)
 	App->camera->Move({ 1.0f, 1.0f, 1.0f });
 	App->camera->LookAt({ 0, 0, 0 });
 
-	main_grid = new Grid(15);
+	main_grid = new Grid(config.GetInt("grid_units", 10));
+	main_grid->line_width = config.GetFloat("grid_line_width", 1.f);
+	main_grid->color.x = config.GetFloat("grid_color", 1.f , 0);
+	main_grid->color.y = config.GetFloat("grid_color", 1.f , 1);
+	main_grid->color.z = config.GetFloat("grid_color", 1.f , 2);
+	main_grid->color.w = config.GetFloat("grid_color", 1.f , 3);
 
 	return ret;
 }
@@ -44,6 +49,25 @@ bool ModuleTest::CleanUp()
 	LOG("Unloading Test scene");
 
 	return true;
+}
+
+bool ModuleTest::Save(Config& config)
+{
+	config.AddInt("grid_units",main_grid->GetUnits());
+	config.AddFloat("grid_line_width", main_grid->line_width);
+	config.AddFloatArray("grid_color", (float*)& (main_grid->color) , 4);
+
+	return true;
+}
+
+void ModuleTest::Load(Config& config)
+{
+	main_grid->SetUnits(config.GetInt("grid_units", 10));
+	main_grid->line_width = config.GetFloat("grid_line_width", 1.f);
+	main_grid->color.x = config.GetFloat("grid_color", 1.f, 0);
+	main_grid->color.y = config.GetFloat("grid_color", 1.f, 1);
+	main_grid->color.z = config.GetFloat("grid_color", 1.f, 2);
+	main_grid->color.w = config.GetFloat("grid_color", 1.f, 3);
 }
 
 // Update
@@ -57,11 +81,6 @@ update_status ModuleTest::PostUpdate(float dt)
 	
 
 	return UPDATE_CONTINUE;
-}
-
-void ModuleTest::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
-{
-
 }
 
 Grid::Grid(int units) : units(units)
@@ -121,7 +140,10 @@ void Grid::Render()
 		return;
 	}
 
-	glLineWidth(width);
+	GLfloat emission[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
+
+	glLineWidth(line_width);
 	glColor4fv((float*)&color);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -131,8 +153,11 @@ void Grid::Render()
 
 	glDrawArrays(GL_LINES, 0, n_vertices * 2);
 
-	glDisableClientState(GL_VERTEX_ARRAY);
 
+	GLfloat emission_1[] = { 0.f, .0f, .0f, 1.0f };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_1);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
 	glLineWidth(1.0f);
 }
 

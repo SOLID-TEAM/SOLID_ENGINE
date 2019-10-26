@@ -179,11 +179,13 @@ void GameObject::GetBoundingBox(math::AABB& aabb)
 	if (c_mesh)
 	{
 		aabb = c_mesh->data->aabb;
+		OBB obb = aabb.Transform(this->transform->global_transform);
+		aabb = obb.MinimalEnclosingAABB();
 	}
 	else
-	{
-		aabb.maxPoint = transform->position;
-		aabb.minPoint = transform->position;
+	{ 
+		aabb.maxPoint = transform->GetWorldPosition();
+		aabb.minPoint = transform->GetWorldPosition();
 	}
 
 	GenerateGlobalBoundingBox(this, &aabb);
@@ -200,13 +202,17 @@ void GameObject::GenerateGlobalBoundingBox( GameObject* go, math::AABB* aabb)
 
 		if (c_mesh != nullptr)
 		{
-			aabb->maxPoint = aabb->maxPoint.Max(c_mesh->data->aabb.maxPoint);
-			aabb->minPoint = aabb->minPoint.Min(c_mesh->data->aabb.minPoint);
+			AABB global_aabb = c_mesh->data->aabb;
+			OBB obb = global_aabb.Transform((*child)->transform->global_transform);
+			global_aabb = obb.MinimalEnclosingAABB();
+
+			aabb->maxPoint = aabb->maxPoint.Max(global_aabb.maxPoint);
+			aabb->minPoint = aabb->minPoint.Min(global_aabb.minPoint);
 		}
 		else
 		{
-			aabb->maxPoint = aabb->maxPoint.Max((*child)->transform->position);
-			aabb->minPoint = aabb->minPoint.Min((*child)->transform->position);
+			aabb->maxPoint = aabb->maxPoint.Max((*child)->transform->GetWorldPosition());
+			aabb->minPoint = aabb->minPoint.Min((*child)->transform->GetWorldPosition());
 		}
 	}
 }

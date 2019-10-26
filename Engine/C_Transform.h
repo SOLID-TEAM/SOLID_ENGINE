@@ -21,6 +21,8 @@ public:
 
 	void SetScale(math::float3 new_scale);
 
+	math::float3 GetWorldPosition() const;
+
 	void SetRotation(math::Quat rotation);
 
 	void SetRotation(math::float3 euler_angles);

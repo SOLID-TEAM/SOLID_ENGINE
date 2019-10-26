@@ -77,15 +77,18 @@ void W_Config::Draw()
 			ImGui::Spacing();
 
 			ImGui::PushColumnWidth(200.f);
-			ImGui::Title("Total Reported:"); 		ImGui::TextColored(green, "%i",		App->hardware->ram_usage.total_reported_mem);
-			ImGui::Title("Total Actual: "); 		ImGui::TextColored(green, "%i",			App->hardware->ram_usage.total_actual_mem);
-			ImGui::Title("Peak Reported: ");		ImGui::TextColored(green, "%i",		App->hardware->ram_usage.peak_reported_mem);
-			ImGui::Title("Peak Actual: "); 			ImGui::TextColored(green, "%i",			App->hardware->ram_usage.peak_actual_mem);
-			ImGui::Title("Accumulated Reported: ");	ImGui::TextColored(green, "%i", App->hardware->ram_usage.accumulated_reported_mem);
-			ImGui::Title("Accumulated Actual: ");	ImGui::TextColored(green, "%i",	App->hardware->ram_usage.accumulated_actual_mem);
-			ImGui::Title("Accumulated Alloc: ");	ImGui::TextColored(green, "%i",	App->hardware->ram_usage.accumulated_alloc_unit);
-			ImGui::Title("Total Alloc Unit: ");		ImGui::TextColored(green, "%i",		App->hardware->ram_usage.total_alloc_unity_count);
-			ImGui::Title("PeakAlloc Unit: ");		ImGui::TextColored(green, "%i",		App->hardware->ram_usage.peak_alloc_unit_count);
+			ImGui::Title("Total:", 1 ); 		ImGui::TextColored(green, "%i",		App->hardware->ram_usage.total_reported_mem);
+			ImGui::Title("Actual:", 2); 		ImGui::TextColored(green, "%i",			App->hardware->ram_usage.total_actual_mem);
+			ImGui::Title("Alloc:" ,2);			ImGui::TextColored(green, "%i", App->hardware->ram_usage.total_alloc_unity_count);
+
+			ImGui::Title("Peak:", 1);			ImGui::TextColored(green, "%i",		App->hardware->ram_usage.peak_reported_mem);
+			ImGui::Title("Actual:", 2); 		ImGui::TextColored(green, "%i",			App->hardware->ram_usage.peak_actual_mem);
+			ImGui::Title("Alloc:" , 2);			ImGui::TextColored(green, "%i", App->hardware->ram_usage.peak_alloc_unit_count);
+
+			ImGui::Title("Accumulated:", 1);	ImGui::TextColored(green, "%i", App->hardware->ram_usage.accumulated_reported_mem);
+			ImGui::Title("Actual:", 2);			ImGui::TextColored(green, "%i",	App->hardware->ram_usage.accumulated_actual_mem);
+			ImGui::Title("Alloc:", 2);			ImGui::TextColored(green, "%i",	App->hardware->ram_usage.accumulated_alloc_unit);
+
 			ImGui::PopColumnWidth();
 
 			ImGui::Spacing();

@@ -23,6 +23,8 @@ public:
 public:
 
 	D_Mesh* data = nullptr;
+	AABB	bounding_box;
+
 };
 
 #endif // !_C_MESH_H__
