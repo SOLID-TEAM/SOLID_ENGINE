@@ -43,9 +43,14 @@ public:
 
 	void GetBoundingBox(math::AABB& aabb); // From all components
 
+	//
+	void AddChild(GameObject* child);
+
 private:
 
 	void GenerateGlobalBoundingBox(GameObject* go, math::AABB* aabb);
+
+	void CleanUpRecursive(GameObject* go);
 
 public:
 

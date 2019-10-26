@@ -16,7 +16,7 @@ void W_Hierarchy::Draw()
 		GameObject* root = App->scene->root_go;
 		if (root != nullptr)
 		{
-			for(std::vector<GameObject*>::iterator it = root->childs.begin(); it != root->childs.end(); ++it)
+			for (std::vector<GameObject*>::iterator it = root->childs.begin(); it != root->childs.end(); ++it)
 				DrawAll(*it);
 		}
 	}
@@ -37,7 +37,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 
 	bool selected = App->editor->selected_go == go;
 	//bool hover_check = hovered_go == go;
-   
+
 	if (selected)
 	{
 		node_flags |= ImGuiTreeNodeFlags_Selected;
@@ -52,12 +52,14 @@ void W_Hierarchy::DrawAll(GameObject* go)
 
 	// "default" colors ----------------------
 	ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor(255, 0, 255, 255)); // when current clicked
-	
+
 	node_flags |= ImGuiTreeNodeFlags_SpanAvailWidth; // allows click on it on full box width
+	ImGui::PushID(go);
 	// ---------------------------------------
 	// https://github.com/ocornut/imgui/issues/2077
 	bool open = ImGui::TreeNodeEx(go->GetName(), node_flags);
 	bool clicked = ImGui::IsItemClicked(0);
+	//bool right_clicked = ImGui::IsItemClicked(1);
 	bool hover = ImGui::IsItemHovered();
 
 	// pop colors ------------------------
@@ -66,8 +68,22 @@ void W_Hierarchy::DrawAll(GameObject* go)
 	ImGui::PopStyleColor(1);
 	// -----------------------------------
 
-	ImGui::PushID(go->GetName());
-	// more code
+	// RIGHT CLICK BEHAVIOUR ---
+	
+	if (ImGui::BeginPopupContextItem(go->GetName()))
+	{
+		App->editor->selected_go = go;
+
+		if (ImGui::Button("Delete"))
+		{
+			//LOG("[Error] TODO: deleting %s gameobject", go->GetName());
+			App->scene->DeleteGameObject(go);
+
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
 	ImGui::PopID();
 
 	if (open)
@@ -83,7 +99,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 		//LOG("Clicked: %s", go->GetName());
 		App->editor->selected_go = go;
 	}
-
+	
 	//if (hover) hovered_go = go;
 
 }

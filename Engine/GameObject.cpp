@@ -31,14 +31,32 @@ GameObject::~GameObject()
 
 bool GameObject::CleanUp()
 {
-	std::vector<Component*>::iterator compo = components.begin();
+	// recursively delete its childs and components
+	CleanUpRecursive(this);
 
-	for (; compo != components.end(); ++compo)
-	{
-		(*compo)->CleanUp();
-	}
+	// currently does nothing
+	transform->CleanUp();
 
 	return true;
+}
+
+void GameObject::CleanUpRecursive(GameObject* go)
+{
+	// clean all components of this pointing go
+	
+	std::vector<Component*>::iterator compoIt = go->components.begin();
+	for (; compoIt != go->components.end(); ++compoIt)
+	{
+		(*compoIt)->CleanUp();
+	}
+
+	// currently does nothing
+	transform->CleanUp();
+	
+	// for each children
+	for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
+		CleanUpRecursive((*it));
+
 }
 
 bool GameObject::Enable()
@@ -191,6 +209,11 @@ void GameObject::GenerateGlobalBoundingBox( GameObject* go, math::AABB* aabb)
 			aabb->minPoint = aabb->minPoint.Min((*child)->transform->position);
 		}
 	}
+}
+
+void GameObject::AddChild(GameObject* child)
+{
+	childs.push_back(child);
 }
 
 //bool GameObject::Draw()

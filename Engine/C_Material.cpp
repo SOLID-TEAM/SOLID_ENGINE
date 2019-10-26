@@ -37,3 +37,13 @@ bool C_Material::DrawPanelInfo()
 
 	return true;
 }
+
+bool C_Material::CleanUp()
+{
+	if(data->textures!= nullptr)
+		delete data->textures[0]; // TODO: currently only diffuse channel (0) 
+	
+	delete data;
+
+	return true;
+}

@@ -22,6 +22,9 @@
 #include "W_Scene.h"
 #include "W_Inspector.h"
 #include "W_Primitives.h"
+#include "W_DeleteHistory.h"
+
+#include "C_Transform.h"
 
 ModuleEditor::ModuleEditor(bool start_enabled) : Module(start_enabled)
 {
@@ -101,6 +104,7 @@ bool ModuleEditor::Start(Config& conf)
 	w_scene = new W_Scene("Scene", true);
 	w_inspector = new W_Inspector("Inspector", true);
 	w_primitives = new W_Primitives("Primitives", false);
+	W_delete_history = new W_DeleteHistory("Delete History", true);
 
 	return ret;
 }
@@ -128,6 +132,7 @@ bool ModuleEditor::CleanUp()
 	w_scene = nullptr;
 	w_inspector = nullptr;
 	w_primitives = nullptr;
+	W_delete_history = nullptr;
 
 	// debug data data ---
 	if (ddmesh != nullptr)
@@ -178,13 +183,16 @@ update_status ModuleEditor::PreUpdate(float dt)
 // Update
 update_status ModuleEditor::Update(float dt)
 {
+	// DEBUG MESH  ------------------------------------------------------------------------------------------------
 	// check if we need to show debug normals on selected go
-	if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
+	if ((viewport_options.debug_vertex_normals || viewport_options.debug_face_normals) && selected_go != nullptr)
 	{	
 		if (last_go_precalc != selected_go)
 		{
 			// check if the gameobject has meshes
-			D_Mesh* smesh = selected_go->GetMeshes();
+			D_Mesh* smesh = nullptr;
+			if(selected_go != nullptr)
+				smesh = selected_go->GetMeshes();
 
 			// we calc the two modes at once for the selected go
 			// but we filter what to print from bools cols
@@ -228,6 +236,14 @@ update_status ModuleEditor::Update(float dt)
 			last_go_precalc = nullptr;
 		}
 	}
+	else if (selected_go == nullptr && ddmesh != nullptr)
+	{
+		ddmesh->Clean();
+		delete ddmesh;
+		ddmesh = nullptr;
+		last_go_precalc = nullptr;
+	}
+	// ----------------------------------------------------------------------------------------------------------------
 
 	return UPDATE_CONTINUE;
 }
@@ -348,6 +364,15 @@ update_status ModuleEditor::Draw()
 	{
 		if (ddmesh != nullptr)
 		{
+			// push selected go matrix
+			if (selected_go->transform->HasNegativeScale())
+			{
+				glFrontFace(GL_CW);
+			}
+
+			glPushMatrix();
+			glMultMatrixf((float*)&selected_go->transform->global_transform.Transposed());
+
 			if (viewport_options.debug_vertex_normals)
 			{
 				glColor4fv((float*)&viewport_options.d_vertex_p_color);
@@ -363,6 +388,9 @@ update_status ModuleEditor::Draw()
 				glColor4fv((float*)&viewport_options.d_vertex_face_n_color);
 				ddmesh->DebugRenderFacesNormals(viewport_options.f_n_line_width);
 			}
+
+			glFrontFace(GL_CCW);
+			glPopMatrix();
 		}
 	}
 
@@ -600,6 +628,25 @@ bool ModuleEditor::DrawMainMenuBar()
 		if (ImGui::MenuItem("Quit", "ESC"))
 			ret = false;
 	
+
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Edit"))
+	{
+		bool delete_enabled = true;
+		bool undo_delete = false;
+		if (App->scene->GetUndoDeque().size() > 0) undo_delete = true;
+		if (ImGui::MenuItem("undo delete", "Ctrl + z", nullptr, undo_delete))
+		{
+			App->scene->UndoLastDelete();
+		}
+		if (selected_go == nullptr) delete_enabled = false;
+		if (ImGui::MenuItem("delete selected", nullptr, nullptr, delete_enabled))
+		{
+			App->scene->DeleteGameObject(selected_go);
+		}
+		ImGui::MenuItem("Deleted actions history", NULL, &W_delete_history->active);
 
 		ImGui::EndMenu();
 	}

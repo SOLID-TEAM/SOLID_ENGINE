@@ -30,5 +30,8 @@ bool C_Mesh::DrawPanelInfo()
 
 bool C_Mesh::CleanUp()
 {
+
+	delete data;
+	
 	return true;
 }

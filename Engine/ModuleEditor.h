@@ -17,6 +17,7 @@ class W_Rendering;
 class W_Scene;
 class W_Inspector;
 class W_Primitives;
+class W_DeleteHistory;
 
 // TODO: change this/remove define
 #define MAX_STORED_FPS 100
@@ -171,6 +172,7 @@ public:
 	W_Scene*		w_scene = nullptr;
 	W_Inspector*	w_inspector = nullptr;
 	W_Primitives*	w_primitives = nullptr;
+	W_DeleteHistory* W_delete_history = nullptr;
 
 	// WARNING: TODO: when we delete gameobjects, remember to unlink all pointers
 	// hierarchy / selected go

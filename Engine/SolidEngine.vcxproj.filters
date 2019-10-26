@@ -414,6 +414,9 @@
     <ClInclude Include="W_Primitives.h">
       <Filter>Sources\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="W_DeleteHistory.h">
+      <Filter>Sources\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -651,6 +654,9 @@
       <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
     <ClCompile Include="W_Primitives.cpp">
+      <Filter>Sources\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="W_DeleteHistory.cpp">
       <Filter>Sources\Editor</Filter>
     </ClCompile>
   </ItemGroup>

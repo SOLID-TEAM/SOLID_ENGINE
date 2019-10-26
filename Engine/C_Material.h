@@ -11,6 +11,7 @@ public:
 
 	C_Material(GameObject* go);
 
+	bool CleanUp();
 	bool DrawPanelInfo();
 
 public:
