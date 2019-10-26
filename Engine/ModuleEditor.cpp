@@ -220,7 +220,16 @@ update_status ModuleEditor::Update(float dt)
 				ddmesh->FillFacesBuffer();
 			}
 			else
+			{
+				// if exists any ddmesh, we must to clean it
+				if (ddmesh != nullptr)
+				{
+					ddmesh->Clean();
+					delete ddmesh;
+					ddmesh = nullptr;
+				}
 				LOG("[Error] Warning: gameobject without meshes to debug");
+			}
 			// -----------------------------------------------------------
 			// assign new precalc
 			last_go_precalc = selected_go;

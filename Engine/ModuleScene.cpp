@@ -51,6 +51,16 @@ update_status ModuleScene::PreUpdate(float dt)
 	}
 	if (temp_to_undo_go.size() > 0) temp_to_undo_go.clear();
 
+	// RE-parent all needed childrens if needed --------------
+	// map is done for when we are able to move on hierarchy more than 1 go at once WIP
+	std::map<GameObject*, GameObject*>::iterator it = childrens_to_move.begin();
+
+	for (; it != childrens_to_move.end(); ++it)
+		(*it).first->AddChild((*it).second);
+
+	if (childrens_to_move.size() > 0)
+		childrens_to_move.clear();
+
 	// ---------------------------------------------------------------------------
 
 	return UPDATE_CONTINUE;
@@ -69,6 +79,7 @@ update_status ModuleScene::Update(float dt)
 	{
 		UpdateAll(dt, root_go);
 	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -155,7 +166,7 @@ void ModuleScene::UndoLastDelete()
 		if (to_undo_buffer_go.back()->parent != nullptr)
 		{
 			// re-add child to its parent
-			to_undo_buffer_go.back()->parent->AddChild(to_undo_buffer_go.back());
+			to_undo_buffer_go.back()->parent->childs.push_back(to_undo_buffer_go.back());
 			// TODO: if the parent is already deleted the object doesn't re-arrange on scene (not tested) || currently this never gonna happen
 			LOG("[Info] Succesfully re-attached child %s to its parent %s", to_undo_buffer_go.back()->GetName(), to_undo_buffer_go.back()->parent->GetName());
 			// restore hierarchy selection
@@ -188,3 +199,7 @@ std::deque<GameObject*>& ModuleScene::GetUndoDeque()
 	return to_undo_buffer_go;
 }
 
+void ModuleScene::AddGoToHierarchyChange(GameObject* target_go, GameObject* source_go)
+{
+	childrens_to_move.insert({ target_go, source_go });
+}
