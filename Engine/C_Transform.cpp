@@ -70,6 +70,11 @@ void C_Transform::SetScale(math::float3 scale)
 
 }
 
+math::float3 C_Transform::GetWorldPosition() const
+{
+	return global_transform.TranslatePart();
+}
+
 math::float3 C_Transform::GetPosition() const
 {
 	return position;
