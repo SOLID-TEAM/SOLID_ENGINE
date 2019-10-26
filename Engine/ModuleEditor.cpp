@@ -106,6 +106,11 @@ bool ModuleEditor::Start(Config& config)
 	w_primitives =		new W_Primitives("Primitives",			false);
 	W_delete_history =	new W_DeleteHistory("Delete History",	false);
 
+	for (std::vector<Window*>::iterator itr = windows.begin(); itr != windows.end(); ++itr)
+	{
+		(*itr)->active = config.GetBool(std::string("window_active_" + (*itr)->name).c_str(), &(*itr)->active);
+	}
+
 	return ret;
 }
 
