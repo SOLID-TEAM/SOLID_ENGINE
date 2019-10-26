@@ -126,12 +126,12 @@ update_status ModuleCamera3D::Update(float dt)
 
 				if (dx != 0 || dy != 0)
 				{
-					float rotation_speed = 10.f * dt;
+					float rotation_speed = 8.f * dt;
 					float yaw = dx * rotation_speed;
 					float pitch = dy * rotation_speed;
 
 					math::Quat rot_x = math::Quat::RotateAxisAngle(math::float3::unitY, yaw * DEGTORAD);
-					math::Quat rot_y = math::Quat::RotateAxisAngle(math::Cross(Y, Z), pitch * DEGTORAD);
+					math::Quat rot_y = math::Quat::RotateAxisAngle(X, pitch * DEGTORAD);
 					math::Quat final_rot = rot_x * rot_y;
 
 					Z = final_rot * Z;

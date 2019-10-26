@@ -17,7 +17,7 @@ public:
 public:
 
 	bool active = true;
-	float width = 1.f;
+	float line_width = 1.f;
 	ImVec4 color = { 1.f, 1.f ,1.f, 1.f };
 
 private:
@@ -40,11 +40,11 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
+	bool Save(Config& config);
+	void Load(Config& config);
 
 	// TODO: fit utilities on its own file
 	float map(float value, float s1, float stop1, float s2, float stop2) const;
-	
 
 	Grid* main_grid = nullptr;
 };

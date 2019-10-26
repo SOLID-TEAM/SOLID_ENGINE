@@ -25,10 +25,8 @@ bool C_MeshRenderer::Render()
 {
 	// Get Data from components ----------------------------
 
-	// TODO: i think assign data every frame is not needed, instead, link with the parent component once ---------
-	// ------
-	C_Mesh* c_mesh = (C_Mesh*)linked_go->GetComponentsByType(ComponentType::MESH);
-	C_Material* c_mat = (C_Material*)linked_go->GetComponentsByType(ComponentType::MATERIAL);
+	C_Mesh* c_mesh = (C_Mesh*)linked_go->GetComponentsByType(ComponentType::MESH);           	// TODO: Link it once time ------------------
+	C_Material* c_mat = (C_Material*)linked_go->GetComponentsByType(ComponentType::MATERIAL);   // TODO: Link it once time ------------------
 
 	if (c_mesh == nullptr)
 	{
@@ -50,93 +48,106 @@ bool C_MeshRenderer::Render()
 		glFrontFace(GL_CW);
 	}
 
+	// Push matrix ---------------------------------------------------------
 	glPushMatrix();
 	glMultMatrixf((float*)&linked_go->transform->global_transform.Transposed());
 
-
-	// -------------------------------------------------------------------------------------------------------------
+	// Start rendering ------------------------------------------------------
 
 	uint custom_tex_id = 0;
 
-	if (c_mesh != nullptr) // TODO: delete this checks, the checks on top of this blinds this code
+	if (c_mat->view_checker)
 	{
-		if (c_mat != nullptr)
+		// check if checker still is valid (not deleted gl buffer on the way)
+		if (glIsTexture(c_mat->checker_gl_id))
 		{
-			if (c_mat->view_checker)
-			{
-				// check if checker still is valid (not deleted gl buffer on the way)
-				if (glIsTexture(c_mat->checker_gl_id))
-				{
-					custom_tex_id = c_mat->checker_gl_id;
-				}
-				else
-				{
-					if (c_mat->checker_gl_id != 0)
-						c_mat->checker_gl_id = 0;
-				}
-			}
+			custom_tex_id = c_mat->checker_gl_id;
 		}
-
-		// CHECK if textured for apply or not default albedo color for mesh data
-		Color fill_color = { 1.0f,1.0f,1.0f,1.0f }; // TODO: change variable type if needed
-		if (!c_mat->textured)
+		else
 		{
-			fill_color = d_mat->albedo_color;
-		}
-
-		// TODO NEXT: implement new render functionality to pass all this shit (colors, draw modes etc)
-
-		ViewportOptions& vp = App->editor->viewport_options;
-
-		if (vp.fill_faces && vp.wireframe)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			glEnable(GL_POLYGON_OFFSET_FILL);
-			glPolygonOffset(1.0f, 0.375f);
-
-			glColor4fv((float*)&fill_color);
-
-			RenderMesh(custom_tex_id, c_mat->textured);
-
-			glLineWidth(1.0f);
-			glDisable(GL_POLYGON_OFFSET_FILL);
-
-		}
-		else if (vp.fill_faces)
-		{
-			glColor4fv((float*)&fill_color);
-			RenderMesh(custom_tex_id, c_mat->textured);
-		}
-
-		if (vp.wireframe)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-			glLineWidth(vp.wire_line_width);
-			glColor4fv((float*)&vp.wire_color);
-
-			RenderWireframe();
-
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
-
-		if (vp.outline)
-		{
-			glStencilFunc(GL_NOTEQUAL, 1, -1);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-			glLineWidth(vp.wire_line_width);
-			glColor4fv((float*)&vp.wire_color);
-
-			glLineWidth(7.f);
-			RenderWireframe();
-			glLineWidth(1.f);
-
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			glStencilFunc(GL_ALWAYS, 1, -1);
+			if (c_mat->checker_gl_id != 0)
+				c_mat->checker_gl_id = 0;
 		}
 	}
 
+
+	// CHECK if textured for apply or not default albedo color for mesh data
+	Color fill_color = { 1.0f,1.0f,1.0f,1.0f }; // TODO: change variable type if needed
+
+	if (!c_mat->textured)
+	{
+		fill_color = d_mat->albedo_color;
+	}
+
+	// TODO NEXT: implement new render functionality to pass all this shit (colors, draw modes etc)
+
+	ViewportOptions& vp = App->editor->viewport_options;
+
+	glBegin(GL_LINES);
+
+	GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, MaterialAmbient);
+
+	for (int i = 0; i < d_mesh->aabb.NumEdges(); ++i)
+	{
+		glColor4f( 1.f, 1.f, 1.f, 1.f);
+		math::LineSegment line_segment = d_mesh->aabb.Edge(i);
+		glVertex3f(line_segment.a.x, line_segment.a.y, line_segment.a.z);
+		glVertex3f(line_segment.b.x, line_segment.b.y, line_segment.b.z);
+	}
+
+	GLfloat MaterialAmbient_1[] = { 0, 0, 0, 1 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, MaterialAmbient_1);
+
+	glEnd();
+
+	if (vp.fill_faces && vp.wireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glPolygonOffset(1.0f, 0.375f);
+
+		glColor4fv((float*)&fill_color);
+
+		RenderMesh(custom_tex_id, c_mat->textured);
+
+		glLineWidth(1.0f);
+		glDisable(GL_POLYGON_OFFSET_FILL);
+
+	}
+	else if (vp.fill_faces)
+	{
+		glColor4fv((float*)&fill_color);
+		RenderMesh(custom_tex_id, c_mat->textured);
+	}
+
+	if (vp.wireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		glLineWidth(vp.wire_line_width);
+		glColor4fv((float*)&vp.wire_color);
+
+		RenderWireframe();
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
+	if (vp.outline)
+	{
+		glStencilFunc(GL_NOTEQUAL, 1, -1);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		glLineWidth(vp.wire_line_width);
+		glColor4fv((float*)&vp.wire_color);
+
+		glLineWidth(7.f);
+		RenderWireframe();
+		glLineWidth(1.f);
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glStencilFunc(GL_ALWAYS, 1, -1);
+	}
 	glFrontFace(GL_CCW);
 	glPopMatrix();
 

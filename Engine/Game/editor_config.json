@@ -16,7 +16,16 @@
     "Input": {},
     "Camera3D": {},
     "": {},
-    "ModuleRandom?": {},
+    "ModuleRandom?": {
+        "grid_units": 11,
+        "grid_line_width": 1,
+        "grid_color": [
+            1,
+            1,
+            1,
+            0.5
+        ]
+    },
     "Textures": {},
     "ModuleImporter": {},
     "Editor": {
@@ -38,8 +47,8 @@
         "show_console": true,
         "wireframe": false,
         "fill_mode": true,
-        "debug_vertex_normals": true,
-        "debug_face_normals": true,
+        "debug_vertex_normals": false,
+        "debug_face_normals": false,
         "fill_color": [
             0,
             0,
@@ -77,7 +86,7 @@
             1
         ],
         "wire_line_width": 1,
-        "v_point_size": 5,
+        "v_point_size": 0,
         "f_v_point_size": 5,
         "v_n_line_width": 1,
         "f_n_line_width": 1,
