@@ -28,7 +28,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 {
 	// TODO: BEWARE of linkeds go, when we deleting them
 
-	ImGuiTreeNodeFlags node_flags = 0;
+	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnArrow; // allows click on it on full box width | allows open only by arrow click
 
 	if (go->childs.size() == 0)
 		node_flags |= ImGuiTreeNodeFlags_Leaf;
@@ -53,7 +53,6 @@ void W_Hierarchy::DrawAll(GameObject* go)
 	// "default" colors ----------------------
 	ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor(255, 0, 255, 255)); // when current clicked
 
-	node_flags |= ImGuiTreeNodeFlags_SpanAvailWidth; // allows click on it on full box width
 	ImGui::PushID(go);
 	// ---------------------------------------
 	// https://github.com/ocornut/imgui/issues/2077
