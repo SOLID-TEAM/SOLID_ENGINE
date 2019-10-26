@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "GameObject.h"
 #include <queue>
+#include <map>
 
 // one action include any child tree inside object
 #define MAX_UNDO_ACTIONS 20 // TODO: add a max saved actions buffer qty configuration on W_Config panel to allow user configure its ctrl-z buffer
@@ -36,6 +37,8 @@ public:
 
 	std::deque<GameObject*>& GetUndoDeque();
 
+	void AddGoToHierarchyChange(GameObject* target_go, GameObject* source_go);
+
 private:
 	void AddGOToUndoDeque(GameObject* gameObject);
 
@@ -47,6 +50,12 @@ private:
 	//std::queue<GameObject*> to_delete_buffer_go;
 
 	std::vector<GameObject*> temp_to_undo_go;
+
+	// store childrens we must to move
+	// TODO: think is this the better place, the idea is any hierarchy change is made outside any loop except preupdate
+	// and the more direct way to access and do the changes
+	//std::queue<GameObject*> childrens_to_move;
+	std::map<GameObject*, GameObject*> childrens_to_move;
 
 
 };

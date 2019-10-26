@@ -43,14 +43,17 @@ public:
 
 	void GetBoundingBox(math::AABB& aabb); // From all components
 
-	//
+	// addchild currently is used to hierarchical changes
 	void AddChild(GameObject* child);
+	void RemoveChild(GameObject* child);
 
 private:
 
 	void GenerateGlobalBoundingBox(GameObject* go, math::AABB* aabb);
 
 	void CleanUpRecursive(GameObject* go);
+	
+	
 
 public:
 

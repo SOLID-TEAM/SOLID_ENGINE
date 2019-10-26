@@ -26,7 +26,12 @@ public:
 		memcpy(&albedo_color, &color, sizeof(float) * 4);
 	}
 
-	~D_Material() {};
+	~D_Material() {
+		// delete diffuse channel
+		// WARNING: if the object had the same texture of another, we CAN'T DO THIS
+		/*if(textures[0] != nullptr)
+			App->textures->FreeTextureBuffer(textures[0]->buffer_id);*/
+	};
 
 public:
 

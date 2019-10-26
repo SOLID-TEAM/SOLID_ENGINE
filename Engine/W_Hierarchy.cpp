@@ -68,6 +68,9 @@ void W_Hierarchy::DrawAll(GameObject* go)
 	ImGui::PopStyleColor(1);
 	// -----------------------------------
 
+	
+	
+
 	// RIGHT CLICK BEHAVIOUR ---
 	
 	if (ImGui::BeginPopupContextItem(go->GetName()))
@@ -86,6 +89,40 @@ void W_Hierarchy::DrawAll(GameObject* go)
 	}
 	ImGui::PopID();
 
+	if (clicked)
+	{
+		//LOG("Clicked: %s", go->GetName());
+		App->editor->selected_go = go;
+	}
+
+	// DRAG AND DROP
+	 // Our buttons are both drag sources and drag targets here!
+	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+	{
+		ImGui::SetDragDropPayload("gameobject_object", &go, sizeof(GameObject*));    // Set payload to carry the index of our item (could be anything)
+	   // Display preview (could be anything, e.g. when dragging an image we could decide to display the filename and a small preview of the image, etc.)
+		ImGui::Text("Move %s", go->GetName());
+
+		ImGui::EndDragDropSource();
+	}
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("gameobject_object"))
+		{
+			IM_ASSERT(payload->DataSize == sizeof(GameObject*));
+			GameObject** source_go = (GameObject**)payload->Data;
+
+			LOG("%s",(*source_go)->GetName());
+			
+			/*go->AddChildren((*source_go));*/
+			App->scene->AddGoToHierarchyChange(go, (*source_go));
+
+			LOG("[Info] Moved %s to %s", (*source_go)->GetName(), go->GetName());
+		}
+		ImGui::EndDragDropTarget();
+	}
+
 	if (open)
 	{
 		for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
@@ -93,12 +130,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 
 		ImGui::TreePop();
 	}
-
-	if (clicked)
-	{
-		//LOG("Clicked: %s", go->GetName());
-		App->editor->selected_go = go;
-	}
+	
 	
 	//if (hover) hovered_go = go;
 

@@ -213,7 +213,56 @@ void GameObject::GenerateGlobalBoundingBox( GameObject* go, math::AABB* aabb)
 
 void GameObject::AddChild(GameObject* child)
 {
+	// removes child for previous parent, if any
+	if (child->parent != nullptr)
+	{
+		child->parent->RemoveChild(child);
+
+		// if this child has childs, move the childs to the child previous parent
+		if (child->childs.size() > 0)
+		{
+			//LOG("%i", child->childs.size());
+			
+			for (std::vector<GameObject*>::iterator it = child->childs.begin(); it != child->childs.end(); )
+			{
+				(*it)->parent;
+				LOG("");
+				(*it)->parent = child->parent;
+				(*it)->parent->childs.push_back((*it));
+
+				it = child->childs.erase(it);
+			}
+
+			float4x4 current_global = transform->GetGlobalTransform();
+			// updates transform
+			float4x4 new_transform = current_global * child->transform->GetGlobalTransform().Inverted();
+			new_transform.Decompose(transform->position, transform->rotation, transform->scale);
+		}
+	}
+
+	// updates parent of the child
+	child->parent = this;
+	// finally add new child
 	childs.push_back(child);
+
+}
+
+// removes child but not deletes
+void GameObject::RemoveChild(GameObject* child)
+{
+	std::vector<GameObject*>::iterator it = std::find(childs.begin(), childs.end(), child);
+
+	if (it != childs.end())
+	{
+		LOG("[Info] I %s i lost treat with my child %s", this->GetName(), child->GetName());
+		childs.erase(it);
+	}
+	else
+	{
+		LOG("[Info] I never known about %s child");
+		//return childs.end();
+	}
+
 }
 
 //bool GameObject::Draw()

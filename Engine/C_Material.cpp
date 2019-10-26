@@ -40,6 +40,7 @@ bool C_Material::DrawPanelInfo()
 
 bool C_Material::CleanUp()
 {
+	// DELETES only the data, not free the texture itself (TODO: warning for another objects with same texture)
 	if(data->textures!= nullptr)
 		delete data->textures[0]; // TODO: currently only diffuse channel (0) 
 	
