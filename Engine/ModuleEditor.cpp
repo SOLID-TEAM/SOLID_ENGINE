@@ -90,21 +90,21 @@ bool ModuleEditor::Init(Config& config)
 }
 
 // Load assets
-bool ModuleEditor::Start(Config& conf)
+bool ModuleEditor::Start(Config& config)
 {
 	LOG("[Start] Loading Editor");
 	bool ret = true;
 
 	// Initial Windows -------------------------------------
 
-	w_config = new W_Config("Configuration", show_configuration);
-	w_console = new W_Console("Console", show_console);
-	w_hierarchy = new W_Hierarchy("Hierarchy", true);
-	w_rendering = new W_Rendering("Rendering Settings", true);
-	w_scene = new W_Scene("Scene", true);
-	w_inspector = new W_Inspector("Inspector", true);
-	w_primitives = new W_Primitives("Primitives", false);
-	W_delete_history = new W_DeleteHistory("Delete History", true);
+	w_config =			new W_Config("Configuration",			false);
+	w_console =			new W_Console("Console",				false);
+	w_hierarchy =		new W_Hierarchy("Hierarchy",			false);
+	w_rendering =		new W_Rendering("Rendering Settings",	false);
+	w_scene =			new W_Scene("Scene",					false);
+	w_inspector =		new W_Inspector("Inspector",			false);
+	w_primitives =		new W_Primitives("Primitives",			false);
+	W_delete_history =	new W_DeleteHistory("Delete History",	false);
 
 	return ret;
 }
@@ -397,66 +397,6 @@ update_status ModuleEditor::Draw()
 	return UPDATE_CONTINUE;
 }
 
-// TODO: improve this methods when we get the windows class helper --------------
-
-//bool ModuleEditor::LoadEditorConfig(const char* path)
-//{
-//	bool ret = true;
-//
-//	JSON_Value* editor_config = json_parse_file(path);
-//
-//	if (editor_config == NULL)
-//	{
-//		LOG("Editor file configuration %s not found", path);
-//	}
-//	else
-//	{
-//		LOG("Found");
-//		// TODO: iterate all members and save its states
-//		show_demo_imgui = json_object_get_boolean(json_object(editor_config), "show_demo_imgui");
-//		show_about_popup = json_object_get_boolean(json_object(editor_config), "show_about_popup");
-//	}
-//
-//	return ret;
-//}
-
-//bool ModuleEditor::SaveEditorConfig(const char* path)
-//{
-//	bool ret = true;
-//
-//	// testing how array works ----
-//
-//	JSON_Array* arr = nullptr;
-//	JSON_Value* va = json_value_init_object();
-//	JSON_Object* obj = nullptr;
-//	obj = json_value_get_object(va);
-//
-//	JSON_Value* vaa = json_value_init_array();
-//	json_object_set_value(obj, "blabla", vaa);
-//
-//	//va = json_value_init_array();
-//	//arr = json_value_get_array(vaa);
-//
-//	/*json_array_append_boolean(arr, true);
-//	json_array_append_boolean(arr, true);
-//	json_array_append_boolean(arr, false);
-//	json_array_append_boolean(arr, true);
-//	json_array_append_boolean(arr, true);*/
-//
-//	json_array_append_boolean(json_value_get_array(vaa), true);
-//	json_array_append_boolean(json_value_get_array(vaa), true);
-//	json_array_append_boolean(json_value_get_array(vaa), true);
-//	json_array_append_boolean(json_value_get_array(vaa), true);
-//
-//	json_serialize_to_file_pretty(va, "testingArray.json");
-//
-//	return ret;
-//}
-
-// ----------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------
-// TODO: temporaly methods helpers for imgui here --------------------------
 
 // In your own code you may want to display an actual icon if you are using a merged icon fonts (see misc/fonts/README.txt)
 void ModuleEditor::HelpMarker(const char* desc) const
@@ -476,27 +416,20 @@ bool ModuleEditor::Save(Config& config)
 {
 	bool ret = true;
 
-	float blabla[10] = { 0,2,0,0,0,0,4,5,5,10 };
-
 	ret = config.AddBool("show_about_popup", show_about_popup);
 	ret = config.AddBool("show_demo_imgui", show_demo_imgui);
-	ret = config.AddFloatArray("sdfgd", blabla, 10);
 
-	if (w_config != nullptr)
-		ret = config.AddBool("show_configuration", w_config->active);
-	else
-		ret = config.AddBool("show_configuration", show_configuration);
-
-	if (w_console != nullptr)
-		ret = config.AddBool("show_console", w_console->active);
-	else
-		ret = config.AddBool("show_console", show_console);
+	for (std::vector<Window*>::iterator itr = windows.begin(); itr != windows.end(); ++itr)
+	{
+		config.AddBool( std::string("window_active_" + (*itr)->name).c_str() , w_config->active);
+	}
 
 	// DEBUG VIEWPORT OPTIONS
 	ret = config.AddBool("wireframe", viewport_options.wireframe);
 	ret = config.AddBool("fill_mode", viewport_options.fill_faces);
 	ret = config.AddBool("debug_vertex_normals", viewport_options.debug_vertex_normals);
 	ret = config.AddBool("debug_face_normals", viewport_options.debug_face_normals);
+	ret = config.AddBool("debug_bounding_boxes", viewport_options.debug_bounding_boxes);
 
 	ret = config.AddFloatArray("fill_color", (float*)&viewport_options.fill_color, 4);
 	ret = config.AddFloatArray("wire_color", (float*)&viewport_options.wire_color, 4);
@@ -514,7 +447,6 @@ bool ModuleEditor::Save(Config& config)
 	ret = config.AddFloat("v_n_line_length", viewport_options.v_n_line_length);
 	ret = config.AddFloat("f_n_line_length", viewport_options.f_n_line_length);
 
-
 	return ret;
 }
 
@@ -522,22 +454,20 @@ void ModuleEditor::Load(Config& config)
 {
 	show_about_popup = config.GetBool("show_about_popup", show_about_popup);
 	show_demo_imgui = config.GetBool("show_demo_imgui", show_demo_imgui);
-	if (w_console != nullptr)
-		w_console->active = config.GetBool("show_console", w_console->active);
-	else
-		show_console = config.GetBool("show_console", show_console);
-	if (w_config != nullptr)
-		w_config->active = config.GetBool("show_configuration", w_config->active);
-	else
-		show_configuration = config.GetBool("show_configuration", show_configuration);
 
+	for (std::vector<Window*>::iterator itr = windows.begin(); itr != windows.end(); ++itr)
+	{
+		(*itr)->active = config.GetBool(std::string("window_active_" + (*itr)->name).c_str(), &(*itr)->active);
+	}
 	// viewport options
 	
 	viewport_options.wireframe = config.GetBool("wireframe", viewport_options.wireframe);
 	viewport_options.fill_faces = config.GetBool("fill_mode", viewport_options.fill_faces);
 	viewport_options.debug_vertex_normals = config.GetBool("debug_vertex_normals", viewport_options.debug_vertex_normals);
 	viewport_options.debug_face_normals = config.GetBool("debug_face_normals", viewport_options.debug_face_normals);
-	
+	viewport_options.debug_bounding_boxes = config.GetBool("debug_bounding_boxes", viewport_options.debug_bounding_boxes);
+
+
 	// load colors ----------------------------------------------------------------------------------
 	viewport_options.fill_color.x = config.GetFloat("fill_color", viewport_options.fill_color.x, 0);
 	viewport_options.fill_color.y = config.GetFloat("fill_color", viewport_options.fill_color.y, 1);
@@ -653,11 +583,10 @@ bool ModuleEditor::DrawMainMenuBar()
 
 	if (ImGui::BeginMenu("Windows"))
 	{
-		ImGui::MenuItem("Inspector", NULL, &w_inspector->active);
-		ImGui::MenuItem("Hierarchy", NULL, &w_hierarchy->active);
-		ImGui::MenuItem("Configuration", NULL, &w_config->active);
-		ImGui::MenuItem("Console Log", NULL, &w_console->active);
-		ImGui::MenuItem("Rendering settings", NULL, &w_rendering->active); // TODO: probably obsolete window, maybe we could add more render options
+		for (std::vector<Window*>::iterator itr = windows.begin(); itr != windows.end(); ++itr)
+		{
+			ImGui::MenuItem((*itr)->name.c_str(), NULL, &(*itr)->active);
+		}
 
 		ImGui::EndMenu();
 	}

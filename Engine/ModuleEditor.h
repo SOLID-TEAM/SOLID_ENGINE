@@ -28,8 +28,11 @@ struct ViewportOptions
 	bool outline = false;
 	bool fill_faces = true;
 
+	bool debug_bounding_boxes = false;
 	bool debug_vertex_normals = true;
 	bool debug_face_normals = true;
+
+
 	ImVec4 fill_color = ImVec4(0.f, 0.f, 0.f, 0.f);
 	ImVec4 wire_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);;
 	ImVec4 d_vertex_p_color = ImVec4(0.59f, 0.22f, 1.0f, 1.0f);
