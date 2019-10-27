@@ -11,7 +11,7 @@
         "fullscreen_desktop": false,
         "resizable": true,
         "borderless": false,
-        "maximized": true
+        "maximized": false
     },
     "Input": {},
     "Camera3D": {},
@@ -21,8 +21,8 @@
         "grid_line_width": 1,
         "grid_color": [
             1,
-            1,
-            1,
+            0.99998998641967773,
+            0.99998998641967773,
             0.40000000596046448
         ]
     },
@@ -39,7 +39,7 @@
         "window_active_Inspector": true,
         "window_active_Primitives": true,
         "window_active_Delete History": true,
-        "debug_vertex_normals": true,
+        "debug_vertex_normals": false,
         "debug_face_normals": false,
         "debug_bounding_boxes": false,
         "wire_color": [
