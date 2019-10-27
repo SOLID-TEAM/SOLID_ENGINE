@@ -59,7 +59,7 @@ bool ModuleImporter::Start(Config& config)
 	//ImportModelFile("child_test999.fbx");
 	//ImportModelFile("child_test_definitive_edition_remaster.fbx");
 
-	ImportModelFile("Assets/Models/BakerHouse.fbx");
+	ImportModelFile("Assets/Models/baker_house/BakerHouse.fbx");
 
 	//ImportModelFile("Assets/Models/hammer_low.fbx");
 	//ImportModelFile("Assets/Models/suzanne.solid");

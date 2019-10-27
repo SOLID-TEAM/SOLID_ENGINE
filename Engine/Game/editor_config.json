@@ -39,7 +39,7 @@
         "window_active_Inspector": true,
         "window_active_Primitives": true,
         "window_active_Delete History": true,
-        "debug_vertex_normals": false,
+        "debug_vertex_normals": true,
         "debug_face_normals": false,
         "debug_bounding_boxes": false,
         "wire_color": [
@@ -73,7 +73,7 @@
             1
         ],
         "wire_line_width": 1,
-        "v_point_size": 0,
+        "v_point_size": 5,
         "f_v_point_size": 5,
         "v_n_line_width": 1,
         "f_n_line_width": 1,
