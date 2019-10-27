@@ -25,6 +25,11 @@ The code is written in C++.
 
 ## Features
 
+### View port
+- Selectable shading modes.
+- Debug visualization for selected gameobject of vertex normals and face normals.
+- Configurable grid
+
 ### Game Objects
 - Drag & Drop to Reorder GameObjects in the Hierarchy Window.
 - Create Primitives GameObjects in the Primitives Window.
@@ -32,23 +37,24 @@ The code is written in C++.
 - 
 ### Components
 - Added: Transform, Mesh Renderer , Mesh & Material Components
- - Component Material can change its texture 
+- Component material has one option to activate a procedurally checker texture.
  
 ### Debug
 - Change ViewMode in Scene Window Left-Top Combo 
 - Change Grid and Debug Settings in Scene Window Menus
+- View all textures loaded in vram on Configuration->View
 
 ### Camera Controls
 
 - **Mouse Right** Hold: 
- 	- **Mouse Movement**: Look Around.
-	- **WASD**: Change local position on X-Z Plane
-	- **QE**: Move up and down
+- **Mouse Movement**: Look Around.
+- **WASD**: Change local position on X-Z Plane
+- **QE**: Move up and down
 - **Mouse Wheel**: Zoom In/Out
 - **Shift** Hold : Movement Speed x2
 - **F**: Focus selected GameObject
 - **Alt** Hold :
-	- **Mouse Left** Hold : Orbit Last Selected GameObject
+- **Mouse Left** Hold : Orbit Last Selected GameObject
 
 ## Third Party Tools
 
