@@ -32,7 +32,7 @@ class FBO
 {
 public:
 
-	enum FBORenderTarget
+	enum FBORender
 	{
 		NORMAL_FBO,
 		NORMAL_TEXTURE,
@@ -58,11 +58,26 @@ public:
 
 	uint GetRenderTexture();
 
-public:
+	uint GetID(FBORender render)
+	{
+		return ID[render];
+	}
 
-	uint samples = 4;
+	// Only multiple of 2 values
+	//    0 : MSAA disabled
+	//    2-16 : MSAA enabled
+	void SetMSAA( int MSAA) 
+	{
+		if (MSAA % 2 != 0 || MSAA > 0 || MSAA <= 16)
+		{
+			msaa = MSAA;
+		}
+	}
+
+private:
+
 	uint ID[8];
-
+	uint msaa = 4;
 	float4 clear_color = { 0.1, 0.1, 0.1, 1.f };
 	float width = 0, height = 0;
 

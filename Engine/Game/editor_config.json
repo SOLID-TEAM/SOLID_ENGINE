@@ -1,7 +1,7 @@
 {
     "App": {
-        "name": "SOLID_ENGINE",
-        "organization": "SOLID_TEAM",
+        "name": "Solid Engine",
+        "organization": "Solid Team ",
         "framerate_cap": 60
     },
     "Window": {

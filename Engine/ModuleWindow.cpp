@@ -88,7 +88,7 @@ bool ModuleWindow::Init(Config& config)
 		}
 		else
 		{
-			SetTitle("SOLID ENGINE v0.1");
+			SetTitle("Solid Engine v.1.0");
 		}
 	}
 
