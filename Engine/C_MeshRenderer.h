@@ -28,7 +28,7 @@ private:
 
 	void RenderOutline(float width, float* color);
 
-	void RenderBoundingBox(math::AABB& aabb);
+	void RenderBoundingBox(math::AABB& aabb, float width, float* color);
 
 private:
 

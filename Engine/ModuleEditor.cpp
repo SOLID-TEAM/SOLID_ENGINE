@@ -444,12 +444,14 @@ bool ModuleEditor::Save(Config& config)
 	ret = config.AddBool("debug_face_normals", viewport_options.debug_face_normals);
 	ret = config.AddBool("debug_bounding_boxes", viewport_options.debug_bounding_box);
 
+	ret = config.AddFloatArray("bb_color", (float*)&viewport_options.bb_color, 4);
 	ret = config.AddFloatArray("wire_color", (float*)&viewport_options.wire_color, 4);
 	ret = config.AddFloatArray("d_vertex_p_color", (float*)&viewport_options.d_vertex_p_color, 4);
 	ret = config.AddFloatArray("d_vertex_l_color", (float*)&viewport_options.d_vertex_l_color, 4);
 	ret = config.AddFloatArray("d_vertex_face_color", (float*)&viewport_options.d_vertex_face_color, 4);
 	ret = config.AddFloatArray("d_vertex_face_n_color", (float*)&viewport_options.d_vertex_face_n_color, 4);
 
+	ret = config.AddFloat("bb_line_width", viewport_options.bb_line_width);
 	ret = config.AddFloat("wire_line_width", viewport_options.wire_line_width);
 	ret = config.AddFloat("v_point_size", viewport_options.v_point_size);
 	ret = config.AddFloat("f_v_point_size", viewport_options.f_v_point_size);
@@ -479,6 +481,11 @@ void ModuleEditor::Load(Config& config)
 
 
 	// load colors ----------------------------------------------------------------------------------
+	viewport_options.bb_color.x = config.GetFloat("bb_color", viewport_options.wire_color.x, 0);
+	viewport_options.bb_color.y = config.GetFloat("bb_color", viewport_options.wire_color.y, 1);
+	viewport_options.bb_color.z = config.GetFloat("bb_color", viewport_options.wire_color.z, 2);
+	viewport_options.bb_color.w = config.GetFloat("bb_color", viewport_options.wire_color.w, 3);
+
 	viewport_options.wire_color.x = config.GetFloat("wire_color", viewport_options.wire_color.x, 0);
 	viewport_options.wire_color.y = config.GetFloat("wire_color", viewport_options.wire_color.y, 1);
 	viewport_options.wire_color.z = config.GetFloat("wire_color", viewport_options.wire_color.z, 2);
@@ -506,6 +513,7 @@ void ModuleEditor::Load(Config& config)
 	// -----------------------------------------------------------------------------------------------
 
 	viewport_options.wire_line_width = config.GetFloat("wire_line_width", viewport_options.wire_line_width);
+	viewport_options.bb_line_width = config.GetFloat("bb_line_width", viewport_options.bb_line_width);
 	viewport_options.v_point_size = config.GetFloat("v_point_size", viewport_options.v_point_size);
 	viewport_options.f_v_point_size = config.GetFloat("f_v_point_size", viewport_options.f_v_point_size);
 	viewport_options.v_n_line_width = config.GetFloat("v_n_line_width", viewport_options.v_n_line_width);
