@@ -26,7 +26,8 @@ public:
 	bool FreeTextureBuffer(uint id);
 	uint GenerateCheckerTexture(uint w, uint h);
 
-	void GetTextureSize(uint& w, uint& h) const;
+	void GetTextureSize(uint id,int& w, int& h) const;
+	const char* GetTextureName(uint id); // TODO: provisional, data class from resources must return correctly its id and name
 
 
 public:
