@@ -79,7 +79,7 @@ void W_Scene::Draw()
 void W_Scene::ViewportModes()
 {
 	ViewportOptions& vp = App->editor->viewport_options;
-	static const char* items[] = { "Shaded", "Wirefrime", "Shaded Wirefrime", "Depth View" };
+	static const char* items[] = { "Shaded", "Wireframe", "Shaded Wireframe", "Depth View" };
 	static const char* current_item = items[0];
 
 	ImGui::SetCursorPosX(0);
@@ -96,8 +96,8 @@ void W_Scene::ViewportModes()
 				current_item = items[n];
 
 				if		(current_item == "Shaded")				vp.mode = V_MODE_SHADED;
-				else if (current_item == "Wirefrime")			vp.mode = V_MODE_WIREFRIME;
-				else if (current_item == "Shaded Wirefrime")	vp.mode = V_MODE_SHADED_WIREFRIME;
+				else if (current_item == "Wireframe")			vp.mode = V_MODE_WIREFRAME;
+				else if (current_item == "Shaded Wireframe")	vp.mode = V_MODE_SHADED_WIREFRAME;
 				else if (current_item == "Depth View")			vp.mode = V_MODE_DEPTH_FILTER;
 			}
 

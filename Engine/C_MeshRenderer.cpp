@@ -88,12 +88,12 @@ bool C_MeshRenderer::Render()
 		RenderMesh(albedo_color.ptr(), custom_tex_id, c_mat->textured);
 	}
 
-	else if (vp.mode == V_MODE_WIREFRIME)
+	else if (vp.mode == V_MODE_WIREFRAME)
 	{
 		RenderWireframe(vp.wire_line_width, (float*)&vp.wire_color);
 	}
 
-	else if (vp.mode == V_MODE_SHADED_WIREFRIME)
+	else if (vp.mode == V_MODE_SHADED_WIREFRAME)
 	{
 		RenderMesh(albedo_color.ptr(), custom_tex_id, c_mat->textured);
 		RenderWireframe(vp.wire_line_width, (float*)&vp.wire_color);
