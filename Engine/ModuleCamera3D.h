@@ -3,8 +3,7 @@
 #include "Globals.h"
 #include "glmath.h"
 
-#include "external/MathGeoLib\include\Math\float3.h"
-#include "external/MathGeoLib\include\Math\float4x4.h"
+#include "external/MathGeoLib\include\Math/MathAll.h"
 
 class ModuleCamera3D : public Module
 {
@@ -38,13 +37,18 @@ public:
 	float distance = 0;
 
 	bool mouse_right_pressed = false;
+	bool mouse_wheel_pressed = false;
 	bool mouse_left_pressed = false;
+
 	bool alt_pressed = false;
 
 	bool enable_keys_input = false;
 	bool enable_mouse_input = false;
-	math::float3 X, Y, Z, position, reference;
+	math::float3 X, Y, Z, position, reference, current_position;
+	math::Quat current_rotation, rotation;
 
 private:
+
+	math::float4x4 current_viewmatrix;
 	math::float4x4 view_matrix;
 };

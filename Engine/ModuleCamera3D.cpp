@@ -22,6 +22,7 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 	Z = float3::unitZ;
 
 	position = { 0.0f, 0.0f, 5.0f };
+	current_position = position;
 	reference = { 0.0f, 0.0f, 0.0f };
 }
 
@@ -52,7 +53,11 @@ update_status ModuleCamera3D::Update(float dt)
 {
 	mouse_right_pressed = (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN);
 	mouse_left_pressed = (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN);
+	mouse_wheel_pressed = (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_DOWN);
 	alt_pressed = (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RALT) == KEY_REPEAT  || App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN|| App->input->GetKey(SDL_SCANCODE_RALT) == KEY_DOWN);
+
+	float dx;
+	float dy;
 
 	state = IDLE;
 
@@ -64,8 +69,8 @@ update_status ModuleCamera3D::Update(float dt)
 
 			state = LOOK_AROUND;
 
-			float dx = -App->input->GetMouseXMotion();
-			float dy = -App->input->GetMouseYMotion();
+			dx = -App->input->GetMouseXMotion();
+			dy = -App->input->GetMouseYMotion();
 
 			if (dx != 0 || dy != 0)
 			{
@@ -121,8 +126,8 @@ update_status ModuleCamera3D::Update(float dt)
 
 				state = ORBIT;
 
-				float dx = -App->input->GetMouseXMotion();
-				float dy = -App->input->GetMouseYMotion();
+				dx = -App->input->GetMouseXMotion();
+				dy = -App->input->GetMouseYMotion();
 
 				if (dx != 0 || dy != 0)
 				{
@@ -143,6 +148,25 @@ update_status ModuleCamera3D::Update(float dt)
 			}
 		}
 		
+		// Palm ---------------------------------------------------------------------
+		
+		if (mouse_wheel_pressed)
+		{
+			float palm_speed = 1.f * dt;
+			dx = -App->input->GetMouseXMotion();
+			dy = -App->input->GetMouseYMotion();
+
+			if (dx != 0 || dy != 0)
+			{
+				math::float3 offset(0, 0, 0);
+
+				offset += X * palm_speed * dx;
+				offset -= Y * palm_speed * dy;
+
+				position += offset;
+			}
+		}
+
 		// Zoom ---------------------------------------------------------------------
 
 		float mouse_z = -App->input->GetMouseZ();
@@ -189,25 +213,15 @@ update_status ModuleCamera3D::Update(float dt)
 					reference = selected->transform->position;
 					position = reference + d_vector;
 				}
-
-				
-
-				//C_Mesh* c_mesh = (C_Mesh * )selected->GetComponentsByType(ComponentType::MESH);
-
-				//if (c_mesh != nullptr)
-				//{
-				//	distance = c_mesh->data->aabb.Diagonal().Length() * 1.2F;
-				//	float3 d_vector = Z * distance;
-				//	reference = c_mesh->data->aabb.CenterPoint();
-				//	position = reference + d_vector;
-				//}
 			}
 		}
-
-
-			
-
 	}
+	
+	//current_rotation.Set(float3x3(X.x, Y.x, Z.x, X.y, Y.y, Z.y, X.z, Y.z, Z.z));
+
+	//current_rotation = Quat::Slerp()
+
+	current_position = float3::Lerp(current_position, position , 5.f * dt );
 	
 
 	// Recalculate matrix -------------
@@ -248,7 +262,7 @@ float* ModuleCamera3D::GetViewMatrix()
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {
-	view_matrix = float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, - X.Dot(position), -Y.Dot(position), -Z.Dot(position), 1.0f);
+	view_matrix = float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, - X.Dot(current_position), -Y.Dot(current_position), -Z.Dot(current_position), 1.0f);
 }
 
 bool ModuleCamera3D::Save(Config& config)
