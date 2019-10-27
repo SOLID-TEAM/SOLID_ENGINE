@@ -3,7 +3,7 @@
 
 #include "Module.h"
 #include "Globals.h"
-
+#include "external//MathGeoLib/include/Math/float4.h"
 class Grid 
 {
 public:
@@ -18,7 +18,7 @@ public:
 
 	bool active = true;
 	float line_width = 1.f;
-	ImVec4 color = { 1.f, 1.f ,1.f, 1.f };
+	float4 color = { 1.f, 1.f ,1.f, 1.f };
 
 private:
 	// General

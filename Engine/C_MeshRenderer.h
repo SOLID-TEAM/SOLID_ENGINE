@@ -30,10 +30,6 @@ private:
 
 	void RenderBoundingBox(math::AABB& aabb);
 
-	void BeginDebugDraw();
-
-	void EndDebugDraw();
-
 private:
 
 	D_Mesh*     d_mesh = nullptr;

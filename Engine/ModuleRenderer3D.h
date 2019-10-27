@@ -115,6 +115,10 @@ public:
 
 	void SetDefaultColorMaterial();
 
+	static void BeginDebugDraw(const float* color);
+
+	static void EndDebugDraw();
+
 public:
 	
 	RenderConfig render_config;

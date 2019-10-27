@@ -249,6 +249,17 @@ void ModuleRenderer3D::SetDefaultColorMaterial()
 	glColor4fv((float*)&render_config.default_color_mat);
 }
 
+void ModuleRenderer3D::BeginDebugDraw(const float* color)
+{
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
+}
+
+void ModuleRenderer3D::EndDebugDraw()
+{
+	GLfloat emission_default[] = { 0, 0, 0, 1 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_default);
+}
+
 FBO::FBO()
 {
 	for (int i = 0; i < 8; ++i)
@@ -387,5 +398,7 @@ uint FBO::GetRenderTexture()
 {
 	return ID[NORMAL_TEXTURE];
 }
+
+
 
 

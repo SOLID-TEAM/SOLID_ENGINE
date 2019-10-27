@@ -133,6 +133,7 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 
 	// Settings ====================================================
 	glColor4fv(color);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	if (d_material->textures[D_Material::DIFFUSE] != nullptr) // TODO: clean this and perform for possible another textures
 	{
@@ -204,13 +205,15 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 
 	// Settings Default =========================================
 	glColor4fv(float4::one.ptr());
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 }
 
 
 void C_MeshRenderer::RenderWireframe(float width, float* color) // need very few operations
 {
 	// Custom Settings ============================================
-	BeginDebugDraw();
+	ModuleRenderer3D::BeginDebugDraw(color);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glLineWidth(width);
 	glColor4fv(color);
@@ -240,7 +243,7 @@ void C_MeshRenderer::RenderWireframe(float width, float* color) // need very few
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glLineWidth(1.f);
 	glColor4fv( float4::one.ptr() );
-	EndDebugDraw();
+	ModuleRenderer3D::EndDebugDraw();
 }
 
 void C_MeshRenderer::RenderOutline(float width, float* color)
@@ -257,7 +260,7 @@ void C_MeshRenderer::RenderOutline(float width, float* color)
 void C_MeshRenderer::RenderBoundingBox(math::AABB& aabb)
 {
 	glBegin(GL_LINES);
-	BeginDebugDraw();
+	ModuleRenderer3D::BeginDebugDraw( float4::one.ptr());
 
 	for (int i = 0; i < aabb.NumEdges(); ++i)
 	{
@@ -267,18 +270,7 @@ void C_MeshRenderer::RenderBoundingBox(math::AABB& aabb)
 		glVertex3f(line_segment.b.x, line_segment.b.y, line_segment.b.z);
 	}
 
-	EndDebugDraw();
+	ModuleRenderer3D::EndDebugDraw();
 	glEnd();
 }
 
-void C_MeshRenderer::BeginDebugDraw()
-{
-	GLfloat emission_debug[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_debug);
-}
-
-void C_MeshRenderer::EndDebugDraw()
-{
-	GLfloat emission_default[] = { 0, 0, 0, 1 };
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_default);
-}
