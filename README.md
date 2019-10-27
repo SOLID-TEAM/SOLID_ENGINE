@@ -42,7 +42,7 @@ The code is written in C++.
 ### Debug
 - Change ViewMode in Scene Window Left-Top Combo 
 - Change Grid and Debug Settings in Scene Window Menus
-- View all textures loaded in vram on Configuration->View
+- View all textures loaded in vram on Configuration->Loaded textures vram
 
 ### Camera Controls
 
