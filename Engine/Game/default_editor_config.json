@@ -1,7 +1,7 @@
 {
     "App": {
-        "name": "SOLID_ENGINE",
-        "organization": "SOLID_TEAM",
+        "name": "Solid Engine",
+        "organization": "Solid Team ",
         "framerate_cap": 60
     },
     "Window": {
@@ -11,41 +11,37 @@
         "fullscreen_desktop": false,
         "resizable": true,
         "borderless": false,
-        "maximized": true
+        "maximized": false
     },
     "Input": {},
     "Camera3D": {},
     "": {},
-    "ModuleRandom?": {},
+    "ModuleRandom?": {
+        "grid_units": 11,
+        "grid_line_width": 1,
+        "grid_color": [
+            1,
+            0.99998998641967773,
+            0.99998998641967773,
+            0.40000000596046448
+        ]
+    },
     "Textures": {},
     "ModuleImporter": {},
     "Editor": {
         "show_about_popup": false,
         "show_demo_imgui": false,
-        "sdfgd": [
-            0,
-            2,
-            0,
-            0,
-            0,
-            0,
-            4,
-            5,
-            5,
-            10
-        ],
-        "show_configuration": false,
-        "show_console": true,
-        "wireframe": false,
-        "fill_mode": true,
-        "debug_vertex_normals": true,
-        "debug_face_normals": true,
-        "fill_color": [
-            0,
-            0,
-            0,
-            0
-        ],
+        "window_active_Configuration": true,
+        "window_active_Console": true,
+        "window_active_Hierarchy": true,
+        "window_active_Rendering Settings": true,
+        "window_active_Scene": true,
+        "window_active_Inspector": true,
+        "window_active_Primitives": true,
+        "window_active_Delete History": true,
+        "debug_vertex_normals": false,
+        "debug_face_normals": false,
+        "debug_bounding_boxes": false,
         "wire_color": [
             1,
             1,
