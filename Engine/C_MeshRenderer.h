@@ -22,11 +22,17 @@ public:
 
 private:
 
-	bool RenderMesh(const uint custom_tex = 0, bool textured = true);
+	void RenderMesh(float* color, const uint custom_tex = 0, bool textured = true);
 
-	bool RenderWireframe();
+	void RenderWireframe(float width, float* color);
 
-	bool RenderOutline();
+	void RenderOutline(float width, float* color);
+
+	void RenderBoundingBox(math::AABB& aabb);
+
+	void BeginDebugDraw();
+
+	void EndDebugDraw();
 
 private:
 

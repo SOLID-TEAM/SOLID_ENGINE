@@ -39,17 +39,9 @@
         "window_active_Inspector": true,
         "window_active_Primitives": true,
         "window_active_Delete History": true,
-        "wireframe": false,
-        "fill_mode": true,
         "debug_vertex_normals": false,
         "debug_face_normals": false,
         "debug_bounding_boxes": false,
-        "fill_color": [
-            0,
-            0,
-            0,
-            0
-        ],
         "wire_color": [
             1,
             1,

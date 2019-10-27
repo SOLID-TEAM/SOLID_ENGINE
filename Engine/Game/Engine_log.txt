@@ -89,6 +89,7 @@ Created mesh data: Untitled
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
+Closed Primitives Panel
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

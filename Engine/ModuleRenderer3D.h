@@ -4,6 +4,8 @@
 #include "Light.h"
 #include <string>
 
+#include "external/MathGeoLib/include/Math/float4.h"
+
 #define MAX_LIGHTS 8
 
 struct RenderConfig
@@ -24,6 +26,46 @@ struct RenderConfig
 	float max_alpha = 1.f;
 
 	ImVec4 default_color_mat = { 1.0f,1.0f,1.0f,1.0f };
+};
+
+class FBO
+{
+public:
+
+	enum FBORenderTarget
+	{
+		NORMAL_FBO,
+		NORMAL_TEXTURE,
+		NORMAL_DEPTH_RBO,
+		MULTISAMPLING_FBO,
+		MULTISAMPLING_COLOR_RBO,
+		MULTISAMPLING_DEPTH_RBO,
+	};
+
+	FBO();
+
+	~FBO();
+
+	void BeginFBO();
+
+	void EndFBO();
+
+	void GenerateFBO();
+
+	void UpdateFBO(float width, float height);
+
+	void DeleteFBO();
+
+	uint GetRenderTexture();
+
+public:
+
+	uint samples = 4;
+	uint ID[8];
+
+	float4 clear_color = { 0.1, 0.1, 0.1, 1.f };
+	float width = 0, height = 0;
+
 };
 
 class ModuleRenderer3D : public Module
@@ -54,11 +96,6 @@ public:
 
 	std::string GetGlewVersionString() const;
 
-	void GenSceneBuffers();
-	bool DeleteSceneBuffers();
-
-	void UpdateSceneBuffers(int width, int height);
-
 	RenderConfig& GetRenderConfig();
 
 	void SetDefaultColorMaterial();
@@ -72,15 +109,11 @@ public:
 	mat3x3 normal_mat;
 	mat4x4 model_mat, view_mat, projection_mat;
 
-	// Buffers ID's --------------------------
-
-	uint frame_buffer_id = 0;
-	uint depth_buffer_id = 0;
-	uint texture_id = 0;
+	FBO scene_fbo;
 
 private:
 
-	bool on_resize = false;
+	bool on_resize = true;
 	std::string openglGDriversVersionString;
 	std::string glewVersionString;
 };

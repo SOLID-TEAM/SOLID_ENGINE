@@ -10,6 +10,9 @@
 #include "D_Mesh.h"
 #include "D_Material.h"
 
+#define EMISSION_DEFAULT {0.F, 0.F, 0.F, 1.F}
+#define EMISSION_LINES   {1.F, 1.F, 1.F, 1.F}
+
 C_MeshRenderer::C_MeshRenderer(GameObject* parent): Component(parent, ComponentType::MESH_RENDERER)
 {
 	name.assign("Mesh Renderer");
@@ -80,60 +83,32 @@ bool C_MeshRenderer::Render()
 
 	ViewportOptions& vp = App->editor->viewport_options;
 
-	if (vp.debug_bounding_box)
-	{
-		glBegin(GL_LINES);
-		float4 f;
-
-		GLfloat emission_new[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		GLfloat emission_default[] = { 0, 0, 0, 1 };
-
-		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_new);
-
-		for (int i = 0; i < d_mesh->aabb.NumEdges(); ++i)
-		{
-			glColor4f(1.f, 1.f, 1.f, 1.f);
-			math::LineSegment line_segment = d_mesh->aabb.Edge(i);
-			glVertex3f(line_segment.a.x, line_segment.a.y, line_segment.a.z);
-			glVertex3f(line_segment.b.x, line_segment.b.y, line_segment.b.z);
-		}
-
-		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_default);
-		glEnd();
-	}
-
 	if (vp.mode == V_MODE_SHADED)
 	{
-		glColor4fv(albedo_color.ptr());
-		RenderMesh(custom_tex_id, c_mat->textured);
+		RenderMesh(albedo_color.ptr(), custom_tex_id, c_mat->textured);
 	}
 
 	else if (vp.mode == V_MODE_WIREFRIME)
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-		glLineWidth(vp.wire_line_width);
-		glColor4fv((float*)&vp.wire_color);
-
-		RenderWireframe();
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		RenderWireframe(vp.wire_line_width, (float*)&vp.wire_color);
 	}
 
-	else if (1)
+	else if (vp.mode == V_MODE_SHADED_WIREFRIME)
 	{
-		glStencilFunc(GL_NOTEQUAL, 1, -1);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		RenderMesh(albedo_color.ptr(), custom_tex_id, c_mat->textured);
+		RenderWireframe(vp.wire_line_width, (float*)&vp.wire_color);
+	}
 
-		glLineWidth(vp.wire_line_width);
-		glColor4fv((float*)&vp.wire_color);
+	// Editor & Debug Rendering --------------------------------------------
 
-		glLineWidth(7.f);
-		RenderWireframe();
-		glLineWidth(1.f);
+	if (false)
+	{
+		RenderOutline(7.f, (float*)&vp.wire_color);
+	}
 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glStencilFunc(GL_ALWAYS, 1, -1);
+	if (vp.debug_bounding_box)
+	{
+		RenderBoundingBox(d_mesh->aabb);
 	}
 
 	// Flip faces enable ----------------------------------------------------
@@ -152,10 +127,12 @@ bool C_MeshRenderer::Render()
 // it is guaranteed that none of the returned names was in use immediately before the call to glGenTextures. "
 // checks if the texture id is a valid texture id and prevents creation of no dimensionality with new binding before render
 
-bool C_MeshRenderer::RenderMesh(uint custom_tex_id, bool textured)
+void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 {
-	bool ret = true;
 	uint texture_id = 0;
+
+	// Settings ====================================================
+	glColor4fv(color);
 
 	if (d_material->textures[D_Material::DIFFUSE] != nullptr) // TODO: clean this and perform for possible another textures
 	{
@@ -175,16 +152,18 @@ bool C_MeshRenderer::RenderMesh(uint custom_tex_id, bool textured)
 	// Enable client ==============================================
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
-	if(d_mesh->buffers_size[D_Mesh::UVS] != 0) glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	if(texture_id != 0) glClientActiveTexture(GL_TEXTURE0);
+	if(d_mesh->buffers_size[D_Mesh::UVS] != 0) 
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	if(texture_id != 0) 
+		glClientActiveTexture(GL_TEXTURE0);
 
 	// Bind buffers ===============================================
 
-	// Vertices --------------------------
+	// Vertices ------------------------------
 	glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::VERTICES]);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 
-	// UV's & Texture --------------------
+	// UV's & Texture ------------------------
 	if (d_mesh->buffers_size[D_Mesh::UVS] != 0 && d_material != nullptr)
 	{
 		if (textured)
@@ -201,50 +180,105 @@ bool C_MeshRenderer::RenderMesh(uint custom_tex_id, bool textured)
 		glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::UVS]);
 		glTexCoordPointer(d_mesh->uv_num_components, GL_FLOAT, 0, (void*)0);
 	}
-	// Nomrals -----------------------------
 
+	// Nomrals -----------------------------
 	glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::NORMALS]);
 	glNormalPointer(GL_FLOAT, 0, (void*)0);
 
-	// Draw & Indices ----------------------
-
+	// Indices ------------------------------
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::INDICES]);
+
+	// Draw =====================================================
 	glDrawElements(GL_TRIANGLES, d_mesh->buffers_size[D_Mesh::INDICES], GL_UNSIGNED_INT, (void*)0);
 
 	// Unbind buffers ===========================================
-
-	// unbind texture
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisableClientState(GL_TEXTURE0);
 
+
+	glDisableClientState(GL_TEXTURE0);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	return ret;
+	// Settings Default =========================================
+	glColor4fv(float4::one.ptr());
 }
 
 
-bool C_MeshRenderer::RenderWireframe() // need very few operations
+void C_MeshRenderer::RenderWireframe(float width, float* color) // need very few operations
 {
-	bool ret = true;
+	// Custom Settings ============================================
+	BeginDebugDraw();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glLineWidth(width);
+	glColor4fv(color);
 
+	// Enable client ==============================================
 	glEnableClientState(GL_VERTEX_ARRAY);
-	//bind and define data type vertices
+
+	// Bind buffers ===============================================
+
+	// Vertices ---------------
 	glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::VERTICES]);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
-	//bind indices
+	// Indices ----------------
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::INDICES]);
-	//draw
+
+	// Draw =======================================================
 	glDrawElements(GL_TRIANGLES, d_mesh->buffers_size[D_Mesh::INDICES] , GL_UNSIGNED_INT, (void*)0);
 
+	// Bind buffers ===============================================
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	// Disable client =============================================
 	glDisableClientState(GL_VERTEX_ARRAY);
 
-	return ret;
+	// Custom Settings Default ====================================
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glLineWidth(1.f);
+	glColor4fv( float4::one.ptr() );
+	EndDebugDraw();
 }
 
-
-bool C_MeshRenderer::RenderOutline()
+void C_MeshRenderer::RenderOutline(float width, float* color)
 {
-	return true;
+	glStencilFunc(GL_NOTEQUAL, 1, -1);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	RenderWireframe(width, color);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glStencilFunc(GL_ALWAYS, 1, -1);
+}
+
+void C_MeshRenderer::RenderBoundingBox(math::AABB& aabb)
+{
+	glBegin(GL_LINES);
+	BeginDebugDraw();
+
+	for (int i = 0; i < aabb.NumEdges(); ++i)
+	{
+		glColor4f(1.f, 1.f, 1.f, 1.f);
+		math::LineSegment line_segment = aabb.Edge(i);
+		glVertex3f(line_segment.a.x, line_segment.a.y, line_segment.a.z);
+		glVertex3f(line_segment.b.x, line_segment.b.y, line_segment.b.z);
+	}
+
+	EndDebugDraw();
+	glEnd();
+}
+
+void C_MeshRenderer::BeginDebugDraw()
+{
+	GLfloat emission_debug[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_debug);
+}
+
+void C_MeshRenderer::EndDebugDraw()
+{
+	GLfloat emission_default[] = { 0, 0, 0, 1 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_default);
 }

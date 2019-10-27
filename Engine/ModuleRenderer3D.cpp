@@ -7,12 +7,10 @@
 #include <gl\glew.h>
 #include "SDL\include\SDL_opengl.h"
 
-#include <gl\GL.h>
-#include <gl\GLU.h>
-
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")
 #pragma comment (lib, "glew32.lib")    /* link OpenGL Utility lib     */
+
 
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 {
@@ -71,10 +69,6 @@ bool ModuleRenderer3D::Init(Config& config)
 			ret = false;
 		}
 		
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-
 		//glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
 		
 		//Initialize clear color
@@ -96,15 +90,28 @@ bool ModuleRenderer3D::Init(Config& config)
 		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 		
+		glEnable(GL_LINE_SMOOTH);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);
+		glEnable(GL_MULTISAMPLE);
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
+		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+		glShadeModel(GL_SMOOTH);                    // shading mathod: GL_SMOOTH or GL_FLAT
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);      // 4-byte pixel alignment
+
+		glClearColor(0, 0, 0, 0);                   // background color
+		glClearStencil(0);                          // clear stencil buffer
+		glClearDepth(1.0f);                         // 0 is near, 1 is far
+		glDepthFunc(GL_LEQUAL);
 	}
 
 	// Store version opengl/graphic drivers
@@ -119,7 +126,7 @@ bool ModuleRenderer3D::Init(Config& config)
 	LOG("[Info] GLSL: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	// Generate Scene Buffers -------------------------------
-	GenSceneBuffers();
+	scene_fbo.GenerateFBO();
 
 	return ret;
 }
@@ -168,13 +175,12 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		UpdateSceneBuffers(size.x, size.y);
+		scene_fbo.UpdateFBO(size.x, size.y);
 
 		on_resize = false;
 	}
 
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
@@ -182,16 +188,11 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	
 	// Start Buffer Frame ----------------------------------
-	glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glClearColor(0.1, 0.1, 0.1, 1.f);
+	scene_fbo.BeginFBO();
+
 	// Object Draw Stencil Settings ------------------------
 	glStencilFunc(GL_ALWAYS, 1, -1);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-	// -----------------------------------------------------
-	// start last main loop draw
-	// ----------------------------------------------------------------------------
-	
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);	
 
 	return UPDATE_CONTINUE;
 }
@@ -202,13 +203,9 @@ update_status ModuleRenderer3D::Draw()
 	glStencilFunc(GL_ALWAYS, 1, 0);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
-	// Start Buffer Frame ----------------------------------
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glBindTexture(GL_TEXTURE_2D, texture_id);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	// -----------------------------------------------------
-
+	// End Buffer Frame ------------------------------------
+	scene_fbo.EndFBO();
+	
 	return UPDATE_CONTINUE;
 }
 
@@ -219,66 +216,7 @@ bool ModuleRenderer3D::CleanUp()
 
 	SDL_GL_DeleteContext(context);
 
-	DeleteSceneBuffers();
-
 	return true;
-}
-
-void ModuleRenderer3D::GenSceneBuffers()
-{
-	// Gen depth buffer ---------------------------------------
-	glGenRenderbuffers(1, &depth_buffer_id);
-
-	// Gen color texture ----------------------------------------------
-	glGenTextures(1, &texture_id);
-
-	// Gen frame buffer ----------------------------------------
-	glGenFramebuffers(1, &frame_buffer_id);
-}
-
-bool ModuleRenderer3D::DeleteSceneBuffers()
-{
-	// Delete depth buffer ---------------------------------------
-	glDeleteRenderbuffers(1, &depth_buffer_id);
-
-	// Delete color texture --------------------------------------
-	glDeleteTextures(1, &texture_id);
-
-	// Delete frame buffer ---------------------------------------
-	glDeleteFramebuffers(1, &frame_buffer_id);
-
-	return true;
-}
-
-void ModuleRenderer3D::UpdateSceneBuffers(int width, int height)
-{
-	// Config depth storage -----------------------------------
-	glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer_id);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	// Config  color texture ------------------------------------------
-	glBindTexture(GL_TEXTURE_2D, texture_id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE); // automatic mipmap
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	// Attach texture and render buffer to frame buffer -------
-	glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depth_buffer_id);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture_id, 0);
-
-	// If program can generate the texture ----------------------
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-	{
-		LOG("[Error] creating screen buffer");
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void ModuleRenderer3D::OnResize()
@@ -310,3 +248,143 @@ void ModuleRenderer3D::SetDefaultColorMaterial()
 {
 	glColor4fv((float*)&render_config.default_color_mat);
 }
+
+FBO::FBO()
+{
+	for (int i = 0; i < 8; ++i)
+	{
+		ID[i] = 0;
+	}
+}
+
+FBO::~FBO()
+{
+	DeleteFBO();
+}
+
+void FBO::BeginFBO()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, ID[MULTISAMPLING_FBO]);
+	glClearColor(0.1, 0.1, 0.1, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void FBO::EndFBO()
+{
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, ID[MULTISAMPLING_FBO]);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, ID[NORMAL_FBO]);
+	
+	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT /*| GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT*/, GL_LINEAR);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+	glBindTexture(GL_TEXTURE_2D, ID[NORMAL_TEXTURE]);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+}
+
+void FBO::UpdateFBO( float width, float height)
+{
+	this->width = width;
+	this->height = height;
+	bool fboUsed = true;
+	// Normal =====================================================================
+
+	// Texture ---------------------------------------------
+
+	glBindTexture(GL_TEXTURE_2D, ID[NORMAL_TEXTURE]);
+	
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Depth & Stencil -------------------------------------
+
+	glBindRenderbuffer(GL_RENDERBUFFER, ID[NORMAL_DEPTH_RBO]);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	// Frame -----------------------------------------------
+
+	glBindFramebuffer(GL_FRAMEBUFFER, ID[NORMAL_FBO]);
+
+	// Attachment ------------------------------------------
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ID[NORMAL_TEXTURE], 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, ID[NORMAL_DEPTH_RBO]);
+
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE) 
+		fboUsed = false;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// Multisample ================================================================
+
+	// Color -----------------------------------------------
+
+	glBindRenderbuffer(GL_RENDERBUFFER, ID[MULTISAMPLING_COLOR_RBO]);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_RGBA8, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	// Depth & Stencil -------------------------------------
+
+	glBindRenderbuffer(GL_RENDERBUFFER, ID[MULTISAMPLING_DEPTH_RBO]);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH24_STENCIL8, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+
+	// Frame -----------------------------------------------
+
+	glBindFramebuffer(GL_FRAMEBUFFER, ID[MULTISAMPLING_FBO]);
+
+	// Attachment ------------------------------------------
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, ID[MULTISAMPLING_COLOR_RBO]);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, ID[MULTISAMPLING_DEPTH_RBO]);
+
+
+	GLenum status_2 = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status_2 != GL_FRAMEBUFFER_COMPLETE)
+		fboUsed *= false;
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+}
+
+
+void FBO::GenerateFBO()
+{
+	glGenTextures(1,		&ID[NORMAL_TEXTURE]);
+	glGenRenderbuffers(1,	&ID[NORMAL_DEPTH_RBO]);
+	glGenFramebuffers(1,	&ID[NORMAL_FBO]);
+
+	glGenRenderbuffers(1,	&ID[MULTISAMPLING_COLOR_RBO]);
+	glGenRenderbuffers(1,	&ID[MULTISAMPLING_DEPTH_RBO]);
+	glGenFramebuffers(1,	&ID[MULTISAMPLING_FBO]);
+}
+
+void FBO::DeleteFBO()
+{
+	glDeleteFramebuffers(1, &ID[MULTISAMPLING_FBO]);
+	glDeleteFramebuffers(1, &ID[MULTISAMPLING_COLOR_RBO]);
+	glDeleteFramebuffers(1, &ID[MULTISAMPLING_DEPTH_RBO]);
+
+	glDeleteFramebuffers(1, &ID[NORMAL_FBO]);
+	glDeleteFramebuffers(1, &ID[NORMAL_DEPTH_RBO]);
+	glDeleteFramebuffers(1, &ID[NORMAL_TEXTURE]);
+}
+
+uint FBO::GetRenderTexture()
+{
+	return ID[NORMAL_TEXTURE];
+}
+
+

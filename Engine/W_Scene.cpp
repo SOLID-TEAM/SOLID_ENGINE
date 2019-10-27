@@ -61,7 +61,7 @@ void W_Scene::Draw()
 		// Attach texture to window ----------------------------------------
 		ImVec2 current_viewport_size = ImGui::GetContentRegionAvail();
 
-		ImGui::Image((ImTextureID)App->renderer3D->texture_id, ImVec2(current_viewport_size.x, current_viewport_size.y), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((ImTextureID)App->renderer3D->scene_fbo.ID[0], ImVec2(current_viewport_size.x, current_viewport_size.y), ImVec2(0, 1), ImVec2(1, 0));
 
 		// Resize logic ----------------------------------------------------
 		if (!(current_viewport_size == viewport_size))
