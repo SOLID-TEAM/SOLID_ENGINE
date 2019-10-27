@@ -1,7 +1,6 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-//#include "glmath.h"
 #include "Light.h"
 #include <string>
 
@@ -77,7 +76,6 @@ public:
 
 	uint frame_buffer_id = 0;
 	uint depth_buffer_id = 0;
-	//uint stencil_buffer_id = 0;
 	uint texture_id = 0;
 
 private:

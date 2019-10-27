@@ -51,6 +51,13 @@ public:
 		return library_file_path;
 	}
 
+	uint GetFileTexture() const
+	{
+		return file_texture;
+	}
+
+	virtual void GenerateFileTexture() {}
+
 	virtual void Load() {};
 	virtual void Unload() {};
 
@@ -63,7 +70,7 @@ protected:
 	std::string		name = "";
 	std::string		library_file_path = "";
 	std::string		original_file_path = "";
-
+	uint			file_texture = 0;
 };
 
 #endif // !__DATA_H__

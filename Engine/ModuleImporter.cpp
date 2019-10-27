@@ -316,7 +316,7 @@ D_Material* ModuleImporter::ImportMaterial(const aiMaterial* material , const ch
 
 	aiColor4D color;
 	material->Get(AI_MATKEY_COLOR_DIFFUSE,color);
-	d_material->albedo_color = Color(color.r, color.g, color.b, color.a);
+	d_material->diffuse_color = { color.r, color.g, color.b, color.a };
 
 	// Get assimp path and normalize --------
 
@@ -345,7 +345,7 @@ D_Material* ModuleImporter::ImportMaterial(const aiMaterial* material , const ch
 	return d_material;
 }
 
-D_Material* ModuleImporter::CreateDefaultMaterial(const char* name, vec4 color) const
+D_Material* ModuleImporter::CreateDefaultMaterial(const char* name, float4 color) const
 {
 	return  new D_Material(name, color);
 }
@@ -358,7 +358,7 @@ D_Texture* ModuleImporter::ImportTexture(const char* path)
 	return d_texture;
 }
 
-GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, vec3 size, vec2 slicesStacks, vec4 color)
+GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, float3 position, float3 size, float2 slicesStacks, float4 color)
 {
 	bool isPlatonic = false; // par_shapes weld its vertices on creation and needs to be unwelded to compute normals
 	std::string name;
@@ -441,7 +441,7 @@ GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, vec3 position, v
 	c_mesh->data->CreateAABB();
 
 	C_Material* c_material = (C_Material*)gameobject->CreateComponent(ComponentType::MATERIAL);
-	c_material->data = CreateDefaultMaterial("default material", color);
+	c_material->data = CreateDefaultMaterial("Default material", color);
 	c_material->textured = false;
 
 	C_MeshRenderer* c_renderer = (C_MeshRenderer*)gameobject->CreateComponent(ComponentType::MESH_RENDERER);

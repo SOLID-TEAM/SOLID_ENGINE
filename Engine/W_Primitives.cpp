@@ -73,7 +73,7 @@ void W_Primitives::Draw()
 			if (last_created != nullptr)
 			{
 				C_Material* c_mat = (C_Material*)last_created->GetComponentsByType(ComponentType::MATERIAL);
-				c_mat->data->albedo_color = color;
+				c_mat->data->diffuse_color = { color.x, color.y, color.z, color.w};
 			}
 		}
 		if (last_state != active)
@@ -92,9 +92,9 @@ void W_Primitives::Draw()
 }
 
 // return default values for primitives creation
-vec2 W_Primitives::GetSlicesAndStacks(int i)
+float2 W_Primitives::GetSlicesAndStacks(int i)
 {
-	vec2 ret = { 10,10 };
+	float2 ret = { 10,10 };
 
 	switch (PrimitiveType(i))
 	{

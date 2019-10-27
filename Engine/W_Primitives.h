@@ -16,7 +16,7 @@ public:
 
 	void Draw();
 
-	vec2 GetSlicesAndStacks(int i);
+	float2 GetSlicesAndStacks(int i);
 
 private:
 

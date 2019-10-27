@@ -22,30 +22,36 @@ class W_DeleteHistory;
 // TODO: change this/remove define
 #define MAX_STORED_FPS 100
 
+enum ViewportMode
+{
+	V_MODE_SHADED = 0,
+	V_MODE_WIREFRIME,
+	V_MODE_SHADED_WIREFRIME,
+	V_MODE_CHECKERS,
+	V_MODE_DEPTH_FILTER,
+	V_MODE_FILLED
+};
+
 struct ViewportOptions
 {
-	bool wireframe = false;
-	bool outline = false;
-	bool fill_faces = true;
+	ViewportMode mode = V_MODE_SHADED;
 
-	bool debug_bounding_boxes = false;
-	bool debug_vertex_normals = true;
-	bool debug_face_normals = true;
+	bool debug_bounding_box = false;
+	bool debug_vertex_normals = false;
+	bool debug_face_normals = false;
 
+	ImVec4 wire_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	float wire_line_width = 1.0f;
 
-	ImVec4 fill_color = ImVec4(0.f, 0.f, 0.f, 0.f);
-	ImVec4 wire_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);;
 	ImVec4 d_vertex_p_color = ImVec4(0.59f, 0.22f, 1.0f, 1.0f);
 	ImVec4 d_vertex_l_color = ImVec4(0.2f, 1.0f, 0.0f, 1.0f);
 	ImVec4 d_vertex_face_color = ImVec4(1.0f, 0.5f, 0.2f, 1.0f);
 	ImVec4 d_vertex_face_n_color = ImVec4(0.0f, 0.5f, 1.0f, 1.0f);
 
-	float wire_line_width = 1.0f;
 	float v_point_size = 5.0f;
 	float f_v_point_size = 5.0f;
 	float v_n_line_width = 1.0f;
 	float f_n_line_width = 1.0f;
-
 	float v_n_line_length = 0.4f;
 	float f_n_line_length = 0.4f;
 };

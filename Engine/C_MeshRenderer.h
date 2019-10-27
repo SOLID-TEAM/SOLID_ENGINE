@@ -31,7 +31,7 @@ private:
 private:
 
 	D_Mesh*     d_mesh = nullptr;
-	D_Material* d_mat = nullptr;
+	D_Material* d_material = nullptr;
 
 };
 

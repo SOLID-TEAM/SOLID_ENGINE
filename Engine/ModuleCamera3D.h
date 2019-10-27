@@ -46,5 +46,5 @@ public:
 	math::float3 X, Y, Z, position, reference;
 
 private:
-	mat4x4 view_matrix;
+	math::float4x4 view_matrix;
 };

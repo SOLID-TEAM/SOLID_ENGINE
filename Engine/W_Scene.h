@@ -11,6 +11,8 @@ public:
 
 	void Draw();
 
+
+
 	ImVec2 GetViewportSize() const
 	{
 		return viewport_size;
@@ -21,6 +23,8 @@ private:
 	void GridMenu();
 
 	void DebugMenu();
+
+	void ViewportModes();
 
 private:
 

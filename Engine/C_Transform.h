@@ -2,9 +2,6 @@
 #define _C_TRANSFORM_H__
 
 #include "Component.h"
-
-//#include "external/MathGeoLib/include/Math/float4x4.h"
-//#include "external/MathGeoLib/include/Math/float3.h"
 #include "external/MathGeoLib/include/MathGeoLib.h"
 
 class C_Transform : public Component

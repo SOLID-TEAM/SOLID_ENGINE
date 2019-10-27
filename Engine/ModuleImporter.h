@@ -5,7 +5,8 @@
 #include "Module.h"
 #include <vector>
 #include <string>
-#include "glmath.h"
+
+#include "external/MathGeoLib/include/Math/MathAll.h"
 
 struct aiScene;
 struct aiNode;
@@ -51,7 +52,7 @@ public:
 	//bool ReComputeFacesNormals(float length = 0.4f);
 
 	// Create primitives with par_shapes tool
-	GameObject* CreatePrimitive(PrimitiveType type, vec3 position = { 0,0,0 }, vec3 size = { 1,1,1 }, vec2 slicesStacks = { 10,10 }, vec4 color = {1.0f,1.0f,1.0f,1.0f});
+	GameObject* CreatePrimitive(PrimitiveType type, float3 position = { 0,0,0 }, float3 size = { 1,1,1 }, float2 slicesStacks = { 10,10 }, float4 color = { 1.0f,1.0f,1.0f,1.0f });
 
 	// TODO: implement base class gameObjects (for future components addition)
 	std::vector<D_Mesh*>& GetModels();
@@ -69,7 +70,7 @@ private:
 
 	D_Mesh*			ImportMesh(const aiMesh* mesh, const char* name);
 	D_Material*		ImportMaterial(const aiMaterial* material, const char* name);
-	D_Material*		CreateDefaultMaterial(const char* name, vec4 color) const;
+	D_Material*		CreateDefaultMaterial(const char* name, float4 color) const;
 	D_Texture*		ImportTexture(const char* path);
 
 private:

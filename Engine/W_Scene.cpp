@@ -11,13 +11,14 @@ void W_Scene::Draw()
 	// --------------------
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
 
-	if (ImGui::Begin(name.c_str(), &active , ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize))
+	if (ImGui::Begin(name.c_str(), &active , ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize /*| ImGuiWindowFlags_::ImGuiWindowFlags_NoDecoration*/))
 	{
 		if (ImGui::BeginMenuBar())
-		{
+		{	
 			ImGui::SetSeparationType(ImGuiSeparationType::ImGui_MenuSeparation);
 			ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(10.f, 10.f));
-			
+
+			ViewportModes();
 
 			if (ImGui::BeginMenu("Debug"))
 			{
@@ -36,44 +37,10 @@ void W_Scene::Draw()
 			ImGui::SetSeparationType(ImGuiSeparationType::ImGui_WindowSeparation);
 		}
 
-		//if (ImGui::CollapsingHeader("viewport options"))
-		//{
-		//	ImGui::SetCursorPosX(10);
-		//	ImGui::Text("Wireframe"); ImGui::SameLine();
-		//	ImGui::Checkbox("##wire", &App->editor->viewport_options.wireframe); 
-		//	ImGui::SameLine();
-
-		//	/*float cur_w_pos = ImGui::GetCursorPosX(); */
-		//	bool debug_n = ImGui::Button("Debug normals");
-		//	ImGui::SetNextWindowContentWidth(320);
-		//
-		//	if (ImGui::BeginPopupContextItem(0,0))
-		//	{
-		//		//ImGui::SetCursorPosX(10);
-		//		ImGui::Dummy(ImVec2(0, 8));
-		//		DebugMenu();
-		//		ImGui::Dummy(ImVec2(0, 8));
-		//		ImGui::EndPopup();
-		//	}
-		//}
 
 		// Input camera ----------------------------------------------------
 		ImVec2 min = ImGui::GetCursorScreenPos();
 		ImVec2 max = ImGui::GetCursorScreenPos() + ImGui::GetContentRegionAvail();
-
-		//POINT   cursorPos;
-		//GetCursorPos(&cursorPos);
-		//float x = cursorPos.x, y = cursorPos.y;
-
-		//if ((y < max.y) && (y > min.y) && (x < max.x) && (x > min.x))
-		//{
-		//	if (App->window->IsFocused())
-		//	{
-		//		SDL_RaiseWindow(App->window->window);
-		//	}
-		//}
-		//HWND GetTopWindow(GW_HWNDFIRST);
-
 
 		bool mouse_is_hovering = ImGui::IsMouseHoveringRect(min, max);
 
@@ -108,6 +75,42 @@ void W_Scene::Draw()
 	ImGui::End();
 
 }
+
+void W_Scene::ViewportModes()
+{
+	ViewportOptions& vp = App->editor->viewport_options;
+	static const char* items[] = { "Shaded", "Wirefrime", "Shaded Wirefrime", "Depth View" };
+	static const char* current_item = items[0];
+
+	ImGui::SetCursorPosX(0);
+	ImGui::SetNextItemWidth(140);
+
+	if (ImGui::BeginComboEx(std::string("##viewport_modes").c_str(), std::string(" " + std::string(current_item)).c_str(), 200, ImGuiComboFlags_NoArrowButton))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(items); ++n)
+		{
+			bool is_selected = (current_item == items[n]);
+
+			if (ImGui::Selectable(std::string("   " + std::string(items[n])).c_str(), is_selected))
+			{
+				current_item = items[n];
+
+				if		(current_item == "Shaded")				vp.mode = V_MODE_SHADED;
+				else if (current_item == "Wirefrime")			vp.mode = V_MODE_WIREFRIME;
+				else if (current_item == "Shaded Wirefrime")	vp.mode = V_MODE_SHADED_WIREFRIME;
+				else if (current_item == "Depth View")			vp.mode = V_MODE_DEPTH_FILTER;
+			}
+
+			if (is_selected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+
+		ImGui::EndCombo();
+	}
+}
+
 
 void W_Scene::GridMenu()
 {

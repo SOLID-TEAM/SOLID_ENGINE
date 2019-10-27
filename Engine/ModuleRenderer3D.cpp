@@ -145,27 +145,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 update_status ModuleRenderer3D::Update(float dt)
 {
-	// NOT NEEDED EVERY FRAME, MOVED TO PANEL RENDER
-	/*if (render_config.gl_color_material)
-		glEnable(GL_COLOR_MATERIAL);
-	else
-		glDisable(GL_COLOR_MATERIAL);
-
-	if (render_config.gl_depth_test)
-		glEnable(GL_DEPTH_TEST);
-	else
-		glDisable(GL_DEPTH_TEST);
-
-	if (render_config.gl_cull_face)
-		glEnable(GL_CULL_FACE);
-	else
-		glDisable(GL_CULL_FACE);
-
-	if (render_config.gl_lighting)
-		glEnable(GL_LIGHTING);
-	else
-		glDisable(GL_LIGHTING);*/
-
 	return UPDATE_CONTINUE;
 }
 

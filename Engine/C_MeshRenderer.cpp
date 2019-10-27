@@ -40,19 +40,7 @@ bool C_MeshRenderer::Render()
 	}
 
 	d_mesh = c_mesh->data;
-	d_mat = c_mat->data;
-
-
-	if (linked_go->transform->HasNegativeScale())
-	{
-		glFrontFace(GL_CW);
-	}
-
-	// Push matrix ---------------------------------------------------------
-	glPushMatrix();
-	glMultMatrixf((float*)&linked_go->transform->global_transform.Transposed());
-
-	// Start rendering ------------------------------------------------------
+	d_material = c_mat->data;
 
 	uint custom_tex_id = 0;
 
@@ -70,58 +58,57 @@ bool C_MeshRenderer::Render()
 		}
 	}
 
-
 	// CHECK if textured for apply or not default albedo color for mesh data
-	Color fill_color = { 1.0f,1.0f,1.0f,1.0f }; // TODO: change variable type if needed
+	float4 albedo_color = { 1.0f,1.0f,1.0f,1.0f }; // TODO: change variable type if needed
 
 	if (!c_mat->textured)
 	{
-		fill_color = d_mat->albedo_color;
+		albedo_color = d_material->diffuse_color;
 	}
 
-	// TODO NEXT: implement new render functionality to pass all this shit (colors, draw modes etc)
+	// Push matrix ---------------------------------------------------------
+	glPushMatrix();
+	glMultMatrixf((float*)&linked_go->transform->global_transform.Transposed());
+
+	// Flip faces enable ----------------------------------------------------
+	if (linked_go->transform->HasNegativeScale())
+	{
+		glFrontFace(GL_CW);
+	}
+
+	// Start rendering ------------------------------------------------------
 
 	ViewportOptions& vp = App->editor->viewport_options;
 
-	glBegin(GL_LINES);
-
-	GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, MaterialAmbient);
-
-	for (int i = 0; i < d_mesh->aabb.NumEdges(); ++i)
+	if (vp.debug_bounding_box)
 	{
-		glColor4f( 1.f, 1.f, 1.f, 1.f);
-		math::LineSegment line_segment = d_mesh->aabb.Edge(i);
-		glVertex3f(line_segment.a.x, line_segment.a.y, line_segment.a.z);
-		glVertex3f(line_segment.b.x, line_segment.b.y, line_segment.b.z);
+		glBegin(GL_LINES);
+		float4 f;
+
+		GLfloat emission_new[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		GLfloat emission_default[] = { 0, 0, 0, 1 };
+
+		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_new);
+
+		for (int i = 0; i < d_mesh->aabb.NumEdges(); ++i)
+		{
+			glColor4f(1.f, 1.f, 1.f, 1.f);
+			math::LineSegment line_segment = d_mesh->aabb.Edge(i);
+			glVertex3f(line_segment.a.x, line_segment.a.y, line_segment.a.z);
+			glVertex3f(line_segment.b.x, line_segment.b.y, line_segment.b.z);
+		}
+
+		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_default);
+		glEnd();
 	}
 
-	GLfloat MaterialAmbient_1[] = { 0, 0, 0, 1 };
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, MaterialAmbient_1);
-
-	glEnd();
-
-	if (vp.fill_faces && vp.wireframe)
+	if (vp.mode == V_MODE_SHADED)
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(1.0f, 0.375f);
-
-		glColor4fv((float*)&fill_color);
-
-		RenderMesh(custom_tex_id, c_mat->textured);
-
-		glLineWidth(1.0f);
-		glDisable(GL_POLYGON_OFFSET_FILL);
-
-	}
-	else if (vp.fill_faces)
-	{
-		glColor4fv((float*)&fill_color);
+		glColor4fv(albedo_color.ptr());
 		RenderMesh(custom_tex_id, c_mat->textured);
 	}
 
-	if (vp.wireframe)
+	else if (vp.mode == V_MODE_WIREFRIME)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -133,7 +120,7 @@ bool C_MeshRenderer::Render()
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	if (vp.outline)
+	else if (1)
 	{
 		glStencilFunc(GL_NOTEQUAL, 1, -1);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -148,46 +135,57 @@ bool C_MeshRenderer::Render()
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glStencilFunc(GL_ALWAYS, 1, -1);
 	}
+
+	// Flip faces enable ----------------------------------------------------
 	glFrontFace(GL_CCW);
+
+	// Pop matrix -----------------------------------------------------------
 	glPopMatrix();
 
 	return true;
 }
 
+
+// TODO: implements this check on a more universal place for all render functions
+// if we delete this linked buffer on another part and enters here without check
+// "There is no guarantee that the names form a contiguous set of integers; however, 
+// it is guaranteed that none of the returned names was in use immediately before the call to glGenTextures. "
+// checks if the texture id is a valid texture id and prevents creation of no dimensionality with new binding before render
+
 bool C_MeshRenderer::RenderMesh(uint custom_tex_id, bool textured)
 {
 	bool ret = true;
+	uint texture_id = 0;
 
-	// TODO: implements this check on a more universal place for all render functions
-	// if we delete this linked buffer on another part and enters here without check
-	// "There is no guarantee that the names form a contiguous set of integers; however, 
-	// it is guaranteed that none of the returned names was in use immediately before the call to glGenTextures. "
-	// checks if the texture id is a valid texture id and prevents creation of no dimensionality with new binding before render
-
-	if (d_mat->textures[D_Material::DIFFUSE] != nullptr) // TODO: clean this and perform for possible another textures
+	if (d_material->textures[D_Material::DIFFUSE] != nullptr) // TODO: clean this and perform for possible another textures
 	{
-		if (d_mat->textures[D_Material::DIFFUSE]->buffer_id != 0)
+		if (d_material->textures[D_Material::DIFFUSE]->buffer_id != 0)
 		{
-			if (!glIsTexture(d_mat->textures[D_Material::DIFFUSE]->buffer_id))
-				d_mat->textures[D_Material::DIFFUSE]->buffer_id = 0;
+			if (glIsTexture(d_material->textures[D_Material::DIFFUSE]->buffer_id))
+			{
+				texture_id = d_material->textures[D_Material::DIFFUSE]->buffer_id;
+			}
+			else
+			{
+				d_material->textures[D_Material::DIFFUSE]->buffer_id = 0;
+			}
 		}
 	}
 
-	// Enable client side individual capabilities
+	// Enable client ==============================================
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
-	if(d_mesh->buffers_size[D_Mesh::UVS] != 0)
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	if(textured)
-		glClientActiveTexture(GL_TEXTURE0);
-	//glEnableClientState(GL_COLOR_ARRAY); to colorize each vertex with an array of colors
+	if(d_mesh->buffers_size[D_Mesh::UVS] != 0) glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	if(texture_id != 0) glClientActiveTexture(GL_TEXTURE0);
 
-	// Vertices --------------------------------------
+	// Bind buffers ===============================================
+
+	// Vertices --------------------------
 	glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::VERTICES]);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 
-	// UV's & Texture --------------------------------
-	if (d_mesh->buffers_size[D_Mesh::UVS] != 0 && d_mat != nullptr)
+	// UV's & Texture --------------------
+	if (d_mesh->buffers_size[D_Mesh::UVS] != 0 && d_material != nullptr)
 	{
 		if (textured)
 		{
@@ -195,35 +193,33 @@ bool C_MeshRenderer::RenderMesh(uint custom_tex_id, bool textured)
 				glBindTexture(GL_TEXTURE_2D, custom_tex_id);
 			else
 			{
-				if (d_mat->textures[D_Material::DIFFUSE] != nullptr)
-					glBindTexture(GL_TEXTURE_2D, d_mat->textures[D_Material::DIFFUSE]->buffer_id);
+				if (d_material->textures[D_Material::DIFFUSE] != nullptr)
+					glBindTexture(GL_TEXTURE_2D, d_material->textures[D_Material::DIFFUSE]->buffer_id);
 			}
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::UVS]);
 		glTexCoordPointer(d_mesh->uv_num_components, GL_FLOAT, 0, (void*)0);
 	}
-	// Nomrals ---------------------------------------
+	// Nomrals -----------------------------
 
 	glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::NORMALS]);
 	glNormalPointer(GL_FLOAT, 0, (void*)0);
 
-	// each vertex colors
-	//glBindBuffer(GL_ARRAY_BUFFER, colors_gl_id);
-	//glColorPointer(3, GL_FLOAT, 0, (void*)0);
-	// indices
+	// Draw & Indices ----------------------
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::INDICES]);
-	// draw
 	glDrawElements(GL_TRIANGLES, d_mesh->buffers_size[D_Mesh::INDICES], GL_UNSIGNED_INT, (void*)0);
 
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	// Unbind buffers ===========================================
 
 	// unbind texture
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisableClientState(GL_TEXTURE0);
-	//glDisableClientState(GL_COLOR_ARRAY);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	return ret;
 }
@@ -250,7 +246,5 @@ bool C_MeshRenderer::RenderWireframe() // need very few operations
 
 bool C_MeshRenderer::RenderOutline()
 {
-
-
 	return true;
 }

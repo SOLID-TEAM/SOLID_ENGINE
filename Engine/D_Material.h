@@ -3,8 +3,8 @@
 
 #include "Globals.h"
 #include "Data.h"
-#include "Color.h"
 #include "D_Texture.h"
+#include "external/MathGeoLib/include/MathGeoLib.h"
 
 class D_Material : public Data
 {
@@ -16,22 +16,20 @@ public:
 			textures[i] = nullptr;
 	}
 
-	D_Material(const char* name, vec4 color) : Data(DataType::MATERIAL)
+	D_Material(const char* name, float4 color) : Data(DataType::MATERIAL)
 	{
 		for (int i = 0; i < MAX; ++i)
 			textures[i] = nullptr;
 
-		GetName().assign(name);
-		
-		memcpy(&albedo_color, &color, sizeof(float) * 4);
+		this->name.assign(name);
+		diffuse_color = color;
 	}
 
 	~D_Material() {
-		// delete diffuse channel
-		// WARNING: if the object had the same texture of another, we CAN'T DO THIS
-		/*if(textures[0] != nullptr)
-			App->textures->FreeTextureBuffer(textures[0]->buffer_id);*/
+
 	};
+
+	void GenerateFileTexture();
 
 public:
 
@@ -46,8 +44,8 @@ public:
 
 public:
 
-	D_Texture* textures[MAX];
-	Color	    albedo_color;
+	D_Texture*  textures[MAX];
+	float4	    diffuse_color; 
 };
 
 #endif //__R_MATERIAL_H__

@@ -89,7 +89,6 @@ Created mesh data: Untitled
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
-[Info] editor_config.json succesfully saved
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

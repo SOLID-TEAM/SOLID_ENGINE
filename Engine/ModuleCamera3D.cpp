@@ -242,13 +242,13 @@ void ModuleCamera3D::Move(const math::float3 &Movement)
 // -----------------------------------------------------------------
 float* ModuleCamera3D::GetViewMatrix()
 {
-	return &view_matrix;
+	return view_matrix.ptr();
 }
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {
-	view_matrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, - X.Dot(position), -Y.Dot(position), -Z.Dot(position), 1.0f);
+	view_matrix = float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, - X.Dot(position), -Y.Dot(position), -Z.Dot(position), 1.0f);
 }
 
 bool ModuleCamera3D::Save(Config& config)

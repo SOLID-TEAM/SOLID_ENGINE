@@ -439,13 +439,11 @@ bool ModuleEditor::Save(Config& config)
 	}
 
 	// DEBUG VIEWPORT OPTIONS
-	ret = config.AddBool("wireframe", viewport_options.wireframe);
-	ret = config.AddBool("fill_mode", viewport_options.fill_faces);
+
 	ret = config.AddBool("debug_vertex_normals", viewport_options.debug_vertex_normals);
 	ret = config.AddBool("debug_face_normals", viewport_options.debug_face_normals);
-	ret = config.AddBool("debug_bounding_boxes", viewport_options.debug_bounding_boxes);
+	ret = config.AddBool("debug_bounding_boxes", viewport_options.debug_bounding_box);
 
-	ret = config.AddFloatArray("fill_color", (float*)&viewport_options.fill_color, 4);
 	ret = config.AddFloatArray("wire_color", (float*)&viewport_options.wire_color, 4);
 	ret = config.AddFloatArray("d_vertex_p_color", (float*)&viewport_options.d_vertex_p_color, 4);
 	ret = config.AddFloatArray("d_vertex_l_color", (float*)&viewport_options.d_vertex_l_color, 4);
@@ -475,19 +473,12 @@ void ModuleEditor::Load(Config& config)
 	}
 	// viewport options
 	
-	viewport_options.wireframe = config.GetBool("wireframe", viewport_options.wireframe);
-	viewport_options.fill_faces = config.GetBool("fill_mode", viewport_options.fill_faces);
 	viewport_options.debug_vertex_normals = config.GetBool("debug_vertex_normals", viewport_options.debug_vertex_normals);
 	viewport_options.debug_face_normals = config.GetBool("debug_face_normals", viewport_options.debug_face_normals);
-	viewport_options.debug_bounding_boxes = config.GetBool("debug_bounding_boxes", viewport_options.debug_bounding_boxes);
+	viewport_options.debug_bounding_box = config.GetBool("debug_bounding_boxes", viewport_options.debug_bounding_box);
 
 
 	// load colors ----------------------------------------------------------------------------------
-	viewport_options.fill_color.x = config.GetFloat("fill_color", viewport_options.fill_color.x, 0);
-	viewport_options.fill_color.y = config.GetFloat("fill_color", viewport_options.fill_color.y, 1);
-	viewport_options.fill_color.z = config.GetFloat("fill_color", viewport_options.fill_color.z, 2);
-	viewport_options.fill_color.w = config.GetFloat("fill_color", viewport_options.fill_color.w, 3);
-
 	viewport_options.wire_color.x = config.GetFloat("wire_color", viewport_options.wire_color.x, 0);
 	viewport_options.wire_color.y = config.GetFloat("wire_color", viewport_options.wire_color.y, 1);
 	viewport_options.wire_color.z = config.GetFloat("wire_color", viewport_options.wire_color.z, 2);
