@@ -9,8 +9,8 @@ Loading File System
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
 [Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 430.86
+[Info] Renderer: GeForce GTX 970/PCIe/SSE2
+[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
 [Start] Setting up the camera
@@ -89,6 +89,222 @@ Created mesh data: Untitled
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
+[Error] Warning: gameobject without meshes to debug
+ ------------------------------------------------------- 
+[Info] Succesfully erased child BakerHouse from parent scene_root_gameobject
+[Info] Added BakerHouse to undo buffers
+ ------------------------------------------------------- 
+C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/pirate_scene.fbx
+fbx
+// ---------------------------------------------------
+[Info] Possible 3D fbx model
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    42 
+[Info] Indices:    177
+[Info] Triangles:  59
+[Info] Normals:   42
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Rug.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Rug.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    5924 
+[Info] Indices:    11448
+[Info] Triangles:  3816
+[Info] Normals:   5924
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Wood_Trims.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Wood_Trims.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    3456 
+[Info] Indices:    6306
+[Info] Triangles:  2102
+[Info] Normals:   3456
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Wood_Planks.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Wood_Planks.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    45257 
+[Info] Indices:    84918
+[Info] Triangles:  28306
+[Info] Normals:   45257
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Bits_Bobs.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Bits_Bobs.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    664 
+[Info] Indices:    936
+[Info] Triangles:  312
+[Info] Normals:   664
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Wood_Painted.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Wood_Painted.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    278 
+[Info] Indices:    1104
+[Info] Triangles:  368
+[Info] Normals:   278
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Sails.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Sails.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    1221 
+[Info] Indices:    2394
+[Info] Triangles:  798
+[Info] Normals:   1221
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Building_Mats.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Building_Mats.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    1102 
+[Info] Indices:    1488
+[Info] Triangles:  496
+[Info] Normals:   1102
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Foliage_emissive.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Foliage_emissive.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    2914 
+[Info] Indices:    7920
+[Info] Triangles:  2640
+[Info] Normals:   2914
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Foliage.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Foliage.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    2675 
+[Info] Indices:    6720
+[Info] Triangles:  2240
+[Info] Normals:   2675
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Foliage_02.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Foliage_02.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    189 
+[Info] Indices:    621
+[Info] Triangles:  207
+[Info] Normals:   189
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Sand_Tile_Caustics.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Sand_Tile_Caustics.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    257 
+[Info] Indices:    987
+[Info] Triangles:  329
+[Info] Normals:   257
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Sand_Tile.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Sand_Tile.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    326 
+[Info] Indices:    900
+[Info] Triangles:  300
+[Info] Normals:   326
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Rock_Tile.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Rock_Tile.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    748 
+[Info] Indices:    2070
+[Info] Triangles:  690
+[Info] Normals:   748
+[Info] More than 1 uv|w channel for mesh
+Created mesh data: Mesh
+// ---------------------------------------------------
+[Info] Image Rocks_Unique.dds correctly loaded into DevIL
+[Info] from filepath C:/Users/Peter/Documents/GitHub/SOLID_ENGINE/Engine/Game/Assets/Models/pirate_ship/
+[Info] Image correctly uploaded to gl buffer
+[Info] Added image Rocks_Unique.dds to texture map
+[Info] Image deleted from DevIL
+// ---------------------------------------------------
+extension: fbx
+[Error] Warning: gameobject without meshes to debug
+[Init] Info: hey, i need to recompute the normals!
+[Init] Info: hey, i need to recompute the normals!
+[Init] Info: hey, i need to recompute the normals!
+[Init] Info: hey, i need to recompute the normals!
+[Init] Info: hey, i need to recompute the normals!
+[Init] Info: hey, i need to recompute the normals!
+[Init] Info: hey, i need to recompute the normals!
+[Init] Info: hey, i need to recompute the normals!
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

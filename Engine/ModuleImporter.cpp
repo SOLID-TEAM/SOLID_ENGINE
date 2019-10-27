@@ -270,7 +270,7 @@ D_Mesh*  ModuleImporter::ImportMesh(const aiMesh* mesh, const char* name)
 	if (num_uv_channels > 0)
 	{
 		if (num_uv_channels > 1)
-			LOG("[Error] More than 1 uv|w channel for mesh");
+			LOG("[Info] More than 1 uv|w channel for mesh");
 
 		if (mesh->HasTextureCoords(0)) // TODO: support more texture coord channels if needed
 		{
