@@ -9,8 +9,8 @@ Loading File System
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
 [Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 970/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
+[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
+[Info] OpenGL version supported: 4.6.0 NVIDIA 430.86
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
 [Start] Setting up the camera
