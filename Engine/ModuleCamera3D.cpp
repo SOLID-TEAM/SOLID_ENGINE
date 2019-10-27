@@ -24,6 +24,7 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 	position = { 0.0f, 0.0f, 5.0f };
 	current_position = position;
 	reference = { 0.0f, 0.0f, 0.0f };
+	current_rotation = current_rotation.identity;
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -58,6 +59,9 @@ update_status ModuleCamera3D::Update(float dt)
 
 	float dx;
 	float dy;
+	float3 last_Z = Z;
+	float3 last_X = X;
+	float3 last_Y = Y;
 
 	state = IDLE;
 
@@ -217,14 +221,19 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 	}
 	
+	float speed = 4.8f;
 
-	//rotation.Set(float3x3(X.x, Y.x, Z.x, X.y, Y.y, Z.y, X.z, Y.z, Z.z));
-
-	//current_rotation = current_rotation.Slerp(rotation, 5.f * dt);
-
-	current_position = float3::Lerp(current_position, position, 5.f * dt);
-
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+	{
+		speed *= 1.8;
+	}
 	
+	current_position = float3::Lerp(current_position, position, speed * dt);
+
+	//float3 current_Z = Quat::SlerpVector(Z, last_Z , 4.F * dt);
+
+	//current_viewmatrix = current_viewmatrix * float4x4::RotateFromTo(Z, current_Z);
+
 
 
 	// Recalculate matrix -------------
@@ -265,7 +274,7 @@ float* ModuleCamera3D::GetViewMatrix()
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {
-	view_matrix = float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, - X.Dot(current_position), -Y.Dot(current_position), -Z.Dot(current_position), 1.0f);
+	view_matrix = float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -X.Dot(current_position), -Y.Dot(current_position), -Z.Dot(current_position), 1.0f);
 }
 
 bool ModuleCamera3D::Save(Config& config)

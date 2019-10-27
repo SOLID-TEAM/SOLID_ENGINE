@@ -1,0 +1,84 @@
+{
+    "App": {
+        "name": "SOLID_ENGINE",
+        "organization": "SOLID_TEAM",
+        "framerate_cap": 60
+    },
+    "Window": {
+        "window_width": 1920,
+        "window_height": 1080,
+        "fullscreen": false,
+        "fullscreen_desktop": false,
+        "resizable": true,
+        "borderless": false,
+        "maximized": true
+    },
+    "Input": {},
+    "Camera3D": {},
+    "": {},
+    "ModuleRandom?": {
+        "grid_units": 10,
+        "grid_line_width": 1,
+        "grid_color": [
+            1,
+            1,
+            1,
+            0.60000002384185791
+        ]
+    },
+    "Textures": {},
+    "ModuleImporter": {},
+    "Editor": {
+        "show_about_popup": false,
+        "show_demo_imgui": false,
+        "window_active_Configuration": true,
+        "window_active_Console": true,
+        "window_active_Hierarchy": true,
+        "window_active_Rendering Settings": true,
+        "window_active_Scene": true,
+        "window_active_Inspector": true,
+        "window_active_Primitives": true,
+        "window_active_Delete History": true,
+        "debug_vertex_normals": false,
+        "debug_face_normals": false,
+        "debug_bounding_boxes": false,
+        "wire_color": [
+            1,
+            1,
+            1,
+            1
+        ],
+        "d_vertex_p_color": [
+            0.5899999737739563,
+            0.2199999988079071,
+            1,
+            1
+        ],
+        "d_vertex_l_color": [
+            0.20000000298023224,
+            1,
+            0,
+            1
+        ],
+        "d_vertex_face_color": [
+            1,
+            0.5,
+            0.20000000298023224,
+            1
+        ],
+        "d_vertex_face_n_color": [
+            0,
+            0.5,
+            1,
+            1
+        ],
+        "wire_line_width": 1,
+        "v_point_size": 5,
+        "f_v_point_size": 5,
+        "v_n_line_width": 1,
+        "f_n_line_width": 1,
+        "v_n_line_length": 0.40000000596046448,
+        "f_n_line_length": 0.40000000596046448
+    },
+    "Renderer3D": {}
+}
