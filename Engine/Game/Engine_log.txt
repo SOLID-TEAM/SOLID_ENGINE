@@ -23,7 +23,7 @@ Loading Test assets
 Created mesh data: Untitled.001
 // ---------------------------------------------------
 [Info] Image Baker_house.png correctly loaded into DevIL
-[Info] from filepath Assets/Models/
+[Info] from filepath Assets/Models/baker_house/
 [Info] Image correctly uploaded to gl buffer
 [Info] Added image Baker_house.png to texture map
 [Info] Image deleted from DevIL
