@@ -34,6 +34,12 @@
         "debug_vertex_normals": false,
         "debug_face_normals": false,
         "debug_bounding_boxes": false,
+        "bb_color": [
+            1,
+            1,
+            1,
+            1
+        ],
         "wire_color": [
             1,
             1,
@@ -64,6 +70,7 @@
             1,
             1
         ],
+        "bb_line_width": 1,
         "wire_line_width": 1,
         "v_point_size": 5,
         "f_v_point_size": 5,

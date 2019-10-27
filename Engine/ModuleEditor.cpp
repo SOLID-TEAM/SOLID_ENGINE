@@ -106,10 +106,8 @@ bool ModuleEditor::Start(Config& config)
 	w_primitives =		new W_Primitives("Primitives",			false);
 	W_delete_history =	new W_DeleteHistory("Delete History",	false);
 
-	for (std::vector<Window*>::iterator itr = windows.begin(); itr != windows.end(); ++itr)
-	{
-		(*itr)->active = config.GetBool(std::string("window_active_" + (*itr)->name).c_str(), &(*itr)->active);
-	}
+
+	Load(config);
 
 	return ret;
 }
@@ -435,7 +433,7 @@ bool ModuleEditor::Save(Config& config)
 
 	for (std::vector<Window*>::iterator itr = windows.begin(); itr != windows.end(); ++itr)
 	{
-		config.AddBool( std::string("window_active_" + (*itr)->name).c_str() , w_config->active);
+		config.AddBool( std::string("window_active_" + (*itr)->name).c_str() , (*itr)->active);
 	}
 
 	// DEBUG VIEWPORT OPTIONS
