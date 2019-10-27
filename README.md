@@ -12,10 +12,16 @@ The code is written in C++.
 
 - GitHub repository: [SolidEngine](https://github.com/SOLID-TEAM/SOLID_ENGINE)
 
+## Instalation
+
+- Download the latest version of the engine in the following [link](https://github.com/SOLID-TEAM/SOLID_ENGINE/releases)
+- Unzip the **SolidEngine v.X.X** folder in some path of your pc 
+- Start the **SolidEngine v.X.X/SolidEngine.exe** and enjoy! : D
 ## Innovations
 
 - Delete GameObjects History (**Undo CTRL + Z**).
 - Window Scene Viewport **FBO** with modifiable **MSAA**.
+- ImGui modified as unity editor Gui.
 
 ## Features
 
