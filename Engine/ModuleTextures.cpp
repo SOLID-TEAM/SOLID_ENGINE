@@ -226,7 +226,27 @@ uint ModuleTextures::GenerateCheckerTexture(uint w, uint h)
 	return ret_id > 0 ? ret_id : 0;
 }
 
-void ModuleTextures::GetTextureSize(uint& w, uint& h) const
+void ModuleTextures::GetTextureSize(uint id,int& w, int& h) const
 {
-	//
+	// get texture data
+	glBindTexture(GL_TEXTURE_2D, id);
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+const char* ModuleTextures::GetTextureName(uint id)
+{
+	std::map<std::string, uint>::iterator it = textures.begin();
+	for (; it != textures.end(); ++it)
+	{
+		if (id == (*it).second)
+		{
+			return (*it).first.c_str();
+		}
+	}
+
+	LOG("[Error] Texture name not found on user loaded textures"); // TODO: implement user and system maps, user can be delete from user but never from the system
+
+	return nullptr;
 }
