@@ -40,8 +40,11 @@ struct ViewportOptions
 	bool debug_vertex_normals = false;
 	bool debug_face_normals = false;
 
+	ImVec4 bb_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	float  bb_line_width = 1.0f;
+
 	ImVec4 wire_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-	float wire_line_width = 1.0f;
+	float  wire_line_width = 1.0f;
 
 	ImVec4 d_vertex_p_color = ImVec4(0.59f, 0.22f, 1.0f, 1.0f);
 	ImVec4 d_vertex_l_color = ImVec4(0.2f, 1.0f, 0.0f, 1.0f);

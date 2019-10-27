@@ -108,7 +108,7 @@ bool C_MeshRenderer::Render()
 
 	if (vp.debug_bounding_box)
 	{
-		RenderBoundingBox(d_mesh->aabb);
+		RenderBoundingBox(d_mesh->aabb, vp.bb_line_width, (float*)&vp.bb_color);
 	}
 
 	// Flip faces enable ----------------------------------------------------
@@ -257,20 +257,22 @@ void C_MeshRenderer::RenderOutline(float width, float* color)
 	glStencilFunc(GL_ALWAYS, 1, -1);
 }
 
-void C_MeshRenderer::RenderBoundingBox(math::AABB& aabb)
+void C_MeshRenderer::RenderBoundingBox(math::AABB& aabb, float width, float* color)
 {
+	ModuleRenderer3D::BeginDebugDraw(color);
+	glLineWidth(width);
 	glBegin(GL_LINES);
-	ModuleRenderer3D::BeginDebugDraw( float4::one.ptr());
+
 
 	for (int i = 0; i < aabb.NumEdges(); ++i)
 	{
-		glColor4f(1.f, 1.f, 1.f, 1.f);
 		math::LineSegment line_segment = aabb.Edge(i);
 		glVertex3f(line_segment.a.x, line_segment.a.y, line_segment.a.z);
 		glVertex3f(line_segment.b.x, line_segment.b.y, line_segment.b.z);
 	}
 
-	ModuleRenderer3D::EndDebugDraw();
 	glEnd();
+	glLineWidth(1.f);
+	ModuleRenderer3D::EndDebugDraw();
 }
 

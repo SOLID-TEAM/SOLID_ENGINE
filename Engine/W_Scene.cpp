@@ -128,11 +128,28 @@ void W_Scene::DebugMenu()
 	RenderConfig& config = App->renderer3D->render_config;
 	ViewportOptions& vp = App->editor->viewport_options;
 
-	ImGui::Title("Vertex Normals", 1);		ImGui::Checkbox("##d_vertex_normals", &vp.debug_vertex_normals);
-	ImGui::Title("Point Color", 2);			ImGui::ColorEdit4("Vertex Point Color##2f", (float*)&vp.d_vertex_p_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-	ImGui::Title("Point Size", 2);			ImGui::SetNextItemWidth(150);  ImGui::SliderFloat("##d_vertex_p_size", &vp.v_point_size, config.min_point_size, config.max_point_size, "%.1f", 1.0f);
-	ImGui::Title("Line Color", 2);			ImGui::ColorEdit4("Vertex Line Color##2f", (float*)&vp.d_vertex_l_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-	ImGui::Title("Line Width", 2);			ImGui::SliderFloat("##d_vertex_line_width", &vp.v_n_line_width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
+	ImGui::Title("Bounding Box", 1);	ImGui::Checkbox("##bb_enable", &vp.debug_bounding_box);
+	ImGui::Title("Color", 2);			ImGui::ColorEdit4("##bb_color", (float*)&vp.bb_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+	ImGui::Title("Width", 2);			ImGui::SliderFloat("##bb_line_width", &vp.bb_line_width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
+	ImGui::Spacing();
+
+	ImGui::Separator();
+
+	ImGui::Spacing();
+	ImGui::Title("Wireframe", 1);	ImGui::Text("");
+	ImGui::Title("Color", 2);		ImGui::ColorEdit4("Line Color##2f", (float*)&vp.wire_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+	ImGui::Title("Width", 2);		ImGui::SliderFloat("##wire_line_width", &vp.wire_line_width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
+	ImGui::Spacing();
+
+	ImGui::Separator();
+
+	ImGui::Spacing();
+	ImGui::Title("Normals", 1);			ImGui::Text("");
+	ImGui::Title("Vertices", 2);		ImGui::Checkbox("##d_vertex_normals", &vp.debug_vertex_normals);
+	ImGui::Title("Point Color", 2);		ImGui::ColorEdit4("Vertex Point Color##2f", (float*)&vp.d_vertex_p_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+	ImGui::Title("Point Size",  2);		ImGui::SetNextItemWidth(150);  ImGui::SliderFloat("##d_vertex_p_size", &vp.v_point_size, config.min_point_size, config.max_point_size, "%.1f", 1.0f);
+	ImGui::Title("Line Color",  2);		ImGui::ColorEdit4("Vertex Line Color##2f", (float*)&vp.d_vertex_l_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+	ImGui::Title("Line Width",  2);		ImGui::SliderFloat("##d_vertex_line_width", &vp.v_n_line_width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
 	ImGui::Title("Line Lenght", 2);
 
 	if (ImGui::SliderFloat("##d_vertex_line_lenght", &vp.v_n_line_length, config.min_n_length, config.max_n_length, "%.1f", 1.0f))
@@ -146,16 +163,17 @@ void W_Scene::DebugMenu()
 			}
 		}
 	}
-	ImGui::Spacing();
-
-	ImGui::Separator();
 
 	ImGui::Spacing();
-	ImGui::Title("Face Normals", 1);	ImGui::Checkbox("##d_face_normals", &vp.debug_face_normals);
+	ImGui::Spacing();
+	//ImGui::Spacing();
+	//ImGui::Spacing();
+
+	ImGui::Title("Faces", 2);			ImGui::Checkbox("##d_face_normals", &vp.debug_face_normals);
 	ImGui::Title("Point Color", 2);		ImGui::ColorEdit4("Face Point Color##2f", (float*)&vp.d_vertex_face_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-	ImGui::Title("Point Size", 2);		ImGui::SliderFloat("##d_face_p_size", &vp.f_v_point_size, config.min_point_size, config.max_point_size, "%.1f", 1.0f);
-	ImGui::Title("Line Color", 2);		ImGui::ColorEdit4("Face Line Color##2f", (float*)&vp.d_vertex_face_n_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-	ImGui::Title("Line Width", 2);		ImGui::SliderFloat("##d_face_line_width", &vp.f_n_line_width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
+	ImGui::Title("Point Size",  2);		ImGui::SliderFloat("##d_face_p_size", &vp.f_v_point_size, config.min_point_size, config.max_point_size, "%.1f", 1.0f);
+	ImGui::Title("Line Color",  2);		ImGui::ColorEdit4("Face Line Color##2f", (float*)&vp.d_vertex_face_n_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+	ImGui::Title("Line Width",  2);		ImGui::SliderFloat("##d_face_line_width", &vp.f_n_line_width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
 	ImGui::Title("Line Lenght", 2);
 
 	if (ImGui::SliderFloat("##d_face_line_lenght", &vp.f_n_line_length, config.min_n_length, config.max_n_length, "%.1f", 1.0f))
