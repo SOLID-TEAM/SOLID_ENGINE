@@ -217,41 +217,62 @@ void GameObject::GenerateGlobalBoundingBox( GameObject* go, math::AABB* aabb)
 	}
 }
 
-void GameObject::AddChild(GameObject* child)
+
+bool GameObject::SearchParentRecursive(GameObject* parent, GameObject* parent_match)
 {
-	// removes child for previous parent, if any
-	if (child->parent != nullptr)
+	bool match = false;
+
+	if (parent == parent_match)
 	{
-		child->parent->RemoveChild(child);
+		match = true;
+	}
+	else if(parent->parent != nullptr)
+		match = SearchParentRecursive(parent->parent, parent_match);
 
-		// if this child has childs, move the childs to the child previous parent
-		if (child->childs.size() > 0)
+	return match;
+}
+
+
+void GameObject::AddChild(GameObject* new_child)
+{
+	if (new_child->parent == this)
+		return;
+
+	// search all
+	bool match = SearchParentRecursive(this, new_child);
+
+	if (match)
+	{
+		//LOG("NEW CHILD IS ON PARENT TREE");
+		// if new child is on parent tree, we must to relink all new_child->childs->parent to new_child->parent
+		std::vector<GameObject*>::iterator it = new_child->childs.begin();
+		for (; it != new_child->childs.end();)
 		{
-			//LOG("%i", child->childs.size());
-			
-			for (std::vector<GameObject*>::iterator it = child->childs.begin(); it != child->childs.end(); )
-			{
-				(*it)->parent;
-				LOG("");
-				(*it)->parent = child->parent;
-				(*it)->parent->childs.push_back((*it));
-
-				it = child->childs.erase(it);
-			}
-
-			float4x4 current_global = transform->GetGlobalTransform();
-			// updates transform
-			float4x4 new_transform = current_global * child->transform->GetGlobalTransform().Inverted();
-			new_transform.Decompose(transform->position, transform->rotation, transform->scale);
+			LOG(" ------------------------------- ");
+			LOG("[Info] Re-linked %s to %s", (*it)->GetName(), new_child->parent->GetName());
+			(*it)->parent = new_child->parent;
+			// adds to parent childs
+			new_child->parent->childs.push_back((*it));
+			// and remove all new_child->childs
+			it = new_child->childs.erase(it);
 		}
 	}
+	/*else
+		LOG("NEW CHILD NOT ON PARENT TREE");*/
 
-	// updates parent of the child
-	child->parent = this;
-	// finally add new child
-	childs.push_back(child);
+	// remove new_child from new_child->parent
+	new_child->parent->RemoveChild(new_child);
+	new_child->parent = this;
+
+	// adds new child to this gameobject childs
+	childs.push_back(new_child);
+
+	LOG(" ------------------------------- ");
+	LOG("[Info] Moved %s to %s", new_child->GetName(), this->GetName());
+	LOG(" ------------------------------- ");
 
 }
+
 
 // removes child but not deletes
 void GameObject::RemoveChild(GameObject* child)

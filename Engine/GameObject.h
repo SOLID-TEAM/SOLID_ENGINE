@@ -47,6 +47,8 @@ public:
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
 
+	bool SearchParentRecursive(GameObject* parent, GameObject* parent_match);
+
 private:
 
 	void GenerateGlobalBoundingBox(GameObject* go, math::AABB* aabb);

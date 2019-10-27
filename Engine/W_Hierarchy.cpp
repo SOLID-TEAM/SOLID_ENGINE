@@ -28,7 +28,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 {
 	// TODO: BEWARE of linkeds go, when we deleting them
 
-	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnArrow; // allows click on it on full box width | allows open only by arrow click
+	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen; // allows click on it on full box width | allows open only by arrow click
 
 	if (go->childs.size() == 0)
 		node_flags |= ImGuiTreeNodeFlags_Leaf;
@@ -112,12 +112,14 @@ void W_Hierarchy::DrawAll(GameObject* go)
 			IM_ASSERT(payload->DataSize == sizeof(GameObject*));
 			GameObject** source_go = (GameObject**)payload->Data;
 
-			LOG("%s",(*source_go)->GetName());
+			//LOG("%s",(*source_go)->GetName());
 			
 			/*go->AddChildren((*source_go));*/
 			App->scene->AddGoToHierarchyChange(go, (*source_go));
 
-			LOG("[Info] Moved %s to %s", (*source_go)->GetName(), go->GetName());
+			App->editor->selected_go = (*source_go);
+
+			//LOG("[Info] Moved %s to %s", (*source_go)->GetName(), go->GetName());
 		}
 		ImGui::EndDragDropTarget();
 	}
