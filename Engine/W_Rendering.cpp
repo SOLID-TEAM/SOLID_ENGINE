@@ -51,17 +51,6 @@ void W_Rendering::Draw()
 				App->importer->ReComputeFacesNormals(App->importer->f_n_line_length);
 			}
 		}*/
-
-		static int units = 15;
-
-		if (ImGui::CollapsingHeader("Grid Settings"))
-		{
-			ImGui::Title("Active", 1);		ImGui::Checkbox("##active_grid", &App->test->main_grid->active);
-			ImGui::Title("Color", 2);		ImGui::ColorEdit4("Grid Color##2f", (float*)&App->test->main_grid->color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-			ImGui::Title("Opacity", 2);		ImGui::SliderFloat("##d_face_line_lenght", &App->test->main_grid->color.w, config.min_alpha, config.max_alpha, "%.1f", 1.0f);
-			ImGui::Title("Distance", 2);     if (ImGui::SliderInt("##grid_units", &units, 1, 50)) App->test->main_grid->SetUnits(units);
-			ImGui::Title("Line Width", 2);	ImGui::SliderFloat("##grid_width", &App->test->main_grid->line_width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
-		}
 		if (ImGui::CollapsingHeader("OpenGL Test", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::Title("Color Material");	

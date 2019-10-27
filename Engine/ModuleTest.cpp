@@ -55,7 +55,7 @@ bool ModuleTest::Save(Config& config)
 {
 	config.AddInt("grid_units",main_grid->GetUnits());
 	config.AddFloat("grid_line_width", main_grid->line_width);
-	config.AddFloatArray("grid_color", (float*)& (main_grid->color) , 4);
+	config.AddFloatArray("grid_color", main_grid->color.ptr() , 4);
 
 	return true;
 }
@@ -140,22 +140,19 @@ void Grid::Render()
 		return;
 	}
 
-	GLfloat emission[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
+	ModuleRenderer3D::BeginDebugDraw(color.ptr());
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glLineWidth(line_width);
-	glColor4fv((float*)&color);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
+	glColor4fv(color.ptr());
 
 	glBindBuffer(GL_ARRAY_BUFFER, id);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 
 	glDrawArrays(GL_LINES, 0, n_vertices * 2);
 
-
-	GLfloat emission_1[] = { 0.f, .0f, .0f, 1.0f };
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_1);
+	ModuleRenderer3D::EndDebugDraw();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glLineWidth(1.0f);
