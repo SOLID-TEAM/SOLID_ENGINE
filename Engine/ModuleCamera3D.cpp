@@ -217,12 +217,15 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 	}
 	
-	//current_rotation.Set(float3x3(X.x, Y.x, Z.x, X.y, Y.y, Z.y, X.z, Y.z, Z.z));
 
-	//current_rotation = Quat::Slerp()
+	//rotation.Set(float3x3(X.x, Y.x, Z.x, X.y, Y.y, Z.y, X.z, Y.z, Z.z));
 
-	current_position = float3::Lerp(current_position, position , 5.f * dt );
+	//current_rotation = current_rotation.Slerp(rotation, 5.f * dt);
+
+	current_position = float3::Lerp(current_position, position, 5.f * dt);
+
 	
+
 
 	// Recalculate matrix -------------
 

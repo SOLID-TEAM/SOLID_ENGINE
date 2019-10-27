@@ -34,11 +34,7 @@ bool ModuleTest::Start(Config& config)
 	App->camera->LookAt({ 0, 0, 0 });
 
 	main_grid = new Grid(config.GetInt("grid_units", 10));
-	main_grid->line_width = config.GetFloat("grid_line_width", 1.f);
-	main_grid->color.x = config.GetFloat("grid_color", 1.f , 0);
-	main_grid->color.y = config.GetFloat("grid_color", 1.f , 1);
-	main_grid->color.z = config.GetFloat("grid_color", 1.f , 2);
-	main_grid->color.w = config.GetFloat("grid_color", 1.f , 3);
+	Load(config);
 
 	return ret;
 }
@@ -53,9 +49,19 @@ bool ModuleTest::CleanUp()
 
 bool ModuleTest::Save(Config& config)
 {
-	config.AddInt("grid_units",main_grid->GetUnits());
-	config.AddFloat("grid_line_width", main_grid->line_width);
-	config.AddFloatArray("grid_color", main_grid->color.ptr() , 4);
+	if (main_grid != nullptr)
+	{
+		config.AddInt("grid_units", main_grid->GetUnits());
+		config.AddFloat("grid_line_width", main_grid->line_width);
+		config.AddFloatArray("grid_color", main_grid->color.ptr(), 4);
+	}
+	else
+	{
+		float4 color = { 1.f, 1.f ,1.f ,5.f };
+		config.AddInt("grid_units", 10);
+		config.AddFloat("grid_line_width", 1.f);
+		config.AddFloatArray("grid_color", color.ptr(), 4);
+	}
 
 	return true;
 }
