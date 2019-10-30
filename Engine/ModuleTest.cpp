@@ -156,7 +156,7 @@ void Grid::Render()
 	glBindBuffer(GL_ARRAY_BUFFER, id);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 
-	glDrawArrays(GL_LINES, 0, n_vertices * 2);
+	glDrawArrays(GL_LINES, 0, n_vertices * 3);
 
 	ModuleRenderer3D::EndDebugDraw();
 
