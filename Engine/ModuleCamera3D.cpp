@@ -147,7 +147,8 @@ update_status ModuleCamera3D::Update(float dt)
 					Y = final_rot * Y;
 					X = Cross(Y, Z);
 
-					position = reference + Z.Normalized() * distance;
+					current_position = position = reference + Z.Normalized() * distance;
+
 				}
 			}
 		}
@@ -228,7 +229,11 @@ update_status ModuleCamera3D::Update(float dt)
 		speed *= 1.8;
 	}
 	
-	current_position = float3::Lerp(current_position, position, speed * dt);
+	if (current_position.Distance(position) > math::eps)
+	{
+		current_position = float3::Lerp(current_position, position, speed * dt);
+	}
+	
 
 	//float3 current_Z = Quat::SlerpVector(Z, last_Z , 4.F * dt);
 
