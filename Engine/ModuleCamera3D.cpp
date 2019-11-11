@@ -76,9 +76,9 @@ update_status ModuleCamera3D::Update(float dt)
 			dx = -App->input->GetMouseXMotion();
 			dy = -App->input->GetMouseYMotion();
 
-			if (dx != 0 || dy != 0)
+			if (dx != 0.f || dy != 0.f)
 			{
-				float rotation_speed = 10.f * dt;
+				float rotation_speed = 60.f * dt;
 				float yaw = dx * rotation_speed;
 				float pitch = dy * rotation_speed;
 
@@ -238,7 +238,6 @@ update_status ModuleCamera3D::Update(float dt)
 	//float3 current_Z = Quat::SlerpVector(Z, last_Z , 4.F * dt);
 
 	//current_viewmatrix = current_viewmatrix * float4x4::RotateFromTo(Z, current_Z);
-
 
 
 	// Recalculate matrix -------------

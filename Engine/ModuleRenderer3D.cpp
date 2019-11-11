@@ -138,15 +138,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrix());
 
-
-	// TODO: re-added lights until we create component light, remove from here when done
-	// light 0 on cam pos
-	lights[0].SetPos(App->camera->position.x, App->camera->position.y, App->camera->position.z);
-
-	for (uint i = 0; i < MAX_LIGHTS; ++i)
-		lights[i].Render();
-
-
 	return UPDATE_CONTINUE;
 }
 
@@ -193,6 +184,13 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	// Object Draw Stencil Settings ------------------------
 	glStencilFunc(GL_ALWAYS, 1, -1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);	
+
+	// TODO: re-added lights until we create component light, remove from here when done
+    // light 0 on cam pos
+	lights[0].SetPos(App->camera->current_position.x, App->camera->current_position.y, App->camera->current_position.z);
+
+	for (uint i = 0; i < MAX_LIGHTS; ++i)
+		lights[i].Render();
 
 	return UPDATE_CONTINUE;
 }
