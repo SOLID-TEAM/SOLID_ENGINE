@@ -52,9 +52,6 @@
     <Filter Include="Sources\Game Object\Components">
       <UniqueIdentifier>{b20fa3f4-fe07-4fd6-99f3-6c8c3809e8df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Modules\Scene">
-      <UniqueIdentifier>{45354d5a-b0f0-4cd1-abba-567c02423ad6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Data">
       <UniqueIdentifier>{cf84c64d-fec2-41af-afa0-2ea3d34dbaa9}</UniqueIdentifier>
     </Filter>
@@ -381,9 +378,6 @@
     <ClInclude Include="ImGui\Impl\imgui_impl_sdl.h">
       <Filter>Sources\Thirds Party\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleScene.h">
-      <Filter>Sources\Modules\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="C_Mesh.h">
       <Filter>Sources\Game Object\Components</Filter>
     </ClInclude>
@@ -416,6 +410,12 @@
     </ClInclude>
     <ClInclude Include="W_DeleteHistory.h">
       <Filter>Sources\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleScene.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Camera.h">
+      <Filter>Sources\Game Object\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -623,9 +623,6 @@
     <ClCompile Include="ImGui\Impl\imgui_impl_sdl.cpp">
       <Filter>Sources\Thirds Party\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleScene.cpp">
-      <Filter>Sources\Modules\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="C_Mesh.cpp">
       <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
@@ -658,6 +655,12 @@
     </ClCompile>
     <ClCompile Include="W_DeleteHistory.cpp">
       <Filter>Sources\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScene.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="C_Camera.cpp">
+      <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,10 @@
 
 Component::Component(GameObject* go, ComponentType type) : linked_go(go), type(type) {}
 
+void Component::Reset()
+{
+}
+
 void Component::Enable()
 {
 	if (!active)
@@ -18,6 +22,10 @@ void Component::Disable()
 bool Component::Update(float dt)
 {
 	return true;
+}
+
+void Component::UpdateTransform()
+{
 }
 
 bool Component::Render()

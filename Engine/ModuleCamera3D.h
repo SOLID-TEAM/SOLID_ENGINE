@@ -3,7 +3,7 @@
 #include "Globals.h"
 #include "glmath.h"
 
-#include "external/MathGeoLib\include\Math/MathAll.h"
+#include "external/MathGeoLib/include/MathGeoLib.h"
 
 class ModuleCamera3D : public Module
 {

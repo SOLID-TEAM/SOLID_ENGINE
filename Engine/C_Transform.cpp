@@ -28,23 +28,34 @@ bool C_Transform::Update(float dt)
 	{
 		GameObject* parent = linked_go->parent;
 
+		// Update Global Transform from parent -----------------------
+
 		if (parent != nullptr)
 		{
-
 			global_transform = parent->transform->global_transform * local_transform;
 
-			if (parent != nullptr)
+			for (std::vector<GameObject*>::iterator child = linked_go->childs.begin(); child != linked_go->childs.end(); ++child)
 			{
-				for (std::vector<GameObject*>::iterator child = linked_go->childs.begin(); child != linked_go->childs.end(); ++child)
-				{
-					(*child)->transform->to_update = true;
-				}
+				(*child)->transform->to_update = true;
 			}
 		}
+
+		// Update scale value factor ---------------------------------
 
 		math::float3 global_scale;
 		global_transform.Decompose(float3(), Quat(), global_scale);
 		negative_scale = !((scale.x * scale.y * scale.z * global_scale.x * global_scale.y * global_scale.z) >= 0.f);
+
+		// Update Components related with Transform ------------------
+
+		std::vector< Component*> components = linked_go->GetComponents();
+
+		for (std::vector<Component*>::iterator itr = components.begin(); itr != components.end(); ++itr)
+		{
+			(*itr)->UpdateTransform();
+		}
+
+		// Finish transform update -----------------------------------
 
 		to_update = false;
 	}

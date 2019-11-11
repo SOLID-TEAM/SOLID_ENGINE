@@ -24,7 +24,7 @@ private:
 
 	void DebugMenu();
 
-	void ViewportModes();
+	void ModesMenu();
 
 private:
 

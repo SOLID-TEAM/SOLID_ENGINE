@@ -1,15 +1,10 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleCamera3D.h"
-
 #include "ModuleScene.h"
+
 #include "GameObject.h"
-
 #include "C_Transform.h"
-#include "C_Mesh.h"
-#include "D_Mesh.h"
-
-#include "external/MathGeoLib\include\Math\MathAll.h"
 
 ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 {
@@ -59,9 +54,6 @@ update_status ModuleCamera3D::Update(float dt)
 
 	float dx;
 	float dy;
-	float3 last_Z = Z;
-	float3 last_X = X;
-	float3 last_Y = Y;
 
 	state = IDLE;
 
@@ -233,13 +225,6 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 		current_position = float3::Lerp(current_position, position, speed * dt);
 	}
-	
-
-	//float3 current_Z = Quat::SlerpVector(Z, last_Z , 4.F * dt);
-
-	//current_viewmatrix = current_viewmatrix * float4x4::RotateFromTo(Z, current_Z);
-
-
 
 	// Recalculate matrix -------------
 

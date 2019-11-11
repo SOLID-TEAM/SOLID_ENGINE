@@ -8,31 +8,11 @@
 
 #define MAX_LIGHTS 8
 
-struct RenderConfig
-{
-	bool gl_depth_test = true;
-	bool gl_cull_face = true;
-	bool gl_lighting = true;
-	bool gl_color_material = true;
-	bool wireframe = true;
-
-	float max_line_w = 10.0f;
-	float min_line_w = 0.0f;
-	float max_point_size = 10.0f;
-	float min_point_size = 0.0f;
-	float max_n_length = 3.0f;
-	float min_n_length = 0.0f;
-	float min_alpha = 0.f;
-	float max_alpha = 1.f;
-
-	ImVec4 default_color_mat = { 1.0f,1.0f,1.0f,1.0f };
-};
-
 class FBO
 {
 public:
 
-	enum FBORender
+	enum BufferType
 	{
 		NORMAL_FBO,
 		NORMAL_TEXTURE,
@@ -54,18 +34,11 @@ public:
 
 	void UpdateFBO(float width, float height);
 
-	void DeleteFBO();
+	void DeleteFBO(); 
 
-	uint GetRenderTexture();
+	uint GetFinalTexture();
 
-	uint GetID(FBORender render)
-	{
-		return ID[render];
-	}
-
-	// Only multiple of 2 values
-	//    0 : MSAA disabled
-	//    2-16 : MSAA enabled
+	// Only multiple of 2 values // 0 : MSAA disabled // 2-16 : MSAA enabled
 	void SetMSAA( int MSAA) 
 	{
 		if (MSAA % 2 != 0 || MSAA > 0 || MSAA <= 16)
@@ -80,8 +53,29 @@ private:
 	uint msaa = 4;
 	float4 clear_color = { 0.1, 0.1, 0.1, 1.f };
 	float width = 0, height = 0;
-
 };
+
+struct RenderConfig
+{
+	bool gl_depth_test = true;
+	bool gl_cull_face = true;
+	bool gl_lighting = true;
+	bool gl_color_material = true;
+	bool wireframe = true;
+
+	float max_line_w = 10.0f;
+	float min_line_w = 0.0f;
+	float max_point_size = 10.0f;
+	float min_point_size = 0.0f;
+	float max_n_length = 3.0f;
+	float min_n_length = 0.0f;
+	float min_alpha = 0.f;
+	float max_alpha = 1.f;
+
+	ImVec4 default_color_mat = { 1.0f,1.0f,1.0f,1.0f };
+};
+
+typedef void*  SDL_GLContext;
 
 class ModuleRenderer3D : public Module
 {
@@ -115,7 +109,7 @@ public:
 
 	void SetDefaultColorMaterial();
 
-	static void BeginDebugDraw(const float* color);
+	static void BeginDebugDraw(float* color = nullptr);
 
 	static void EndDebugDraw();
 

@@ -180,12 +180,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		on_resize = false;
 	}
 
-
-	glLoadIdentity();
-
-	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrix());
-
 	
 	// Start Buffer Frame ----------------------------------
 	scene_fbo.BeginFBO();
@@ -249,14 +244,22 @@ void ModuleRenderer3D::SetDefaultColorMaterial()
 	glColor4fv((float*)&render_config.default_color_mat);
 }
 
-void ModuleRenderer3D::BeginDebugDraw(const float* color)
+void ModuleRenderer3D::BeginDebugDraw(float* color )
 {
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
-}
+	if (color == nullptr)
+	{
+		float _color[] = { 1.f ,1.f, 1.f, 1.f };
+		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, _color);
+	}
+	else
+	{
+		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
+	}
+} 
 
 void ModuleRenderer3D::EndDebugDraw()
 {
-	GLfloat emission_default[] = { 0, 0, 0, 1 };
+	GLfloat emission_default[] = { 0.f, 0.f, 0.f, 1.f };
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_default);
 }
 
@@ -394,7 +397,7 @@ void FBO::DeleteFBO()
 	glDeleteFramebuffers(1, &ID[NORMAL_TEXTURE]);
 }
 
-uint FBO::GetRenderTexture()
+uint FBO::GetFinalTexture()
 {
 	return ID[NORMAL_TEXTURE];
 }

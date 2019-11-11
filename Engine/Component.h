@@ -11,6 +11,7 @@ enum class ComponentType
 	TRANSFORM,
 	MESH,
 	MATERIAL,
+	CAMERA,
 	LIGHT,
 	MESH_RENDERER,
 	NO_TYPE
@@ -30,11 +31,15 @@ public:
 
 	Component(GameObject* go, ComponentType type);
 
+	virtual void Reset();
+
 	virtual void Enable();
 
 	virtual void Disable();
 
 	virtual bool Update(float dt);
+
+	virtual void UpdateTransform();
 
 	virtual bool Render();
 
