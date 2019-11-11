@@ -14,45 +14,36 @@ public:
 
 	bool DrawPanelInfo();
 
-	void SetPosition(math::float3 new_position);
+	void SetPosition(math::float3 position);
 
-	void SetScale(math::float3 new_scale);
+	void SetRotation(math::float3 rotation);
 
-	math::float3 GetWorldPosition() const;
-
-	void SetRotation(math::Quat rotation);
-
-	void SetRotation(math::float3 euler_angles);
-
-	math::float4x4 GetLocalTransform() const;
+	void SetScale(math::float3 scale);
 
 	math::float3 GetPosition() const;
 
-	math::Quat GetQuatRotation() const;
-
-	math::float3 GetEaRotation() const;
+	math::float3 GetRotation() const;
 
 	math::float3 GetScale() const;
 
-	void UpdateLocalTransform();
+	math::float3 GetWorldPosition() const;
+
+	math::float4x4 GetLocalTransform() const;
 
 	math::float4x4 GetGlobalTransform() const;
 
+	void UpdateLocalTransform();
+
 	bool HasNegativeScale();
-	 
-private:
-
-	void UpdateTRS();
-
 
 public:
 
-	float3		position;
-	Quat		rotation;
-	float3		scale;
+	math::float3	position;
+	math::float3	rotation;
+	math::float3	scale;
 
-	float4x4	local_transform;
-	float4x4	global_transform;
+	math::float4x4	local_transform;
+	math::float4x4	global_transform;
 
 private:
 

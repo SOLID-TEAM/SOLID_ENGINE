@@ -56,21 +56,8 @@ bool ModuleImporter::Init(Config& config)
 bool ModuleImporter::Start(Config& config)
 {
 
-	//ImportModelFile("child_test999.fbx");
-	//ImportModelFile("child_test_definitive_edition_remaster.fbx");
-
 	ImportModelFile("Assets/Models/baker_house/BakerHouse.fbx");
 
-	//ImportModelFile("Assets/Models/hammer_low.fbx");
-	//ImportModelFile("Assets/Models/suzanne.solid");
-	////ImportModelFile("Assets/Models/warrior.FBX");
-
-	//CreatePrimitive(CUBE, { 0,0,0 }, { 1,1,1 }); 
-	/*CreatePrimitive(SPHERE, { -3,0,0 }, { 1,1,1 });
-	CreatePrimitive(TETRAHEDRON, { 0,1,0 }, { 1,1.2f,1 });
-	CreatePrimitive(ICOSAHEDRON, { 4.5f,0,0 }, { 1,1,1 });*/
-
-	Random::GetRandomPercent();
 
 	return true;
 }

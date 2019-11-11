@@ -136,23 +136,15 @@ public:
 
 	void Load(Config& config);
 
-	/*bool SaveEditorConfig(const char* path);
-
-	bool LoadEditorConfig(const char* path);*/
-
-	// temporaly utils for imgui prefab functions
-	void HelpMarker(const char* desc) const;
-	void ShowSoftwareInfo() const;
-	void ShowCheckerTexture(uint& checker_tex, bool& active) const;
-
-	//bool SliderIntWithSteps(const char* label, int* v, int v_min, int v_max, int v_step, const char* display_format);
-
 	void AddWindow(Window* panel_to_add);
 
 	void DestroyWindow(Window* panel_to_add);
 
-	// TODO: move this utility out here
-	float map(float value, float s1, float stop1, float s2, float stop2) const;
+	// temporaly utils for imgui prefab functions
+
+	void HelpMarker(const char* desc) const;
+	void ShowSoftwareInfo() const;
+	void ShowCheckerTexture(uint& checker_tex, bool& active) const;
 
 private:
 
@@ -185,10 +177,10 @@ public:
 	W_Inspector*	w_inspector = nullptr;
 	W_Primitives*	w_primitives = nullptr;
 	W_DeleteHistory* W_delete_history = nullptr;
+\
 
-	// WARNING: TODO: when we delete gameobjects, remember to unlink all pointers
-	// hierarchy / selected go
-	GameObject* selected_go = nullptr;
+	GameObject* selected_go = nullptr; // WARNING: TODO: when we delete gameobjects, remember to unlink all pointers
+
 	ViewportOptions viewport_options;
 	// if we need store more debug data, pass this to a vector/list
 	DebugDataMesh* ddmesh = nullptr; // debug data data

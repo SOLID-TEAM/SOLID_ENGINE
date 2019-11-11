@@ -18,7 +18,7 @@ void W_Scene::Draw()
 			ImGui::SetSeparationType(ImGuiSeparationType::ImGui_MenuSeparation);
 			ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(10.f, 10.f));
 
-			ViewportModes();
+			ModesMenu();
 
 			if (ImGui::BeginMenu("Debug"))
 			{
@@ -61,7 +61,7 @@ void W_Scene::Draw()
 		// Attach texture to window ----------------------------------------
 		ImVec2 current_viewport_size = ImGui::GetContentRegionAvail();
 
-		ImGui::Image((ImTextureID)App->renderer3D->scene_fbo.GetRenderTexture(), ImVec2(current_viewport_size.x, current_viewport_size.y), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((ImTextureID)App->renderer3D->scene_fbo.GetFinalTexture(), ImVec2(current_viewport_size.x, current_viewport_size.y), ImVec2(0, 1), ImVec2(1, 0));
 
 		// Resize logic ----------------------------------------------------
 		if (!(current_viewport_size == viewport_size))
@@ -76,7 +76,7 @@ void W_Scene::Draw()
 
 }
 
-void W_Scene::ViewportModes()
+void W_Scene::ModesMenu()
 {
 	ViewportOptions& vp = App->editor->viewport_options;
 	static const char* items[] = { "Shaded", "Wireframe", "Shaded Wireframe", "Depth View" };
