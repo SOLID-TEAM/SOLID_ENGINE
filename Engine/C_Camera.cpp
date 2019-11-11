@@ -2,6 +2,9 @@
 #include "ModuleRenderer3D.h"
 #include "GL/glew.h"
 
+#include "GameObject.h"
+#include "C_Transform.h"
+
 C_Camera::C_Camera(GameObject* go): Component(go, ComponentType::CAMERA)
 {
 	frustum.type = math::FrustumType::PerspectiveFrustum;
@@ -19,7 +22,15 @@ C_Camera::C_Camera(GameObject* go): Component(go, ComponentType::CAMERA)
 
 bool C_Camera::CleanUp()
 {
-	return false;
+	return true;
+}
+
+void C_Camera::UpdateTransform()
+{
+	math::float4x4 global_transform = linked_go->transform->GetGlobalTransform();
+	frustum.pos = global_transform.TranslatePart();
+	frustum.front = global_transform.WorldZ();
+	frustum.up = global_transform.WorldY();
 }
 
 void C_Camera::SetAspectRatio(float width, float height)

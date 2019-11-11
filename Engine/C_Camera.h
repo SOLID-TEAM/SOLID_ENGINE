@@ -16,6 +16,8 @@ public:
 
 	bool CleanUp();
 
+	void UpdateTransform();
+
 	bool Render();
 
 	bool DrawPanelInfo();
