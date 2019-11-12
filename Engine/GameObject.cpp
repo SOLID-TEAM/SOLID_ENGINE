@@ -6,6 +6,7 @@
 #include "C_Mesh.h"
 #include "C_Material.h"
 #include "C_MeshRenderer.h"
+#include "C_Camera.h"
 
 #include "D_Mesh.h"
 
@@ -117,13 +118,20 @@ Component* GameObject::CreateComponent(ComponentType type)
 		break;
 	}
 	case ComponentType::MATERIAL:
-
+	{
 		components.push_back(new_component = new C_Material(this));
 		break;
-
+	}
 	case ComponentType::MESH_RENDERER:
+	{
 		components.push_back(new_component = new C_MeshRenderer(this));
 		break;
+	}
+	case ComponentType::CAMERA:
+	{
+		components.push_back(new_component = new C_Camera(this));
+		break;
+	}
 
 	default:
 		break;

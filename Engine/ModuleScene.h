@@ -35,6 +35,10 @@ public:
 	
 	bool CleanUp();
 
+	GameObject* Find(std::string name);
+
+	GameObject* _Find(std::string name, GameObject* go);
+
 	std::deque<GameObject*>& GetUndoDeque();
 
 	void AddGoToHierarchyChange(GameObject* target_go, GameObject* source_go);
@@ -44,6 +48,7 @@ private:
 
 public:
 	GameObject* root_go = nullptr;
+	GameObject* main_camera = nullptr;
 
 private:
 	std::deque<GameObject*> to_undo_buffer_go;

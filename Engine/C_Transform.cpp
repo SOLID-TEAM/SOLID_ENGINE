@@ -11,9 +11,9 @@ C_Transform::C_Transform(GameObject* parent) : Component(parent, ComponentType::
 	position = float3::zero;
 	rotation = float3::zero;
 	scale = float3::one;
+	global_transform = math::float4x4::identity;
 
 	UpdateLocalTransform();
-	global_transform = math::float4x4::identity;
 
 }
 
@@ -100,6 +100,13 @@ math::float3 C_Transform::GetWorldPosition() const
 	return global_transform.TranslatePart();
 }
 
+void C_Transform::UpdateTRS()
+{
+	math::Quat q_rotation;
+	local_transform.Decompose(position, q_rotation, scale);
+	rotation = q_rotation.ToEulerXYZ();
+}
+
 // Transforms Set/Get/Update =============================================================
 
 math::float4x4 C_Transform::GetLocalTransform() const
@@ -122,6 +129,22 @@ void C_Transform::UpdateLocalTransform()
 bool C_Transform::HasNegativeScale()
 {
 	return negative_scale;
+}
+
+void C_Transform::LookAt(math::float3 reference)
+{
+	global_transform.SetRotatePart(float3x3::LookAt(float3::unitZ, (GetWorldPosition() - reference).Normalized(), float3::unitY, float3::unitY));
+
+	GameObject* parent = linked_go->parent;
+
+	if (parent != nullptr)
+	{
+		local_transform  = parent->transform->global_transform.Inverted() * global_transform;
+	}
+
+	UpdateTRS();
+
+	to_update = true;
 }
 
 bool C_Transform::DrawPanelInfo()

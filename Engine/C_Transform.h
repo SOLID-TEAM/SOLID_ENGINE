@@ -8,6 +8,7 @@ class C_Transform : public Component
 {
 public:
 	C_Transform(GameObject* parent);
+
 	~C_Transform();
 
 	bool Update(float dt);
@@ -28,6 +29,8 @@ public:
 
 	math::float3 GetWorldPosition() const;
 
+	void UpdateTRS();
+
 	math::float4x4 GetLocalTransform() const;
 
 	math::float4x4 GetGlobalTransform() const;
@@ -35,6 +38,8 @@ public:
 	void UpdateLocalTransform();
 
 	bool HasNegativeScale();
+
+	void LookAt(math::float3 eye);
 
 public:
 

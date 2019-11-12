@@ -57,7 +57,7 @@ private:
 	math::float4x4 projection_matrix;
 	math::float4x4 view_matrix;
 
-	float aspect_ratio = 16.f / 9.f;
+	float aspect_ratio = 1.f;
 	bool cullling = true;
 
 };

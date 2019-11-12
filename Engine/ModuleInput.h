@@ -18,13 +18,23 @@ class ModuleInput : public Module
 public:
 	
 	ModuleInput(bool start_enabled = true);
+
 	~ModuleInput();
 
 	bool Init(Config& config);
+
 	update_status PreUpdate(float dt);
+
+	void SetMouseX(int x);
+
+	void SetMouseY(int y);
+
+	void ResetImGuiDrag();
+
 	bool CleanUp();
 
 	bool Save(Config& config);
+
 	void Load(Config& config);
 
 	KEY_STATE GetKey(int id) const
@@ -71,10 +81,10 @@ private:
 
 	KEY_STATE* keyboard;
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
+
 	int mouse_x;
 	int mouse_y;
 	int mouse_z;
 	int mouse_x_motion;
 	int mouse_y_motion;
-	//int mouse_z_motion;
 };

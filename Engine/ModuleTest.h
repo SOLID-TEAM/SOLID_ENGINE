@@ -29,6 +29,8 @@ private:
 	uint id = 1;
 };
 
+class GameObject;
+
 class ModuleTest : public Module
 {
 public:
@@ -47,6 +49,7 @@ public:
 	float map(float value, float s1, float stop1, float s2, float stop2) const;
 
 	Grid* main_grid = nullptr;
+	GameObject* test = nullptr;
 };
 
 #endif // !__MODULETEST_H__

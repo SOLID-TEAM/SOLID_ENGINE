@@ -145,7 +145,7 @@ update_status ModuleCamera3D::Update(float dt)
 			}
 		}
 		
-		// Palm ---------------------------------------------------------------------
+		// Pan ---------------------------------------------------------------------
 		
 		if (mouse_wheel_pressed)
 		{
@@ -243,6 +243,7 @@ void ModuleCamera3D::LookAt(const math::float3 &spot)
 	Y = Z.Cross(X);
 
 	CalculateViewMatrix();
+	
 }
 
 

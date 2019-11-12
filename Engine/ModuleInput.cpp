@@ -6,6 +6,7 @@
 #include "W_Rendering.h"
 
 #include "ImGui/Impl/imgui_impl_sdl.h"
+#include "ImGui/imgui_internal.h"
 
 // TODO: DELETE FROM HERE
 #include "C_Material.h"
@@ -51,6 +52,13 @@ bool ModuleInput::Init(Config& config)
 	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 	
 	return ret;
+}
+
+bool ModuleInput::CleanUp()
+{
+	LOG("Quitting SDL input event subsystem");
+	SDL_QuitSubSystem(SDL_INIT_EVENTS);
+	return true;
 }
 
 // Called every draw update
@@ -128,7 +136,13 @@ update_status ModuleInput::PreUpdate(float dt)
 	bool quit = false;
 	SDL_Event event;
 
-	char* dropped_filedir = nullptr;
+	//char* dropped_filedir = nullptr;
+
+	//SDL_DisplayMode DM;
+	//SDL_GetCurrentDisplayMode(0, &DM);
+	//auto width = DM.w;
+	//auto height = DM.h;
+	//int offset = 12;
 
 	while (SDL_PollEvent(&event))
 	{
@@ -141,11 +155,13 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 		case SDL_MOUSEMOTION:
+
 			mouse_x = event.motion.x / SCREEN_SIZE;
 			mouse_y = event.motion.y / SCREEN_SIZE;
 
-			mouse_x_motion = event.motion.xrel / SCREEN_SIZE;
-			mouse_y_motion = event.motion.yrel / SCREEN_SIZE;
+			mouse_x_motion = (event.motion.xrel / SCREEN_SIZE) ;
+			mouse_y_motion = (event.motion.yrel / SCREEN_SIZE);
+
 			break;
 
 		case SDL_DROPFILE:
@@ -263,14 +279,6 @@ update_status ModuleInput::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-// Called before quitting
-bool ModuleInput::CleanUp()
-{
-	LOG("Quitting SDL input event subsystem");
-	SDL_QuitSubSystem(SDL_INIT_EVENTS);
-	return true;
-}
-
 bool ModuleInput::Save(Config& config)
 {
 	return true;
@@ -282,3 +290,39 @@ void ModuleInput::Load(Config& config)
 }
 
 
+//if (mouse_x > width - offset)
+//{
+//	int last_x = mouse_x;
+//	App->input->SetMouseX(offset);
+//	mouse_offset_x = mouse_x - last_x;
+//	ImGui::GetIO().MousePos.x = mouse_x;
+//}
+//else if (mouse_x < offset)
+//{
+//	int last_x = mouse_x;
+//	App->input->SetMouseX(width - offset);
+//	mouse_offset_x = mouse_x - last_x;
+//	ImGui::GetIO().MousePos.x = mouse_x;
+//}
+
+//if (mouse_y > height - offset)
+//{
+//	int last_y = mouse_y;
+//	App->input->SetMouseY(offset);
+//	mouse_offset_y = mouse_y - last_y;
+//	ImGui::GetIO().MousePos.y = mouse_y;
+//}
+//else if (mouse_y < offset)
+//{
+//	int last_y = mouse_y;
+//	App->input->SetMouseY(height - offset);
+//	mouse_offset_y = mouse_y - last_y;
+//	ImGui::GetIO().MousePos.y = mouse_y;
+//}
+
+//ImGui::ResetMouseDragDelta(0);
+//ImGui::ResetMouseDragDelta(1);
+//ImGui::ResetMouseDragDelta(2);
+//ImGui::GetCurrentContext()->ActiveIdIsJustActivated = true;
+
+//LOG("mouse x: %i  mouse y: %i", mouse_x, mouse_y);

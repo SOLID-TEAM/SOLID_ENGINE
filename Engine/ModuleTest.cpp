@@ -4,6 +4,10 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleTest.h"
+#include "ModuleImporter.h"
+#include "C_Transform.h"
+
+
 // MathGeoLib ---------------------------------------------
 #include "external/MathGeoLib/include/MathBuildConfig.h"
 #include "external/MathGeoLib/include/MathGeoLib.h"
@@ -22,7 +26,8 @@ ModuleTest::ModuleTest(bool start_enabled) : Module(start_enabled)
 }
 
 ModuleTest::~ModuleTest()
-{}
+{
+}
 
 // Load assets
 bool ModuleTest::Start(Config& config)
@@ -35,6 +40,9 @@ bool ModuleTest::Start(Config& config)
 
 	main_grid = new Grid(config.GetInt("grid_units", 10));
 	Load(config);
+
+	App->importer->ImportModelFile("Assets/Models/baker_house/BakerHouse.fbx");
+	test = App->scene->Find("BakerHouse");
 
 	return ret;
 }
@@ -79,6 +87,8 @@ void ModuleTest::Load(Config& config)
 // Update
 update_status ModuleTest::Update(float dt)
 {
+	test->transform->LookAt(float3(0.f, 0.f, 0.f));
+
 	return UPDATE_CONTINUE;
 }
 

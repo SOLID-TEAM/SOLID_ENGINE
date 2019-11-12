@@ -7,17 +7,19 @@
 
 C_Camera::C_Camera(GameObject* go): Component(go, ComponentType::CAMERA)
 {
+	name.assign("Camera");
+
 	frustum.type = math::FrustumType::PerspectiveFrustum;
 
 	frustum.pos = math::float3::zero;
 	frustum.front = math::float3::unitZ;
 	frustum.up = math::float3::unitY;
 
-	frustum.nearPlaneDistance = 0.03f;
-	frustum.farPlaneDistance =	1000.0f;
+	SetAspectRatio(16.f, 9.f );
+	SetClippingNearPlane(0.03f);
+	SetClippingFarPlane(30.f);
+	SetFov(60.f);
 
-	frustum.ProjectionMatrix();
-	frustum.ViewMatrix();
 }
 
 bool C_Camera::CleanUp()
@@ -31,6 +33,7 @@ void C_Camera::UpdateTransform()
 	frustum.pos = global_transform.TranslatePart();
 	frustum.front = global_transform.WorldZ();
 	frustum.up = global_transform.WorldY();
+	UpdateViewMatrix();
 }
 
 void C_Camera::SetAspectRatio(float width, float height)
@@ -45,14 +48,13 @@ void C_Camera::SetFov(float fov)
 	if (fov > 179.f) fov = 179.f;
 
 	frustum.verticalFov = fov * DEGTORAD;
-	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov / 2.0f) * aspect_ratio);
+	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * aspect_ratio);
 	UpdateProjectionMatrix();
 }
 
 void C_Camera::SetClippingNearPlane(float distance)
 {
 	if (distance < 0.f) distance = 0.f;
-	if (distance > frustum.farPlaneDistance) distance = frustum.farPlaneDistance;
 
 	frustum.nearPlaneDistance = distance;
 	UpdateProjectionMatrix();
@@ -60,8 +62,7 @@ void C_Camera::SetClippingNearPlane(float distance)
 
 void C_Camera::SetClippingFarPlane(float distance)
 {
-	if (distance < frustum.nearPlaneDistance) distance = frustum.nearPlaneDistance;
-	if (distance > 10000.f) distance = 10000.f;
+	if (distance > 1000.f) distance = 1000.f;
 
 	frustum.farPlaneDistance = distance;
 	UpdateProjectionMatrix();
@@ -130,5 +131,39 @@ bool C_Camera::Render()
 
 bool C_Camera::DrawPanelInfo()
 {
-	return false;
+
+	float fov = GetFov();
+	float near_plane = GetClippingNearPlane();
+	float far_plane = GetClippingFarPlane();
+
+	float last_fov = fov;
+	float last_near_plane = near_plane;
+	float last_far_plane = far_plane;
+
+	ImGui::Spacing();
+	ImGui::Title("Field of View", 1);	ImGui::SliderFloat("##fov", &fov, 4.f, 179.f, "%.1f");
+
+	ImGui::Title("Clipping Planes", 1);  ImGui::Text("");
+	ImGui::Title("Near", 4);	ImGui::DragFloat("##near_plane", &near_plane, 0.1f,  0.00f, 0.f, "%.1f");
+	ImGui::Title("Far", 4);	ImGui::DragFloat("##far_plane", &far_plane, 0.1f, 0.00f, 0.f, "%.1f");
+
+
+	ImGui::Spacing();
+
+	if (last_fov != fov )
+	{
+		SetFov(fov);
+	}
+
+	if (last_near_plane != near_plane)
+	{
+		SetClippingNearPlane(near_plane);
+	}
+
+	if (last_far_plane != far_plane)
+	{
+		SetClippingFarPlane(far_plane);
+	}
+
+	return true;
 }

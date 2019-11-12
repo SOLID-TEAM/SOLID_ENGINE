@@ -55,10 +55,6 @@ bool ModuleImporter::Init(Config& config)
 
 bool ModuleImporter::Start(Config& config)
 {
-
-	ImportModelFile("Assets/Models/baker_house/BakerHouse.fbx");
-
-
 	return true;
 }
 

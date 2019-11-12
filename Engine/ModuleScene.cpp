@@ -10,13 +10,15 @@ ModuleScene::~ModuleScene() {}
 
 bool ModuleScene::Init(Config& config)
 {
-	// creates a root gameobject, wich all another go are childs of it
-	root_go = new GameObject("scene_root_gameobject");
 	return true;
 }
 
 bool ModuleScene::Start(Config& config)
 {
+	// creates a root gameobject, wich all another go are childs of it
+	root_go = new GameObject("Scene Root");
+	main_camera = new GameObject("Main Camera", root_go);
+	main_camera->CreateComponent(ComponentType::CAMERA);
 
 	return true;
 }
@@ -139,6 +141,36 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
+GameObject* ModuleScene::Find(std::string name)
+{
+	GameObject* to_return = nullptr;
+
+	to_return = _Find(name, root_go);
+
+	return to_return;
+}
+
+GameObject* ModuleScene::_Find(std::string name, GameObject* go)
+{
+	std::string name_ = go->GetName();
+
+	if (name_  == name)
+	{
+		return go;
+	}
+
+	for (std::vector<GameObject*>::iterator itr = go->childs.begin(); itr != go->childs.end(); ++itr)
+	{
+		GameObject* ret = _Find(name, (*itr));
+
+		if (ret != nullptr)
+		{
+			return ret;
+		}
+	}
+
+	return nullptr;
+}
 
 // --------------------------------------------------------------
 
