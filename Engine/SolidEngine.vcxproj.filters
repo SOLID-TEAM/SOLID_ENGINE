@@ -55,12 +55,12 @@
     <Filter Include="Sources\Data">
       <UniqueIdentifier>{cf84c64d-fec2-41af-afa0-2ea3d34dbaa9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Game Object\Custom">
+      <UniqueIdentifier>{8e39da0f-096c-4620-aa8b-bf7ae991bc71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleCamera3D.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="ModuleInput.h">
@@ -417,11 +417,11 @@
     <ClInclude Include="C_Camera.h">
       <Filter>Sources\Game Object\Components</Filter>
     </ClInclude>
+    <ClInclude Include="CameraEditor.h">
+      <Filter>Sources\Game Object\Custom</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ModuleCamera3D.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleInput.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
@@ -661,6 +661,9 @@
     </ClCompile>
     <ClCompile Include="C_Camera.cpp">
       <Filter>Sources\Game Object\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraEditor.cpp">
+      <Filter>Sources\Game Object\Custom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

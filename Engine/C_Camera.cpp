@@ -68,6 +68,12 @@ void C_Camera::SetClippingFarPlane(float distance)
 	UpdateProjectionMatrix();
 }
 
+void C_Camera::SetFrustumType(math::FrustumType type)
+{
+	frustum.type = type;
+	UpdateProjectionMatrix();
+}
+
 float C_Camera::GetClippingNearPlane()
 {
 	return frustum.nearPlaneDistance;
@@ -76,6 +82,11 @@ float C_Camera::GetClippingNearPlane()
 float C_Camera::GetClippingFarPlane()
 {
 	return frustum.farPlaneDistance;
+}
+
+math::FrustumType  C_Camera::GetFrustumType()
+{
+	return frustum.type;
 }
 
 math::float4x4 C_Camera::GetProjectionMatrix()
@@ -131,24 +142,56 @@ bool C_Camera::Render()
 
 bool C_Camera::DrawPanelInfo()
 {
-
+	math::FrustumType type = GetFrustumType();
 	float fov = GetFov();
 	float near_plane = GetClippingNearPlane();
 	float far_plane = GetClippingFarPlane();
-
+	math::FrustumType last_type = type;
 	float last_fov = fov;
 	float last_near_plane = near_plane;
 	float last_far_plane = far_plane;
 
+	static const char* items[] = { "Perspective", "Orthographic" };
+	static const char* current_item = items[0];
+
 	ImGui::Spacing();
+
+	ImGui::Title("Projection", 1);
+
+	if (ImGui::BeginComboEx(std::string("##frustum_type").c_str(), std::string(" " + std::string(current_item)).c_str(), 200, ImGuiComboFlags_NoArrowButton))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(items); ++n)
+		{
+			bool is_selected = (current_item == items[n]);
+
+			if (ImGui::Selectable(std::string("   " + std::string(items[n])).c_str(), is_selected))
+			{
+				current_item = items[n];
+
+				if (current_item == "Perspective")			frustum.type = math::FrustumType::PerspectiveFrustum;
+				else if (current_item == "Orthographic")	frustum.type = math::FrustumType::OrthographicFrustum;
+			}
+
+			if (is_selected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+
 	ImGui::Title("Field of View", 1);	ImGui::SliderFloat("##fov", &fov, 4.f, 179.f, "%.1f");
-
-	ImGui::Title("Clipping Planes", 1);  ImGui::Text("");
-	ImGui::Title("Near", 4);	ImGui::DragFloat("##near_plane", &near_plane, 0.1f,  0.00f, 0.f, "%.1f");
-	ImGui::Title("Far", 4);	ImGui::DragFloat("##far_plane", &far_plane, 0.1f, 0.00f, 0.f, "%.1f");
-
+	ImGui::Title("Clipping", 1);  ImGui::Text("");
 
 	ImGui::Spacing();
+	ImGui::Title("Near Plane", 3);	ImGui::DragFloat("##near_plane", &near_plane, 0.1f,  0.00f, 0.f, "%.1f");
+	ImGui::Title("Far Plane", 3);	ImGui::DragFloat("##far_plane", &far_plane, 0.1f, 0.00f, 0.f, "%.1f");
+	ImGui::Spacing();
+
+	if (last_type != type)
+	{
+		SetFrustumType(type);
+	}
 
 	if (last_fov != fov )
 	{

@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "W_Inspector.h"
+#include "ModuleScene.h"
 
 #include "C_Transform.h"
 #include "C_Mesh.h"
@@ -10,11 +11,6 @@
 
 #include "D_Mesh.h"
 
-//GameObject::GameObject() 
-//{
-//	// adds a component transform by default
-//	components.push_back(CreateComponent(ComponentType::TRANSFORM));
-//}
 
 GameObject::GameObject(std::string name, GameObject* parent) : name(name), parent(parent)
 {
@@ -30,75 +26,74 @@ GameObject::~GameObject()
 {
 }
 
-bool GameObject::CleanUp()
+// User functions ------------------------------------
+
+void GameObject::CleanUp(){}
+
+void GameObject::Start(){}
+
+void GameObject::Update(float dt){}
+
+void GameObject::Render(){}
+
+// Fixed functions ------------------------------------
+
+void GameObject::DoStart()
 {
-	// recursively delete its childs and components
+	Start();
+}
+
+void GameObject::DoUpdate(float dt)
+{
+	Update(dt);
+
+	std::vector<Component*>::iterator component = components.begin();
+
+	for (; component != components.end(); ++component)
+	{
+		(*component)->Update(dt);
+	}
+}
+
+void GameObject::DoRender()
+{
+	Render();
+
+	std::vector<Component*>::iterator component = components.begin();
+
+	for (; component != components.end(); ++component)
+	{
+		(*component)->Render();
+	}
+}
+
+void GameObject::DoCleanUp()
+{
+	CleanUp();
+
 	CleanUpRecursive(this);
-
-	// currently does nothing
-	transform->CleanUp();
-
-	return true;
 }
 
 void GameObject::CleanUpRecursive(GameObject* go)
 {
 	// clean all components of this pointing go
-	
-	std::vector<Component*>::iterator compoIt = go->components.begin();
-	for (; compoIt != go->components.end(); ++compoIt)
+
+	std::vector<Component*>::iterator component = go->components.begin();
+
+	for (; component != go->components.end(); ++component)
 	{
-		(*compoIt)->CleanUp();
+		(*component)->CleanUp();
 	}
 
-	// currently does nothing
-	transform->CleanUp();
-	
+
 	// for each children
-	for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
-		CleanUpRecursive((*it));
 
-}
+	std::vector<GameObject*>::iterator child = go->childs.begin();
 
-bool GameObject::Enable()
-{
-	active = true;
-	return true;
-}
-
-bool GameObject::Disable()
-{
-	active = false;
-	return true;
-}
-
-bool GameObject::Update(float dt)
-{
-	bool ret = true;
-
-	std::vector<Component*>::iterator component = components.begin();
-
-	for (; component != components.end(); ++component)
+	for (; child != go->childs.end(); ++child)
 	{
-		ret = (*component)->Update(dt);
+		CleanUpRecursive((*child));
 	}
-
-	return ret;
-}
-
-
-bool GameObject::Render()
-{
-	bool ret = true;
-
-	std::vector<Component*>::iterator component = components.begin();
-
-	for (; component != components.end(); ++component)
-	{
-		ret = (*component)->Render();
-	}
-
-	return ret;
 }
 
 Component* GameObject::CreateComponent(ComponentType type)
@@ -153,6 +148,11 @@ Component* GameObject::GetComponentsByType(ComponentType type)
 	return nullptr;
 }
 
+void GameObject::SetActive(bool active)
+{
+	this->active = active;
+}
+
 const char* GameObject::GetName() const
 {
 	return name.c_str();
@@ -192,13 +192,12 @@ void GameObject::GetBoundingBox(math::AABB& aabb)
 	}
 	else
 	{ 
-		aabb.maxPoint = transform->GetWorldPosition();
-		aabb.minPoint = transform->GetWorldPosition();
+		aabb.maxPoint = transform->position;
+		aabb.minPoint = transform->position;
 	}
 
 	GenerateGlobalBoundingBox(this, &aabb);
 }
-
 
 void GameObject::GenerateGlobalBoundingBox( GameObject* go, math::AABB* aabb)
 {
@@ -219,8 +218,8 @@ void GameObject::GenerateGlobalBoundingBox( GameObject* go, math::AABB* aabb)
 		}
 		else
 		{
-			aabb->maxPoint = aabb->maxPoint.Max((*child)->transform->GetWorldPosition());
-			aabb->minPoint = aabb->minPoint.Min((*child)->transform->GetWorldPosition());
+			aabb->maxPoint = aabb->maxPoint.Max((*child)->transform->position);
+			aabb->minPoint = aabb->minPoint.Min((*child)->transform->position);
 		}
 	}
 }

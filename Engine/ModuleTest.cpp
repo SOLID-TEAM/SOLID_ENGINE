@@ -35,8 +35,8 @@ bool ModuleTest::Start(Config& config)
 	LOG("Loading Test assets");
 	bool ret = true;
 
-	App->camera->Move({ 1.0f, 1.0f, 1.0f });
-	App->camera->LookAt({ 0, 0, 0 });
+	//App->camera->Move({ 1.0f, 1.0f, 1.0f });
+	//App->camera->LookAt({ 0, 0, 0 });
 
 	main_grid = new Grid(config.GetInt("grid_units", 10));
 	Load(config);

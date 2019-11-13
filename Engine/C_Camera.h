@@ -32,11 +32,15 @@ public:
 
 	void SetClippingFarPlane(float distance);
 
+	void SetFrustumType(math::FrustumType type);
+
 	float GetFov();
 
 	float GetClippingNearPlane();
 
 	float GetClippingFarPlane();
+
+	math::FrustumType GetFrustumType();
 
 	math::float4x4 GetProjectionMatrix();
 

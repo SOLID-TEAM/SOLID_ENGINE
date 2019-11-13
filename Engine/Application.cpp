@@ -13,7 +13,6 @@ Application::Application()
 	input = new ModuleInput();
 	test = new ModuleTest();
 	renderer3D = new ModuleRenderer3D();
-	camera = new ModuleCamera3D();
 	importer = new ModuleImporter();
 	editor = new ModuleEditor();
 	file_sys = new ModuleFileSystem();
@@ -23,17 +22,15 @@ Application::Application()
 	// Main Modules
 	AddModule(window);
 	AddModule(input);
-	AddModule(camera);
-
 	// Scenes
 	AddModule(scene);
 	AddModule(test);
 
-	// Renderer last!
 	AddModule(file_sys);
 	AddModule(textures);
 	AddModule(importer);
 	AddModule(editor);
+	// Renderer last!
 	AddModule(renderer3D);
 
 }

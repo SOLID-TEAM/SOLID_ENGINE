@@ -7,7 +7,9 @@
 #include "external/Parson/parson.h"
 #include <string>
 #include <vector>
+
 #include "GameObject.h"
+#include "CameraEditor.h"
 
 class Window;
 class W_Config;
@@ -143,7 +145,9 @@ public:
 	// temporaly utils for imgui prefab functions
 
 	void HelpMarker(const char* desc) const;
+
 	void ShowSoftwareInfo() const;
+
 	void ShowCheckerTexture(uint& checker_tex, bool& active) const;
 
 private:
@@ -163,31 +167,27 @@ private:
 	bool show_restore_popup = false;
 	bool show_demo_imgui = false;
 	bool show_about_popup = false;
-	bool show_console = true;
-	bool show_configuration = false;
 
 public:
 
-	// Windows -----------------------
-	W_Config*		w_config = nullptr;
-	W_Console*		w_console = nullptr;
-	W_Hierarchy*	w_hierarchy = nullptr;
-	W_Rendering*	w_rendering = nullptr;
-	W_Scene*		w_scene = nullptr;
-	W_Inspector*	w_inspector = nullptr;
-	W_Primitives*	w_primitives = nullptr;
-	W_DeleteHistory* W_delete_history = nullptr;
-\
+	// Windows -----------------------------
+	W_Config*			w_config = nullptr;
+	W_Console*			w_console = nullptr;
+	W_Hierarchy*		w_hierarchy = nullptr;
+	W_Rendering*		w_rendering = nullptr;
+	W_Scene*			w_scene = nullptr;
+	W_Inspector*		w_inspector = nullptr;
+	W_Primitives*		w_primitives = nullptr;
+	W_DeleteHistory*	w_delete_history = nullptr;
 
-	GameObject* selected_go = nullptr; // WARNING: TODO: when we delete gameobjects, remember to unlink all pointers
+	// GameObjects ------------------------
 
-	ViewportOptions viewport_options;
-	// if we need store more debug data, pass this to a vector/list
-	DebugDataMesh* ddmesh = nullptr; // debug data data
-	// if the gameobject itself has more than one data (not its childs)
-	std::vector<DebugDataMesh*> ddmeshes;
-	// store last precalculated go from debug normals
-	GameObject* last_go_precalc = nullptr;
+	CameraEditor*		camera = nullptr;
+	GameObject*			selected_go = nullptr; // WARNING: TODO: when we delete gameobjects, remember to unlink all pointers
+	GameObject*			last_go_precalc = nullptr; // store last precalculated go from debug normals
+
+	ViewportOptions		viewport_options;
+	DebugDataMesh*		ddmesh = nullptr; // debug data data // if we need store more debug data, pass this to a vector/list
 };
 
 #endif // !_MODULE_EDITOR_H__

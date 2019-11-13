@@ -88,7 +88,7 @@ update_status ModuleScene::Update(float dt)
 
 void ModuleScene::UpdateAll(float dt, GameObject* go)
 {
-	go->Update(dt);
+	go->DoUpdate(dt);
 
 	for (std::vector<GameObject*>::iterator child = go->childs.begin(); child != go->childs.end(); ++child)
 	{
@@ -118,7 +118,7 @@ update_status ModuleScene::Draw()
 
 void ModuleScene::RenderAll(GameObject* go)
 {
-	go->Render();
+	go->DoRender();
 
 	for (std::vector<GameObject*>::iterator child = go->childs.begin() ; child != go->childs.end(); ++child)
 	{
@@ -132,7 +132,7 @@ bool ModuleScene::CleanUp()
 
 	for (; game_objects != root_go->childs.end(); ++game_objects)
 	{
-		(*game_objects)->CleanUp();
+		(*game_objects)->DoCleanUp();
 	}
 
 	// release undo buffers
@@ -216,7 +216,7 @@ void ModuleScene::AddGOToUndoDeque(GameObject* go)
 	if (to_undo_buffer_go.size() >= MAX_UNDO_ACTIONS)
 	{
 		LOG("[Error] Max %i undo buffer reached, permanently deleted %s gameObject", to_undo_buffer_go.size(), to_undo_buffer_go.front()->GetName())
-		to_undo_buffer_go.front()->CleanUp();
+		to_undo_buffer_go.front()->DoCleanUp();
 		delete to_undo_buffer_go.front();
 		to_undo_buffer_go.pop_front();
 	}

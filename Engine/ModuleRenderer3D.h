@@ -119,9 +119,6 @@ public:
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 
-	mat3x3 normal_mat;
-	mat4x4 model_mat, view_mat, projection_mat;
-
 	FBO scene_fbo;
 
 private:

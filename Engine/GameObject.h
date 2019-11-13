@@ -10,26 +10,37 @@
 class W_Inspector;
 class D_Mesh;
 class C_Transform;
+class ModuleScene;
+class ModuleEditor;
 
 class GameObject
 {
 public:
 
-	GameObject(std::string name = "no_name", GameObject* parent = nullptr);
+	friend ModuleScene;
+	friend ModuleEditor;
+
+public:
+
+	GameObject(std::string name = "Unknown", GameObject* parent = nullptr);
 
 	~GameObject();
 
-	bool Enable();
+	// Common functions ---------------------------------------------
 
-	bool Disable();
-
-	bool Update(float dt);
-
-	bool Render();
+	void SetActive(bool active);
 
 	const char* GetName() const;
 
-	bool CleanUp();
+	// Virtual functions -------------------------------------------
+
+	virtual void  Start();
+		    
+	virtual void  Update(float dt);
+		     
+	virtual void  Render();
+		     
+	virtual void  CleanUp();
 
 	// Components Funtions -------------------------------------------
 
@@ -43,19 +54,29 @@ public:
 
 	void GetBoundingBox(math::AABB& aabb); // From all components
 
-	// addchild currently is used to hierarchical changes
-	void AddChild(GameObject* child);
-	void RemoveChild(GameObject* child);
-
-	bool SearchParentRecursive(GameObject* parent, GameObject* parent_match);
-
 private:
+
+	void  DoStart();
+
+	void  DoUpdate(float dt);
+
+	void  DoRender();
+
+	void  DoCleanUp();
+
+	// Bounding Box Functions --------------------------------------
 
 	void GenerateGlobalBoundingBox(GameObject* go, math::AABB* aabb);
 
 	void CleanUpRecursive(GameObject* go);
 	
-	
+	// Hierarchy functions -----------------------------------------
+
+	void AddChild(GameObject* child); // Addchild currently is used to hierarchical changes
+
+	void RemoveChild(GameObject* child);
+
+	bool SearchParentRecursive(GameObject* parent, GameObject* parent_match);
 
 public:
 

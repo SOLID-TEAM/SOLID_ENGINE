@@ -11,7 +11,6 @@
 #include "ModuleInput.h"
 #include "ModuleTest.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
 #include "ModuleImporter.h"
 #include "ModuleEditor.h"
 #include "ModuleFileSystem.h"
@@ -68,7 +67,6 @@ public:
 	ModuleInput* input = nullptr;
 	ModuleTest* test = nullptr;
 	ModuleRenderer3D* renderer3D = nullptr;
-	ModuleCamera3D* camera = nullptr;
 	ModuleTextures* textures = nullptr;
 	ModuleImporter* importer = nullptr;
 	ModuleEditor* editor = nullptr;

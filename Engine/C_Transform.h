@@ -13,11 +13,17 @@ public:
 
 	bool Update(float dt);
 
+	void Rotate(math::float3 axis, float angle);
+
 	bool DrawPanelInfo();
+
+	// World -------------------------------------------
 
 	void SetPosition(math::float3 position);
 
 	void SetRotation(math::float3 rotation);
+
+	void SetRotation(math::Quat q_rotation);
 
 	void SetScale(math::float3 scale);
 
@@ -27,15 +33,31 @@ public:
 
 	math::float3 GetScale() const;
 
-	math::float3 GetWorldPosition() const;
+	math::float4x4 GetGlobalTransform() const;
 
-	void UpdateTRS();
+	void UpdateLocalTransformFromGlobal();
+
+	// Local -------------------------------------------
+
+	void SetLocalPosition(math::float3 position);
+
+	void SetLocalRotation(math::float3 rotation);
+
+	void SetLocalScale(math::float3 scale);
+
+	math::float3 GetLocalPosition() const;
+
+	math::float3 GetLocalRotation() const;
+
+	math::float3 GetLocalScale() const;
 
 	math::float4x4 GetLocalTransform() const;
 
-	math::float4x4 GetGlobalTransform() const;
+	void UpdateLocalTransformFromTRS();
 
-	void UpdateLocalTransform();
+	// ----------------------------------------------
+
+	void UpdateTRS();
 
 	bool HasNegativeScale();
 
@@ -43,12 +65,25 @@ public:
 
 public:
 
+	// World ----------------------------------------
+
 	math::float3	position;
 	math::float3	rotation;
 	math::float3	scale;
+;
+	math::float3	forward;
+	math::float3	up;
+	math::float3	right;
+
+	math::float4x4	global_transform;
+
+	// Local ----------------------------------------
+
+	math::float3	local_position;
+	math::float3	local_rotation;
+	math::float3	local_scale;
 
 	math::float4x4	local_transform;
-	math::float4x4	global_transform;
 
 private:
 

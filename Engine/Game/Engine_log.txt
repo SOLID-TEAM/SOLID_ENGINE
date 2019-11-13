@@ -13,7 +13,6 @@ Loading File System
 [Info] OpenGL version supported: 4.6.0 NVIDIA 440.97
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
-[Start] Setting up the camera
 Loading Test assets
 [Info] Loading mesh data : Untitled.001
 [Info] Vertices:    160 
@@ -94,6 +93,5 @@ Created mesh data: Untitled
 [CleanUp] Unloading Editor
 [Info] Shutting down DevIL library
 Unloading Test scene
-[CleanUp] Cleaning camera
 Quitting SDL input event subsystem
 [CleanUp] Destroying SDL window and quitting all SDL systems

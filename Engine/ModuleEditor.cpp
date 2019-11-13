@@ -95,6 +95,10 @@ bool ModuleEditor::Start(Config& config)
 	LOG("[Start] Loading Editor");
 	bool ret = true;
 
+	// Editor Camera ---------------------------------------
+
+	camera =			new CameraEditor();
+
 	// Initial Windows -------------------------------------
 
 	w_config =			new W_Config("Configuration",			false);
@@ -104,7 +108,7 @@ bool ModuleEditor::Start(Config& config)
 	w_scene =			new W_Scene("Scene",					false);
 	w_inspector =		new W_Inspector("Inspector",			false);
 	w_primitives =		new W_Primitives("Primitives",			false);
-	W_delete_history =	new W_DeleteHistory("Delete History",	false);
+	w_delete_history =	new W_DeleteHistory("Delete History",	false);
 
 
 	Load(config);
@@ -117,8 +121,7 @@ bool ModuleEditor::CleanUp()
 {
 	LOG("[CleanUp] Unloading Editor");
 
-	// TODO: save editor config on exit or application error
-	//SaveEditorConf(editor_filename.data());
+	// Windows ------------------------------------------------------
 
 	for (std::vector<Window*>::iterator itr = windows.begin(); itr != windows.end(); ++itr)
 	{
@@ -135,14 +138,22 @@ bool ModuleEditor::CleanUp()
 	w_scene = nullptr;
 	w_inspector = nullptr;
 	w_primitives = nullptr;
-	W_delete_history = nullptr;
+	w_delete_history = nullptr;
 
-	// debug data data ---
+	// Debug Data ---------------------------------------------------
+
 	if (ddmesh != nullptr)
+	{
 		ddmesh->Clean();
+		delete ddmesh;
+	}
 
-	delete ddmesh;
-	// -------------------
+	// GameObjects --------------------------------------------------
+
+	if (camera != nullptr)
+	{
+		delete camera;
+	}
 
 	return true;
 }
@@ -186,6 +197,8 @@ update_status ModuleEditor::PreUpdate(float dt)
 // Update
 update_status ModuleEditor::Update(float dt)
 {
+	camera->DoUpdate(dt);
+
 	// DEBUG MESH  ------------------------------------------------------------------------------------------------
 	// check if we need to show debug normals on selected go
 	if ((viewport_options.debug_vertex_normals || viewport_options.debug_face_normals) && selected_go != nullptr)
@@ -587,7 +600,7 @@ bool ModuleEditor::DrawMainMenuBar()
 		{
 			App->scene->DeleteGameObject(selected_go);
 		}
-		ImGui::MenuItem("Deleted actions history", NULL, &W_delete_history->active);
+		ImGui::MenuItem("Deleted actions history", NULL, &w_delete_history->active);
 
 		ImGui::EndMenu();
 	}

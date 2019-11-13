@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleInput.h"
-#include "ModuleCamera3D.h"
+#include "CameraEditor.h"
 #include "W_Scene.h"
 #include <math.h>
 
@@ -44,11 +44,9 @@ void W_Scene::Draw()
 
 		bool mouse_is_hovering = ImGui::IsMouseHoveringRect(min, max);
 
-		App->camera->enable_keys_input = ImGui::IsWindowFocused();
-
-		if (!App->camera->mouse_right_pressed)
+		if (!App->editor->camera->mouse_right_pressed && !App->editor->camera->mouse_left_pressed)
 		{
-			App->camera->enable_mouse_input = mouse_is_hovering;
+			App->editor->camera->enable_mouse_input = mouse_is_hovering;
 		}
 		else
 		{

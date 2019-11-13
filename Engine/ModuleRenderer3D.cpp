@@ -3,6 +3,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleEditor.h"
 #include "W_Scene.h"
+#include "C_Transform.h"
 
 #include <gl\glew.h>
 #include "SDL\include\SDL_opengl.h"
@@ -131,13 +132,8 @@ bool ModuleRenderer3D::Init(Config& config)
 	return ret;
 }
 
-// PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix());
-
 	return UPDATE_CONTINUE;
 }
 
@@ -161,8 +157,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		glViewport(0, 0, size.x, size.y);
 
 		glMatrixMode(GL_PROJECTION);
-		projection_mat = perspective(60.0f, size.x / size.y, 0.125f, 512.0f);
-		glLoadMatrixf(&projection_mat);
+		glLoadMatrixf(App->editor->camera->GetProjectionMatrix().Transposed().ptr());
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
@@ -171,8 +166,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		on_resize = false;
 	}
 
-	glLoadMatrixf(App->camera->GetViewMatrix());
-	
 	// Start Buffer Frame ----------------------------------
 	scene_fbo.BeginFBO();
 
@@ -180,9 +173,12 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glStencilFunc(GL_ALWAYS, 1, -1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);	
 
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(App->editor->camera->GetViewMatrix().Transposed().ptr());
 	// TODO: re-added lights until we create component light, remove from here when done
     // light 0 on cam pos
-	lights[0].SetPos(App->camera->current_position.x, App->camera->current_position.y, App->camera->current_position.z);
+	//lights[0].SetPos(App->camera->transform->position.x, App->camera->transform->position.y, App->camera->transform->position.z);
+	lights[0].SetPos(0, 0, 0);
 
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();

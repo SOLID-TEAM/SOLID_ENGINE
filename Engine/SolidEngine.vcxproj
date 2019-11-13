@@ -174,7 +174,7 @@
     <ClInclude Include="ImGui\misc\cpp\imgui_stdlib.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="D_Mesh.h" />
-    <ClInclude Include="ModuleCamera3D.h" />
+    <ClInclude Include="CameraEditor.h" />
     <ClInclude Include="ModuleEditor.h" />
     <ClInclude Include="ModuleFileSystem.h" />
     <ClInclude Include="ModuleImporter.h" />
@@ -264,7 +264,7 @@
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="D_Mesh.cpp" />
-    <ClCompile Include="ModuleCamera3D.cpp" />
+    <ClCompile Include="CameraEditor.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
     <ClCompile Include="ModuleImporter.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
