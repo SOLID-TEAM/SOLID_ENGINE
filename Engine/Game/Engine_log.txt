@@ -9,9 +9,9 @@ Loading File System
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
 [Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 440.97
-[Info] GLSL: 4.60 NVIDIA
+[Info] Renderer: Quadro FX 370/PCIe/SSE2
+[Info] OpenGL version supported: 3.3.0
+[Info] GLSL: 3.30 NVIDIA via Cg compiler
 -------------- Application Start --------------
 Loading Test assets
 [Info] Loading mesh data : Untitled.001

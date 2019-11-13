@@ -185,6 +185,7 @@
     <ClInclude Include="ModuleTest.h" />
     <ClInclude Include="ModuleTextures.h" />
     <ClInclude Include="ModuleWindow.h" />
+    <ClInclude Include="Viewport.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="W_Config.h" />
     <ClInclude Include="W_Console.h" />
@@ -274,6 +275,7 @@
     <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="ModuleEditor.cpp" />
+    <ClCompile Include="Viewport.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="W_Config.cpp" />
     <ClCompile Include="W_Console.cpp" />

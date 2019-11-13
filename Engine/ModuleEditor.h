@@ -182,7 +182,6 @@ public:
 
 	// GameObjects ------------------------
 
-	CameraEditor*		camera = nullptr;
 	GameObject*			selected_go = nullptr; // WARNING: TODO: when we delete gameobjects, remember to unlink all pointers
 	GameObject*			last_go_precalc = nullptr; // store last precalculated go from debug normals
 

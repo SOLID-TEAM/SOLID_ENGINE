@@ -95,10 +95,6 @@ bool ModuleEditor::Start(Config& config)
 	LOG("[Start] Loading Editor");
 	bool ret = true;
 
-	// Editor Camera ---------------------------------------
-
-	camera =			new CameraEditor();
-
 	// Initial Windows -------------------------------------
 
 	w_config =			new W_Config("Configuration",			false);
@@ -148,13 +144,6 @@ bool ModuleEditor::CleanUp()
 		delete ddmesh;
 	}
 
-	// GameObjects --------------------------------------------------
-
-	if (camera != nullptr)
-	{
-		delete camera;
-	}
-
 	return true;
 }
 
@@ -197,8 +186,6 @@ update_status ModuleEditor::PreUpdate(float dt)
 // Update
 update_status ModuleEditor::Update(float dt)
 {
-	camera->DoUpdate(dt);
-
 	// DEBUG MESH  ------------------------------------------------------------------------------------------------
 	// check if we need to show debug normals on selected go
 	if ((viewport_options.debug_vertex_normals || viewport_options.debug_face_normals) && selected_go != nullptr)

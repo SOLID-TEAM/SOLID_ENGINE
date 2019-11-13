@@ -2,6 +2,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleInput.h"
 #include "CameraEditor.h"
+#include "Viewport.h"
 #include "W_Scene.h"
 #include <math.h>
 
@@ -44,9 +45,11 @@ void W_Scene::Draw()
 
 		bool mouse_is_hovering = ImGui::IsMouseHoveringRect(min, max);
 
-		if (!App->editor->camera->mouse_right_pressed && !App->editor->camera->mouse_left_pressed)
+
+
+		if (!App->scene->editor_camera->mouse_right_pressed && !App->scene->editor_camera->mouse_left_pressed)
 		{
-			App->editor->camera->enable_mouse_input = mouse_is_hovering;
+			App->scene->editor_camera->enable_mouse_input = mouse_is_hovering;
 		}
 		else
 		{
@@ -59,13 +62,13 @@ void W_Scene::Draw()
 		// Attach texture to window ----------------------------------------
 		ImVec2 current_viewport_size = ImGui::GetContentRegionAvail();
 
-		ImGui::Image((ImTextureID)App->renderer3D->scene_fbo.GetFinalTexture(), ImVec2(current_viewport_size.x, current_viewport_size.y), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((ImTextureID)App->scene->scene_viewport->GetTexture(), ImVec2(current_viewport_size.x, current_viewport_size.y), ImVec2(0, 1), ImVec2(1, 0));
 
 		// Resize logic ----------------------------------------------------
 		if (!(current_viewport_size == viewport_size))
 		{
 			viewport_size = current_viewport_size;
-			App->renderer3D->OnResize();
+			App->scene->scene_viewport->SetSize(viewport_size.x, viewport_size.y);
 		}
 	}
 

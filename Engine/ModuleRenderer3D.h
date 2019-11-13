@@ -36,10 +36,10 @@ public:
 
 	void DeleteFBO(); 
 
-	uint GetFinalTexture();
+	uint GetFBOTexture();
 
 	// Only multiple of 2 values // 0 : MSAA disabled // 2-16 : MSAA enabled
-	void SetMSAA( int MSAA) 
+	void SetMSAA( uint MSAA) 
 	{
 		if (MSAA % 2 != 0 || MSAA > 0 || MSAA <= 16)
 		{
@@ -47,11 +47,19 @@ public:
 		}
 	}
 
+	uint GetMSAA()
+	{
+		return msaa;
+	}
+
+public:
+
+	float4 clear_color = { 0.1, 0.1, 0.1, 1.f };
+
 private:
 
 	uint ID[8];
 	uint msaa = 4;
-	float4 clear_color = { 0.1, 0.1, 0.1, 1.f };
 	float width = 0, height = 0;
 };
 
@@ -101,8 +109,6 @@ public:
 
 	void Load(Config& config);
 
-	void OnResize();
-
 	std::string GetGlewVersionString() const;
 
 	RenderConfig& GetRenderConfig();
@@ -119,11 +125,8 @@ public:
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 
-	FBO scene_fbo;
-
 private:
 
-	bool on_resize = true;
 	std::string openglGDriversVersionString;
 	std::string glewVersionString;
 };

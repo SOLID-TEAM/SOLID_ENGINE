@@ -81,7 +81,6 @@ bool ModuleRenderer3D::Init(Config& config)
 		lights[0].ref = GL_LIGHT0;
 		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
 		lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
-		lights[0].SetPos(0.0f, 0.0f, 2.5f);
 		lights[0].Init();
 		lights[0].Active(true);
 		
@@ -126,9 +125,6 @@ bool ModuleRenderer3D::Init(Config& config)
 	LOG("[Info] OpenGL version supported: %s", openglGDriversVersionString.data());
 	LOG("[Info] GLSL: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-	// Generate Scene Buffers -------------------------------
-	scene_fbo.GenerateFBO();
-
 	return ret;
 }
 
@@ -145,56 +141,13 @@ update_status ModuleRenderer3D::Update(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-
 	SDL_GL_SwapWindow(App->window->window);
-
-	// prepare for main loop Draw -----------------------------------------------
-
-	if (on_resize)
-	{
-		ImVec2 size = App->editor->w_scene->GetViewportSize();
-
-		glViewport(0, 0, size.x, size.y);
-
-		glMatrixMode(GL_PROJECTION);
-		glLoadMatrixf(App->editor->camera->GetProjectionMatrix().Transposed().ptr());
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		scene_fbo.UpdateFBO(size.x, size.y);
-
-		on_resize = false;
-	}
-
-	// Start Buffer Frame ----------------------------------
-	scene_fbo.BeginFBO();
-
-	// Object Draw Stencil Settings ------------------------
-	glStencilFunc(GL_ALWAYS, 1, -1);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);	
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->editor->camera->GetViewMatrix().Transposed().ptr());
-	// TODO: re-added lights until we create component light, remove from here when done
-    // light 0 on cam pos
-	//lights[0].SetPos(App->camera->transform->position.x, App->camera->transform->position.y, App->camera->transform->position.z);
-	lights[0].SetPos(0, 0, 0);
-
-	for (uint i = 0; i < MAX_LIGHTS; ++i)
-		lights[i].Render();
 
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleRenderer3D::Draw()
-{
-	// Default Stencil Settings ----------------------------
-	glStencilFunc(GL_ALWAYS, 1, 0);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-
-	// End Buffer Frame ------------------------------------
-	scene_fbo.EndFBO();
-	
+{	
 	return UPDATE_CONTINUE;
 }
 
@@ -206,11 +159,6 @@ bool ModuleRenderer3D::CleanUp()
 	SDL_GL_DeleteContext(context);
 
 	return true;
-}
-
-void ModuleRenderer3D::OnResize()
-{
-	on_resize = true;
 }
 
 RenderConfig& ModuleRenderer3D::GetRenderConfig()
@@ -263,6 +211,8 @@ FBO::FBO()
 	{
 		ID[i] = 0;
 	}
+
+	GenerateFBO();
 }
 
 FBO::~FBO()
@@ -273,7 +223,7 @@ FBO::~FBO()
 void FBO::BeginFBO()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, ID[MULTISAMPLING_FBO]);
-	glClearColor(0.1, 0.1, 0.1, 1.f);
+	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -391,7 +341,7 @@ void FBO::DeleteFBO()
 	glDeleteFramebuffers(1, &ID[NORMAL_TEXTURE]);
 }
 
-uint FBO::GetFinalTexture()
+uint FBO::GetFBOTexture()
 {
 	return ID[NORMAL_TEXTURE];
 }

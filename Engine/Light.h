@@ -1,20 +1,21 @@
 
 #pragma once
 #include "Color.h"
-#include "glmath.h"
+
+#include "external/MathGeoLib/include/Math/float3.h"
 
 struct Light
 {
 	Light();
 
 	void Init();
-	void SetPos(float x, float y, float z);
+	void SetPos(float3 pos);
 	void Active(bool active);
 	void Render();
 
 	Color ambient;
 	Color diffuse;
-	vec3 position;
+	float3 position;
 
 	int ref;
 	bool on;

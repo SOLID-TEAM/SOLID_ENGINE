@@ -3,7 +3,11 @@
 #include "Application.h"
 
 #include "C_Transform.h"
+#include "Viewport.h"
+#include "CameraEditor.h"
+
 #include "external/MathGeoLib/include/Math/MathAll.h"
+
 ModuleScene::ModuleScene() {}
 
 ModuleScene::~ModuleScene() {}
@@ -19,6 +23,10 @@ bool ModuleScene::Start(Config& config)
 	root_go = new GameObject("Scene Root");
 	main_camera = new GameObject("Main Camera", root_go);
 	main_camera->CreateComponent(ComponentType::CAMERA);
+	editor_camera = new CameraEditor();
+
+	scene_viewport = new Viewport(editor_camera);
+	game_viewport = new Viewport(main_camera);
 
 	return true;
 }
@@ -70,6 +78,8 @@ update_status ModuleScene::PreUpdate(float dt)
 
 update_status ModuleScene::Update(float dt)
 {
+	editor_camera->DoUpdate(dt);
+
 	// TODO: SHORTCUTS
 	// check CTRL + Z
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
@@ -99,11 +109,17 @@ void ModuleScene::UpdateAll(float dt, GameObject* go)
 
 update_status ModuleScene::PostUpdate(float dt)
 {
+	App->renderer3D->lights[0].SetPos(editor_camera->transform->position);
+
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleScene::Draw()
 {
+
+	scene_viewport->BeginViewport();
+
+	App->renderer3D->lights[0].Render();
 	App->test->main_grid->Render();
 
 	// draw all go's last
@@ -112,6 +128,8 @@ update_status ModuleScene::Draw()
 	{
 		RenderAll(root_go);
 	}
+
+	scene_viewport->EndViewport();
 
 	return UPDATE_CONTINUE;
 }
@@ -137,6 +155,13 @@ bool ModuleScene::CleanUp()
 
 	// release undo buffers
 	to_undo_buffer_go.clear();
+
+	// GameObjects --------------------------------------------------
+
+	if (editor_camera != nullptr)
+	{
+		delete editor_camera;
+	}
 
 	return true;
 }

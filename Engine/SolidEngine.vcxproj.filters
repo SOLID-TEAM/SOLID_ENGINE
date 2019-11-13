@@ -420,6 +420,9 @@
     <ClInclude Include="CameraEditor.h">
       <Filter>Sources\Game Object\Custom</Filter>
     </ClInclude>
+    <ClInclude Include="Viewport.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -664,6 +667,9 @@
     </ClCompile>
     <ClCompile Include="CameraEditor.cpp">
       <Filter>Sources\Game Object\Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewport.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,9 @@
 // one action include any child tree inside object
 #define MAX_UNDO_ACTIONS 20 // TODO: add a max saved actions buffer qty configuration on W_Config panel to allow user configure its ctrl-z buffer
 
+class CameraEditor;
+class Viewport;
+
 class ModuleScene : public Module
 {
 public:
@@ -44,13 +47,25 @@ public:
 	void AddGoToHierarchyChange(GameObject* target_go, GameObject* source_go);
 
 private:
+
 	void AddGOToUndoDeque(GameObject* gameObject);
 
 public:
-	GameObject* root_go = nullptr;
-	GameObject* main_camera = nullptr;
+
+	// Game Objects -------------------------------
+
+	GameObject*		root_go = nullptr;
+	GameObject*		main_camera = nullptr;
+	CameraEditor*	editor_camera = nullptr;
+
+	// Viewports ---------------------------------
+
+	Viewport* scene_viewport = nullptr;
+	Viewport* game_viewport = nullptr;
+
 
 private:
+
 	std::deque<GameObject*> to_undo_buffer_go;
 	//std::queue<GameObject*> to_delete_buffer_go;
 
