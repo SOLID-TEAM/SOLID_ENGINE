@@ -53,13 +53,14 @@ D_Mesh::~D_Mesh()
 	Unload();
 }
 
+// TODO: rename this like before "GenBuffers" / "GenBuffersAndLoad"
 void D_Mesh::Load()
 {
 	// TODO: REWORK THIS, not all meshes has all this components
 	// Generate Buffers --------------------------------
 	glGenBuffers(4, buffers_id);
 
-	// Vertives ----------------
+	// Vertices ----------------
 	glBindBuffer(GL_ARRAY_BUFFER, buffers_id[VERTICES]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * buffers_size[VERTICES], vertices, GL_STATIC_DRAW);
 
@@ -88,6 +89,7 @@ void D_Mesh::CreateAABB()
 	aabb.Enclose((math::float3*) vertices, buffers_size[VERTICES]);
 }
 
+// TODO: RENAME
 void D_Mesh::Unload()
 {
 	glDeleteBuffers(4, buffers_id);
@@ -101,7 +103,57 @@ void D_Mesh::Unload()
 }
 
 
-//texture_id = App->textures->GenerateCheckerTexture(512,512);
+bool D_Mesh::SaveToFile(const char* name)
+{
+	uint ranges[4] = { buffers_size[BufferType::INDICES],buffers_size[BufferType::VERTICES], buffers_size[BufferType::NORMALS], buffers_size[BufferType::UVS] };
 
-/*glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-glGenTextures(1, &texture_id);*/
+	uint size = sizeof(ranges) +
+				sizeof(uint)   * buffers_size[BufferType::INDICES] +
+				sizeof(float)  * buffers_size[BufferType::VERTICES] * 3 +
+				sizeof(float)  * buffers_size[BufferType::NORMALS] * 3 +
+				sizeof(float)  * buffers_size[BufferType::UVS] * uv_num_components;
+
+	char* data = new char[size];
+	char* cursor = data;
+
+	// TODO: on for loop picking the type size of the first element
+	uint bytes = sizeof(ranges);
+	memcpy(cursor, ranges, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(uint) * buffers_size[BufferType::INDICES];
+	memcpy(cursor, indices, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(float) * buffers_size[BufferType::VERTICES] * 3;
+	memcpy(cursor, vertices, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(float) * buffers_size[BufferType::NORMALS] * 3;
+	memcpy(cursor, normals, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(float) * buffers_size[BufferType::UVS] * uv_num_components;
+	memcpy(cursor, uvs, bytes);
+
+
+	std::string full_name(LIBRARY_MESH_FOLDER + std::string(name) + std::string(".solidmesh"));
+
+	return App->file_sys->Save(full_name.c_str(), data, size) != -1 ? true:false;
+}
+
+bool D_Mesh::LoadFromFile(const char* name)
+{
+	bool ret = true;
+
+	char* buffer = nullptr;
+
+	App->file_sys->Load(LIBRARY_MESH_FOLDER,name, &buffer);
+
+	char* cursor = buffer;
+
+
+
+
+	return ret;
+}

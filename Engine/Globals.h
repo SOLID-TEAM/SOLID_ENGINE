@@ -19,6 +19,7 @@ void log(const char file[], int line, const char* format, ...);
 
 
 typedef unsigned int uint;
+typedef unsigned long long UID;
 
 enum update_status
 {
@@ -37,6 +38,13 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
 #define TITLE "Solid Engine"
+
+#define ASSETS_FOLDER "Assets/"
+#define LIBRARY_FOLDER "Library/"
+#define LIBRARY_EDITOR_FOLDER "Library/Editor/"
+#define LIBRARY_MODEL_FOLDER "Library/Models/"
+#define LIBRARY_MESH_FOLDER "Library/Meshes/" // mesh own file format data
+#define LIBRARY_MATERIAL_FOLDER "Library/Materials/" // textures in dds
 
 
 // Deletes a buffer

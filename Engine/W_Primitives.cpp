@@ -10,13 +10,13 @@ W_Primitives::W_Primitives(std::string name, bool active) : Window(name, active)
 {
 	// TODO: add/get the folder from filesystem 
 	// THIS ORDER MATTERS, for simplicity we follow the same order as enumerator PrimitiveType
-	tex_ids.push_back(App->textures->LoadTexture("Project/Editor/Images/cube.png"));
-	tex_ids.push_back(App->textures->LoadTexture("Project/Editor/Images/sphere.png"));
-	tex_ids.push_back(App->textures->LoadTexture("Project/Editor/Images/icosphere.png"));
-	tex_ids.push_back(App->textures->LoadTexture("Project/Editor/Images/plane.png"));
-	tex_ids.push_back(App->textures->LoadTexture("Project/Editor/Images/cylinder.png"));
-	tex_ids.push_back(App->textures->LoadTexture("Project/Editor/Images/connus.png"));
-	tex_ids.push_back(App->textures->LoadTexture("Project/Editor/Images/torus.png"));
+	tex_ids.push_back(App->textures->LoadTexture(std::string(LIBRARY_EDITOR_FOLDER + std::string("cube.png")).c_str()));
+	tex_ids.push_back(App->textures->LoadTexture(std::string(LIBRARY_EDITOR_FOLDER + std::string("sphere.png")).c_str()));
+	tex_ids.push_back(App->textures->LoadTexture(std::string(LIBRARY_EDITOR_FOLDER + std::string("icosphere.png")).c_str()));
+	tex_ids.push_back(App->textures->LoadTexture(std::string(LIBRARY_EDITOR_FOLDER + std::string("plane.png")).c_str()));
+	tex_ids.push_back(App->textures->LoadTexture(std::string(LIBRARY_EDITOR_FOLDER + std::string("cylinder.png")).c_str()));
+	tex_ids.push_back(App->textures->LoadTexture(std::string(LIBRARY_EDITOR_FOLDER + std::string("connus.png")).c_str()));
+	tex_ids.push_back(App->textures->LoadTexture(std::string(LIBRARY_EDITOR_FOLDER + std::string("torus.png")).c_str()));
 }
 
 void W_Primitives::Draw()

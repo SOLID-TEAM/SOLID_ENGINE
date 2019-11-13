@@ -26,10 +26,18 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module()
 	if (PHYSFS_setWriteDir(".") == 0)
 		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 
-	CreateDir("Project");
+	
+	CreateDir(ASSETS_FOLDER);
+	CreateDir(LIBRARY_FOLDER);
+	CreateDir(LIBRARY_EDITOR_FOLDER);
+	CreateDir(LIBRARY_MODEL_FOLDER);
+	CreateDir(LIBRARY_MESH_FOLDER);
+	CreateDir(LIBRARY_MATERIAL_FOLDER);
+	
+	/*CreateDir("Project");
 	CreateDir("Project/Assets");
 	CreateDir("Project/Library");
-	CreateDir("Project/Library/Meshes");
+	CreateDir("Project/Library/Meshes");*/
 	//CreateDir("Project/Library/Materials");
 	//CreateDir("Project/Library/Textures");
 	//CreateDir("Project/Library/GameObjects");

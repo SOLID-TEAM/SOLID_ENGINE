@@ -24,6 +24,9 @@ public:
 
 	void Unload();
 
+	bool SaveToFile(const char* name);
+	bool LoadFromFile(const char* name);
+
 public:
 
 	enum  BufferType

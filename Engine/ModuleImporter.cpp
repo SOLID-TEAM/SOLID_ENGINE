@@ -72,17 +72,30 @@ update_status ModuleImporter::PostUpdate(float dt)
 bool ModuleImporter::CleanUp()
 {
 	
-
 	aiDetachAllLogStreams();
 
 	return true;
 }
 
+// returns sequentially uid's for filename naming
+UID ModuleImporter::GetNewUID()
+{
+	return last_id++;
+}
+
+
+// directly drag and drop -> import directly and create own file
 bool ModuleImporter::ImportModelFile(const char* path)
 {
 	bool ret = true;
-
-	// TODO: duplicate model file whatever we want on internal files
+	
+	// copy model to own assets project folder ------
+	App->file_sys->DuplicateFile(path, ASSETS_FOLDER, std::string("/"));
+	std::string file;
+	std::string ext;
+	App->file_sys->SplitFilePath(path, nullptr, &file, &ext);
+	LOG("[Info] Copied model file %s to %s folder", (file+ "." + ext).c_str(), ASSETS_FOLDER);
+	// -----------------------------------------------
 
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_GenBoundingBoxes); // not needed, already included on quality | max quality preset
 
@@ -115,6 +128,16 @@ bool ModuleImporter::ImportModelFile(const char* path)
 		LOG("[Error] Loading scene %s ", path);
 
 	return ret;
+}
+
+std::string ModuleImporter::GetFormattedName(std::string name, UID id)
+{
+	std::string plain_name;
+	std::string extension; // this is not really the extension, only the "extension name" then sometimes is nothing
+
+	App->file_sys->SplitFilePath(name.c_str(), nullptr, &plain_name, &extension);
+
+	return std::string(plain_name + "_" + std::to_string(id) + "_" + extension);
 }
 
 void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, GameObject* parent)
@@ -153,6 +176,14 @@ void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, Game
 
  			C_Mesh* c_mesh = (C_Mesh*)new_go->CreateComponent(ComponentType::MESH);
 			c_mesh->data = ImportMesh( ai_mesh, ai_mesh->mName.C_Str() );
+			// and save own format to disk
+			std::string test_name = GetFormattedName(ai_mesh->mName.C_Str(), GetNewUID()).c_str();
+			c_mesh->data->SaveToFile(test_name.c_str());
+
+			// TESTING LOAD FROM custom file
+			/*C_Mesh* test_mesh = (C_Mesh*)new_go->CreateComponent(ComponentType::MESH);
+			c_mesh->data = new D_Mesh();
+			c_mesh->data->LoadFromFile(test_name.c_str());*/
 
 			// Add Component Material ----------
 

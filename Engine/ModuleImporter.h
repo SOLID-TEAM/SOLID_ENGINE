@@ -73,7 +73,13 @@ private:
 	D_Material*		CreateDefaultMaterial(const char* name, float4 color) const;
 	D_Texture*		ImportTexture(const char* path);
 
+	// sequentiall id for every thing
+	UID GetNewUID();
+	std::string GetFormattedName(std::string name, UID id);
+
 private:
+
+	UID last_id = 0;
 
 	// TODO: MAYBE WE NEED a specific module to store all models of the scene and draw etc
 	// TODO: for testing here, but we need to search a better place, maybe new module coming
