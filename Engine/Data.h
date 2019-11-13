@@ -51,6 +51,11 @@ public:
 		return library_file_path;
 	}
 
+	std::string GetExportedName() const
+	{
+		return exported_name;
+	}
+
 	uint GetFileTexture() const
 	{
 		return file_texture;
@@ -70,6 +75,7 @@ protected:
 	std::string		name = "";
 	std::string		library_file_path = "";
 	std::string		original_file_path = "";
+	std::string		exported_name;
 	uint			file_texture = 0;
 };
 

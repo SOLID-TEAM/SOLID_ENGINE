@@ -22,7 +22,7 @@ Loading Test assets
 [Info] Triangles:  108
 [Info] Normals:   160
 Created mesh data: Untitled.001
-File [.Library/Meshes/Untitled_0_001.solidmesh] overwritten with 6432 bytes
+File [.Library/Meshes/Untitled_0_001.solidmesh] overwritten with 6444 bytes
 // ---------------------------------------------------
 [Info] Image Baker_house.png correctly loaded into DevIL
 [Info] from filepath Assets/Models/baker_house/
@@ -36,7 +36,7 @@ File [.Library/Meshes/Untitled_0_001.solidmesh] overwritten with 6432 bytes
 [Info] Triangles:  917
 [Info] Normals:   1641
 Created mesh data: Untitled
-File [.Library/Meshes/Untitled_1_.solidmesh] overwritten with 63532 bytes
+File [.Library/Meshes/Untitled_1_.solidmesh] overwritten with 63544 bytes
 // ---------------------------------------------------
 [Info] Texture with same name Baker_house.png already loaded into buffers
 [Info] returning stored texture id

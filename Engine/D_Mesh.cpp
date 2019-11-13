@@ -102,16 +102,17 @@ void D_Mesh::Unload()
 	delete[] uvs;
 }
 
-
+// TODO: pick value for ranges from enumerator and adds and assert
 bool D_Mesh::SaveToFile(const char* name)
 {
-	uint ranges[4] = { buffers_size[BufferType::INDICES],buffers_size[BufferType::VERTICES], buffers_size[BufferType::NORMALS], buffers_size[BufferType::UVS] };
+	uint ranges[BufferType::MAX + 1] = { buffers_size[BufferType::INDICES],buffers_size[BufferType::VERTICES], buffers_size[BufferType::NORMALS], buffers_size[BufferType::UVS], uv_num_components };
 
 	uint size = sizeof(ranges) +
 				sizeof(uint)   * buffers_size[BufferType::INDICES] +
 				sizeof(float)  * buffers_size[BufferType::VERTICES] * 3 +
 				sizeof(float)  * buffers_size[BufferType::NORMALS] * 3 +
-				sizeof(float)  * buffers_size[BufferType::UVS] * uv_num_components;
+				sizeof(float)  * buffers_size[BufferType::UVS] * uv_num_components +
+				sizeof(uint)   * uv_num_components;
 
 	char* data = new char[size];
 	char* cursor = data;
@@ -139,8 +140,11 @@ bool D_Mesh::SaveToFile(const char* name)
 
 	std::string full_name(LIBRARY_MESH_FOLDER + std::string(name) + std::string(".solidmesh"));
 
+	exported_name.assign(name + std::string(".solidmesh"));
+
 	return App->file_sys->Save(full_name.c_str(), data, size) != -1 ? true:false;
 }
+
 
 bool D_Mesh::LoadFromFile(const char* name)
 {
@@ -150,10 +154,54 @@ bool D_Mesh::LoadFromFile(const char* name)
 
 	App->file_sys->Load(LIBRARY_MESH_FOLDER,name, &buffer);
 
-	char* cursor = buffer;
+	if (buffer != nullptr)
+	{
 
+		char* cursor = buffer;
 
+		uint ranges[BufferType::MAX + 1];
+		uint bytes = sizeof(ranges);
+		memcpy(ranges, cursor, bytes);
 
+		
+		buffers_size[BufferType::INDICES]  = ranges[0];
+		buffers_size[BufferType::VERTICES] = ranges[1];
+		buffers_size[BufferType::NORMALS]  = ranges[2];
+		buffers_size[BufferType::UVS]	   = ranges[3];
+		uv_num_components = ranges[BufferType::MAX];
+
+		cursor += bytes;
+
+		bytes = sizeof(uint) * buffers_size[BufferType::INDICES];
+		indices = new uint[buffers_size[BufferType::INDICES]];
+		memcpy(indices, cursor, bytes);
+
+		cursor += bytes;
+
+		bytes = sizeof(float) * buffers_size[BufferType::VERTICES] * 3;
+		vertices = new float[buffers_size[BufferType::VERTICES] * 3];
+		memcpy(vertices, cursor, bytes);
+
+		cursor += bytes;
+
+		bytes = sizeof(float) * buffers_size[BufferType::NORMALS] * 3;
+		normals = new float[buffers_size[BufferType::NORMALS] * 3];
+		memcpy(normals, cursor, bytes);
+
+		cursor += bytes;
+
+		bytes = sizeof(float) * buffers_size[BufferType::UVS] * uv_num_components;
+		uvs = new float[buffers_size[BufferType::UVS] * uv_num_components];
+		memcpy(uvs, cursor, bytes);
+
+		// TODO: we want always load?
+		// TODO: recalc aabb/obb
+		Load();
+	}
+	else
+	{
+		LOG("[Error] Loading mesh from %s", name);
+	}
 
 	return ret;
 }
