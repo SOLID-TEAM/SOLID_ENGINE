@@ -150,3 +150,19 @@ float Config::GetFloat(const char* name, const float default, const float array_
 
 	return default;
 }
+
+bool Config::AddArrayEntry(const Config& config)
+{
+	if (array != nullptr)
+		return json_array_append_value(array, json_value_deep_copy(config.root_value)) == JSONSuccess;
+
+	return false;
+}
+
+bool Config::AddArray(const char* array_name)
+{
+	JSON_Value* va = json_value_init_array();
+	array = json_value_get_array(va);
+
+	return json_object_set_value(root_object, array_name, va) == JSONSuccess;
+}

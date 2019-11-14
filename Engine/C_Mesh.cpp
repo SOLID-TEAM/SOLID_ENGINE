@@ -47,9 +47,6 @@ void C_Mesh::SetMeshResource(D_Mesh* resource)
 	}
 
 	data = resource;
-	linked_go->bounding_box.SetFromCenterAndSize(linked_go->transform->position, resource->aabb.Size());
-
-
 }
 
 void C_Mesh::DeleteMeshResource()
@@ -57,4 +54,13 @@ void C_Mesh::DeleteMeshResource()
 	RELEASE(data);
 }
 
+bool C_Mesh::Save(Config& config)
+{
+	// TODO: resources
+	int resource = 3142413;
+	config.AddInt("Resource", resource);
+	config.AddBool("Active", active);
 
+
+	return true;
+}

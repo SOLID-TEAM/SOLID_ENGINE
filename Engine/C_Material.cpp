@@ -78,3 +78,20 @@ bool C_Material::CleanUp()
 
 	return true;
 }
+
+bool C_Material::Save(Config& config)
+{
+	// TODO: resources
+	int resource_test = 2213;
+	config.AddInt("Resource", resource_test);
+	config.AddBool("Active", active);
+
+
+	return true;
+}
+
+bool C_Material::Load(Config& config)
+{
+
+	return true;
+}

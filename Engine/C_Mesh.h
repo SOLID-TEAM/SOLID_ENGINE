@@ -14,10 +14,13 @@ public:
 public:
 
 	C_Mesh(GameObject* parent);
+
 	~C_Mesh();
 
 	bool Update(float dt);
+
 	bool DrawPanelInfo();
+
 	bool CleanUp();
 
 	// Resource functions ---------------------
@@ -25,6 +28,10 @@ public:
 	void SetMeshResource(D_Mesh* resource);
 
 	void DeleteMeshResource();
+
+	bool Save(Config& config);
+
+	//bool Load(Config& config);
 
 public:
 

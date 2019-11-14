@@ -54,6 +54,9 @@ public:
 		     
 	virtual void  CleanUp();
 
+	// SERIALIZE ME
+	bool Save(Config& config);
+
 	// Components Funtions -------------------------------------------
 
 	template <class T>

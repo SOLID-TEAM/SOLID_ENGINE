@@ -80,6 +80,12 @@ update_status ModuleScene::Update(float dt)
 {
 	editor_camera->DoUpdate(dt);
 
+	// TESTING SAVE SCENE
+	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		ToSaveScene();
+	}
+
 	// TODO: SHORTCUTS
 	// check CTRL + Z
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
@@ -266,4 +272,38 @@ std::deque<GameObject*>& ModuleScene::GetUndoDeque()
 void ModuleScene::AddGoToHierarchyChange(GameObject* target_go, GameObject* source_go)
 {
 	childrens_to_move.insert({ target_go, source_go });
+}
+
+// testing function to launch the process of save
+bool ModuleScene::ToSaveScene()
+{
+	Config new_scene_save;
+
+	// save first other scene needed values
+	// name
+	// etc
+	Config other = new_scene_save.AddSection("other");
+	other.AddString("scene_name", "testing.solidscene");
+	
+	//Config GameObjects = new_scene_save.AddSection("GameObjects");
+	// save all gameobjects needed values
+	new_scene_save.AddArray("GameObjects");
+	SaveScene(new_scene_save, root_go);
+
+	new_scene_save.SaveConfigToFile("testing.solidscene");
+
+	return true;
+}
+
+bool ModuleScene::SaveScene(Config& config, GameObject* go)
+{
+	
+	go->Save(config);
+
+	for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
+	{
+		SaveScene(config, (*it));
+	}
+
+	return true;
 }

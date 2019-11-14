@@ -231,6 +231,33 @@ void GameObject::RemoveChild(GameObject* child)
 
 }
 
+bool GameObject::Save(Config& config)
+{
+	Config myConfig;
+	// save my needed values and my components
+
+	myConfig.AddInt("UID", uid);
+	if (parent) myConfig.AddInt("Parent UID", parent->uid);
+	myConfig.AddString("name", name.c_str());
+	myConfig.AddBool("Active", active);
+
+	// components
+	myConfig.AddArray("Components");
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
+	{
+		Config component;
+		component.AddInt("Type", (int)(*it)->type);
+		component.AddString("name", (*it)->name.c_str());
+		(*it)->Save(component);
+		myConfig.AddArrayEntry(component);
+	}
+
+
+	config.AddArrayEntry(myConfig);
+
+	return true;
+}
+
 //bool GameObject::Draw()
 //{
 //	bool ret = true;

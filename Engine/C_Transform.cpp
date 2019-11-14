@@ -257,3 +257,17 @@ bool C_Transform::DrawPanelInfo()
 
 	return true;
 }
+
+
+bool C_Transform::Save(Config& config)
+{
+	//Config myConfig;
+
+	config.AddFloatArray("Position", (float*)&position, 3);
+	config.AddFloatArray("Rotation", (float*)&rotation, 3);
+	config.AddFloatArray("Scale", (float*)&scale, 3);
+
+	//config.AddArrayEntry(myConfig);
+
+	return true;
+}

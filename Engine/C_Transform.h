@@ -63,6 +63,11 @@ public:
 
 	void LookAt(math::float3 eye);
 
+	// save/load
+
+	bool Save(Config& config);
+	//bool Load(Config& config);
+
 public:
 
 	// World ----------------------------------------
