@@ -24,6 +24,8 @@ public:
 	bool AddInt(const char* name, int value);
 	bool AddFloatArray(const char* var_name, const float* values, const int size);
 	bool AddFloat(const char* var_name, const float value);
+	bool AddArray(const char* array_name);
+	bool AddArrayEntry(const Config& config);
 	// Get -----
 	bool GetBool(const char* name, const bool default, const int array_index = -1) const;
 	const char* GetString(const char* name,  const char* default, const int array_index = -1) const;
@@ -34,5 +36,6 @@ public:
 private:
 	JSON_Value* root_value = nullptr;
 	JSON_Object* root_object = nullptr;
+	JSON_Array* array = nullptr;
 
 };

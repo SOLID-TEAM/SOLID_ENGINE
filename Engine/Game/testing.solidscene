@@ -1,0 +1,177 @@
+{
+    "other": {
+        "scene_name": "testing.solidscene"
+    },
+    "GameObjects": [
+        {
+            "UID": 1650141930,
+            "name": "Scene Root",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": 0,
+                    "name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        -0,
+                        0,
+                        -0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 598644971,
+            "Parent UID": 1650141930,
+            "name": "Main Camera",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": 0,
+                    "name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        -0,
+                        0,
+                        -0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "name": "Camera"
+                }
+            ]
+        },
+        {
+            "UID": 1117444181,
+            "Parent UID": 1650141930,
+            "name": "BakerHouse",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": 0,
+                    "name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        0,
+                        90,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 691245532,
+            "Parent UID": 1117444181,
+            "name": "Chimney",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": 0,
+                    "name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        0,
+                        90,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 1,
+                    "name": "Mesh",
+                    "Resource": 3142413,
+                    "Active": true
+                },
+                {
+                    "Type": 2,
+                    "name": "Material",
+                    "Resource": 2213,
+                    "Active": true
+                },
+                {
+                    "Type": 5,
+                    "name": "Mesh Renderer"
+                }
+            ]
+        },
+        {
+            "UID": 96654102,
+            "Parent UID": 1117444181,
+            "name": "Baker_house",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": 0,
+                    "name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        0,
+                        90,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 1,
+                    "name": "Mesh",
+                    "Resource": 3142413,
+                    "Active": true
+                },
+                {
+                    "Type": 2,
+                    "name": "Material",
+                    "Resource": 2213,
+                    "Active": true
+                },
+                {
+                    "Type": 5,
+                    "name": "Mesh Renderer"
+                }
+            ]
+        }
+    ]
+}

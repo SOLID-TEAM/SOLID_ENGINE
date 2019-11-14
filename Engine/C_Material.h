@@ -14,6 +14,9 @@ public:
 	bool CleanUp();
 	bool DrawPanelInfo();
 
+	bool Save(Config& config);
+	bool Load(Config& config);
+
 public:
 
 	D_Material* data = nullptr;

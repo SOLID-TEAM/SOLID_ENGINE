@@ -44,6 +44,9 @@ public:
 		     
 	virtual void  CleanUp();
 
+	// SERIALIZE ME
+	bool Save(Config& config);
+
 	// Components Funtions -------------------------------------------
 
 	Component* CreateComponent(ComponentType type);

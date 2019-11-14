@@ -8,6 +8,8 @@
 #include <list>
 #include <stack>
 
+#include "Config.h"
+
 // one action include any child tree inside object
 #define MAX_UNDO_ACTIONS 20 // TODO: add a max saved actions buffer qty configuration on W_Config panel to allow user configure its ctrl-z buffer
 
@@ -39,6 +41,9 @@ public:
 	void UpdateAll(float dt, GameObject*);
 
 	void RenderAll(GameObject* go);
+
+	bool ToSaveScene();
+	bool SaveScene(Config& config, GameObject* go);
 	
 	// Game Objects functions ----------------------------------------------
 

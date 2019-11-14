@@ -3,6 +3,7 @@
 
 #include "ModuleImporter.h"
 #include "W_Inspector.h"
+#include "Config.h"
 
 #include <string>
 
@@ -46,6 +47,9 @@ public:
 	virtual bool DrawPanelInfo(); // draw something on the editor panels loop (components) called from editor
 
 	virtual bool CleanUp();
+
+	virtual bool Save(Config& config) { return true; };
+	virtual bool Load(Config& config) { return true; };
 
 public:
 

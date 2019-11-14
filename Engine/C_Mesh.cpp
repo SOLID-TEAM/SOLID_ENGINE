@@ -35,3 +35,14 @@ bool C_Mesh::CleanUp()
 	
 	return true;
 }
+
+bool C_Mesh::Save(Config& config)
+{
+	// TODO: resources
+	int resource = 3142413;
+	config.AddInt("Resource", resource);
+	config.AddBool("Active", active);
+
+
+	return true;
+}

@@ -20,6 +20,9 @@ public:
 	bool DrawPanelInfo();
 	bool CleanUp();
 
+	bool Save(Config& config);
+	//bool Load(Config& config);
+
 public:
 
 	D_Mesh* data = nullptr;
