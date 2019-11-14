@@ -2,7 +2,7 @@
 #include "GL/glew.h"
 #include "SDL\include\SDL_opengl.h"
 
-
+#include "Application.h"
 
 void D_Material::GenerateFileTexture()
 {
@@ -11,7 +11,7 @@ void D_Material::GenerateFileTexture()
 
 	// Gen buffers ------------------------------------
 	glGenRenderbuffers(1, &depth_buffer_id);
-	glGenTextures(1, &file_texture);
+	glGenTextures(1, &tex_gl_id);
 	glGenFramebuffers(1, &frame_buffer_id);
 
 	// Settings --------------------------------------
@@ -22,7 +22,7 @@ void D_Material::GenerateFileTexture()
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	// Color texture ---------------
-	glBindTexture(GL_TEXTURE_2D, file_texture);
+	glBindTexture(GL_TEXTURE_2D, tex_gl_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -34,7 +34,7 @@ void D_Material::GenerateFileTexture()
 	// Attach ---------------------
 	glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depth_buffer_id);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, file_texture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex_gl_id, 0);
 
 	// Error texture --------------
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -50,4 +50,40 @@ void D_Material::GenerateFileTexture()
 	// Delete buffers ---------------------------------
 	glDeleteRenderbuffers(1, &depth_buffer_id);
 	glDeleteFramebuffers(1, &frame_buffer_id);
+}
+
+bool D_Material::SaveToFile(const char* name)
+{
+	uint size = sizeof(diffuse_color);
+
+	char* data = new char[size];
+
+	char* cursor = data;
+
+	memcpy(cursor, &diffuse_color, size);
+
+	// TODO, add more data if needed to save
+	App->file_sys->Save(name, data, size);
+	
+	
+	return true;
+}
+
+bool D_Material::LoadFromFile(const char* name)
+{
+
+	char* buffer = nullptr;
+
+	App->file_sys->Load(name, &buffer);
+
+	if (buffer != nullptr)
+	{
+		LOG("TODO");
+	}
+	else
+	{
+		LOG("[Error] Loading material from %", name);
+	}
+
+	return true;
 }

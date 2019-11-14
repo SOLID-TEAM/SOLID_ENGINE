@@ -82,6 +82,10 @@ private:
 
 	bool SearchParentRecursive(GameObject* parent, GameObject* parent_match);
 
+	// 
+
+	UID GetUID() const { return uid;  };
+
 public:
 
 	std::vector<GameObject*> childs;
@@ -93,6 +97,8 @@ public:
 	math::AABB bounding_box;
 
 private:
+
+	UID uid = 0;
 
 	bool active = true;
 

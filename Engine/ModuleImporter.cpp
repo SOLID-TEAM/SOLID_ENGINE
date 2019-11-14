@@ -170,7 +170,7 @@ void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, Game
 
 			// Create GameObject ---------------
 
-			new_go = new GameObject(node->mName.data, parent); 
+			new_go = new GameObject(node->mName.data, parent);
 
 			//  Add Component Mesh -------------
 
@@ -180,11 +180,14 @@ void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, Game
 			std::string test_name = GetFormattedName(ai_mesh->mName.C_Str(), GetNewUID()).c_str();
 			c_mesh->data->SaveToFile(test_name.c_str());
 
-			// TESTING LOAD FROM custom file
-			/*C_Mesh* test_mesh = (C_Mesh*)new_go->CreateComponent(ComponentType::MESH);
-			c_mesh->data = new D_Mesh();
-			c_mesh->data->LoadFromFile(test_name.c_str());*/
+			// TESTING LOAD FROM custom file - OK
+			/*std::string own_filename = c_mesh->data->GetExportedName().c_str();
+			delete c_mesh->data;
+			c_mesh->data = nullptr;
 
+			c_mesh->data = new D_Mesh();
+			c_mesh->data->LoadFromFile(own_filename.c_str());*/
+		
 			// Add Component Material ----------
 
 			C_Material* c_material = (C_Material*)new_go->CreateComponent(ComponentType::MATERIAL);
@@ -192,6 +195,10 @@ void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, Game
 			// check if the data contains texture data, if not, uncheck textured by default on c_mesh
 			if (c_material->data->textures[0] == nullptr) // TODO: ON DIFFUSE CHANNEL FOR NOW
 				c_material->textured = false;
+
+			// TODO: NOT TESTED
+			c_material->data->SaveToFile("testing.solidmat");
+
 
 			// Add Component Mesh Renderer -----
 

@@ -4,8 +4,6 @@
 #include "ModuleImporter.h"
 #include <string>
 
-typedef unsigned long long ulong;
-
 class Data
 {
 public:
@@ -26,51 +24,35 @@ public:
 
 	virtual ~Data() {}
 
-	std::string & GetName()
-	{
-		return name;
-	}
+	std::string & GetName() { return name; }
 
-	DataType GetType() const
-	{
-		return type;
-	}
+	DataType GetType() const { return type; }
 
-	ulong GetID() const
-	{
-		return ID;
-	}
+	UID GetUID() const { return uid; }
 
-	std::string GetOriginalFilePath() const
-	{
-		return original_file_path;
-	}
+	std::string GetOriginalFilePath() const { return original_file; }
 
-	std::string GetLibraryFilePath() const
-	{
-		return library_file_path;
-	}
+	std::string GetExportedName() const { return exported_file;	}
 
-	uint GetFileTexture() const
-	{
-		return file_texture;
-	}
-
-	virtual void GenerateFileTexture() {}
-
-	virtual void Load() {};
+	virtual void Save(Config& config) {};
+	virtual void Load(const Config& config) {};
+	
+	// release memory for loaded data, not resource abstract data
 	virtual void Unload() {};
 
 protected:
 
 	// Data Info -------------------------
 
-	ulong			ID = 0;
+	UID				uid = 0;
 	DataType		type = DataType::NO_TYPE;
-	std::string		name = "";
-	std::string		library_file_path = "";
-	std::string		original_file_path = "";
-	uint			file_texture = 0;
+
+	std::string		original_file; // Assets/..bla bla bla
+	std::string		name; // custom name based on import names from model
+	std::string		exported_file; // /Library/<custom type>/bla bla
+
+	//uint loaded_times = 0; // stores attempts to load
+	
 };
 
 #endif // !__DATA_H__
