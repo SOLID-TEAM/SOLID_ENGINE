@@ -188,14 +188,14 @@ update_status ModuleEditor::Update(float dt)
 {
 	// DEBUG MESH  ------------------------------------------------------------------------------------------------
 	// check if we need to show debug normals on selected go
-	if ((viewport_options.debug_vertex_normals || viewport_options.debug_face_normals) && selected_go != nullptr)
+	if ((viewport_options.debug_vertex_normals || viewport_options.debug_face_normals) && App->scene->selected_go != nullptr)
 	{	
-		if (last_go_precalc != selected_go)
+		if (last_go_precalc != App->scene->selected_go)
 		{
 			// check if the gameobject has meshes
 			D_Mesh* smesh = nullptr;
-			if(selected_go != nullptr)
-				smesh = selected_go->GetMeshes();
+			if(App->scene->selected_go != nullptr)
+				smesh = App->scene->selected_go->GetMeshes();
 
 			// we calc the two modes at once for the selected go
 			// but we filter what to print from bools cols
@@ -235,7 +235,7 @@ update_status ModuleEditor::Update(float dt)
 			}
 			// -----------------------------------------------------------
 			// assign new precalc
-			last_go_precalc = selected_go;
+			last_go_precalc = App->scene->selected_go;
 		}
 	}
 	else if (!viewport_options.debug_face_normals && !viewport_options.debug_vertex_normals) // when the two debug options are off and still have a ddmesh
@@ -248,7 +248,7 @@ update_status ModuleEditor::Update(float dt)
 			last_go_precalc = nullptr;
 		}
 	}
-	else if (selected_go == nullptr && ddmesh != nullptr)
+	else if (App->scene->selected_go == nullptr && ddmesh != nullptr)
 	{
 		ddmesh->Clean();
 		delete ddmesh;
@@ -345,13 +345,13 @@ update_status ModuleEditor::PostUpdate(float dt)
 	// -------------------------------------------------------------------------------------------------------------------------------------------
 	if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
 	{
-		if (last_go_precalc == selected_go && ddmesh != nullptr)
+		if (last_go_precalc == App->scene->selected_go && ddmesh != nullptr)
 		{
 			if (viewport_options.debug_vertex_normals)
 			{
 				if (ddmesh->v_last_ll != viewport_options.v_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
 				{
-					ddmesh->ComputeVertexNormals(selected_go->GetMeshes(), viewport_options.v_n_line_length);
+					ddmesh->ComputeVertexNormals(App->scene->selected_go->GetMeshes(), viewport_options.v_n_line_length);
 					ddmesh->FillVertexBuffer();
 				}
 			}
@@ -360,7 +360,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 			{
 				if (ddmesh->f_last_ll != viewport_options.f_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
 				{
-					ddmesh->ComputeFacesNormals(selected_go->GetMeshes(), viewport_options.f_n_line_length);
+					ddmesh->ComputeFacesNormals(App->scene->selected_go->GetMeshes(), viewport_options.f_n_line_length);
 					ddmesh->FillFacesBuffer();
 				}
 			}
@@ -377,13 +377,13 @@ update_status ModuleEditor::Draw()
 		if (ddmesh != nullptr)
 		{
 			// push selected go matrix
-			if (selected_go->transform->HasNegativeScale())
+			if (App->scene->selected_go->transform->HasNegativeScale())
 			{
 				glFrontFace(GL_CW);
 			}
 
 			glPushMatrix();
-			glMultMatrixf((float*)&selected_go->transform->global_transform.Transposed());
+			glMultMatrixf((float*)&App->scene->selected_go->transform->global_transform.Transposed());
 
 			if (viewport_options.debug_vertex_normals)
 			{
@@ -520,17 +520,17 @@ void ModuleEditor::Load(Config& config)
 	// if we have meshes, and line length doesnt match, recompute normals ----
 	float temp_v = viewport_options.v_n_line_length;
 	viewport_options.v_n_line_length = config.GetFloat("v_n_line_length", viewport_options.v_n_line_length);
-	if (temp_v != viewport_options.v_n_line_length && ddmesh != nullptr && selected_go != nullptr)
+	if (temp_v != viewport_options.v_n_line_length && ddmesh != nullptr && App->scene->selected_go != nullptr)
 	{
-		 ddmesh->ComputeVertexNormals(selected_go->GetMeshes(),viewport_options.v_n_line_length);
+		 ddmesh->ComputeVertexNormals(App->scene->selected_go->GetMeshes(),viewport_options.v_n_line_length);
 		 ddmesh->FillVertexBuffer();
 	}
 
 	float temp_f = viewport_options.f_n_line_length;
 	viewport_options.f_n_line_length = config.GetFloat("f_n_line_length", viewport_options.f_n_line_length);
-	if (temp_f != viewport_options.f_n_line_length && ddmesh != nullptr && selected_go != nullptr)
+	if (temp_f != viewport_options.f_n_line_length && ddmesh != nullptr && App->scene->selected_go != nullptr)
 	{
-		ddmesh->ComputeFacesNormals(selected_go->GetMeshes(),viewport_options.f_n_line_length);
+		ddmesh->ComputeFacesNormals(App->scene->selected_go->GetMeshes(),viewport_options.f_n_line_length);
 		ddmesh->FillFacesBuffer();
 	}
 	// -----------------------------------------------------------------------
@@ -582,10 +582,10 @@ bool ModuleEditor::DrawMainMenuBar()
 		{
 			App->scene->UndoLastDelete();
 		}
-		if (selected_go == nullptr) delete_enabled = false;
+		if (App->scene->selected_go == nullptr) delete_enabled = false;
 		if (ImGui::MenuItem("delete selected", nullptr, nullptr, delete_enabled))
 		{
-			App->scene->DeleteGameObject(selected_go);
+			App->scene->DeleteGameObject(App->scene->selected_go);
 		}
 		ImGui::MenuItem("Deleted actions history", NULL, &w_delete_history->active);
 

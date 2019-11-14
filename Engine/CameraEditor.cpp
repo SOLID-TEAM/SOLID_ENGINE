@@ -174,7 +174,7 @@ void CameraEditor::Update(float dt)
 
 			if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && state == IDLE)
 			{
-				GameObject* selected = App->editor->selected_go;
+				GameObject* selected = App->scene->selected_go;
 
 				if (selected != nullptr && App->scene->root_go != selected)
 				{

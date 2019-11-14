@@ -205,9 +205,9 @@ update_status ModuleInput::PreUpdate(float dt)
 				// TODO: very provisional for the assignment 1, the original behaviour we want is more complex
 				if (new_tex_id != 0)
 				{
-					if (App->editor->selected_go != nullptr)
+					if (App->scene->selected_go != nullptr)
 					{
-						GameObject* sel_go = App->editor->selected_go;
+						GameObject* sel_go = App->scene->selected_go;
 
 						C_Material* c = (C_Material*)sel_go->GetComponentsByType(ComponentType::MATERIAL);
 

@@ -159,7 +159,7 @@ void W_Scene::DebugMenu()
 		{
 			if (App->editor->ddmesh != nullptr)
 			{
-				App->editor->ddmesh->ComputeVertexNormals(App->editor->selected_go->GetMeshes(), vp.v_n_line_length);
+				App->editor->ddmesh->ComputeVertexNormals(App->scene->selected_go->GetMeshes(), vp.v_n_line_length);
 				App->editor->ddmesh->FillVertexBuffer();
 			}
 		}
@@ -183,7 +183,7 @@ void W_Scene::DebugMenu()
 		{
 			if (App->editor->ddmesh != nullptr)
 			{
-				App->editor->ddmesh->ComputeFacesNormals(App->editor->selected_go->GetMeshes(), vp.f_n_line_length);
+				App->editor->ddmesh->ComputeFacesNormals(App->scene->selected_go->GetMeshes(), vp.f_n_line_length);
 				App->editor->ddmesh->FillFacesBuffer();
 			}
 		}

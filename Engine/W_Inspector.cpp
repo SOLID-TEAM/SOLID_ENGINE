@@ -14,9 +14,9 @@ void W_Inspector::Draw()
 		// Print all info using components
 		// each component already has a draw elements for its own data
 		// here only call this
-		if (App->editor->selected_go != nullptr)
+		if (App->scene->selected_go != nullptr)
 		{
-			GameObject* go = App->editor->selected_go;
+			GameObject* go = App->scene->selected_go;
 
 			ImGui::Spacing();
 			ImGui::Checkbox("##active", &go->active); ImGui::SameLine(); ImGui::InputText("##etc", &go->name);

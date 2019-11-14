@@ -35,7 +35,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 
 	/*node_flags |= ImGuiTreeNodeFlags_CollapsingHeader;*/
 
-	bool selected = App->editor->selected_go == go;
+	bool selected = App->scene->selected_go == go;
 	//bool hover_check = hovered_go == go;
 
 	if (selected)
@@ -74,7 +74,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 	
 	if (ImGui::BeginPopupContextItem(go->GetName()))
 	{
-		App->editor->selected_go = go;
+		App->scene->selected_go = go;
 
 		if (ImGui::Button("Delete"))
 		{
@@ -91,7 +91,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 	if (clicked)
 	{
 		//LOG("Clicked: %s", go->GetName());
-		App->editor->selected_go = go;
+		App->scene->selected_go = go;
 	}
 
 	// DRAG AND DROP
@@ -117,7 +117,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 			/*go->AddChildren((*source_go));*/
 			App->scene->AddGoToHierarchyChange(go, (*source_go));
 
-			App->editor->selected_go = (*source_go);
+			App->scene->selected_go = (*source_go);
 
 			//LOG("[Info] Moved %s to %s", (*source_go)->GetName(), go->GetName());
 		}
