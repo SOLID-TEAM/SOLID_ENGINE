@@ -58,6 +58,9 @@
     <Filter Include="Sources\Game Object\Custom">
       <UniqueIdentifier>{8e39da0f-096c-4620-aa8b-bf7ae991bc71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Trees">
+      <UniqueIdentifier>{113d7f54-e47e-43a3-aa2d-b0f206733eaf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -336,9 +339,6 @@
     <ClInclude Include="external\mmgr\nommgr.h">
       <Filter>Sources\Thirds Party\mmgr</Filter>
     </ClInclude>
-    <ClInclude Include="HardwareInfo.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>Sources\Core</Filter>
     </ClInclude>
@@ -422,6 +422,12 @@
     </ClInclude>
     <ClInclude Include="Viewport.h">
       <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="HardwareInfo.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="KDTree.h">
+      <Filter>Sources\Trees</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -584,9 +590,6 @@
     <ClCompile Include="external\mmgr\mmgr.cpp">
       <Filter>Sources\Thirds Party\mmgr</Filter>
     </ClCompile>
-    <ClCompile Include="HardwareInfo.cpp">
-      <Filter>Sources\Containers</Filter>
-    </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Sources\Core</Filter>
     </ClCompile>
@@ -670,6 +673,12 @@
     </ClCompile>
     <ClCompile Include="Viewport.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="HardwareInfo.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="KDTree.cpp">
+      <Filter>Sources\Trees</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

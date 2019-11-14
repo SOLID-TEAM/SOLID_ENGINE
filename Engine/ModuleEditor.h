@@ -182,9 +182,7 @@ public:
 
 	// GameObjects ------------------------
 
-	GameObject*			selected_go = nullptr; // WARNING: TODO: when we delete gameobjects, remember to unlink all pointers
 	GameObject*			last_go_precalc = nullptr; // store last precalculated go from debug normals
-
 	ViewportOptions		viewport_options;
 	DebugDataMesh*		ddmesh = nullptr; // debug data data // if we need store more debug data, pass this to a vector/list
 };

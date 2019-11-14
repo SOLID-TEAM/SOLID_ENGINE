@@ -51,7 +51,7 @@ update_status ModuleScene::PreUpdate(float dt)
 				AddGOToUndoDeque(*gotu);
 				LOG(" ------------------------------------------------------- ");
 				// "unselect from hierarchy"
-				App->editor->selected_go = nullptr;
+				selected_go = nullptr;
 			}
 			else
 				LOG("child not found on parent");
@@ -168,36 +168,29 @@ bool ModuleScene::CleanUp()
 
 GameObject* ModuleScene::Find(std::string name)
 {
-	GameObject* to_return = nullptr;
+	std::stack<GameObject*> go_stack;
 
-	to_return = _Find(name, root_go);
+	go_stack.push(root_go);
 
-	return to_return;
-}
-
-GameObject* ModuleScene::_Find(std::string name, GameObject* go)
-{
-	std::string name_ = go->GetName();
-
-	if (name_  == name)
+	while (!go_stack.empty())
 	{
-		return go;
-	}
+		GameObject* go = go_stack.top();
 
-	for (std::vector<GameObject*>::iterator itr = go->childs.begin(); itr != go->childs.end(); ++itr)
-	{
-		GameObject* ret = _Find(name, (*itr));
-
-		if (ret != nullptr)
+		if (go->name == name)
 		{
-			return ret;
+			return go;
+		}
+
+
+		go_stack.pop();
+
+		for (GameObject * child : go->childs)
+		{
+			go_stack.push(child);
 		}
 	}
-
 	return nullptr;
 }
-
-// --------------------------------------------------------------
 
 GameObject* ModuleScene::CreateGameObject(std::string name, GameObject* parent)
 {
@@ -227,13 +220,27 @@ void ModuleScene::UndoLastDelete()
 			// TODO: if the parent is already deleted the object doesn't re-arrange on scene (not tested) || currently this never gonna happen
 			LOG("[Info] Succesfully re-attached child %s to its parent %s", to_undo_buffer_go.back()->GetName(), to_undo_buffer_go.back()->parent->GetName());
 			// restore hierarchy selection
-			App->editor->selected_go = to_undo_buffer_go.back();
+			selected_go = to_undo_buffer_go.back();
 			LOG("[Info] %s deleted from undo buffer", to_undo_buffer_go.back()->GetName());
 			to_undo_buffer_go.pop_back();
 		}
 	}
 	else
 		LOG("no more gameobjects to restore");
+}
+
+
+AABB ModuleScene::EncloseAllStaticGo()
+{
+	AABB global_aabb;
+	global_aabb.SetNegativeInfinity();
+
+	for (GameObject* go : static_go_list)
+	{
+		global_aabb.Enclose(go->bounding_box);
+	}
+
+	return global_aabb;
 }
 
 void ModuleScene::AddGOToUndoDeque(GameObject* go)

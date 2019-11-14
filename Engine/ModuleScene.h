@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include <queue>
 #include <map>
+#include <list>
+#include <stack>
 
 // one action include any child tree inside object
 #define MAX_UNDO_ACTIONS 20 // TODO: add a max saved actions buffer qty configuration on W_Config panel to allow user configure its ctrl-z buffer
@@ -15,38 +17,48 @@ class Viewport;
 class ModuleScene : public Module
 {
 public:
+
 	ModuleScene();
+
 	~ModuleScene();
 
 	bool Init(Config& config);
+
 	bool Start(Config& config);
+
 	update_status PreUpdate(float dt);
+
 	update_status Update(float dt);
-	void UpdateAll(float dt, GameObject*);
+	
 	update_status PostUpdate(float dt);
+
 	update_status Draw();
 
-	// TODO: improve this hierarchy draw if needed
-	// current in-out recursively (draw at return)
+	bool CleanUp();
+
+	void UpdateAll(float dt, GameObject*);
+
 	void RenderAll(GameObject* go);
 	
-	// put gameobject to undo buffer
-	void DeleteGameObject(GameObject* go);
-	void UndoLastDelete();
+	// Game Objects functions ----------------------------------------------
 
 	GameObject* CreateGameObject(std::string name = "no_name", GameObject* parent = nullptr);
-	
-	bool CleanUp();
+
+	void DeleteGameObject(GameObject* go);
 
 	GameObject* Find(std::string name);
 
-	GameObject* _Find(std::string name, GameObject* go);
+	// Commands -------------------------------------------------------------
 
 	std::deque<GameObject*>& GetUndoDeque();
 
 	void AddGoToHierarchyChange(GameObject* target_go, GameObject* source_go);
 
+	void UndoLastDelete(); // put gameobject to undo buffer
+
 private:
+
+	AABB EncloseAllStaticGo();
 
 	void AddGOToUndoDeque(GameObject* gameObject);
 
@@ -54,9 +66,13 @@ public:
 
 	// Game Objects -------------------------------
 
-	GameObject*		root_go = nullptr;
-	GameObject*		main_camera = nullptr;
-	CameraEditor*	editor_camera = nullptr;
+	std::list<GameObject*>	static_go_list;
+	std::list<GameObject*>	dynamic_go_list;
+
+	GameObject*				root_go = nullptr;
+	GameObject*				selected_go = nullptr;
+	GameObject*				main_camera = nullptr;
+	CameraEditor*			editor_camera = nullptr;
 
 	// Viewports ---------------------------------
 

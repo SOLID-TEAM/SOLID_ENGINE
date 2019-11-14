@@ -10,7 +10,7 @@
 #include "C_Camera.h"
 
 #include "D_Mesh.h"
-
+#include "KDTree.h"
 
 GameObject::GameObject(std::string name, GameObject* parent) : name(name), parent(parent)
 {
@@ -180,7 +180,7 @@ D_Mesh* GameObject::GetMeshes()
 	return nullptr;
 }
 
-void GameObject::GetBoundingBox(math::AABB& aabb)
+void GameObject::GetHierarchyAABB(math::AABB& aabb)
 {
 	C_Mesh* c_mesh = (C_Mesh*)GetComponentsByType(ComponentType::MESH);
 
@@ -196,14 +196,14 @@ void GameObject::GetBoundingBox(math::AABB& aabb)
 		aabb.minPoint = transform->position;
 	}
 
-	GenerateGlobalBoundingBox(this, &aabb);
+	GenerateHierarchyAABB(this, &aabb);
 }
 
-void GameObject::GenerateGlobalBoundingBox( GameObject* go, math::AABB* aabb)
+void GameObject::GenerateHierarchyAABB( GameObject* go, math::AABB* aabb)
 {
 	for (std::vector<GameObject*>::iterator child = go->childs.begin() ;  child != go->childs.end(); ++child)
 	{
-		GenerateGlobalBoundingBox( *child, aabb);
+		GenerateHierarchyAABB( *child, aabb);
 		
 		C_Mesh* c_mesh = (C_Mesh*) (*child)->GetComponentsByType(ComponentType::MESH);
 

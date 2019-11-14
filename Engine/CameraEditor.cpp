@@ -179,7 +179,7 @@ void CameraEditor::Update(float dt)
 				if (selected != nullptr && App->scene->root_go != selected)
 				{
 					AABB general_aabb;
-					selected->GetBoundingBox(general_aabb);
+					selected->GetHierarchyAABB(general_aabb);
 					Sphere sphere = general_aabb.MinimalEnclosingSphere();
 
 					if (sphere.Diameter() != 0)

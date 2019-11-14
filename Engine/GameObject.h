@@ -12,6 +12,7 @@ class D_Mesh;
 class C_Transform;
 class ModuleScene;
 class ModuleEditor;
+class KDTree;
 
 class GameObject
 {
@@ -19,6 +20,7 @@ public:
 
 	friend ModuleScene;
 	friend ModuleEditor;
+	friend KDTree;
 
 public:
 
@@ -52,7 +54,9 @@ public:
 
 	D_Mesh* GetMeshes();
 
-	void GetBoundingBox(math::AABB& aabb); // From all components
+	// Bounding Box Functions --------------------------------------
+
+	void GetHierarchyAABB(math::AABB& aabb); 
 
 private:
 
@@ -66,7 +70,7 @@ private:
 
 	// Bounding Box Functions --------------------------------------
 
-	void GenerateGlobalBoundingBox(GameObject* go, math::AABB* aabb);
+	void GenerateHierarchyAABB(GameObject* go, math::AABB* aabb);
 
 	void CleanUpRecursive(GameObject* go);
 	
@@ -85,6 +89,8 @@ public:
 	GameObject* parent = nullptr;
 
 	C_Transform* transform = nullptr;
+
+	math::AABB bounding_box;
 
 private:
 
