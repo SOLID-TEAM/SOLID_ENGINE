@@ -196,6 +196,10 @@ void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, Game
 			if (c_material->data->textures[0] == nullptr) // TODO: ON DIFFUSE CHANNEL FOR NOW
 				c_material->textured = false;
 
+			// TODO: NOT TESTED
+			c_material->data->SaveToFile("testing.solidmat");
+
+
 			// Add Component Mesh Renderer -----
 
 			new_go->CreateComponent(ComponentType::MESH_RENDERER);

@@ -31,6 +31,10 @@ public:
 
 	void GenerateFileTexture();
 
+
+	bool SaveToFile(const char* name);
+	bool LoadFromFile(const char* name);
+
 public:
 
 	enum TextureType
@@ -44,8 +48,10 @@ public:
 
 public:
 
+	// TODO: instead of D_Texture, store a UID from future resource texture
 	D_Texture*  textures[MAX];
-	float4	    diffuse_color; 
+	float4	    diffuse_color;
+	uint tex_gl_id;
 };
 
 #endif //__R_MATERIAL_H__

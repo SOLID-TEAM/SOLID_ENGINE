@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Component.h"
+#include "Application.h"
 #include "W_Inspector.h"
 #include "ModuleScene.h"
 
@@ -14,6 +15,8 @@
 
 GameObject::GameObject(std::string name, GameObject* parent) : name(name), parent(parent)
 {
+	uid = App->random->Int();
+
 	// Adds a component transform ---------------------
 	transform = (C_Transform*)CreateComponent(ComponentType::TRANSFORM);
 

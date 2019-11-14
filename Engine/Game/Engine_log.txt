@@ -30,6 +30,7 @@ File [.Library/Meshes/Untitled_0_001.solidmesh] overwritten with 6444 bytes
 [Info] Added image Baker_house.png to texture map
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
+File [.testing.solidmat] overwritten with 16 bytes
 [Info] Loading mesh data : Untitled
 [Info] Vertices:    1641 
 [Info] Indices:    2751
@@ -41,6 +42,7 @@ File [.Library/Meshes/Untitled_1_.solidmesh] overwritten with 63544 bytes
 [Info] Texture with same name Baker_house.png already loaded into buffers
 [Info] returning stored texture id
 // ---------------------------------------------------
+File [.testing.solidmat] overwritten with 16 bytes
 [Start] Loading Editor
 // ---------------------------------------------------
 [Info] Image cube.png correctly loaded into DevIL

@@ -20,6 +20,7 @@
 // Tools ---------------------
 #include "Config.h"
 #include "HardwareInfo.h"
+#include "external/MathGeoLib/include/Algorithm/Random/LCG.h"
 
 // Panels --------------------
 #include "W_Config.h"
@@ -61,6 +62,9 @@ public:
 	Config* config = nullptr;
 	std::string config_filename;
 	int max_frames = 60;
+
+	// random
+	LCG* random = nullptr;
 
 	// Modules --------------------------------
 	ModuleWindow* window = nullptr;

@@ -9,6 +9,8 @@ Application::Application()
 	app_name.assign("SOLID_ENGINE");
 	organization_name.assign("SOLID_TEAM");
 
+	random = new math::LCG();
+
 	window = new ModuleWindow();
 	input = new ModuleInput();
 	test = new ModuleTest();
@@ -218,6 +220,8 @@ bool Application::CleanUp()
 
 	SaveLogToFile();
 	delete config;
+
+	delete random;
 
 	return ret;
 }

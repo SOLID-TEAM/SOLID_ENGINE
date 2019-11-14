@@ -103,6 +103,7 @@ void D_Mesh::Unload()
 }
 
 // TODO: pick value for ranges from enumerator and adds and assert
+// TODO: BE aware on the future if we need uv_num_channels, you have to add here too
 bool D_Mesh::SaveToFile(const char* name)
 {
 	uint ranges[BufferType::MAX + 1] = { buffers_size[BufferType::INDICES],buffers_size[BufferType::VERTICES], buffers_size[BufferType::NORMALS], buffers_size[BufferType::UVS], uv_num_components };
@@ -140,7 +141,7 @@ bool D_Mesh::SaveToFile(const char* name)
 
 	std::string full_name(LIBRARY_MESH_FOLDER + std::string(name) + std::string(".solidmesh"));
 
-	exported_name.assign(name + std::string(".solidmesh"));
+	exported_file.assign(name + std::string(".solidmesh"));
 
 	return App->file_sys->Save(full_name.c_str(), data, size) != -1 ? true:false;
 }
