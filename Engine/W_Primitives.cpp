@@ -72,7 +72,7 @@ void W_Primitives::Draw()
 			// TODO: when we delete gameobjects, on preupdate check all linked go's of each module if anyone is going to delete
 			if (last_created != nullptr)
 			{
-				C_Material* c_mat = (C_Material*)last_created->GetComponentsByType(ComponentType::MATERIAL);
+				C_Material* c_mat = last_created->GetComponent< C_Material>();
 				c_mat->data->diffuse_color = { color.x, color.y, color.z, color.w};
 			}
 		}

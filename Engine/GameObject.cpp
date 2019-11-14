@@ -4,12 +4,6 @@
 #include "W_Inspector.h"
 #include "ModuleScene.h"
 
-#include "C_Transform.h"
-#include "C_Mesh.h"
-#include "C_Material.h"
-#include "C_MeshRenderer.h"
-#include "C_Camera.h"
-
 #include "D_Mesh.h"
 #include "KDTree.h"
 
@@ -18,11 +12,16 @@ GameObject::GameObject(std::string name, GameObject* parent) : name(name), paren
 	uid = App->random->Int();
 
 	// Adds a component transform ---------------------
-	transform = (C_Transform*)CreateComponent(ComponentType::TRANSFORM);
+	transform = CreateComponent<C_Transform>();
 
-	// Add to its parent childs ----------------------
+	// Add to its parent childs -----------------------
 	if (parent != nullptr)
 		parent->childs.push_back(this);
+
+	// Standard Bounding Box --------------------------
+
+	bounding_box.SetFromCenterAndSize( float3::zero , math::float3(10.f, 10.f, 10.f));
+	obb = bounding_box.ToOBB();
 }
 
 GameObject::~GameObject()
@@ -99,58 +98,6 @@ void GameObject::CleanUpRecursive(GameObject* go)
 	}
 }
 
-Component* GameObject::CreateComponent(ComponentType type)
-{
-	Component* new_component = nullptr;
-
-	switch (type)
-	{
-	case ComponentType::TRANSFORM:
-	{
-		components.push_back(new_component = new C_Transform(this));
-		break;
-	}
-	case ComponentType::MESH:
-	{
-		components.push_back(new_component = new C_Mesh(this));
-		break;
-	}
-	case ComponentType::MATERIAL:
-	{
-		components.push_back(new_component = new C_Material(this));
-		break;
-	}
-	case ComponentType::MESH_RENDERER:
-	{
-		components.push_back(new_component = new C_MeshRenderer(this));
-		break;
-	}
-	case ComponentType::CAMERA:
-	{
-		components.push_back(new_component = new C_Camera(this));
-		break;
-	}
-
-	default:
-		break;
-	}
-
-
-	return new_component;
-}
-
-Component* GameObject::GetComponentsByType(ComponentType type) 
-{
-	std::vector<Component*>::iterator component = components.begin();
-
-	for (; component != components.end(); ++component)
-	{
-		if ((*component)->type == type) return  (*component);
-	}
-
-	return nullptr;
-}
-
 void GameObject::SetActive(bool active)
 {
 	this->active = active;
@@ -183,50 +130,32 @@ D_Mesh* GameObject::GetMeshes()
 	return nullptr;
 }
 
-void GameObject::GetHierarchyAABB(math::AABB& aabb)
+AABB GameObject::GetHierarchyAABB()
 {
-	C_Mesh* c_mesh = (C_Mesh*)GetComponentsByType(ComponentType::MESH);
+	AABB hierarchy_aabb;
+	hierarchy_aabb.SetNegativeInfinity();
 
-	if (c_mesh)
+	std::stack<GameObject*> go_stack;
+
+	go_stack.push(this);
+
+	while (!go_stack.empty())
 	{
-		aabb = c_mesh->data->aabb;
-		OBB obb = aabb.Transform(this->transform->global_transform);
-		aabb = obb.MinimalEnclosingAABB();
-	}
-	else
-	{ 
-		aabb.maxPoint = transform->position;
-		aabb.minPoint = transform->position;
-	}
+		GameObject* go = go_stack.top();
 
-	GenerateHierarchyAABB(this, &aabb);
-}
+		hierarchy_aabb.Enclose(go->bounding_box);
 
-void GameObject::GenerateHierarchyAABB( GameObject* go, math::AABB* aabb)
-{
-	for (std::vector<GameObject*>::iterator child = go->childs.begin() ;  child != go->childs.end(); ++child)
-	{
-		GenerateHierarchyAABB( *child, aabb);
-		
-		C_Mesh* c_mesh = (C_Mesh*) (*child)->GetComponentsByType(ComponentType::MESH);
+		go_stack.pop();
 
-		if (c_mesh != nullptr)
+		for (GameObject* child : go->childs)
 		{
-			AABB global_aabb = c_mesh->data->aabb;
-			OBB obb = global_aabb.Transform((*child)->transform->global_transform);
-			global_aabb = obb.MinimalEnclosingAABB();
-
-			aabb->maxPoint = aabb->maxPoint.Max(global_aabb.maxPoint);
-			aabb->minPoint = aabb->minPoint.Min(global_aabb.minPoint);
-		}
-		else
-		{
-			aabb->maxPoint = aabb->maxPoint.Max((*child)->transform->position);
-			aabb->minPoint = aabb->minPoint.Min((*child)->transform->position);
+			go_stack.push(child);
 		}
 	}
-}
 
+	return hierarchy_aabb;
+
+}
 
 bool GameObject::SearchParentRecursive(GameObject* parent, GameObject* parent_match)
 {

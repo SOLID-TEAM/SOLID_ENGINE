@@ -209,7 +209,7 @@ update_status ModuleInput::PreUpdate(float dt)
 					{
 						GameObject* sel_go = App->scene->selected_go;
 
-						C_Material* c = (C_Material*)sel_go->GetComponentsByType(ComponentType::MATERIAL);
+						C_Material* c = sel_go->GetComponent<C_Material>();
 
 						if (c != nullptr)
 						{

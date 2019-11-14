@@ -174,7 +174,7 @@ void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, Game
 
 			//  Add Component Mesh -------------
 
- 			C_Mesh* c_mesh = (C_Mesh*)new_go->CreateComponent(ComponentType::MESH);
+ 			C_Mesh* c_mesh = new_go->CreateComponent< C_Mesh>();
 			c_mesh->data = ImportMesh( ai_mesh, ai_mesh->mName.C_Str() );
 			// and save own format to disk
 			std::string test_name = GetFormattedName(ai_mesh->mName.C_Str(), GetNewUID()).c_str();
@@ -190,7 +190,7 @@ void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, Game
 		
 			// Add Component Material ----------
 
-			C_Material* c_material = (C_Material*)new_go->CreateComponent(ComponentType::MATERIAL);
+			C_Material* c_material = new_go->CreateComponent< C_Material>();
 			c_material->data = ImportMaterial(ai_material, ai_material->GetName().C_Str());
 			// check if the data contains texture data, if not, uncheck textured by default on c_mesh
 			if (c_material->data->textures[0] == nullptr) // TODO: ON DIFFUSE CHANNEL FOR NOW
@@ -202,7 +202,7 @@ void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, Game
 
 			// Add Component Mesh Renderer -----
 
-			new_go->CreateComponent(ComponentType::MESH_RENDERER);
+			new_go->CreateComponent< C_MeshRenderer >();
 
 			// TODO, Create ID and search ID on Library to have not cloned data
 		}
@@ -455,17 +455,17 @@ GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, float3 position,
 	
 
 	// Components --------------------------------------------
-	C_Mesh* c_mesh = (C_Mesh*)gameobject->CreateComponent(ComponentType::MESH);
+	C_Mesh* c_mesh = gameobject->CreateComponent<C_Mesh>();
 	c_mesh->data = new D_Mesh(p_mesh->points, p_mesh->triangles, p_mesh->normals, p_mesh->tcoords, p_mesh->npoints, p_mesh->ntriangles);
 	c_mesh->data->name.assign(name.data());
 	c_mesh->data->Load();
 	c_mesh->data->CreateAABB();
 
-	C_Material* c_material = (C_Material*)gameobject->CreateComponent(ComponentType::MATERIAL);
+	C_Material* c_material = gameobject->CreateComponent< C_Material>();
 	c_material->data = CreateDefaultMaterial("Default material", color);
 	c_material->textured = false;
 
-	C_MeshRenderer* c_renderer = (C_MeshRenderer*)gameobject->CreateComponent(ComponentType::MESH_RENDERER);
+	C_MeshRenderer* c_renderer = gameobject->CreateComponent< C_MeshRenderer>();
 
 	par_shapes_free_mesh(p_mesh);
 

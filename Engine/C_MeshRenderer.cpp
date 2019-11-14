@@ -28,8 +28,8 @@ bool C_MeshRenderer::Render()
 {
 	// Get Data from components ----------------------------
 
-	C_Mesh* c_mesh = (C_Mesh*)linked_go->GetComponentsByType(ComponentType::MESH);           	// TODO: Link it once time ------------------
-	C_Material* c_mat = (C_Material*)linked_go->GetComponentsByType(ComponentType::MATERIAL);   // TODO: Link it once time ------------------
+	C_Mesh* c_mesh = linked_go->GetComponent<C_Mesh>();           	// TODO: Link it once time ------------------
+	C_Material* c_mat = linked_go->GetComponent<C_Material>();   // TODO: Link it once time ------------------
 
 	if (c_mesh == nullptr)
 	{

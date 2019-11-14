@@ -20,7 +20,7 @@ Viewport::~Viewport()
 
 void Viewport::SetCamera(GameObject* camera_go)
 {
-	camera = (C_Camera*)camera_go->GetComponentsByType(ComponentType::CAMERA);
+	camera = camera_go->GetComponent< C_Camera>();
 }
 
 C_Camera* Viewport::GetCamera()

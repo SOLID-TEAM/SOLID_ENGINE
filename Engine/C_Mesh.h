@@ -20,6 +20,12 @@ public:
 	bool DrawPanelInfo();
 	bool CleanUp();
 
+	// Resource functions ---------------------
+
+	void SetMeshResource(D_Mesh* resource);
+
+	void DeleteMeshResource();
+
 public:
 
 	D_Mesh* data = nullptr;

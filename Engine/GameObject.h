@@ -6,12 +6,22 @@
 
 #include "Component.h"
 #include "external/MathGeoLib/include/Geometry/AABB.h"
+#include "external/MathGeoLib/include/Geometry/OBB.h"
 
-class W_Inspector;
-class D_Mesh;
-class C_Transform;
+// Components ------------------------------ // Needed to dynamic cast functions
+
+#include "C_Transform.h"
+#include "C_Mesh.h"
+#include "C_Material.h"
+#include "C_MeshRenderer.h"
+#include "C_Camera.h"
+#include <typeinfo>
+
+
 class ModuleScene;
 class ModuleEditor;
+class W_Inspector;
+class D_Mesh; // Remove
 class KDTree;
 
 class GameObject
@@ -46,9 +56,10 @@ public:
 
 	// Components Funtions -------------------------------------------
 
-	Component* CreateComponent(ComponentType type);
-
-	Component* GetComponentsByType(ComponentType type);
+	template <class T>
+	T* CreateComponent();
+	template <class T>
+	T* GetComponent() const;
 
 	const std::vector<Component*>& GetComponents() const;
 
@@ -56,7 +67,7 @@ public:
 
 	// Bounding Box Functions --------------------------------------
 
-	void GetHierarchyAABB(math::AABB& aabb); 
+	AABB GetHierarchyAABB();
 
 private:
 
@@ -68,12 +79,6 @@ private:
 
 	void  DoCleanUp();
 
-	// Bounding Box Functions --------------------------------------
-
-	void GenerateHierarchyAABB(GameObject* go, math::AABB* aabb);
-
-	void CleanUpRecursive(GameObject* go);
-	
 	// Hierarchy functions -----------------------------------------
 
 	void AddChild(GameObject* child); // Addchild currently is used to hierarchical changes
@@ -81,6 +86,8 @@ private:
 	void RemoveChild(GameObject* child);
 
 	bool SearchParentRecursive(GameObject* parent, GameObject* parent_match);
+
+	void CleanUpRecursive(GameObject* go);
 
 	// 
 
@@ -100,15 +107,47 @@ private:
 
 	UID uid = 0;
 
+	bool is_static = false;
+
 	bool active = true;
 
 	std::string name;
 
 	std::vector<Component*> components;
 
+	OBB obb;
+
 	friend W_Inspector;
 };
 
-#endif // !_GAMEOBJECT_H__
+template<class T>
+T* GameObject::GetComponent() const
+{
+	for (auto& component : components)
+	{
+		if (T* c = dynamic_cast<T*>(component))
+			return c;
+	}
 
-//bool Draw();
+	return nullptr;
+}
+template<class T>
+T* GameObject::CreateComponent()
+{
+	T* new_component = nullptr;
+
+	if (typeid(C_Transform) == typeid(T))
+		components.push_back(new_component = (T*) new C_Transform(this));
+	else if (typeid(C_Mesh) == typeid(T))
+		components.push_back(new_component = (T*)new C_Mesh(this));
+	else if (typeid(C_MeshRenderer) == typeid(T))
+		components.push_back(new_component = (T*)new C_MeshRenderer(this));
+	else if (typeid(C_Material) == typeid(T))
+		components.push_back(new_component = (T*)new C_Material(this));
+	else if (typeid(C_Camera) == typeid(T))
+		components.push_back(new_component = (T*)new C_Camera(this));
+
+	return new_component;
+}
+
+#endif // !_GAMEOBJECT_H__

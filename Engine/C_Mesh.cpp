@@ -2,6 +2,8 @@
 #include "ImGui/imgui.h"
 
 #include "C_Mesh.h"
+#include "C_Transform.h"
+
 #include "D_Mesh.h"
 
 C_Mesh::C_Mesh(GameObject* parent) : Component(parent, ComponentType::MESH)
@@ -20,6 +22,7 @@ bool C_Mesh::Update(float dt)
 bool C_Mesh::DrawPanelInfo()
 {
 	ImGui::Spacing();
+	ImGui::Title("Name", 1);		ImGui::Text("%s", data->GetName());
 	ImGui::Title("Triangles", 1);   ImGui::Text("%u", data->buffers_size[D_Mesh::INDICES] / 3u);
 	ImGui::Title("Indices", 1);		ImGui::Text("%u", data->buffers_size[D_Mesh::INDICES]);
 	ImGui::Title("Vertices", 1);    ImGui::Text("%u", data->buffers_size[D_Mesh::VERTICES]);
@@ -35,3 +38,23 @@ bool C_Mesh::CleanUp()
 	
 	return true;
 }
+
+void C_Mesh::SetMeshResource(D_Mesh* resource)
+{
+	if (linked_go == nullptr || resource == nullptr)
+	{
+		return;
+	}
+
+	data = resource;
+	linked_go->bounding_box.SetFromCenterAndSize(linked_go->transform->position, resource->aabb.Size());
+
+
+}
+
+void C_Mesh::DeleteMeshResource()
+{
+	RELEASE(data);
+}
+
+

@@ -51,13 +51,13 @@ void W_Scene::Draw()
 		{
 			App->scene->editor_camera->enable_mouse_input = mouse_is_hovering;
 		}
-		else
-		{
-			if (mouse_is_hovering)
-			{
-				ImGui::SetWindowFocus();
-			}
-		}
+		//else
+		//{
+		//	if (mouse_is_hovering)
+		//	{
+		//		ImGui::SetWindowFocus();
+		//	}
+		//}
 
 		// Attach texture to window ----------------------------------------
 		ImVec2 current_viewport_size = ImGui::GetContentRegionAvail();

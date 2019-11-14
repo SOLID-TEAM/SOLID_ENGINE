@@ -8,7 +8,7 @@
 
 CameraEditor::CameraEditor() : GameObject( "Camera Editor")
 {
-	camera = (C_Camera*)CreateComponent(ComponentType::CAMERA);
+	camera = CreateComponent<C_Camera>();
 	final_position = { 0.0f, 0.0f, 5.0f };
 	final_rotation = transform->GetGlobalTransform().RotatePart().ToQuat();
 	reference = { 0.0f, 0.0f, 0.0f };
@@ -178,8 +178,7 @@ void CameraEditor::Update(float dt)
 
 				if (selected != nullptr && App->scene->root_go != selected)
 				{
-					AABB general_aabb;
-					selected->GetHierarchyAABB(general_aabb);
+					AABB general_aabb = selected->GetHierarchyAABB();
 					Sphere sphere = general_aabb.MinimalEnclosingSphere();
 
 					if (sphere.Diameter() != 0)

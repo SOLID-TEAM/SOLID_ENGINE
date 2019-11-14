@@ -22,7 +22,7 @@ bool ModuleScene::Start(Config& config)
 	// creates a root gameobject, wich all another go are childs of it
 	root_go = new GameObject("Scene Root");
 	main_camera = new GameObject("Main Camera", root_go);
-	main_camera->CreateComponent(ComponentType::CAMERA);
+	main_camera->CreateComponent<C_Camera>();
 	editor_camera = new CameraEditor();
 
 	scene_viewport = new Viewport(editor_camera);
