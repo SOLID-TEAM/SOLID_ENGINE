@@ -456,7 +456,8 @@ GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, float3 position,
 
 	// Components --------------------------------------------
 	C_Mesh* c_mesh = gameobject->CreateComponent<C_Mesh>();
-	c_mesh->data = new R_Mesh(p_mesh->points, p_mesh->triangles, p_mesh->normals, p_mesh->tcoords, p_mesh->npoints, p_mesh->ntriangles);
+	// TODO: GEN NEW UID FOR PRIMITIVES
+	c_mesh->data = new R_Mesh(0,p_mesh->points, p_mesh->triangles, p_mesh->normals, p_mesh->tcoords, p_mesh->npoints, p_mesh->ntriangles);
 	c_mesh->data->name.assign(name.data());
 	c_mesh->data->GLGenBuffersAndLoad();
 	c_mesh->data->CreateAABB();

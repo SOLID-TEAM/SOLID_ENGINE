@@ -3,6 +3,7 @@
 
 #include "ModuleImporter.h"
 #include <string>
+#include "Config.h"
 
 class Resource
 {
@@ -21,13 +22,13 @@ public:
 
 public:
 
-	Resource(Type type) : type(type){}
+	Resource(UID uid, Type type) : uid(uid), type(type){}
 
 	virtual ~Resource() {}
 
 	std::string & GetName() { return name; }
 
-	Type GetType() const { return type; }
+	Resource::Type GetType() const { return type; }
 
 	UID GetUID() const { return uid; }
 
@@ -35,16 +36,21 @@ public:
 
 	std::string GetExportedName() const { return exported_file;	}
 
-	virtual void Save(Config& config) {};
-	virtual void Load(const Config& config) {};
+	bool IsLoadedToMemory() const;
+	bool LoadToMemory();
+	uint CountReferences() const;
+
+	virtual void Save(Config& config) const;
+	virtual void Load(const Config& config);
 	
 	// release memory for loaded data, not resource abstract data
 	virtual void Unload() {};
+	virtual bool LoadInMemory() = 0;
 
 protected:
 
 	// Data Info -------------------------
-
+	uint loaded = 0;
 	UID				uid = 0; // we use id as exported resource file too
 	Type		type = Type::NO_TYPE; // and with type, we know how to online load this resource
 

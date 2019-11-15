@@ -12,9 +12,9 @@ class R_Mesh : public Resource
 
 public:
 
-	R_Mesh();
+	R_Mesh(UID uid);
 
-	R_Mesh( float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices);
+	R_Mesh(UID uid, float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices);
 
 	~R_Mesh();
 
@@ -23,6 +23,8 @@ public:
 	void CreateAABB();
 
 	void Unload();
+
+	bool LoadInMemory();
 
 	bool SaveToFile(const char* name);
 	bool LoadFromFile(const char* name);

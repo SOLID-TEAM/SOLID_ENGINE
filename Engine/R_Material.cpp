@@ -87,3 +87,8 @@ bool R_Material::LoadFromFile(const char* name)
 
 	return true;
 }
+
+bool R_Material::LoadInMemory()
+{
+	return true;
+}

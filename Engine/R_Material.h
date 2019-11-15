@@ -10,26 +10,20 @@ class R_Material : public Resource
 {
 public:
 
-	R_Material() : Resource(Type::MATERIAL) 
-	{
-		for (int i = 0; i < MAX; ++i)
-			textures[i] = nullptr;
-	}
+	R_Material(UID uid) : Resource(uid, Type::MATERIAL) {}
+	
 
-	R_Material(const char* name, float4 color) : Resource(Type::MATERIAL)
+	R_Material(UID uid, const char* name, float4 color) : Resource(uid, Type::MATERIAL)
 	{
-		for (int i = 0; i < MAX; ++i)
-			textures[i] = nullptr;
-
 		this->name.assign(name);
 		diffuse_color = color;
 	}
 
-	~R_Material() {
-
-	};
+	~R_Material() {};
 
 	void GenerateFileTexture();
+
+	bool LoadInMemory();
 
 
 	bool SaveToFile(const char* name);
@@ -48,10 +42,10 @@ public:
 
 public:
 
-	// TODO: instead of D_Texture, store a UID from future resource texture
-	R_Texture*  textures[MAX];
+	UID  textures[MAX]{ 0,0,0,0 };
 	float4	    diffuse_color;
-	uint tex_gl_id;
+
+	uint tex_gl_id; // TODO: remove this
 };
 
 #endif //__R_MATERIAL_H__

@@ -135,20 +135,20 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 	glColor4fv(color);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	if (r_material->textures[R_Material::DIFFUSE] != nullptr) // TODO: clean this and perform for possible another textures
-	{
-		if (r_material->textures[R_Material::DIFFUSE]->buffer_id != 0)
-		{
-			if (glIsTexture(r_material->textures[R_Material::DIFFUSE]->buffer_id))
-			{
-				texture_id = r_material->textures[R_Material::DIFFUSE]->buffer_id;
-			}
-			else
-			{
-				r_material->textures[R_Material::DIFFUSE]->buffer_id = 0;
-			}
-		}
-	}
+	//if (r_material->textures[R_Material::DIFFUSE] != 0) // TODO: clean this and perform for possible another textures
+	//{
+	//	if (r_material->textures[R_Material::DIFFUSE]->buffer_id != 0)
+	//	{
+	//		if (glIsTexture(r_material->textures[R_Material::DIFFUSE]->buffer_id))
+	//		{
+	//			texture_id = r_material->textures[R_Material::DIFFUSE]->buffer_id;
+	//		}
+	//		else
+	//		{
+	//			r_material->textures[R_Material::DIFFUSE]->buffer_id = 0;
+	//		}
+	//	}
+	//}
 
 	// Enable client ==============================================
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -165,7 +165,7 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 
 	// UV's & Texture ------------------------
-	if (r_mesh->buffers_size[R_Mesh::UVS] != 0 && r_material != nullptr)
+	/*if (r_mesh->buffers_size[R_Mesh::UVS] != 0 && r_material != nullptr)
 	{
 		if (textured)
 		{
@@ -180,7 +180,7 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 
 		glBindBuffer(GL_ARRAY_BUFFER, r_mesh->buffers_id[R_Mesh::UVS]);
 		glTexCoordPointer(r_mesh->uv_num_components, GL_FLOAT, 0, (void*)0);
-	}
+	}*/
 
 	// Nomrals -----------------------------
 	glBindBuffer(GL_ARRAY_BUFFER, r_mesh->buffers_id[R_Mesh::NORMALS]);

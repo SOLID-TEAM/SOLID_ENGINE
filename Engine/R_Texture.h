@@ -7,11 +7,37 @@ class R_Texture : public Resource
 {
 public:
 
-	R_Texture(): Resource(Type::TEXTURE) {};
-	~R_Texture() {}
+	enum Format {
+		color_index,
+		rgb,
+		rgba,
+		bgr,
+		bgra,
+		luminance,
+		unknown
+	};
 
 public:
 
+	R_Texture(UID id);
+	~R_Texture();
+
+	bool LoadInMemory() override;
+	void ReleaseFromMemory();
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
+
+
+public:
 	uint buffer_id = 0;
+
+	uint width = 0;
+	uint height = 0;
+	uint depth = 0;
+	bool has_mips = false;
+	bool linear = false;
+	uint bytes = 0;
+
+	Format format = unknown;
 };
 #endif //__R_TEXTURE_H__

@@ -7,7 +7,7 @@
 #include "ModuleTextures.h"
 
 
-R_Mesh::R_Mesh() : Resource(Type::MESH )
+R_Mesh::R_Mesh(UID uid) : Resource(uid, Type::MESH )
 {
 	for (uint i = 0; i < BufferType::MAX ; i++)
 	{
@@ -16,7 +16,8 @@ R_Mesh::R_Mesh() : Resource(Type::MESH )
 	}
 }
 
-R_Mesh::R_Mesh(float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices) : Resource(Type::MESH)
+// TODO: update this constructor exclusively for primitives
+R_Mesh::R_Mesh(UID uid,float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices) : Resource(uid,Type::MESH)
 { 
 	// par_shapes meshes fixed num uv components per uv = 2
 	this->uv_num_components = 2;
@@ -205,4 +206,9 @@ bool R_Mesh::LoadFromFile(const char* name)
 	}
 
 	return ret;
+}
+
+bool R_Mesh::LoadInMemory()
+{
+	return true;
 }
