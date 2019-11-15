@@ -20,8 +20,8 @@ GameObject::GameObject(std::string name, GameObject* parent) : name(name), paren
 
 	// Standard Bounding Box --------------------------
 
-	bounding_box.SetFromCenterAndSize( float3::zero , math::float3(10.f, 10.f, 10.f));
-	obb = bounding_box.ToOBB();
+	bounding_box.SetNegativeInfinity();
+	obb.SetNegativeInfinity();
 }
 
 GameObject::~GameObject()
@@ -143,7 +143,14 @@ AABB GameObject::GetHierarchyAABB()
 	{
 		GameObject* go = go_stack.top();
 
-		hierarchy_aabb.Enclose(go->obb);
+		if (go->obb.IsFinite())
+		{
+			hierarchy_aabb.Enclose(go->obb);
+		}
+		else
+		{
+			hierarchy_aabb.Enclose(AABB::FromCenterAndSize(go->transform->position, float3::one ) );
+		}
 
 		go_stack.pop();
 

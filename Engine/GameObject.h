@@ -125,6 +125,8 @@ private:
 
 	bool active = true;
 
+	bool ignore = false;
+
 	std::vector<Component*> components;
 
 	OBB obb;

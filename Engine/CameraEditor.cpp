@@ -12,6 +12,9 @@ CameraEditor::CameraEditor() : GameObject( "Camera Editor")
 	final_position = { 0.0f, 0.0f, 5.0f };
 	final_rotation = transform->GetGlobalTransform().RotatePart().ToQuat();
 	reference = { 0.0f, 0.0f, 0.0f };
+
+	camera->SetClippingFarPlane(500.f);
+	camera->SetFov(60.f);
 }
 
 void CameraEditor::Start()

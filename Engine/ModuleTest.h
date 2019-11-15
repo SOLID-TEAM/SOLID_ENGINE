@@ -18,7 +18,7 @@ public:
 
 	bool active = true;
 	float line_width = 1.f;
-	float4 color = { 1.f, 1.f ,1.f, 1.f };
+	float4 color = { 0.7f, 0.7f ,0.7f, 0.7f };
 
 private:
 	// General

@@ -90,20 +90,20 @@ bool C_MeshRenderer::Render()
 
 	else if (vp.mode == V_MODE_WIREFRAME)
 	{
-		RenderWireframe(vp.wire_line_width, (float*)&vp.wire_color);
+		RenderWireframe(vp.wire_line_width,vp.wire_color);
 	}
 
 	else if (vp.mode == V_MODE_SHADED_WIREFRAME)
 	{
 		RenderMesh(albedo_color.ptr(), custom_tex_id, c_mat->textured);
-		RenderWireframe(vp.wire_line_width, (float*)&vp.wire_color);
+		RenderWireframe(vp.wire_line_width, vp.wire_color);
 	}
 
 	// Editor & Debug Rendering --------------------------------------------
 
 	if (false)
 	{
-		RenderOutline(7.f, (float*)&vp.wire_color);
+		RenderOutline(7.f, vp.wire_color);
 	}
 
 	glPopMatrix();
@@ -113,8 +113,8 @@ bool C_MeshRenderer::Render()
 
 	if (/*vp.debug_bounding_box*/ true)
 	{
-		RenderBoundingBox(linked_go->bounding_box, vp.bb_line_width, (float*)&vp.bb_color);
-		RenderBoundingBox(linked_go->obb, vp.bb_line_width, (float*)&vp.d_vertex_face_color);
+		App->renderer3D->RenderAABB(linked_go->bounding_box, vp.bb_line_width, vp.bb_color);
+		App->renderer3D->RenderOBB(linked_go->obb, vp.bb_line_width, float4(0.F, 0.9f, 0.f, 1.f));
 	}
 
 
@@ -217,13 +217,12 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 }
 
 
-void C_MeshRenderer::RenderWireframe(float width, float* color) // need very few operations
+void C_MeshRenderer::RenderWireframe(float width, float4& color) // need very few operations
 {
 	// Custom Settings ============================================
 	ModuleRenderer3D::BeginDebugDraw(color);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glLineWidth(width);
-	glColor4fv(color);
 
 	// Enable client ==============================================
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -249,11 +248,11 @@ void C_MeshRenderer::RenderWireframe(float width, float* color) // need very few
 	// Custom Settings Default ====================================
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glLineWidth(1.f);
-	glColor4fv( float4::one.ptr() );
+
 	ModuleRenderer3D::EndDebugDraw();
 }
 
-void C_MeshRenderer::RenderOutline(float width, float* color)
+void C_MeshRenderer::RenderOutline(float width, float4& color)
 {
 	glStencilFunc(GL_NOTEQUAL, 1, -1);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -264,41 +263,5 @@ void C_MeshRenderer::RenderOutline(float width, float* color)
 	glStencilFunc(GL_ALWAYS, 1, -1);
 }
 
-void C_MeshRenderer::RenderBoundingBox(math::AABB& aabb, float width, float* color)
-{
-	ModuleRenderer3D::BeginDebugDraw(color);
-	glLineWidth(width);
-	glBegin(GL_LINES);
 
-
-	for (int i = 0; i < aabb.NumEdges(); ++i)
-	{
-		math::LineSegment line_segment = aabb.Edge(i);
-		glVertex3f(line_segment.a.x, line_segment.a.y, line_segment.a.z);
-		glVertex3f(line_segment.b.x, line_segment.b.y, line_segment.b.z);
-	}
-
-	glEnd();
-	glLineWidth(1.f);
-	ModuleRenderer3D::EndDebugDraw();
-}
-
-void C_MeshRenderer::RenderBoundingBox(math::OBB& obb, float width, float* color)
-{
-	ModuleRenderer3D::BeginDebugDraw(color);
-	glLineWidth(width);
-	glBegin(GL_LINES);
-
-
-	for (int i = 0; i < obb.NumEdges(); ++i)
-	{
-		math::LineSegment line_segment = obb.Edge(i);
-		glVertex3f(line_segment.a.x, line_segment.a.y, line_segment.a.z);
-		glVertex3f(line_segment.b.x, line_segment.b.y, line_segment.b.z);
-	}
-
-	glEnd();
-	glLineWidth(1.f);
-	ModuleRenderer3D::EndDebugDraw();
-}
 

@@ -37,6 +37,7 @@ public:
 	float middle = 0.0f;
 	bool is_leaf = false;
 	uint bucket_members = 0u;
+	uint dimension = 0u;
 
 	std::vector<GameObject*> bucket;
 
@@ -46,8 +47,6 @@ class KDTree
 {
 public:
 
-	KDTree() {};
-
 	~KDTree();
 
 	void Fill(uint max_depth , uint max_node_bucket, AABB global_abb, std::vector<GameObject*> go_vec);
@@ -56,6 +55,8 @@ public:
 
 	template<typename T>
 	void GetIntersections(T &intersector, std::vector<GameObject*> &intersections) const;
+
+	void Render();
 
 private:
 

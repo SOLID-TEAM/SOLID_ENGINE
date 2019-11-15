@@ -24,13 +24,9 @@ private:
 
 	void RenderMesh(float* color, const uint custom_tex = 0, bool textured = true);
 
-	void RenderWireframe(float width, float* color);
+	void RenderWireframe(float width, float4& color);
 
-	void RenderOutline(float width, float* color);
-
-	void RenderBoundingBox(math::AABB& aabb, float width, float* color);
-
-	void RenderBoundingBox(math::OBB& aabb, float width, float* color);
+	void RenderOutline(float width, float4& color);
 
 private:
 

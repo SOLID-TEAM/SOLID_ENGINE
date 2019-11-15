@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "Module.h"
 #include "GameObject.h"
+
+#include "KDTree.h"
 #include <queue>
 #include <map>
 #include <list>
@@ -65,6 +67,8 @@ private:
 
 	AABB EncloseAllStaticGo();
 
+	AABB EncloseAllGo();
+
 	void AddGOToUndoDeque(GameObject* gameObject);
 
 public:
@@ -84,6 +88,7 @@ public:
 	Viewport* scene_viewport = nullptr;
 	Viewport* game_viewport = nullptr;
 
+	KDTree kdtree;
 
 private:
 

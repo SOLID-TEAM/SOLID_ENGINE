@@ -42,16 +42,16 @@ struct ViewportOptions
 	bool debug_vertex_normals = false;
 	bool debug_face_normals = false;
 
-	ImVec4 bb_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	float4 bb_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float  bb_line_width = 1.0f;
 
-	ImVec4 wire_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	float4 wire_color = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	float  wire_line_width = 1.0f;
 
-	ImVec4 d_vertex_p_color = ImVec4(0.59f, 0.22f, 1.0f, 1.0f);
-	ImVec4 d_vertex_l_color = ImVec4(0.2f, 1.0f, 0.0f, 1.0f);
-	ImVec4 d_vertex_face_color = ImVec4(1.0f, 0.5f, 0.2f, 1.0f);
-	ImVec4 d_vertex_face_n_color = ImVec4(0.0f, 0.5f, 1.0f, 1.0f);
+	float4 d_vertex_p_color = float4(0.59f, 0.22f, 1.0f, 1.0f);
+	float4 d_vertex_l_color = float4(0.2f, 1.0f, 0.0f, 1.0f);
+	float4 d_vertex_face_color = float4(1.0f, 0.5f, 0.2f, 1.0f);
+	float4 d_vertex_face_n_color = float4(0.0f, 0.5f, 1.0f, 1.0f);
 
 	float v_point_size = 5.0f;
 	float f_v_point_size = 5.0f;

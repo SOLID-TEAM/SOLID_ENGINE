@@ -20,10 +20,11 @@ bool ModuleScene::Init(Config& config)
 bool ModuleScene::Start(Config& config)
 {
 	// creates a root gameobject, wich all another go are childs of it
-	root_go = new GameObject("Scene Root");
-	main_camera = new GameObject("Main Camera", root_go);
+	root_go = new GameObject("Scene Root"); root_go->ignore = true;
+	main_camera = new GameObject("Main Camera", root_go); main_camera->ignore = true;
 	main_camera->CreateComponent<C_Camera>();
-	editor_camera = new CameraEditor();
+	editor_camera = new CameraEditor(); editor_camera->ignore = true;
+
 
 	scene_viewport = new Viewport(editor_camera);
 	game_viewport = new Viewport(main_camera);
@@ -78,6 +79,38 @@ update_status ModuleScene::PreUpdate(float dt)
 
 update_status ModuleScene::Update(float dt)
 {
+
+	if (ImGui::Begin("KDTree"))
+{
+	if (ImGui::Button("Recalculate", ImVec2( 100, 20)))
+	{
+		std::stack<GameObject*> go_stack;
+		std::vector<GameObject*> go_vector;
+		
+		go_stack.push(root_go);
+
+		while (!go_stack.empty())
+		{
+			GameObject* go = go_stack.top();
+
+			if (go->bounding_box.IsFinite())
+			{
+				go_vector.push_back(go);
+			}
+
+			go_stack.pop();
+
+			for (GameObject* child : go->childs)
+			{
+				go_stack.push(child);
+			}
+		}
+
+		kdtree.Fill(3, 1, EncloseAllGo() ,go_vector);
+	}
+	ImGui::End();
+}
+
 	editor_camera->DoUpdate(dt);
 
 	// TESTING SAVE SCENE
@@ -125,15 +158,18 @@ update_status ModuleScene::Draw()
 
 	scene_viewport->BeginViewport();
 
-	App->renderer3D->lights[0].Render();
-	App->test->main_grid->Render();
-
-	// draw all go's last
+	glEnable(GL_DEPTH_TEST);
 
 	if (root_go != nullptr)
 	{
 		RenderAll(root_go);
 	}
+
+	App->renderer3D->lights[0].Render();
+
+	App->test->main_grid->Render();
+
+	App->renderer3D->RenderKDTree(kdtree, 3.f);
 
 	scene_viewport->EndViewport();
 
@@ -142,7 +178,17 @@ update_status ModuleScene::Draw()
 
 void ModuleScene::RenderAll(GameObject* go)
 {
-	go->DoRender();
+	C_Camera* camera = main_camera->GetComponent<C_Camera>();
+
+	if (main_camera == go || camera->cullling == false )
+	{
+		go->DoRender();
+	}
+	else if (camera->CheckCollisionAABB(go->bounding_box) == true)
+	{
+		go->DoRender();
+	}
+	
 
 	for (std::vector<GameObject*>::iterator child = go->childs.begin() ; child != go->childs.end(); ++child)
 	{
@@ -244,6 +290,35 @@ AABB ModuleScene::EncloseAllStaticGo()
 	for (GameObject* go : static_go_list)
 	{
 		global_aabb.Enclose(go->bounding_box);
+	}
+
+	return global_aabb;
+}
+
+AABB ModuleScene::EncloseAllGo()
+{
+	AABB global_aabb;
+	global_aabb.SetNegativeInfinity();
+
+	std::stack<GameObject*> go_stack;
+
+	go_stack.push(root_go);
+
+	while (!go_stack.empty())
+	{
+		GameObject* go = go_stack.top();
+
+		if (go->ignore == false)
+		{
+			global_aabb.Enclose(go->bounding_box);
+		}
+
+		go_stack.pop();
+
+		for (GameObject* child : go->childs)
+		{
+			go_stack.push(child);
+		}
 	}
 
 	return global_aabb;

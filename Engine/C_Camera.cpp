@@ -1,4 +1,5 @@
 #include "C_Camera.h"
+#include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleScene.h"
 #include "GL/glew.h"
@@ -17,7 +18,7 @@ C_Camera::C_Camera(GameObject* go): Component(go, ComponentType::CAMERA)
 	SetFrustumType(math::FrustumType::PerspectiveFrustum);
 	SetAspectRatio(16.f, 9.f );
 	SetClippingNearPlane(0.01f);
-	SetClippingFarPlane(300.f);
+	SetClippingFarPlane(20.F);
 	SetFov(60.f);
 
 }
@@ -29,12 +30,12 @@ bool C_Camera::CleanUp()
 
 void C_Camera::UpdateTransform()
 {
-	math::float4x4 global_transform = linked_go->transform->GetGlobalTransform();
-	global_transform.RemoveScale();
+	math::float4x4 global_transform = linked_go->transform->global_transform;
 
 	frustum.pos = global_transform.TranslatePart();
-	frustum.front = global_transform.WorldZ();
-	frustum.up = global_transform.WorldY();
+	frustum.front = global_transform.RotatePart().Mul(float3::unitZ).Normalized();
+	frustum.up = global_transform.RotatePart().Mul(float3::unitY).Normalized();
+
 
 	UpdateViewMatrix();
 }
@@ -101,6 +102,28 @@ math::float4x4 C_Camera::GetViewMatrix()
 {
 	return view_matrix;
 }
+	
+bool C_Camera::CheckCollisionAABB(AABB& aabb)
+{
+	float3 corners[8];
+	aabb.GetCornerPoints(corners);
+
+	for (uint i = 0; i < 6; ++i)
+	{
+		Plane plane = frustum.GetPlane(i);
+		int positive_count = 8;
+
+		for (uint i = 0; i < 8; ++i)
+		{
+			if (plane.IsOnPositiveSide(corners[i]))
+				--positive_count;
+		}
+
+		if (positive_count == 0)
+			return false;
+	}
+	return true;
+}
 
 void C_Camera::UpdateFov()
 {
@@ -125,23 +148,7 @@ float C_Camera::GetFov()
 
 bool C_Camera::Render()
 {
-	
-	ModuleRenderer3D::BeginDebugDraw();
-
-	glLineWidth(1.f);
-	glBegin(GL_LINES);
-
-
-	for (int i = 0; i < frustum.NumEdges(); ++i)
-	{
-		math::LineSegment line_segment = frustum.Edge(i);
-		glVertex3f(line_segment.a.x, line_segment.a.y, line_segment.a.z);
-		glVertex3f(line_segment.b.x, line_segment.b.y, line_segment.b.z);
-	}
-
-	glEnd();
-	glLineWidth(1.f);
-	ModuleRenderer3D::EndDebugDraw();
+	App->renderer3D->RenderFrustum(frustum, 1.f, float4(0.7f, 0.7f, 0.7f, 0.7f));
 	return false;
 }
 
@@ -161,6 +168,7 @@ bool C_Camera::DrawPanelInfo()
 
 	ImGui::Spacing();
 
+	ImGui::Title("Culling", 1);  ImGui::Checkbox("##culling", &cullling);
 	ImGui::Title("Projection", 1);
 
 	if (ImGui::BeginComboEx(std::string("##frustum_type").c_str(), std::string(" " + std::string(current_item)).c_str(), 200, ImGuiComboFlags_NoArrowButton))
@@ -215,3 +223,98 @@ bool C_Camera::DrawPanelInfo()
 
 	return true;
 }
+
+//int C_Camera::IntersectAABB(AABB& aabb)
+//{
+//	int    ret = 1;
+//
+//	Plane planes[6];
+//	frustum.GetPlanes(planes);
+//
+//	float3  min = aabb.minPoint, max = aabb.maxPoint;
+//
+//	for (uint i = 0; i < 6; ++i)
+//	{
+//		float3 v_min, v_max;
+//
+//		// X axis 
+//		if (planes[i].normal.x > 0)
+//		{
+//			v_min.x = min.x;
+//			v_max.x = max.x;
+//		}
+//		else {
+//			v_min.x = max.x;
+//			v_max.x = min.x;
+//		}
+//		// Y axis 
+//		if (planes[i].normal.y > 0)
+//		{
+//			v_min.y = min.y;
+//			v_max.y = max.y;
+//		}
+//		else
+//		{
+//			v_min.y = max.y;
+//			v_max.y = min.y;
+//		}
+//		// Z axis 
+//		if (planes[i].normal.z > 0)
+//		{
+//			v_min.z = min.z;
+//			v_max.z = max.z;
+//		}
+//		else {
+//			v_min.z = max.z;
+//			v_max.z = min.z;
+//		}
+//
+//		if (planes[i].normal.Dot(v_min) + planes[i].d > 0)
+//		{
+//			return 2; // OUTSIDE
+//		}
+//
+//		if (planes[i].normal.Dot(v_max) + planes[i].d >= 0)
+//		{
+//			ret = 0;
+//		}
+//	}
+//
+//	return 1;
+//}
+//
+//bool C_Camera::IntersectAABB2(AABB& aabb)
+//{
+//	int    ret = 1;
+//
+//	Plane planes[6];
+//	frustum.GetPlanes(planes);
+//
+//	float3  min = aabb.minPoint, max = aabb.maxPoint;
+//
+//	for (uint i = 0; i < 6; ++i)
+//	{
+//
+//		float4 plane(planes[i].normal.x, planes[i].normal.y, planes[i].normal.z, planes[i].d);
+//
+//		if (plane.x * min.x + plane.y * min.y + plane.z * min.z + plane.w > 0)
+//			continue;
+//		if (plane.x * max.x + plane.y * min.y + plane.z * min.z + plane.w > 0)
+//			continue;
+//		if (plane.x * min.x + plane.y * max.y + plane.z * min.z + plane.w > 0)
+//			continue;
+//		if (plane.x * max.x + plane.y * max.y + plane.z * min.z + plane.w > 0)
+//			continue;
+//		if (plane.x * min.x + plane.y * min.y + plane.z * max.z + plane.w > 0)
+//			continue;
+//		if (plane.x * max.x + plane.y * min.y + plane.z * max.z + plane.w > 0)
+//			continue;
+//		if (plane.x * min.x + plane.y * max.y + plane.z * max.z + plane.w > 0)
+//			continue;
+//		if (plane.x * max.x + plane.y * max.y + plane.z * max.z + plane.w > 0)
+//			continue;
+//
+//		return false;
+//	}
+//	return true;
+//}

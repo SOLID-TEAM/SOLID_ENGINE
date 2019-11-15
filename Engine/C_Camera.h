@@ -46,6 +46,8 @@ public:
 
 	math::float4x4 GetViewMatrix();
 
+	bool CheckCollisionAABB(AABB& aabb);
+
 private:
 
 	void UpdateFov();
@@ -53,6 +55,11 @@ private:
 	void UpdateProjectionMatrix();
 
 	void UpdateViewMatrix();
+
+
+public:
+
+	bool cullling = true;
 
 private:
 
@@ -62,8 +69,6 @@ private:
 	math::float4x4 view_matrix;
 
 	float aspect_ratio = 1.f;
-	bool cullling = true;
-
 };
 
 #endif // !_C_CAMERA_H__

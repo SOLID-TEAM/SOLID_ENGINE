@@ -65,6 +65,7 @@ KDTree::~KDTree()
 {
 	RELEASE(root);
 }
+
 void KDTree::Create(uint max_depth, uint max_node_bucket)
 {
 	std::queue<KDTreeNode*> nodes_queue; 
@@ -120,19 +121,19 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 
 	while (!nodes_queue.empty())
 	{
-		KDTreeNode* current = nodes_queue.front(); 
+		KDTreeNode* node = nodes_queue.front(); 
 		
 		nodes_queue.pop();
 
-		if (current->bucket_members > max_bucket_size && current->depth <= max_depth)
+		if (node->bucket_members > max_bucket_size && node->depth <= max_depth)
 		{
 			// Choose dimension --------------------------------
 
-			uint dimension = current->depth % 3;
+			uint dimension = node->depth % 3;
 
 			// Sort per position dimention ---------------------
 
-			std::sort(current->bucket.begin(), current->bucket.begin() + current->bucket_members, [dimension](const GameObject* go1, const GameObject *go2)
+			std::sort(node->bucket.begin(), node->bucket.begin() + node->bucket_members, [dimension](const GameObject* go1, const GameObject *go2)
 			{
 				if (go1 == nullptr || go2 == nullptr)
 				{
@@ -144,41 +145,40 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 
 			// Calculate middle -------------------------------
 
-			if (current->bucket_members % 2 == 0)
+			if (node->bucket_members % 2 == 0)
 			{
-				uint middle = (current->bucket_members * 0.5f); 
-				current->middle = (current->bucket[middle - 1]->transform->position[dimension] + current->bucket[middle]->transform->position[dimension]) * 0.5f;
+				uint middle = (node->bucket_members * 0.5f); 
+				node->middle = (node->bucket[middle - 1]->transform->position[dimension] + node->bucket[middle]->transform->position[dimension]) * 0.5f;
 			}
 			else
 			{
-				uint middle = (current->bucket_members * 0.5f);
-				current->middle = current->bucket[middle]->transform->position[dimension];
+				uint middle = (node->bucket_members * 0.5f);
+				node->middle = node->bucket[middle]->transform->position[dimension];
 			}
 
 			// Split node in right and left -------------------
 
-			current->SplitNode(dimension, current->middle, current->left_child, current->right_child);
-			nodes_queue.push(current->left_child);
-			nodes_queue.push(current->right_child);
+			node->SplitNode(dimension, node->middle, node->left_child, node->right_child);
+			nodes_queue.push(node->left_child);
+			nodes_queue.push(node->right_child);
 
-			for (unsigned i = 0; i < current->bucket_members; ++i) 
+			for (unsigned i = 0; i < node->bucket_members; ++i) 
 			{
 
-				if (current->left_child->aabb->Intersects(current->bucket[i]->bounding_box))
+				if (node->left_child->aabb->Intersects(node->bucket[i]->bounding_box))
 				{
-					current->left_child->bucket[current->left_child->bucket_members++] = current->bucket[i];
+					node->left_child->bucket[node->left_child->bucket_members++] = node->bucket[i];
 				}
-				if (current->right_child->aabb->Intersects(current->bucket[i]->bounding_box))
+				if (node->right_child->aabb->Intersects(node->bucket[i]->bounding_box))
 				{
-					current->right_child->bucket[current->right_child->bucket_members++] = current->bucket[i];
+					node->right_child->bucket[node->right_child->bucket_members++] = node->bucket[i];
 				}
 			}
-			current->is_leaf = false;
+			node->is_leaf = false;
 		}
 		else
 		{
-			current->is_leaf = true;
+			node->is_leaf = true;
 		}
 	}
 }
-

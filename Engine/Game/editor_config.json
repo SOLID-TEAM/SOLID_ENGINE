@@ -18,12 +18,12 @@
     "": {},
     "ModuleRandom?": {
         "grid_units": 10,
-        "grid_line_width": 1,
+        "grid_line_width": 0.5,
         "grid_color": [
             1,
             1,
             1,
-            5
+            0.60000002384185791
         ]
     },
     "Textures": {},

@@ -70,15 +70,10 @@ bool C_Transform::Update(float dt)
 		if (c_mesh)
 		{
 			linked_go->obb = c_mesh->mesh_aabb;
+			linked_go->obb.Transform(global_transform);
+			linked_go->bounding_box.SetNegativeInfinity();
+			linked_go->bounding_box.Enclose(linked_go->obb);
 		}
-		else
-		{
-			linked_go->obb = AABB::FromCenterAndSize(float3::zero, float3::one * 1.F);
-		}
-
-		linked_go->obb.Transform(global_transform);
-		linked_go->bounding_box.SetNegativeInfinity();
-		linked_go->bounding_box.Enclose(linked_go->obb);
 
 		// Finish transform update -----------------------------------
 

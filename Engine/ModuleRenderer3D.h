@@ -57,7 +57,7 @@ public:
 	float4 clear_color = { 0.1, 0.1, 0.1, 1.f };
 
 private:
-
+	bool z_buffer_mode = true;
 	uint ID[8];
 	uint msaa = 4;
 	float width = 0, height = 0;
@@ -84,6 +84,7 @@ struct RenderConfig
 };
 
 typedef void*  SDL_GLContext;
+class KDTree;
 
 class ModuleRenderer3D : public Module
 {
@@ -105,6 +106,14 @@ public:
 
 	bool CleanUp();
 
+	void RenderAABB(math::AABB& aabb, float width, float4& color);
+
+	void RenderOBB(math::OBB& obb, float width, float4& color);
+
+	void RenderFrustum(math::Frustum& frustum, float width, float4& color);
+
+	void RenderKDTree(KDTree& kdtree, float width);
+
 	bool Save(Config& config);
 
 	void Load(Config& config);
@@ -115,7 +124,7 @@ public:
 
 	void SetDefaultColorMaterial();
 
-	static void BeginDebugDraw(float* color = nullptr);
+	static void BeginDebugDraw(float4& color);
 
 	static void EndDebugDraw();
 

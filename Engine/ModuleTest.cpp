@@ -156,12 +156,11 @@ void Grid::Render()
 		return;
 	}
 
-	ModuleRenderer3D::BeginDebugDraw(color.ptr());
+	ModuleRenderer3D::BeginDebugDraw(color);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glLineWidth(line_width);
-	glColor4fv(color.ptr());
 
 	glBindBuffer(GL_ARRAY_BUFFER, id);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);

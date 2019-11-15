@@ -8,6 +8,8 @@
 #include <gl\glew.h>
 #include "SDL\include\SDL_opengl.h"
 
+#include "KDTree.h"
+
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")
 #pragma comment (lib, "glew32.lib")    /* link OpenGL Utility lib     */
@@ -161,6 +163,168 @@ bool ModuleRenderer3D::CleanUp()
 	return true;
 }
 
+void ModuleRenderer3D::RenderAABB(math::AABB& aabb, float width, float4& color)
+{
+	float3 vertices[24];
+	aabb.ToEdgeList(vertices);
+
+	uint vertex_id = 0;
+
+	glGenBuffers(1, (GLuint*) & (vertex_id));
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24 * 3, vertices, GL_STATIC_DRAW);
+
+
+	BeginDebugDraw(color);
+	glLineWidth(width);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	glDrawArrays(GL_LINES, 0, aabb.NumVerticesInEdgeList());
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+
+	glLineWidth(1.f);
+	EndDebugDraw();
+
+	glDeleteBuffers(1, &vertex_id);
+}
+
+void ModuleRenderer3D::RenderOBB(math::OBB& obb, float width, float4& color)
+{
+	float3 vertices[24];
+	obb.ToEdgeList(vertices);
+
+	uint vertex_id = 0;
+
+	glGenBuffers(1, (GLuint*) & (vertex_id));
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24 * 3, vertices, GL_STATIC_DRAW);
+
+
+	BeginDebugDraw(color);
+	glLineWidth(width);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	glDrawArrays(GL_LINES, 0, obb.NumVerticesInEdgeList());
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+
+	glLineWidth(1.f);
+	EndDebugDraw();
+
+	glDeleteBuffers(1, &vertex_id);
+}
+
+void ModuleRenderer3D::RenderFrustum(math::Frustum& frustum, float width, float4& color)
+{
+	float3 vertices[24];
+	
+	for (int i = 0; i < 12; ++i)
+	{
+		vertices[i * 2] = frustum.Edge(i).a;
+		vertices[i * 2 + 1] = frustum.Edge(i).b;
+	}
+
+	uint vertex_id = 0;
+
+	glGenBuffers(1, (GLuint*) & (vertex_id));
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24 * 3, vertices, GL_STATIC_DRAW);
+
+
+	BeginDebugDraw(color);
+	glLineWidth(width);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	glDrawArrays(GL_LINES, 0, 24);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+
+	glLineWidth(1.f);
+	EndDebugDraw();
+
+	glDeleteBuffers(1, &vertex_id);
+}
+
+void ModuleRenderer3D::RenderKDTree(KDTree& kdtree, float width)
+{
+	std::stack<KDTreeNode*> nodes_stack;
+	std::stack<KDTreeNode*> nodes_to_render;
+	
+	if (kdtree.root == nullptr)
+	{
+		return;
+	}
+
+	nodes_stack.push(kdtree.root);
+
+	while (!nodes_stack.empty())
+	{
+		KDTreeNode* node = nodes_stack.top();
+
+		nodes_to_render.push(node);
+
+		nodes_stack.pop();
+
+		if (node->is_leaf == false)
+		{
+			if (node->left_child->bucket_members > 0) nodes_stack.push(node->left_child);
+			if (node->right_child->bucket_members > 0) nodes_stack.push(node->right_child);
+		}
+	}
+	
+	//glDepthFunc(GL_ALWAYS);
+	//glDepthRange(0.0f, 1.0f);
+
+	while (!nodes_to_render.empty())
+	{
+		KDTreeNode* node = nodes_to_render.top();
+		float4 color;
+
+		//if (node != kdtree.root)
+		//{
+		//	switch (uint dimension = node->depth % 3)
+		//	{
+		//	case 0:
+		//		color = { 1.f, 0.f, 0.f, 1.f };
+		//		break;
+		//	case 1:
+		//		color = { 0.f, 1.f, 0.f, 1.f };
+		//		break;
+		//	case 2:
+		//		color = { 0.f, 0.f, 1.f, 1.f };
+		//		break;
+		//	}
+
+
+		//	RenderAABB(*node->aabb, width - (float)node->depth * 0.3f, color);
+		//}
+		//else
+		//{
+		//	color = { 1.f, 1.f, 1.f, 1.f };
+
+		//	
+		//}
+		color = { 1.f, 0.f, 0.f, 1.f };
+		RenderAABB(*node->aabb, width , color);
+		//glDepthFunc(GL_LESS);
+
+		nodes_to_render.pop();
+	}
+}
+
+
+
 RenderConfig& ModuleRenderer3D::GetRenderConfig()
 {
 	return render_config;
@@ -186,23 +350,17 @@ void ModuleRenderer3D::SetDefaultColorMaterial()
 	glColor4fv((float*)&render_config.default_color_mat);
 }
 
-void ModuleRenderer3D::BeginDebugDraw(float* color )
+void ModuleRenderer3D::BeginDebugDraw(float4& color )
 {
-	if (color == nullptr)
-	{
-		float _color[] = { 1.f ,1.f, 1.f, 1.f };
-		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, _color);
-	}
-	else
-	{
-		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
-	}
+	glDisable(GL_LIGHTING);
+	glColor4fv(&color[0]);
 } 
 
 void ModuleRenderer3D::EndDebugDraw()
 {
-	GLfloat emission_default[] = { 0.f, 0.f, 0.f, 1.f };
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_default);
+	GLfloat color_default[] = { 1.f, 1.f, 1.f, 1.f };
+	glEnable(GL_LIGHTING);
+	glColor4fv(color_default);
 }
 
 FBO::FBO()
@@ -224,7 +382,7 @@ void FBO::BeginFBO()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, ID[MULTISAMPLING_FBO]);
 	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void FBO::EndFBO()
@@ -232,8 +390,8 @@ void FBO::EndFBO()
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, ID[MULTISAMPLING_FBO]);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, ID[NORMAL_FBO]);
-	
-	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT  , GL_LINEAR);
+
+	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -254,14 +412,27 @@ void FBO::UpdateFBO( float width, float height)
 	// Texture ---------------------------------------------
 
 	glBindTexture(GL_TEXTURE_2D, ID[NORMAL_TEXTURE]);
-	
+
+	//if (z_buffer_mode)
+	//{
+	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width, height, 0, GL_LUMINANCE, GL_FLOAT, 0);
+	//}
+	//else
+	{
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-	
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	}
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// Depth & Stencil -------------------------------------
