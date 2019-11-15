@@ -83,7 +83,8 @@ update_status ModuleScene::Update(float dt)
 	// TESTING SAVE SCENE
 	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 	{
-		ToSaveScene();
+		//ToSaveScene();
+		LoadScene();
 	}
 
 	// TODO: SHORTCUTS
@@ -304,6 +305,29 @@ bool ModuleScene::SaveScene(Config& config, GameObject* go)
 	{
 		SaveScene(config, (*it));
 	}
+
+	return true;
+}
+
+bool ModuleScene::LoadScene()
+{
+	Config config("testing.solidscene");
+	std::map<GameObject*, uint> relations;
+
+	int go_count = config.GetArrayCount("GameObjects");
+
+	for (int i = 0; i < go_count; ++i)
+	{
+		GameObject* new_go = new GameObject();
+		new_go->Load(config.GetArray("GameObjects", i), relations);
+	}
+
+	for (std::map<GameObject*, uint>::iterator it = relations.begin(); it != relations.end(); ++it)
+	{
+
+	}
+
+	LOG("");
 
 	return true;
 }

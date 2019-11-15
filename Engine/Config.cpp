@@ -166,3 +166,20 @@ bool Config::AddArray(const char* array_name)
 
 	return json_object_set_value(root_object, array_name, va) == JSONSuccess;
 }
+
+int Config::GetArrayCount(const char* field) const
+{
+	int ret = 0;
+	JSON_Array* array = json_object_get_array(root_object, field);
+	if (array != nullptr)
+		ret = json_array_get_count(array);
+	return ret;
+}
+
+Config Config::GetArray(const char* field, int index) const
+{
+	JSON_Array* array = json_object_get_array(root_object, field);
+	if (array != nullptr)
+		return Config(json_array_get_object(array, index));
+	return Config((JSON_Object*) nullptr);
+}

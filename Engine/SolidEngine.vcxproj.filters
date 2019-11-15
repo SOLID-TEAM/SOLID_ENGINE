@@ -390,18 +390,6 @@
     <ClInclude Include="C_Material.h">
       <Filter>Sources\Game Object\Components</Filter>
     </ClInclude>
-    <ClInclude Include="D_Mesh.h">
-      <Filter>Sources\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="Data.h">
-      <Filter>Sources\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="D_Material.h">
-      <Filter>Sources\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="D_Texture.h">
-      <Filter>Sources\Data</Filter>
-    </ClInclude>
     <ClInclude Include="C_MeshRenderer.h">
       <Filter>Sources\Game Object\Components</Filter>
     </ClInclude>
@@ -428,6 +416,18 @@
     </ClInclude>
     <ClInclude Include="KDTree.h">
       <Filter>Sources\Trees</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Sources\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="R_Texture.h">
+      <Filter>Sources\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="R_Mesh.h">
+      <Filter>Sources\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="R_Material.h">
+      <Filter>Sources\Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -641,18 +641,6 @@
     <ClCompile Include="C_Material.cpp">
       <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
-    <ClCompile Include="D_Mesh.cpp">
-      <Filter>Sources\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="Data.cpp">
-      <Filter>Sources\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="D_Material.cpp">
-      <Filter>Sources\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="D_Texture.cpp">
-      <Filter>Sources\Data</Filter>
-    </ClCompile>
     <ClCompile Include="C_MeshRenderer.cpp">
       <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
@@ -679,6 +667,18 @@
     </ClCompile>
     <ClCompile Include="KDTree.cpp">
       <Filter>Sources\Trees</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Texture.cpp">
+      <Filter>Sources\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Mesh.cpp">
+      <Filter>Sources\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Material.cpp">
+      <Filter>Sources\Data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

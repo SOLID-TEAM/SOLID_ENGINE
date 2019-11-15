@@ -1,24 +1,24 @@
-#ifndef __MODELDATA_H__
-#define __MODELDATA_H__
+#ifndef __R_MESH_H__
+#define __R_MESH_H__
 
 #include "Globals.h"
-#include "Data.h"
+#include "Resource.h"
 #include <vector>
 #include <string>
 #include "external/MathGeoLib/include/Geometry/AABB.h"
 
-class D_Mesh : public Data
+class R_Mesh : public Resource
 {
 
 public:
 
-	D_Mesh();
+	R_Mesh();
 
-	D_Mesh( float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices);
+	R_Mesh( float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices);
 
-	~D_Mesh();
+	~R_Mesh();
 
-	void Load();
+	void GLGenBuffersAndLoad();
 
 	void CreateAABB();
 
@@ -60,4 +60,4 @@ public:
 	// ---------------------------------------------------------------
 };
 
-#endif // !__MODELDATA_H__
+#endif // !__R_MESH_H__

@@ -1,10 +1,10 @@
-#include "D_Material.h"
+#include "R_Material.h"
 #include "GL/glew.h"
 #include "SDL\include\SDL_opengl.h"
 
 #include "Application.h"
 
-void D_Material::GenerateFileTexture()
+void R_Material::GenerateFileTexture()
 {
 	uint frame_buffer_id = 0;
 	uint depth_buffer_id = 0;
@@ -52,7 +52,7 @@ void D_Material::GenerateFileTexture()
 	glDeleteFramebuffers(1, &frame_buffer_id);
 }
 
-bool D_Material::SaveToFile(const char* name)
+bool R_Material::SaveToFile(const char* name)
 {
 	uint size = sizeof(diffuse_color);
 
@@ -69,7 +69,7 @@ bool D_Material::SaveToFile(const char* name)
 	return true;
 }
 
-bool D_Material::LoadFromFile(const char* name)
+bool R_Material::LoadFromFile(const char* name)
 {
 
 	char* buffer = nullptr;

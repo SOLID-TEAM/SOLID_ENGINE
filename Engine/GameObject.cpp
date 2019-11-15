@@ -258,6 +258,29 @@ bool GameObject::Save(Config& config)
 	return true;
 }
 
+bool GameObject::Load(Config& config, std::map<GameObject*,uint>& relations)
+{
+	// set stored uuid
+	uid = config.GetInt("UID", uid);
+	uint parent_id = config.GetInt("Parent UID", 0);
+	// store relations to next hierarchical assignment
+	relations[this] = parent_id;
+
+	name.assign(config.GetString("name", "noname"));
+	active = config.GetBool("active", true);
+
+	// load all components
+	int num_components = config.GetArrayCount("Components");
+
+	for (uint i = 0 ; i < num_components; ++i)
+	{
+		LOG("");
+	}
+
+	return true;
+}
+
+
 //bool GameObject::Draw()
 //{
 //	bool ret = true;

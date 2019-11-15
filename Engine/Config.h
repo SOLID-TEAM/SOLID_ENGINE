@@ -31,7 +31,9 @@ public:
 	const char* GetString(const char* name,  const char* default, const int array_index = -1) const;
 	int GetInt(const char* name, const int default,const int array_index = -1) const;
 	float GetFloat(const char* name, const float default, const float array_index = -1) const;
-
+	
+	int GetArrayCount(const char* field) const;
+	Config GetArray(const char* field, int index) const;
 
 private:
 	JSON_Value* root_value = nullptr;

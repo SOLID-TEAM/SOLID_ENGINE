@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 
 #include "Component.h"
 #include "external/MathGeoLib/include/Geometry/AABB.h"
@@ -56,6 +57,7 @@ public:
 
 	// SERIALIZE ME
 	bool Save(Config& config);
+	bool Load(Config& config, std::map<GameObject*, uint>& relations);
 
 	// Components Funtions -------------------------------------------
 

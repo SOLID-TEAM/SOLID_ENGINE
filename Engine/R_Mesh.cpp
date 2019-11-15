@@ -1,4 +1,4 @@
-#include "D_Mesh.h"
+#include "R_Mesh.h"
 #include "GL/glew.h"
 #include "glmath.h"
 #include "external/MathGeoLib/include/MathGeoLib.h"
@@ -7,7 +7,7 @@
 #include "ModuleTextures.h"
 
 
-D_Mesh::D_Mesh() : Data( DataType::MESH )
+R_Mesh::R_Mesh() : Resource( ResourceType::MESH )
 {
 	for (uint i = 0; i < BufferType::MAX ; i++)
 	{
@@ -16,7 +16,7 @@ D_Mesh::D_Mesh() : Data( DataType::MESH )
 	}
 }
 
-D_Mesh::D_Mesh(float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices) : Data(DataType::MESH)
+R_Mesh::R_Mesh(float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices) : Resource(ResourceType::MESH)
 { 
 	// par_shapes meshes fixed num uv components per uv = 2
 	this->uv_num_components = 2;
@@ -48,13 +48,13 @@ D_Mesh::D_Mesh(float* vertices, uint* indices, float* normals, float* uvs, uint 
 	}	
 }
 
-D_Mesh::~D_Mesh() 
+R_Mesh::~R_Mesh() 
 {
 	Unload();
 }
 
 // TODO: rename this like before "GenBuffers" / "GenBuffersAndLoad"
-void D_Mesh::Load()
+void R_Mesh::GLGenBuffersAndLoad()
 {
 	// TODO: REWORK THIS, not all meshes has all this components
 	// Generate Buffers --------------------------------
@@ -83,14 +83,14 @@ void D_Mesh::Load()
 	}
 }
 
-void D_Mesh::CreateAABB()
+void R_Mesh::CreateAABB()
 {
 	aabb.SetNegativeInfinity();
 	aabb.Enclose((math::float3*) vertices, buffers_size[VERTICES]);
 }
 
 // TODO: RENAME
-void D_Mesh::Unload()
+void R_Mesh::Unload()
 {
 	glDeleteBuffers(4, buffers_id);
 
@@ -104,7 +104,7 @@ void D_Mesh::Unload()
 
 // TODO: pick value for ranges from enumerator and adds and assert
 // TODO: BE aware on the future if we need uv_num_channels, you have to add here too
-bool D_Mesh::SaveToFile(const char* name)
+bool R_Mesh::SaveToFile(const char* name)
 {
 	uint ranges[BufferType::MAX + 1] = { buffers_size[BufferType::INDICES],buffers_size[BufferType::VERTICES], buffers_size[BufferType::NORMALS], buffers_size[BufferType::UVS], uv_num_components };
 
@@ -147,7 +147,7 @@ bool D_Mesh::SaveToFile(const char* name)
 }
 
 
-bool D_Mesh::LoadFromFile(const char* name)
+bool R_Mesh::LoadFromFile(const char* name)
 {
 	bool ret = true;
 
@@ -197,7 +197,7 @@ bool D_Mesh::LoadFromFile(const char* name)
 
 		// TODO: we want always load?
 		// TODO: recalc aabb/obb
-		Load();
+		GLGenBuffersAndLoad();
 	}
 	else
 	{

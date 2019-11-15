@@ -44,6 +44,8 @@ public:
 
 	bool ToSaveScene();
 	bool SaveScene(Config& config, GameObject* go);
+
+	bool LoadScene();
 	
 	// Game Objects functions ----------------------------------------------
 

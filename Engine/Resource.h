@@ -1,17 +1,18 @@
-#ifndef __DATA_H__
-#define __DATA_H__
+#ifndef __RESOURCE_H__
+#define __RESOURCE_H__
 
 #include "ModuleImporter.h"
 #include <string>
 
-class Data
+class Resource
 {
 public:
 
 	friend ModuleImporter;
 
-	enum class DataType
+	enum class ResourceType
 	{
+		MODEL,
 		MESH,
 		MATERIAL,
 		TEXTURE,
@@ -20,13 +21,13 @@ public:
 
 public:
 
-	Data(DataType type) : type(type){}
+	Resource(ResourceType type) : type(type){}
 
-	virtual ~Data() {}
+	virtual ~Resource() {}
 
 	std::string & GetName() { return name; }
 
-	DataType GetType() const { return type; }
+	ResourceType GetType() const { return type; }
 
 	UID GetUID() const { return uid; }
 
@@ -44,8 +45,8 @@ protected:
 
 	// Data Info -------------------------
 
-	UID				uid = 0;
-	DataType		type = DataType::NO_TYPE;
+	UID				uid = 0; // we use id as exported resource file too
+	ResourceType		type = ResourceType::NO_TYPE; // and with type, we know how to online load this resource
 
 	std::string		original_file; // Assets/..bla bla bla
 	std::string		name; // custom name based on import names from model

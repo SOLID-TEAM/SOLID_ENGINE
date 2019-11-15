@@ -2,21 +2,21 @@
 #define __D_MATERIAL_H__
 
 #include "Globals.h"
-#include "Data.h"
-#include "D_Texture.h"
+#include "Resource.h"
+#include "R_Texture.h"
 #include "external/MathGeoLib/include/MathGeoLib.h"
 
-class D_Material : public Data
+class R_Material : public Resource
 {
 public:
 
-	D_Material() : Data(DataType::MATERIAL) 
+	R_Material() : Resource(ResourceType::MATERIAL) 
 	{
 		for (int i = 0; i < MAX; ++i)
 			textures[i] = nullptr;
 	}
 
-	D_Material(const char* name, float4 color) : Data(DataType::MATERIAL)
+	R_Material(const char* name, float4 color) : Resource(ResourceType::MATERIAL)
 	{
 		for (int i = 0; i < MAX; ++i)
 			textures[i] = nullptr;
@@ -25,7 +25,7 @@ public:
 		diffuse_color = color;
 	}
 
-	~D_Material() {
+	~R_Material() {
 
 	};
 
