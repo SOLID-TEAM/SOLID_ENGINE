@@ -11,7 +11,7 @@
 // TODO: DELETE FROM HERE
 #include "C_Material.h"
 #include "Component.h"
-#include "D_Material.h"
+#include "R_Material.h"
 
 // TODO: maybe temporal untill we get to fully work module filesystem
 // the most recommended approach to deal with paths/extensions/filenames in windows
@@ -185,7 +185,7 @@ update_status ModuleInput::PreUpdate(float dt)
 				LOG("// ---------------------------------------------------");
 				LOG("[Info] Possible 3D %s model", extension.c_str());
 				LOG("// ---------------------------------------------------");
-				App->importer->ImportModelFile(filepath.c_str());
+				//App->importer->ImportModelFile(filepath.c_str());
 			}
 			if (extension == "png" ||
 				extension == "jpg" ||
@@ -200,26 +200,26 @@ update_status ModuleInput::PreUpdate(float dt)
 				LOG("[Info] Possible texture");
 				uint new_tex_id = 0;
 				// load texture already checks if the texture is previously loaded and return its id if it, new id if not
-				new_tex_id = App->textures->LoadTexture(filepath.c_str());
+				//new_tex_id = App->textures->LoadTexture(filepath.c_str());
 
-				// TODO: very provisional for the assignment 1, the original behaviour we want is more complex
-				if (new_tex_id != 0)
-				{
-					if (App->scene->selected_go != nullptr)
-					{
-						GameObject* sel_go = App->scene->selected_go;
+				//// TODO: very provisional for the assignment 1, the original behaviour we want is more complex
+				//if (new_tex_id != 0)
+				//{
+				//	if (App->scene->selected_go != nullptr)
+				//	{
+				//		GameObject* sel_go = App->scene->selected_go;
 
-						C_Material* c = sel_go->GetComponent<C_Material>();
+				//		C_Material* c = sel_go->GetComponent<C_Material>();
 
-						if (c != nullptr)
-						{
-							if (c->data->textures[0] != nullptr)
-							{
-								c->data->textures[0]->buffer_id = new_tex_id;
-							}
-						}
-					}
-				}
+				//		if (c != nullptr)
+				//		{
+				//			if (c->data->textures[0] != nullptr)
+				//			{
+				//				c->data->textures[0]->buffer_id = new_tex_id;
+				//			}
+				//		}
+				//	}
+				//}
 
 				// TODO- FIXED(go specific): in rare circunstances we can delete all gl texture buffers(not necessarily all,
 				// only needs to delete one id previously associated with the checker tex). If we have

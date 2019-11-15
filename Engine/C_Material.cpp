@@ -3,7 +3,7 @@
 #include "ModuleEditor.h"
 
 #include "C_Material.h"
-#include "D_Material.h"
+#include "R_Material.h"
 
 C_Material::C_Material(GameObject* parent) : Component(parent, ComponentType::MATERIAL)
 {

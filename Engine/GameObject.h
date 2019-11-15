@@ -22,7 +22,7 @@
 class ModuleScene;
 class ModuleEditor;
 class W_Inspector;
-class D_Mesh; // Remove
+class R_Mesh; // Remove
 class KDTree;
 
 class GameObject
@@ -68,7 +68,7 @@ public:
 
 	const std::vector<Component*>& GetComponents() const;
 
-	D_Mesh* GetMeshes();
+	R_Mesh* GetMeshes();
 
 	// Bounding Box Functions --------------------------------------
 

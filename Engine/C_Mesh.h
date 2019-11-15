@@ -3,7 +3,7 @@
 
 #include "Component.h"
 
-class D_Mesh;
+class R_Mesh;
 
 class C_Mesh : public Component
 {
@@ -25,7 +25,7 @@ public:
 
 	// Resource functions ---------------------
 
-	void SetMeshResource(D_Mesh* resource);
+	void SetMeshResource(R_Mesh* resource);
 
 	void DeleteMeshResource();
 
@@ -35,7 +35,7 @@ public:
 
 public:
 
-	D_Mesh* data = nullptr;
+	R_Mesh* data = nullptr;
 	AABB	bounding_box;
 
 };

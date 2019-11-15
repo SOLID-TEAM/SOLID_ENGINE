@@ -4,7 +4,7 @@
 #include "W_Inspector.h"
 #include "ModuleScene.h"
 
-#include "D_Mesh.h"
+#include "R_Mesh.h"
 #include "KDTree.h"
 
 GameObject::GameObject(std::string name, GameObject* parent) : name(name), parent(parent)
@@ -113,7 +113,7 @@ const std::vector<Component*>& GameObject::GetComponents() const
 	return components;
 }
 
-D_Mesh* GameObject::GetMeshes()
+R_Mesh* GameObject::GetMeshes()
 {
 	std::vector<Component*>::iterator component = components.begin();
 

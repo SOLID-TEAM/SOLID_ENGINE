@@ -49,7 +49,7 @@ public:
 public:
 
 	// TODO: instead of D_Texture, store a UID from future resource texture
-	D_Texture*  textures[MAX];
+	R_Texture*  textures[MAX];
 	float4	    diffuse_color;
 	uint tex_gl_id;
 };

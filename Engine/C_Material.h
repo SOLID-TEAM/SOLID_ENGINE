@@ -3,7 +3,7 @@
 
 #include "Component.h"
 
-class D_Material;
+class R_Material;
 
 class C_Material : public Component
 {
@@ -19,7 +19,7 @@ public:
 
 public:
 
-	D_Material* data = nullptr;
+	R_Material* data = nullptr;
 	bool textured = true;
 	bool view_checker = false;
 	uint checker_gl_id = 0;

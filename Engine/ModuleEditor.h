@@ -75,8 +75,8 @@ public:
 
 	bool Clean();
 
-	void ComputeVertexNormals(D_Mesh* goMesh, float length);
-	bool ComputeFacesNormals(D_Mesh* goMesh, float length);
+	void ComputeVertexNormals(R_Mesh* goMesh, float length);
+	bool ComputeFacesNormals(R_Mesh* goMesh, float length);
 
 	bool DebugRenderVertex(float pointSize);
 	bool DebugRenderVertexNormals(float lineWidth);

@@ -11,7 +11,7 @@
 #include "ImGui/Impl/imgui_impl_opengl3.h"
 
 // TODO:: Change site
-#include "D_Mesh.h"
+#include "R_Mesh.h"
 
 // Windows include 
 
@@ -193,7 +193,7 @@ update_status ModuleEditor::Update(float dt)
 		if (last_go_precalc != App->scene->selected_go)
 		{
 			// check if the gameobject has meshes
-			D_Mesh* smesh = nullptr;
+			R_Mesh* smesh = nullptr;
 			if(App->scene->selected_go != nullptr)
 				smesh = App->scene->selected_go->GetMeshes();
 
@@ -208,10 +208,10 @@ update_status ModuleEditor::Update(float dt)
 				{
 					ddmesh->Clean();
 					// re-assign num v and i
-					ddmesh->SetSizes(smesh->buffers_size[D_Mesh::VERTICES], smesh->buffers_size[D_Mesh::INDICES]);
+					ddmesh->SetSizes(smesh->buffers_size[R_Mesh::VERTICES], smesh->buffers_size[R_Mesh::INDICES]);
 				}
 				else // if not exists, create one
-					ddmesh = new DebugDataMesh(smesh->buffers_size[D_Mesh::VERTICES], smesh->buffers_size[D_Mesh::INDICES]);
+					ddmesh = new DebugDataMesh(smesh->buffers_size[R_Mesh::VERTICES], smesh->buffers_size[R_Mesh::INDICES]);
 				
 				// recompute data from selected_go
 				ddmesh->ComputeVertexNormals(smesh, viewport_options.v_n_line_length);
@@ -826,7 +826,7 @@ void DebugDataMesh::FillFacesBuffer()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * n_idx * 2, &debug_f_normals[0], GL_STATIC_DRAW);
 }
 
-void DebugDataMesh::ComputeVertexNormals(D_Mesh* goMesh, float length)
+void DebugDataMesh::ComputeVertexNormals(R_Mesh* goMesh, float length)
 {
 	// to draw lines, we need an array ready to what expects gldrawarrays
 	// start point and finish point
@@ -855,7 +855,7 @@ void DebugDataMesh::ComputeVertexNormals(D_Mesh* goMesh, float length)
 
 }
 
-bool DebugDataMesh::ComputeFacesNormals(D_Mesh* goMesh, float length)
+bool DebugDataMesh::ComputeFacesNormals(R_Mesh* goMesh, float length)
 {
 
 	if (n_idx % 3 != 0)

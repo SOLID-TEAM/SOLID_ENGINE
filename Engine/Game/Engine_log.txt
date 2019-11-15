@@ -14,35 +14,6 @@ Loading File System
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
 Loading Test assets
-[success] File Duplicated Correctly
-[Info] Copied model file BakerHouse.fbx to Assets/ folder
-[Info] Loading mesh data : Untitled.001
-[Info] Vertices:    160 
-[Info] Indices:    324
-[Info] Triangles:  108
-[Info] Normals:   160
-Created mesh data: Untitled.001
-File [.Library/Meshes/Untitled_0_001.solidmesh] overwritten with 6444 bytes
-// ---------------------------------------------------
-[Info] Image Baker_house.png correctly loaded into DevIL
-[Info] from filepath Assets/Models/baker_house/
-[Info] Image correctly uploaded to gl buffer
-[Info] Added image Baker_house.png to texture map
-[Info] Image deleted from DevIL
-// ---------------------------------------------------
-File [.testing.solidmat] overwritten with 16 bytes
-[Info] Loading mesh data : Untitled
-[Info] Vertices:    1641 
-[Info] Indices:    2751
-[Info] Triangles:  917
-[Info] Normals:   1641
-Created mesh data: Untitled
-File [.Library/Meshes/Untitled_1_.solidmesh] overwritten with 63544 bytes
-// ---------------------------------------------------
-[Info] Texture with same name Baker_house.png already loaded into buffers
-[Info] returning stored texture id
-// ---------------------------------------------------
-File [.testing.solidmat] overwritten with 16 bytes
 [Start] Loading Editor
 // ---------------------------------------------------
 [Info] Image cube.png correctly loaded into DevIL
@@ -94,13 +65,6 @@ File [.testing.solidmat] overwritten with 16 bytes
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
-[Init] Loaded configuration file testing.solidscene
-
-
-
-
-
-
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

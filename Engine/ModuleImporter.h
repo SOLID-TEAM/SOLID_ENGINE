@@ -15,9 +15,9 @@ struct aiMaterial;
 
 class vec3;
 class GameObject;
-class D_Mesh;
-class D_Material;
-class D_Texture;
+class R_Mesh;
+class R_Material;
+class R_Texture;
 
 // TODO: add more types if needed
 enum PrimitiveType
@@ -55,23 +55,24 @@ public:
 	GameObject* CreatePrimitive(PrimitiveType type, float3 position = { 0,0,0 }, float3 size = { 1,1,1 }, float2 slicesStacks = { 10,10 }, float4 color = { 1.0f,1.0f,1.0f,1.0f });
 
 	// TODO: implement base class gameObjects (for future components addition)
-	std::vector<D_Mesh*>& GetModels();
+	std::vector<R_Mesh*>& GetModels();
 
 	//void ImportFileFromPath(const char* path);
-	void CreateGoFromNodes(const aiScene* scene , aiNode* node, GameObject* parent);
+	
+	//void CreateGoFromNodes(const aiScene* scene , aiNode* node, GameObject* parent);
 	
 	// Import file types -----------------------------
-	bool ImportModelFile(const char* path);
+	//bool ImportModelFile(const char* path);
 
 	// TODO: ONLY TEST
-	void ReloadTextureForAllModels(uint texture_id);
+	//void ReloadTextureForAllModels(uint texture_id);
 
 private:
 
-	D_Mesh*			ImportMesh(const aiMesh* mesh, const char* name);
-	D_Material*		ImportMaterial(const aiMaterial* material, const char* name);
-	D_Material*		CreateDefaultMaterial(const char* name, float4 color) const;
-	D_Texture*		ImportTexture(const char* path);
+	/*R_Mesh*			ImportMesh(const aiMesh* mesh, const char* name);
+	R_Material*		ImportMaterial(const aiMaterial* material, const char* name);
+	R_Material*		CreateDefaultMaterial(const char* name, float4 color) const;
+	R_Texture*		ImportTexture(const char* path);*/
 
 	// sequentiall id for every thing
 	UID GetNewUID();
@@ -83,7 +84,7 @@ private:
 
 	// TODO: MAYBE WE NEED a specific module to store all models of the scene and draw etc
 	// TODO: for testing here, but we need to search a better place, maybe new module coming
-	std::vector<D_Mesh*> meshes;
+	std::vector<R_Mesh*> meshes;
 
 	std::string relative_path_from_model;
 
