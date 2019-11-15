@@ -113,8 +113,8 @@ bool C_MeshRenderer::Render()
 
 	if (/*vp.debug_bounding_box*/ true)
 	{
-		App->renderer3D->RenderAABB(linked_go->bounding_box, vp.bb_line_width, vp.bb_color);
-		App->renderer3D->RenderOBB(linked_go->obb, vp.bb_line_width, float4(0.F, 0.9f, 0.f, 1.f));
+		App->renderer3D->RenderAABB(linked_go->bounding_box, 1.2f , vp.bb_color);
+		App->renderer3D->RenderOBB(linked_go->obb, 1.2f,	float4(1.f, .9f, 0.1f, 1.f));
 	}
 
 

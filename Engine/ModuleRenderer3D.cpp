@@ -283,41 +283,40 @@ void ModuleRenderer3D::RenderKDTree(KDTree& kdtree, float width)
 		}
 	}
 	
-	//glDepthFunc(GL_ALWAYS);
-	//glDepthRange(0.0f, 1.0f);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_GREATER);
 
 	while (!nodes_to_render.empty())
 	{
 		KDTreeNode* node = nodes_to_render.top();
 		float4 color;
 
-		//if (node != kdtree.root)
-		//{
-		//	switch (uint dimension = node->depth % 3)
-		//	{
-		//	case 0:
-		//		color = { 1.f, 0.f, 0.f, 1.f };
-		//		break;
-		//	case 1:
-		//		color = { 0.f, 1.f, 0.f, 1.f };
-		//		break;
-		//	case 2:
-		//		color = { 0.f, 0.f, 1.f, 1.f };
-		//		break;
-		//	}
+		if (node != kdtree.root)
+		{
+			switch (uint dimension = node->depth % 3)
+			{
+			case 0:
+				color = { 1.f, 0.f, 0.f, 1.f };
+				break;
+			case 1:
+				color = { 0.f, 1.f, 0.f, 1.f };
+				break;
+			case 2:
+				color = { 0.f, 0.f, 1.f, 1.f };
+				break;
+			}
 
 
-		//	RenderAABB(*node->aabb, width - (float)node->depth * 0.3f, color);
-		//}
-		//else
-		//{
-		//	color = { 1.f, 1.f, 1.f, 1.f };
+			RenderAABB(*node->aabb, width - (float)node->depth * 0.3f, color);
+		}
+		else
+		{
+			color = { 1.f, 1.f, 1.f, 1.f };
+			RenderAABB(*node->aabb, width, color);
+		}
 
-		//	
-		//}
-		color = { 1.f, 0.f, 0.f, 1.f };
-		RenderAABB(*node->aabb, width , color);
-		//glDepthFunc(GL_LESS);
+		glDepthFunc(GL_LESS);
+		glDisable(GL_DEPTH_TEST);
 
 		nodes_to_render.pop();
 	}
