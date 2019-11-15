@@ -27,6 +27,8 @@
 #include "W_Config.h"
 #include "W_Console.h"
 
+struct Event;
+
 class Application
 {
 public:
@@ -43,6 +45,7 @@ public:
 	void Log(const char* new_entry);
 	int GetFrames();
 	void SaveLogToFile() const;
+	void BroadcastEvent(const Event& event);
 
 	bool WantToSave(bool cleanInit = false);
 	void WantToLoad(bool restoreDefault = false);

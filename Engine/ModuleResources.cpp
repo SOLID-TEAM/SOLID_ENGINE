@@ -1,5 +1,6 @@
 #include "ModuleResources.h"
 #include "Application.h"
+#include "Event.h"
 
 ModuleResources::ModuleResources()
 {
@@ -132,4 +133,66 @@ bool ModuleResources::Save(Config& config)
 void ModuleResources::Load(Config& config)
 {
 	last_uid = config.GetInt("Last_UID", last_uid);
+}
+
+void ModuleResources::ReceiveEvent(const Event& e)
+{
+
+	switch (e.type)
+	{
+	case Event::file_dropped:
+		LOG("[Info] New file dropped %s", e.string.ptr);
+		ImportFileDropped(e.string.ptr);
+		break;
+	}
+
+}
+
+void ModuleResources::ImportFileDropped(const char* file)
+{
+	std::string filepath = App->file_sys->NormalizePath(file);
+	std::string extension;
+	
+	App->file_sys->SplitFilePath(filepath.c_str(), nullptr, nullptr, &extension);
+
+	Resource::Type type = GetResourceTypeFromFileExtension(extension);
+
+	// if dropped file is recognised
+	if (type != Resource::Type::NO_TYPE)
+	{
+		LOG("[Info] Recognized file extension .%s", extension.c_str());
+	}
+	else
+	{
+		LOG("[Error] Dropped file can't be imported");
+		LOG("[Error] Path: %s", file);
+		LOG("[Error] Extension: .%s", extension.c_str());
+	}
+
+}
+
+Resource::Type ModuleResources::GetResourceTypeFromFileExtension(std::string extension)
+{
+
+	if (extension.empty()) return Resource::Type::NO_TYPE;
+
+	Resource::Type ret = Resource::Type::NO_TYPE;
+
+	for (uint i = 0; i < strlen(extension.c_str()); ++i)
+		extension[i] = std::tolower(extension[i]);
+
+	if (extension == "fbx" ||
+		extension == "obj" )
+	{
+		ret = Resource::Type::MODEL;
+	}
+	if (extension == "png" ||
+		extension == "jpg" ||
+		extension == "dds" ||
+		extension == "tif")
+	{
+		ret = Resource::Type::TEXTURE;
+	}
+
+	return ret;
 }

@@ -22,6 +22,11 @@ public:
 	bool Save(Config& config);
 	void Load(Config& config);
 
+	void ReceiveEvent(const Event& e);
+
+	void ImportFileDropped(const char* file);
+	Resource::Type GetResourceTypeFromFileExtension(std::string extension);
+
 
 public:
 	UID Find(const char* file_in_assets) const;

@@ -90,6 +90,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="C_MeshRenderer.h" />
     <ClInclude Include="C_Transform.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="ModuleResources.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="R_Material.h" />

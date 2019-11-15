@@ -4,6 +4,7 @@
 #include "ModuleEditor.h"
 #include "W_Config.h"
 #include "W_Rendering.h"
+#include "Event.h"
 
 #include "ImGui/Impl/imgui_impl_sdl.h"
 #include "ImGui/imgui_internal.h"
@@ -166,83 +167,11 @@ update_status ModuleInput::PreUpdate(float dt)
 
 		case SDL_DROPFILE:
 		{
-			// TODO: remove this testing from here, and do specific functions/change with our filesystem ----------
-			
-			std::string filepath = App->file_sys->NormalizePath(event.drop.file);
-			std::string extension;
-			App->file_sys->SplitFilePath(filepath.c_str(), nullptr, nullptr, &extension);
-
-			LOG("%s", filepath.c_str());
-			LOG("%s", extension.c_str());
-
-			for (uint i = 0; i < strlen(extension.c_str()); ++i)
-				extension[i] = std::tolower(extension[i]);
-
-			if (extension == "fbx" ||
-				extension == "obj" ||
-				extension == "solid")
-			{
-				LOG("// ---------------------------------------------------");
-				LOG("[Info] Possible 3D %s model", extension.c_str());
-				LOG("// ---------------------------------------------------");
-				//App->importer->ImportModelFile(filepath.c_str());
-			}
-			if (extension == "png" ||
-				extension == "jpg" ||
-				extension == "dds" ||
-				extension == "tif")
-			{
-
-			// TODO !!!! : testing to reload model texture with the dropped one
-			// still need to reload only the desired "focused" model
-			// still need to delete previous texture buffer
-				LOG("// ---------------------------------------------------");
-				LOG("[Info] Possible texture");
-				uint new_tex_id = 0;
-				// load texture already checks if the texture is previously loaded and return its id if it, new id if not
-				//new_tex_id = App->textures->LoadTexture(filepath.c_str());
-
-				//// TODO: very provisional for the assignment 1, the original behaviour we want is more complex
-				//if (new_tex_id != 0)
-				//{
-				//	if (App->scene->selected_go != nullptr)
-				//	{
-				//		GameObject* sel_go = App->scene->selected_go;
-
-				//		C_Material* c = sel_go->GetComponent<C_Material>();
-
-				//		if (c != nullptr)
-				//		{
-				//			if (c->data->textures[0] != nullptr)
-				//			{
-				//				c->data->textures[0]->buffer_id = new_tex_id;
-				//			}
-				//		}
-				//	}
-				//}
-
-				// TODO- FIXED(go specific): in rare circunstances we can delete all gl texture buffers(not necessarily all,
-				// only needs to delete one id previously associated with the checker tex). If we have
-				// checker texture active with some linked id to image visualization(active checker tex), when we load a new texture
-				// (and delete) with the panel checker texture not active, and returning to it, the image shown is not the checker
-				// previously deleted, is the new one! bad
-				// workaround | WE NEED to deal with this when we implement checker for active gameobject only
-				// if the new id texture is the same as the one we have linked to checker texture, something weird occurs, then
-				// what that means some id are deleted and another texture is loaded without returning to this panel
-				// FIXED ---
-				/*if (new_tex_id == App->editor->w_rendering->checker_tex_gl_id)
-					App->editor->w_rendering->checker_tex_gl_id = 0;*/
-				
-				/*if (new_tex_id > 0)
-					App->importer->ReloadTextureForAllModels(new_tex_id);*/
-			}
-
-			LOG("extension: %s", extension.c_str());
-
+			Event e(Event::file_dropped);
+			e.string.ptr = event.drop.file;
+			App->BroadcastEvent(e);
 			SDL_free(event.drop.file);
-
 			break;
-			// ----------------------------------------------------------------------------------------------------
 		}
 		case SDL_QUIT:
 			quit = true;

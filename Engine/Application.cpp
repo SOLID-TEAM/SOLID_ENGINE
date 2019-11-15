@@ -373,3 +373,9 @@ int Application::GetFrames()
 {
 	return frames;
 }
+
+void Application::BroadcastEvent(const Event& e)
+{
+	for (std::list<Module*>::iterator it = list_modules.begin(); it != list_modules.end(); ++it)
+		(*it)->ReceiveEvent(e);
+}
