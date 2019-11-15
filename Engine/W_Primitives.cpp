@@ -4,7 +4,7 @@
 
 #include "ModuleImporter.h"
 #include "C_Material.h"
-#include "D_Material.h"
+#include "R_Material.h"
 
 W_Primitives::W_Primitives(std::string name, bool active) : Window(name, active)
 {

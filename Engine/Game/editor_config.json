@@ -87,5 +87,8 @@
         "v_n_line_length": 0.40000000596046448,
         "f_n_line_length": 0.40000000596046448
     },
-    "Renderer3D": {}
+    "Renderer3D": {},
+    "ModuleResources": {
+        "Last_UID": 0
+    }
 }

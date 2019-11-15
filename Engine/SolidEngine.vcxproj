@@ -90,6 +90,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="C_MeshRenderer.h" />
     <ClInclude Include="C_Transform.h" />
+    <ClInclude Include="ModuleResources.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="R_Material.h" />
     <ClInclude Include="R_Texture.h" />
@@ -214,6 +215,7 @@
     <ClCompile Include="C_MeshRenderer.cpp" />
     <ClCompile Include="C_Transform.cpp" />
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="ModuleResources.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="R_Material.cpp" />
     <ClCompile Include="R_Texture.cpp" />

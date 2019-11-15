@@ -10,13 +10,13 @@ class R_Material : public Resource
 {
 public:
 
-	R_Material() : Resource(ResourceType::MATERIAL) 
+	R_Material() : Resource(Type::MATERIAL) 
 	{
 		for (int i = 0; i < MAX; ++i)
 			textures[i] = nullptr;
 	}
 
-	R_Material(const char* name, float4 color) : Resource(ResourceType::MATERIAL)
+	R_Material(const char* name, float4 color) : Resource(Type::MATERIAL)
 	{
 		for (int i = 0; i < MAX; ++i)
 			textures[i] = nullptr;

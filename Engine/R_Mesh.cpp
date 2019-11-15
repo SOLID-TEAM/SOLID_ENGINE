@@ -7,7 +7,7 @@
 #include "ModuleTextures.h"
 
 
-R_Mesh::R_Mesh() : Resource( ResourceType::MESH )
+R_Mesh::R_Mesh() : Resource(Type::MESH )
 {
 	for (uint i = 0; i < BufferType::MAX ; i++)
 	{
@@ -16,7 +16,7 @@ R_Mesh::R_Mesh() : Resource( ResourceType::MESH )
 	}
 }
 
-R_Mesh::R_Mesh(float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices) : Resource(ResourceType::MESH)
+R_Mesh::R_Mesh(float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices) : Resource(Type::MESH)
 { 
 	// par_shapes meshes fixed num uv components per uv = 2
 	this->uv_num_components = 2;

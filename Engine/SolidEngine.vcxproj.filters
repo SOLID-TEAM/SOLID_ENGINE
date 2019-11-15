@@ -429,6 +429,9 @@
     <ClInclude Include="R_Material.h">
       <Filter>Sources\Data</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleResources.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -679,6 +682,9 @@
     </ClCompile>
     <ClCompile Include="R_Material.cpp">
       <Filter>Sources\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleResources.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

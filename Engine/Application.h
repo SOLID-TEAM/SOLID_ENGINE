@@ -16,6 +16,7 @@
 #include "ModuleFileSystem.h"
 #include "ModuleTextures.h"
 #include "ModuleScene.h"
+#include "ModuleResources.h"
 
 // Tools ---------------------
 #include "Config.h"
@@ -76,6 +77,7 @@ public:
 	ModuleEditor* editor = nullptr;
 	ModuleFileSystem* file_sys = nullptr;
 	ModuleScene* scene = nullptr;
+	ModuleResources* resources = nullptr;
 
 	// Buffers ------------------------------------
 	ImVector<char*> console_log_aux;

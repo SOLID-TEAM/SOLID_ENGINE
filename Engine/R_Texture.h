@@ -7,7 +7,7 @@ class R_Texture : public Resource
 {
 public:
 
-	R_Texture(): Resource( ResourceType::TEXTURE) {};
+	R_Texture(): Resource(Type::TEXTURE) {};
 	~R_Texture() {}
 
 public:

@@ -10,7 +10,7 @@ public:
 
 	friend ModuleImporter;
 
-	enum class ResourceType
+	enum class Type
 	{
 		MODEL,
 		MESH,
@@ -21,13 +21,13 @@ public:
 
 public:
 
-	Resource(ResourceType type) : type(type){}
+	Resource(Type type) : type(type){}
 
 	virtual ~Resource() {}
 
 	std::string & GetName() { return name; }
 
-	ResourceType GetType() const { return type; }
+	Type GetType() const { return type; }
 
 	UID GetUID() const { return uid; }
 
@@ -46,7 +46,7 @@ protected:
 	// Data Info -------------------------
 
 	UID				uid = 0; // we use id as exported resource file too
-	ResourceType		type = ResourceType::NO_TYPE; // and with type, we know how to online load this resource
+	Type		type = Type::NO_TYPE; // and with type, we know how to online load this resource
 
 	std::string		original_file; // Assets/..bla bla bla
 	std::string		name; // custom name based on import names from model

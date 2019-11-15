@@ -20,10 +20,12 @@ Application::Application()
 	file_sys = new ModuleFileSystem();
 	textures = new ModuleTextures();
 	scene = new ModuleScene();
+	resources = new ModuleResources();
 
 	// Main Modules
 	AddModule(window);
 	AddModule(input);
+	AddModule(resources);
 	// Scenes
 	AddModule(scene);
 	AddModule(test);
