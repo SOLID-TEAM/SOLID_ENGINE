@@ -49,6 +49,7 @@ bool C_Transform::Update(float dt)
 		up = global_transform.WorldY();
 		right = global_transform.WorldX();
 
+		// TODO : Not working at all. Revise 
 		math::float3 global_scale;
 		global_transform.Decompose(float3(), Quat(), global_scale);
 		negative_scale = !((local_scale.x * local_scale.y * local_scale.z * global_scale.x * global_scale.y * global_scale.z) >= 0.f);
@@ -61,6 +62,23 @@ bool C_Transform::Update(float dt)
 		{
 			(*itr)->UpdateTransform();
 		}
+
+		// Update bounding box ---------------------------------------
+
+		C_Mesh* c_mesh = linked_go->GetComponent<C_Mesh>();
+
+		if (c_mesh)
+		{
+			linked_go->obb = c_mesh->mesh_aabb;
+		}
+		else
+		{
+			linked_go->obb = AABB::FromCenterAndSize(float3::zero, float3::one * 1.F);
+		}
+
+		linked_go->obb.Transform(global_transform);
+		linked_go->bounding_box.SetNegativeInfinity();
+		linked_go->bounding_box.Enclose(linked_go->obb);
 
 		// Finish transform update -----------------------------------
 

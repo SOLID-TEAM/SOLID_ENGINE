@@ -46,6 +46,14 @@ void CameraEditor::Update(float dt)
 	const float mouse_motion_y = App->input->GetMouseYMotion();
 	float lerp_trans_speed = 6.f;
 	float lerp_rot_speed = 14.5f;
+	
+	static Quat current_rotation = final_rotation;
+
+	static float final_yaw = 0.f;
+	static float final_pitch = 0.f;
+	
+	static float current_yaw = 0.f;
+	static float current_pitch = 0.f;
 
 	state = IDLE;
 
@@ -65,11 +73,10 @@ void CameraEditor::Update(float dt)
 				float yaw = mouse_motion_x * rotation_speed;
 				float pitch = mouse_motion_y * rotation_speed;
 
+				final_yaw += yaw;
+				final_pitch += pitch;
 
-				float4x4 aux;
-				aux.SetRotatePart(final_rotation);
-
-				final_rotation = Quat::RotateAxisAngle(float3::unitY, yaw * DEGTORAD) * Quat::RotateAxisAngle(aux.WorldX(), pitch * DEGTORAD) * final_rotation;
+				final_rotation = (Quat::RotateAxisAngle(float3::unitY, final_yaw * DEGTORAD) * Quat::RotateAxisAngle(float3::unitX, final_pitch * DEGTORAD));;
 			}
 
 			// WASD movement ----------------------------------
@@ -96,13 +103,18 @@ void CameraEditor::Update(float dt)
 
 			// Lerp ---------------------------------------------------------------
 			transform->SetPosition(float3::Lerp(transform->position, final_position, lerp_trans_speed * dt));
-			transform->SetRotation(Quat::Slerp(transform->GetGlobalTransform().RotatePart().ToQuat(), final_rotation, lerp_rot_speed * dt));
+
+			current_yaw = math::Lerp(current_yaw, final_yaw, lerp_rot_speed * dt);
+			current_pitch = math::Lerp(current_pitch, final_pitch, lerp_rot_speed * dt);
+
+			current_rotation = (Quat::RotateAxisAngle(float3::unitY, current_yaw * DEGTORAD) * Quat::RotateAxisAngle(float3::unitX, current_pitch * DEGTORAD));;
+			transform->SetRotation(current_rotation);
 
 		}
 		else
 		{
 			float3 position = transform->position;
-			Quat rotation = transform->GetGlobalTransform().RotatePart().ToQuat();
+
 			// Orbit -------------------------------------------------------------------
 
 			if (alt_pressed)
@@ -122,8 +134,12 @@ void CameraEditor::Update(float dt)
 						float yaw = mouse_motion_x * rotation_speed;
 						float pitch = mouse_motion_y * rotation_speed;
 
-						rotation = Quat::RotateAxisAngle(float3::unitY, yaw * DEGTORAD) * Quat::RotateAxisAngle(transform->right, pitch * DEGTORAD) * rotation;
-						transform->SetRotation(rotation);
+						current_yaw = final_yaw += yaw;
+						current_pitch = final_pitch += pitch;
+
+						current_rotation = final_rotation = Quat::RotateAxisAngle(float3::unitY, final_yaw * DEGTORAD) * Quat::RotateAxisAngle(float3::unitX, final_pitch * DEGTORAD);
+						transform->SetRotation(final_rotation);
+
 						position = reference + -transform->forward * distance;
 						transform->SetPosition(position);
 					}
@@ -212,7 +228,6 @@ void CameraEditor::Update(float dt)
 			else
 			{
 				final_position = position;
-				final_rotation = rotation;
 			}
 		}
 	}

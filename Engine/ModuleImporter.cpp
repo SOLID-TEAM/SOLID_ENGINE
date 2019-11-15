@@ -175,7 +175,9 @@ void ModuleImporter::CreateGoFromNodes(const aiScene* scene , aiNode* node, Game
 			//  Add Component Mesh -------------
 
  			C_Mesh* c_mesh = new_go->CreateComponent< C_Mesh>();
-			c_mesh->data = ImportMesh( ai_mesh, ai_mesh->mName.C_Str() );
+			c_mesh->SetMeshResource(ImportMesh( ai_mesh, ai_mesh->mName.C_Str() ) );
+
+
 			// and save own format to disk
 			std::string test_name = GetFormattedName(ai_mesh->mName.C_Str(), GetNewUID()).c_str();
 			c_mesh->data->SaveToFile(test_name.c_str());

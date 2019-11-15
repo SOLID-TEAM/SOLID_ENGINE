@@ -30,6 +30,8 @@ private:
 
 	void RenderBoundingBox(math::AABB& aabb, float width, float* color);
 
+	void RenderBoundingBox(math::OBB& aabb, float width, float* color);
+
 private:
 
 	D_Mesh*     d_mesh = nullptr;

@@ -24,6 +24,9 @@ class W_Inspector;
 class D_Mesh; // Remove
 class KDTree;
 
+
+
+
 class GameObject
 {
 public:
@@ -31,6 +34,12 @@ public:
 	friend ModuleScene;
 	friend ModuleEditor;
 	friend KDTree;
+
+	friend C_Transform;
+	friend 	C_Mesh;
+	friend 	C_Material;
+	friend 	C_MeshRenderer;
+	friend 	C_Camera;
 
 public:
 
@@ -108,13 +117,13 @@ public:
 
 private:
 
+	std::string name;
+
 	UID uid = 0;
 
 	bool is_static = false;
 
 	bool active = true;
-
-	std::string name;
 
 	std::vector<Component*> components;
 

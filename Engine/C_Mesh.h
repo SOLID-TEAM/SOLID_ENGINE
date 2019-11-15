@@ -4,12 +4,16 @@
 #include "Component.h"
 
 class D_Mesh;
+class C_MeshRenderer;
+class C_Transform;
 
 class C_Mesh : public Component
 {
 public:
 
 	friend ModuleImporter;
+	friend C_MeshRenderer;
+	friend C_Transform;
 
 public:
 
@@ -33,10 +37,11 @@ public:
 
 	//bool Load(Config& config);
 
-public:
-
 	D_Mesh* data = nullptr;
-	AABB	bounding_box;
+
+private:
+
+	AABB	mesh_aabb;
 
 };
 

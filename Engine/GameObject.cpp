@@ -143,7 +143,7 @@ AABB GameObject::GetHierarchyAABB()
 	{
 		GameObject* go = go_stack.top();
 
-		hierarchy_aabb.Enclose(go->bounding_box);
+		hierarchy_aabb.Enclose(go->obb);
 
 		go_stack.pop();
 

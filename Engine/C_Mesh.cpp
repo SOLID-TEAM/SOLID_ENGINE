@@ -2,6 +2,7 @@
 #include "ImGui/imgui.h"
 
 #include "C_Mesh.h"
+#include "C_MeshRenderer.h"
 #include "C_Transform.h"
 
 #include "D_Mesh.h"
@@ -47,6 +48,9 @@ void C_Mesh::SetMeshResource(D_Mesh* resource)
 	}
 
 	data = resource;
+
+	mesh_aabb.SetNegativeInfinity();
+	mesh_aabb = resource->aabb;
 }
 
 void C_Mesh::DeleteMeshResource()

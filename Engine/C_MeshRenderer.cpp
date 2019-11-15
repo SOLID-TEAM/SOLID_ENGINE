@@ -106,16 +106,23 @@ bool C_MeshRenderer::Render()
 		RenderOutline(7.f, (float*)&vp.wire_color);
 	}
 
-	if (vp.debug_bounding_box)
+	glPopMatrix();
+
+	glPushMatrix();
+	glMultMatrixf(float4x4::identity.ptr());
+
+	if (/*vp.debug_bounding_box*/ true)
 	{
-		RenderBoundingBox(d_mesh->aabb, vp.bb_line_width, (float*)&vp.bb_color);
+		RenderBoundingBox(linked_go->bounding_box, vp.bb_line_width, (float*)&vp.bb_color);
+		RenderBoundingBox(linked_go->obb, vp.bb_line_width, (float*)&vp.d_vertex_face_color);
 	}
 
-	// Flip faces enable ----------------------------------------------------
-	glFrontFace(GL_CCW);
 
 	// Pop matrix -----------------------------------------------------------
 	glPopMatrix();
+
+	// Flip faces enable ----------------------------------------------------
+	glFrontFace(GL_CCW);
 
 	return true;
 }
@@ -267,6 +274,25 @@ void C_MeshRenderer::RenderBoundingBox(math::AABB& aabb, float width, float* col
 	for (int i = 0; i < aabb.NumEdges(); ++i)
 	{
 		math::LineSegment line_segment = aabb.Edge(i);
+		glVertex3f(line_segment.a.x, line_segment.a.y, line_segment.a.z);
+		glVertex3f(line_segment.b.x, line_segment.b.y, line_segment.b.z);
+	}
+
+	glEnd();
+	glLineWidth(1.f);
+	ModuleRenderer3D::EndDebugDraw();
+}
+
+void C_MeshRenderer::RenderBoundingBox(math::OBB& obb, float width, float* color)
+{
+	ModuleRenderer3D::BeginDebugDraw(color);
+	glLineWidth(width);
+	glBegin(GL_LINES);
+
+
+	for (int i = 0; i < obb.NumEdges(); ++i)
+	{
+		math::LineSegment line_segment = obb.Edge(i);
 		glVertex3f(line_segment.a.x, line_segment.a.y, line_segment.a.z);
 		glVertex3f(line_segment.b.x, line_segment.b.y, line_segment.b.z);
 	}

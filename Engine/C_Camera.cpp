@@ -1,5 +1,6 @@
 #include "C_Camera.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleScene.h"
 #include "GL/glew.h"
 
 #include "GameObject.h"
@@ -9,15 +10,14 @@ C_Camera::C_Camera(GameObject* go): Component(go, ComponentType::CAMERA)
 {
 	name.assign("Camera");
 
-	frustum.type = math::FrustumType::PerspectiveFrustum;
-
 	frustum.pos = math::float3::zero;
 	frustum.front = math::float3::unitZ;
 	frustum.up = math::float3::unitY;
 
+	SetFrustumType(math::FrustumType::PerspectiveFrustum);
 	SetAspectRatio(16.f, 9.f );
-	SetClippingNearPlane(0.03f);
-	SetClippingFarPlane(30.f);
+	SetClippingNearPlane(0.01f);
+	SetClippingFarPlane(300.f);
 	SetFov(60.f);
 
 }
@@ -30,9 +30,12 @@ bool C_Camera::CleanUp()
 void C_Camera::UpdateTransform()
 {
 	math::float4x4 global_transform = linked_go->transform->GetGlobalTransform();
+	global_transform.RemoveScale();
+
 	frustum.pos = global_transform.TranslatePart();
 	frustum.front = global_transform.WorldZ();
 	frustum.up = global_transform.WorldY();
+
 	UpdateViewMatrix();
 }
 
@@ -101,7 +104,7 @@ math::float4x4 C_Camera::GetViewMatrix()
 
 void C_Camera::UpdateFov()
 {
-	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov / 2.0f) * aspect_ratio);
+	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * aspect_ratio);
 	UpdateProjectionMatrix();
 }
 
@@ -122,7 +125,9 @@ float C_Camera::GetFov()
 
 bool C_Camera::Render()
 {
+	
 	ModuleRenderer3D::BeginDebugDraw();
+
 	glLineWidth(1.f);
 	glBegin(GL_LINES);
 

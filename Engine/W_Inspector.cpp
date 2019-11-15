@@ -19,7 +19,8 @@ void W_Inspector::Draw()
 			GameObject* go = App->scene->selected_go;
 
 			ImGui::Spacing();
-			ImGui::Checkbox("##active", &go->active); ImGui::SameLine(); ImGui::InputText("##etc", &go->name);
+			ImGui::Checkbox("##active", &go->active); ImGui::SameLine(); ImGui::SetNextItemWidth(ImGui::GetWindowContentRegionMax().x - ImGui::GetCursorPosY() - 85.F);  ImGui::InputText("##etc", &go->name); ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 75.F);
+			ImGui::Checkbox("Static", &go->active); 
 			ImGui::Spacing();
 
 			// -----------------------------------------------------------------
