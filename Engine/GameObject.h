@@ -4,38 +4,39 @@
 #include <vector>
 #include <string>
 
-#include "Component.h"
 #include "external/MathGeoLib/include/Geometry/AABB.h"
 #include "external/MathGeoLib/include/Geometry/OBB.h"
 
 // Components ------------------------------ // Needed to dynamic cast functions
 
+#include "Component.h"
 #include "C_Transform.h"
 #include "C_Mesh.h"
 #include "C_Material.h"
 #include "C_MeshRenderer.h"
 #include "C_Camera.h"
-#include <typeinfo>
 
+#include <typeinfo>
 
 class ModuleScene;
 class ModuleEditor;
 class W_Inspector;
 class D_Mesh; // Remove
 class KDTree;
-
-
-
+class DynTree;
+class DynTreeNode;
 
 class GameObject
 {
 public:
 
+	friend W_Inspector;
 	friend ModuleScene;
 	friend ModuleEditor;
 	friend KDTree;
+	friend DynTree;
 
-	friend C_Transform;
+	friend	C_Transform;
 	friend 	C_Mesh;
 	friend 	C_Material;
 	friend 	C_MeshRenderer;
@@ -113,8 +114,6 @@ public:
 
 	C_Transform* transform = nullptr;
 
-	math::AABB bounding_box;
-
 private:
 
 	std::string name;
@@ -129,10 +128,14 @@ private:
 
 	std::vector<Component*> components;
 
+	math::AABB bounding_box;
+
 	OBB obb;
 
-	friend W_Inspector;
+	DynTreeNode* dyn_node = nullptr;
 };
+
+// Template functions -----------------------------------------------------
 
 template<class T>
 T* GameObject::GetComponent() const

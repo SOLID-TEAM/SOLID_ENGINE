@@ -1,6 +1,6 @@
 #include "C_Transform.h"
 #include "GameObject.h"
-
+#include "DynTree.h"
 #include "ImGui/imgui.h"
 
 C_Transform::C_Transform(GameObject* parent) : Component(parent, ComponentType::TRANSFORM)
@@ -73,6 +73,17 @@ bool C_Transform::Update(float dt)
 			linked_go->obb.Transform(global_transform);
 			linked_go->bounding_box.SetNegativeInfinity();
 			linked_go->bounding_box.Enclose(linked_go->obb);
+		}
+
+		// Update Dynamic Tree ---------------------------------------
+
+		if (linked_go->dyn_node != nullptr && linked_go->bounding_box.IsFinite())
+		{
+			if (!linked_go->dyn_node->aabb.Contains(linked_go->bounding_box))
+			{
+				//App->scene->dy.ReleaseNode(treeNode);
+				//App->scene->aabbTree.InsertGO(this);
+			}
 		}
 
 		// Finish transform update -----------------------------------

@@ -6,6 +6,7 @@
 
 #include "D_Mesh.h"
 #include "KDTree.h"
+#include "DynTree.h"
 
 GameObject::GameObject(std::string name, GameObject* parent) : name(name), parent(parent)
 {
@@ -264,17 +265,3 @@ bool GameObject::Save(Config& config)
 
 	return true;
 }
-
-//bool GameObject::Draw()
-//{
-//	bool ret = true;
-//
-//	std::vector<Component*>::iterator component = components.begin();
-//
-//	for (; component != components.end(); ++component)
-//	{
-//		ret = (*component)->Draw();
-//	}
-//
-//	return ret;
-//}

@@ -432,7 +432,7 @@
     <ClInclude Include="W_Game.h">
       <Filter>Sources\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="AABBTree.h">
+    <ClInclude Include="DynTree.h">
       <Filter>Sources\Trees</Filter>
     </ClInclude>
   </ItemGroup>
@@ -689,7 +689,7 @@
     <ClCompile Include="W_Game.cpp">
       <Filter>Sources\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="AABBTree.cpp">
+    <ClCompile Include="DynTree.cpp">
       <Filter>Sources\Trees</Filter>
     </ClCompile>
   </ItemGroup>

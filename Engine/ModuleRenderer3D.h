@@ -86,6 +86,7 @@ struct RenderConfig
 
 typedef void*  SDL_GLContext;
 class KDTree;
+class DynTree;
 
 class ModuleRenderer3D : public Module
 {
@@ -110,6 +111,8 @@ public:
 	void RenderFrustum(math::Frustum& frustum, float width, float4& color);
 
 	void RenderKDTree(KDTree& kdtree, float width);
+
+	void RenderDynTree(DynTree& kdtree, float width, float4& color);
 
 	static void BeginDebugDraw(float4& color);
 

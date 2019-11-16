@@ -9,6 +9,7 @@
 #include "SDL\include\SDL_opengl.h"
 
 #include "KDTree.h"
+#include "DynTree.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")
@@ -299,7 +300,26 @@ void ModuleRenderer3D::RenderKDTree(KDTree& kdtree, float width)
 	glDepthFunc(GL_LESS);
 }
 
+void ModuleRenderer3D::RenderDynTree(DynTree& kdtree, float width, float4& color)
+{
+	std::stack<DynTreeNode*> nodes_stack;
 
+	nodes_stack.push(kdtree.root);
+
+	while (!nodes_stack.empty())
+	{
+		DynTreeNode* node = nodes_stack.top();
+
+		RenderAABB(node->aabb , width, color);
+
+		nodes_stack.pop();
+
+		if (node->node_left != nullptr)
+			nodes_stack.push(node->node_left);
+		if (node->node_right != nullptr)
+			nodes_stack.push(node->node_right);
+	}
+}
 
 RenderConfig& ModuleRenderer3D::GetRenderConfig()
 {
