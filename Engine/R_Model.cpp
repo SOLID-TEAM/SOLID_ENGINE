@@ -38,6 +38,8 @@ bool R_Model::Import(const char* path, UID& output_uid)
 
 		std::vector<UID> meshes, materials;
 		new_model.GenerateMeshes(scene, path, meshes);
+		/*new_model.GenerateMaterials
+		new_model.GenerateNodes*/
 
 		// Free the imported scene
 		aiReleaseImport(scene);

@@ -11,7 +11,6 @@ class R_Material : public Resource
 public:
 
 	R_Material(UID uid) : Resource(uid, Type::MATERIAL) {}
-	
 
 	R_Material(UID uid, const char* name, float4 color) : Resource(uid, Type::MATERIAL)
 	{
@@ -21,7 +20,7 @@ public:
 
 	~R_Material() {};
 
-	void GenerateFileTexture();
+	//void GenerateFileTexture();
 
 	bool LoadInMemory();
 
@@ -45,7 +44,7 @@ public:
 	UID  textures[MAX]{ 0,0,0,0 };
 	float4	    diffuse_color;
 
-	uint tex_gl_id; // TODO: remove this
+	//uint tex_gl_id; // TODO: remove this
 };
 
 #endif //__R_MATERIAL_H__

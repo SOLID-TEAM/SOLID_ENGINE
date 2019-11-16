@@ -123,8 +123,8 @@ bool R_Mesh::SaveToFile(const char* name)
 	char* data = new char[size];
 	char* cursor = data;
 
-	int test = sizeof(GetName().data());
-	int test2 = strlen(GetName().c_str());
+	/*int test = sizeof(GetName().data());
+	int test2 = strlen(GetName().c_str());*/
 
 	uint bytes = sizeof(char) * strlen(GetName().c_str());
 	//strcpy(cursor, GetName().c_str());
