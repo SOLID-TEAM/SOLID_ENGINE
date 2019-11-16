@@ -94,6 +94,7 @@
     <ClInclude Include="ModuleResources.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="R_Material.h" />
+    <ClInclude Include="R_Model.h" />
     <ClInclude Include="R_Texture.h" />
     <ClInclude Include="external\MathGeoLib\include\Algorithm\Random\LCG.h" />
     <ClInclude Include="external\MathGeoLib\include\Geometry\AABB.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="ModuleResources.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="R_Material.cpp" />
+    <ClCompile Include="R_Model.cpp" />
     <ClCompile Include="R_Texture.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Algorithm\Random\LCG.cpp" />
     <ClCompile Include="external\MathGeoLib\include\Geometry\AABB.cpp" />

@@ -2,6 +2,10 @@
 #include "Application.h"
 #include "Event.h"
 
+#include "R_Model.h"
+#include "R_Mesh.h"
+#include "R_Material.h"
+
 ModuleResources::ModuleResources()
 {
 	name.assign("ModuleResources");
@@ -33,12 +37,11 @@ UID ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type t
 {
 	UID ret = 0;
 	bool import_ok = false;
-	std::string written_file;
 
 	switch (type)
 	{
 	case Resource::Type::MODEL:
-		//import_ok = ResourceModel::Import(new_file_in_assets, written_file);
+		import_ok = R_Model::Import(new_file_in_assets, ret);
 		break;
 	case Resource::Type::TEXTURE:
 		break;
@@ -52,8 +55,12 @@ UID ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type t
 	{
 		Resource* r = CreateNewResource(type);
 		r->GetName().assign(new_file_in_assets);
-		r->GetExportedName().assign(written_file.c_str());
+		//r->GetExportedName().assign(written_file.c_str());
 		ret = r->GetUID();
+	}
+	else
+	{
+		LOG("[Error:%s] Importing %s", name.c_str() ,new_file_in_assets);
 	}
 
 	return ret;
@@ -67,8 +74,10 @@ Resource* ModuleResources::CreateNewResource(Resource::Type type, UID force_uid)
 	switch (type)
 	{
 	case Resource::Type::MODEL:
+		ret = (Resource*) new R_Model(App->random->Int());
 		break;
 	case Resource::Type::MESH:
+		ret = (Resource*) new R_Mesh(uid);
 		break;
 	case Resource::Type::MATERIAL:
 		break;
@@ -141,34 +150,83 @@ void ModuleResources::ReceiveEvent(const Event& e)
 	switch (e.type)
 	{
 	case Event::file_dropped:
-		LOG("[Info] New file dropped %s", e.string.ptr);
+		LOG("[Info:%s] New file dropped %s", name.c_str() ,e.string.ptr);
 		ImportFileDropped(e.string.ptr);
 		break;
 	}
 
 }
 
+// TODO: add functionality to import directories
 void ModuleResources::ImportFileDropped(const char* file)
 {
-	std::string filepath = App->file_sys->NormalizePath(file);
+	std::string full_path = App->file_sys->NormalizePath(file);
 	std::string extension;
+	std::string filename;
 	
-	App->file_sys->SplitFilePath(filepath.c_str(), nullptr, nullptr, &extension);
+	App->file_sys->SplitFilePath(full_path.c_str(), nullptr, &filename, &extension);
+
+	filename += "." + extension;
 
 	Resource::Type type = GetResourceTypeFromFileExtension(extension);
 
-	// if dropped file is recognised
+	// if dropped file is recognized
 	if (type != Resource::Type::NO_TYPE)
 	{
-		LOG("[Info] Recognized file extension .%s", extension.c_str());
+		LOG("[Info:%s] Recognized file extension .%s", name.c_str() ,extension.c_str());
+
+		// duplicate file to our assets folder
+		// TODO: if file exists this overwrites, maybe we don't need this
+		std::string final_path = GetRelativePathToWriteFromType(type, full_path);
+
+		if (App->file_sys->DuplicateFile(file, final_path.c_str() , std::string("/")))
+		{
+			LOG("[Info:%s] Dropped file duplicated to %s", name.c_str(), (final_path + filename).c_str() );
+
+			ImportFile((final_path + filename).c_str(), type);
+
+		}
+		else
+		{
+			LOG("[Error:%s] Dropped file cannot be duplicated to %s", name.c_str(), final_path.c_str());
+		}
+
 	}
 	else
 	{
-		LOG("[Error] Dropped file can't be imported");
-		LOG("[Error] Path: %s", file);
-		LOG("[Error] Extension: .%s", extension.c_str());
+		LOG("[Error:%s] Dropped file can't be imported", name.c_str());
+		LOG("[Error:%s] Path: %s", name.c_str() ,file);
+		LOG("[Error:%s] Extension: %s", name.c_str() ,extension.c_str());
 	}
 
+}
+
+// TODO: get every specific folder
+std::string ModuleResources::GetRelativePathToWriteFromType(Resource::Type type, std::string filename) const
+{
+	std::string ret;
+
+	switch (type)
+	{
+	case Resource::Type::MODEL:
+		ret.assign(ASSETS_FOLDER);
+		break;
+	case Resource::Type::MESH:
+		ret.assign(ASSETS_FOLDER);
+		break;
+	case Resource::Type::MATERIAL:
+		ret.assign(ASSETS_FOLDER);
+		break;
+	case Resource::Type::TEXTURE:
+		ret.assign(ASSETS_FOLDER);
+		break;
+	case Resource::Type::NO_TYPE:
+		break;
+	default:
+		break;
+	}
+
+	return ret;
 }
 
 Resource::Type ModuleResources::GetResourceTypeFromFileExtension(std::string extension)

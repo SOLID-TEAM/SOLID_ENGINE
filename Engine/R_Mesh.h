@@ -7,6 +7,8 @@
 #include <string>
 #include "external/MathGeoLib/include/Geometry/AABB.h"
 
+struct aiMesh;
+
 class R_Mesh : public Resource
 {
 
@@ -25,6 +27,9 @@ public:
 	void Unload();
 
 	bool LoadInMemory();
+
+	// we need static to call this function without the needs of creating new class
+	static UID Import(const aiMesh* mesh, const char* file);
 
 	bool SaveToFile(const char* name);
 	bool LoadFromFile(const char* name);

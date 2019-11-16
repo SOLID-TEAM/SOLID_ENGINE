@@ -435,6 +435,9 @@
     <ClInclude Include="Event.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="R_Model.h">
+      <Filter>Sources\Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -688,6 +691,9 @@
     </ClCompile>
     <ClCompile Include="ModuleResources.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Model.cpp">
+      <Filter>Sources\Data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

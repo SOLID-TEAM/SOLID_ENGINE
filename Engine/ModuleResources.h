@@ -26,6 +26,7 @@ public:
 
 	void ImportFileDropped(const char* file);
 	Resource::Type GetResourceTypeFromFileExtension(std::string extension);
+	std::string GetRelativePathToWriteFromType(Resource::Type type, std::string filename) const;
 
 
 public:

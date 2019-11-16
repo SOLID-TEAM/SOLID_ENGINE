@@ -65,6 +65,26 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
+[Info:ModuleResources] New file dropped C:\Users\Peter\Desktop\own_models\BakerHouse.fbx
+[Info:ModuleResources] Recognized file extension .fbx
+[success] File Duplicated Correctly
+[Info:ModuleResources] Dropped file duplicated to Assets/BakerHouse.fbx
+[Info] Loading mesh data : Untitled.001
+[Info] Vertices:    160 
+[Info] Indices:    324
+[Info] Triangles:  108
+[Info] Normals:   160
+File [.Library/Meshes/0.solidmesh] overwritten with 6457 bytes
+[Info] Succesfully saved 0
+Created mesh data: Untitled.001
+[Info] Loading mesh data : Untitled
+[Info] Vertices:    1641 
+[Info] Indices:    2751
+[Info] Triangles:  917
+[Info] Normals:   1641
+File [.Library/Meshes/1.solidmesh] overwritten with 63553 bytes
+[Info] Succesfully saved 1
+Created mesh data: Untitled
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor
