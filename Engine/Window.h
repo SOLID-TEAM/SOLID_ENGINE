@@ -4,7 +4,9 @@
 #include "Globals.h"
 #include <string>
 #include <vector>
+
 #include "SDL/include/SDL_scancode.h"
+#include "ImGui/imgui.h"
 
 class ModuleEditor;
 
@@ -31,6 +33,8 @@ public:
 		return name;
 	}
 
+	ImVec2 GetViewportSize() const;
+
 protected:
 
 	virtual void CleanUp() {};  // Internal , only Destroy can call this virtual function
@@ -38,15 +42,12 @@ protected:
 public:
 
 	bool	active = false;
-	int		pos_x   = 0;
-	int		pos_y   = 0;
-	int		width	= -1;
-	int		height	= -1;
 
 protected:
 
 	std::string name;
 	std::vector<SDL_Scancode> shortcut;
+	ImVec2 viewport_size = { 0.f, 0.f };
 
 	friend ModuleEditor;
 };

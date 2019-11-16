@@ -14,6 +14,7 @@ public:
 
 	enum BufferType
 	{
+		DEPTH_TEAXTURE,
 		NORMAL_FBO,
 		NORMAL_TEXTURE,
 		NORMAL_DEPTH_RBO,
@@ -96,15 +97,11 @@ public:
 
 	bool Init(Config& config);
 
-	update_status PreUpdate(float dt);
-
-	update_status Update(float dt);
-
 	update_status PostUpdate(float dt);
 
-	update_status Draw();
-
 	bool CleanUp();
+
+	// Render Functions ------------------------------------------------------------
 
 	void RenderAABB(math::AABB& aabb, float width, float4& color);
 
@@ -113,6 +110,11 @@ public:
 	void RenderFrustum(math::Frustum& frustum, float width, float4& color);
 
 	void RenderKDTree(KDTree& kdtree, float width);
+
+	static void BeginDebugDraw(float4& color);
+
+	static void EndDebugDraw();
+
 
 	bool Save(Config& config);
 
@@ -124,9 +126,7 @@ public:
 
 	void SetDefaultColorMaterial();
 
-	static void BeginDebugDraw(float4& color);
 
-	static void EndDebugDraw();
 
 public:
 	

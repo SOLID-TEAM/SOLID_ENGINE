@@ -429,6 +429,12 @@
     <ClInclude Include="KDTree.h">
       <Filter>Sources\Trees</Filter>
     </ClInclude>
+    <ClInclude Include="W_Game.h">
+      <Filter>Sources\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="AABBTree.h">
+      <Filter>Sources\Trees</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -678,6 +684,12 @@
       <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="KDTree.cpp">
+      <Filter>Sources\Trees</Filter>
+    </ClCompile>
+    <ClCompile Include="W_Game.cpp">
+      <Filter>Sources\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="AABBTree.cpp">
       <Filter>Sources\Trees</Filter>
     </ClCompile>
   </ItemGroup>

@@ -101,9 +101,9 @@ bool C_MeshRenderer::Render()
 
 	// Editor & Debug Rendering --------------------------------------------
 
-	if (false)
+	if (App->scene->selected_go == linked_go && App->scene->editor_mode)
 	{
-		RenderOutline(7.f, vp.wire_color);
+		RenderOutline(5.f, float4(1.f ,0.6f , 0.f, 1.f));
 	}
 
 	glPopMatrix();
@@ -111,7 +111,7 @@ bool C_MeshRenderer::Render()
 	glPushMatrix();
 	glMultMatrixf(float4x4::identity.ptr());
 
-	if (/*vp.debug_bounding_box*/ true)
+	if (vp.debug_bounding_box && App->scene->editor_mode)
 	{
 		App->renderer3D->RenderAABB(linked_go->bounding_box, 1.2f , vp.bb_color);
 		App->renderer3D->RenderOBB(linked_go->obb, 1.2f,	float4(1.f, .9f, 0.1f, 1.f));
@@ -138,6 +138,8 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 {
 	uint texture_id = 0;
 
+	glDepthRange(0.1, 1.0);
+
 	// Settings ====================================================
 	glColor4fv(color);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -156,6 +158,11 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 			}
 		}
 	}
+
+	glEnable(GL_STENCIL_TEST);
+
+	glStencilFunc(GL_ALWAYS, 1, -1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 	// Enable client ==============================================
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -255,12 +262,12 @@ void C_MeshRenderer::RenderWireframe(float width, float4& color) // need very fe
 void C_MeshRenderer::RenderOutline(float width, float4& color)
 {
 	glStencilFunc(GL_NOTEQUAL, 1, -1);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 	RenderWireframe(width, color);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glStencilFunc(GL_ALWAYS, 1, -1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 }
 
 

@@ -73,6 +73,10 @@ private:
 
 public:
 
+	// Mode ---------------------------------------
+
+	bool	editor_mode = false;
+
 	// Game Objects -------------------------------
 
 	std::list<GameObject*>	static_go_list;
@@ -85,8 +89,12 @@ public:
 
 	// Viewports ---------------------------------
 
+	std::list<Viewport*> viewports;
+
 	Viewport* scene_viewport = nullptr;
 	Viewport* game_viewport = nullptr;
+
+	// Trees -------------------------------------
 
 	KDTree kdtree;
 

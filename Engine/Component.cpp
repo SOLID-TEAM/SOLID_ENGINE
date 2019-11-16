@@ -1,5 +1,7 @@
 #include "Component.h"
 #include "GameObject.h"
+#include "ModuleImporter.h"
+#include "ModuleScene.h"
 
 Component::Component(GameObject* go, ComponentType type) : linked_go(go), type(type) {}
 

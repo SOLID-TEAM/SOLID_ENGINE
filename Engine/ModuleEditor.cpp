@@ -20,6 +20,7 @@
 #include "W_Hierarchy.h"
 #include "W_Rendering.h"
 #include "W_Scene.h"
+#include "W_Game.h"
 #include "W_Inspector.h"
 #include "W_Primitives.h"
 #include "W_DeleteHistory.h"
@@ -102,6 +103,7 @@ bool ModuleEditor::Start(Config& config)
 	w_hierarchy =		new W_Hierarchy("Hierarchy",			false);
 	w_rendering =		new W_Rendering("Rendering Settings",	false);
 	w_scene =			new W_Scene("Scene",					false);
+	w_game =			new W_Game("Game",						false);
 	w_inspector =		new W_Inspector("Inspector",			false);
 	w_primitives =		new W_Primitives("Primitives",			false);
 	w_delete_history =	new W_DeleteHistory("Delete History",	false);
@@ -132,6 +134,7 @@ bool ModuleEditor::CleanUp()
 	w_hierarchy = nullptr;
 	w_rendering = nullptr;
 	w_scene = nullptr;
+	w_game = nullptr;
 	w_inspector = nullptr;
 	w_primitives = nullptr;
 	w_delete_history = nullptr;

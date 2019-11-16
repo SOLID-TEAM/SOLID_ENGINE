@@ -91,29 +91,20 @@ bool ModuleRenderer3D::Init(Config& config)
 
 		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
-		
-		glEnable(GL_LINE_SMOOTH);
+			
+		glEnable(GL_LINE_SMOOTH);		
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_BLEND);
+		glEnable(GL_BLEND);				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_MULTISAMPLE);
 
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-
-		glShadeModel(GL_SMOOTH);                    // shading mathod: GL_SMOOTH or GL_FLAT
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);      // 4-byte pixel alignment
-
-		glClearColor(0, 0, 0, 0);                   // background color
-		glClearStencil(0);                          // clear stencil buffer
-		glClearDepth(1.0f);                         // 0 is near, 1 is far
-		glDepthFunc(GL_LEQUAL);
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	}
 
 	// Store version opengl/graphic drivers
@@ -130,30 +121,16 @@ bool ModuleRenderer3D::Init(Config& config)
 	return ret;
 }
 
-update_status ModuleRenderer3D::PreUpdate(float dt)
-{
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleRenderer3D::Update(float dt)
-{
-	return UPDATE_CONTINUE;
-}
-
-// PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	// Always swap window  ------------------------
+
 	SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleRenderer3D::Draw()
-{	
-	return UPDATE_CONTINUE;
-}
 
-// Called before quitting
 bool ModuleRenderer3D::CleanUp()
 {
 	LOG("[CleanUp] Destroying 3D Renderer");
@@ -283,8 +260,7 @@ void ModuleRenderer3D::RenderKDTree(KDTree& kdtree, float width)
 		}
 	}
 	
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_GREATER);
+	glDepthFunc(GL_ALWAYS);
 
 	while (!nodes_to_render.empty())
 	{
@@ -315,11 +291,12 @@ void ModuleRenderer3D::RenderKDTree(KDTree& kdtree, float width)
 			RenderAABB(*node->aabb, width, color);
 		}
 
-		glDepthFunc(GL_LESS);
-		glDisable(GL_DEPTH_TEST);
+		
 
 		nodes_to_render.pop();
 	}
+	
+	glDepthFunc(GL_LESS);
 }
 
 
@@ -386,6 +363,7 @@ void FBO::BeginFBO()
 
 void FBO::EndFBO()
 {
+	// Blit Frame buffer -------------------------------------------------------
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, ID[MULTISAMPLING_FBO]);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, ID[NORMAL_FBO]);
@@ -395,9 +373,17 @@ void FBO::EndFBO()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
+	// Generate Mipmap --------------------------------------------------------
+
 	glBindTexture(GL_TEXTURE_2D, ID[NORMAL_TEXTURE]);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Copy depht component ---------------------------------------------------
+
+	//glBindTexture(GL_TEXTURE_2D, ID[DEPTH_TEAXTURE]);
+	//glReadBuffer(GL_BACK); // Ensure we are reading from the back buffer.
+	//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, 0, 0, width, height, 0);
 
 }
 
@@ -412,16 +398,6 @@ void FBO::UpdateFBO( float width, float height)
 
 	glBindTexture(GL_TEXTURE_2D, ID[NORMAL_TEXTURE]);
 
-	//if (z_buffer_mode)
-	//{
-	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width, height, 0, GL_LUMINANCE, GL_FLOAT, 0);
-	//}
-	//else
 	{
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -488,27 +464,42 @@ void FBO::UpdateFBO( float width, float height)
 
 }
 
+//if (z_buffer_mode)
+//{
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+//	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width, height, 0, GL_LUMINANCE, GL_FLOAT, 0);
+//}
+//else
 
 void FBO::GenerateFBO()
 {
 	glGenTextures(1,		&ID[NORMAL_TEXTURE]);
-	glGenRenderbuffers(1,	&ID[NORMAL_DEPTH_RBO]);
-	glGenFramebuffers(1,	&ID[NORMAL_FBO]);
+	glGenTextures(1,		&ID[DEPTH_TEAXTURE]);
 
+	glGenFramebuffers(1,	&ID[NORMAL_FBO]);
+	glGenFramebuffers(1,	&ID[MULTISAMPLING_FBO]);
+
+	glGenRenderbuffers(1,	&ID[NORMAL_DEPTH_RBO]);
 	glGenRenderbuffers(1,	&ID[MULTISAMPLING_COLOR_RBO]);
 	glGenRenderbuffers(1,	&ID[MULTISAMPLING_DEPTH_RBO]);
-	glGenFramebuffers(1,	&ID[MULTISAMPLING_FBO]);
+
 }
 
 void FBO::DeleteFBO()
 {
-	glDeleteFramebuffers(1, &ID[MULTISAMPLING_FBO]);
-	glDeleteFramebuffers(1, &ID[MULTISAMPLING_COLOR_RBO]);
-	glDeleteFramebuffers(1, &ID[MULTISAMPLING_DEPTH_RBO]);
+	glDeleteTextures(1,		&ID[NORMAL_TEXTURE]);
+	glDeleteTextures(1,		&ID[DEPTH_TEAXTURE]);
 
 	glDeleteFramebuffers(1, &ID[NORMAL_FBO]);
-	glDeleteFramebuffers(1, &ID[NORMAL_DEPTH_RBO]);
-	glDeleteFramebuffers(1, &ID[NORMAL_TEXTURE]);
+	glDeleteFramebuffers(1, &ID[MULTISAMPLING_FBO]);
+
+	glDeleteRenderbuffers(1, &ID[NORMAL_DEPTH_RBO]);
+	glDeleteRenderbuffers(1, &ID[MULTISAMPLING_COLOR_RBO]);
+	glDeleteRenderbuffers(1, &ID[MULTISAMPLING_DEPTH_RBO]);
 }
 
 uint FBO::GetFBOTexture()

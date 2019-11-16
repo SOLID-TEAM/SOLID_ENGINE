@@ -17,6 +17,7 @@ class W_Console;
 class W_Hierarchy;
 class W_Rendering;
 class W_Scene;
+class W_Game;
 class W_Inspector;
 class W_Primitives;
 class W_DeleteHistory;
@@ -176,6 +177,7 @@ public:
 	W_Hierarchy*		w_hierarchy = nullptr;
 	W_Rendering*		w_rendering = nullptr;
 	W_Scene*			w_scene = nullptr;
+	W_Game*				w_game = nullptr;
 	W_Inspector*		w_inspector = nullptr;
 	W_Primitives*		w_primitives = nullptr;
 	W_DeleteHistory*	w_delete_history = nullptr;

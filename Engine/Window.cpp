@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "Window.h"
 #include "ModuleEditor.h"
-#include "ImGui/imgui.h"
+
 
 Window::Window(std::string name, bool active) : name(name), active(active)
 {
@@ -29,4 +29,9 @@ void Window::Destroy()
 std::vector<SDL_Scancode> Window::GetShortCut() const
 {
 	return shortcut;
+}
+
+ImVec2 Window::GetViewportSize() const
+{
+	return viewport_size;
 }

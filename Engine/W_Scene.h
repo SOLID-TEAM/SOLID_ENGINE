@@ -3,6 +3,8 @@
 
 #include "Window.h"
 
+struct ImVec2;
+
 class W_Scene: public Window
 {
 public:
@@ -11,18 +13,13 @@ public:
 
 	void Draw();
 
-
-
-	ImVec2 GetViewportSize() const
-	{
-		return viewport_size;
-	}
-
 private:
 
 	void GridMenu();
 
 	void DebugMenu();
+
+	void CameraMenu();
 
 	void ModesMenu();
 

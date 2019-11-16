@@ -82,6 +82,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AABBTree.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="C_Camera.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="W_Config.h" />
     <ClInclude Include="W_Console.h" />
     <ClInclude Include="W_DeleteHistory.h" />
+    <ClInclude Include="W_Game.h" />
     <ClInclude Include="W_Hierarchy.h" />
     <ClInclude Include="par_shapes.h" />
     <ClInclude Include="PathNode.h" />
@@ -206,6 +208,7 @@
     <ClInclude Include="W_Scene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AABBTree.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="C_Camera.cpp" />
@@ -282,6 +285,7 @@
     <ClCompile Include="W_Config.cpp" />
     <ClCompile Include="W_Console.cpp" />
     <ClCompile Include="W_DeleteHistory.cpp" />
+    <ClCompile Include="W_Game.cpp" />
     <ClCompile Include="W_Hierarchy.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Timer.cpp" />

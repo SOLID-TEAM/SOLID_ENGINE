@@ -30,11 +30,15 @@ public:
 
 	uint GetTexture();
 
+public:
+
+	bool		active = false;
+
 private:
 
-	FBO* fbo = nullptr;
+	FBO*		fbo = nullptr;
 	bool        to_update = true;
-	C_Camera* camera = nullptr;
+	C_Camera*	camera = nullptr;
 	float		width = 640.f, height = 360.f;
 };
 

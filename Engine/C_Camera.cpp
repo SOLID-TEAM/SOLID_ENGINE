@@ -58,7 +58,7 @@ void C_Camera::SetFov(float fov)
 
 void C_Camera::SetClippingNearPlane(float distance)
 {
-	if (distance < 0.f) distance = 0.f;
+	if (distance <= 0.01f) distance = 0.01f;
 
 	frustum.nearPlaneDistance = distance;
 	UpdateProjectionMatrix();
@@ -148,8 +148,12 @@ float C_Camera::GetFov()
 
 bool C_Camera::Render()
 {
-	App->renderer3D->RenderFrustum(frustum, 1.f, float4(0.7f, 0.7f, 0.7f, 0.7f));
-	return false;
+	if (App->scene->selected_go == linked_go && App->scene->editor_mode)
+	{
+		App->renderer3D->RenderFrustum(frustum, 1.f, float4(0.7f, 0.7f, 0.7f, 0.7f));
+	}
+
+	return true;
 }
 
 bool C_Camera::DrawPanelInfo()

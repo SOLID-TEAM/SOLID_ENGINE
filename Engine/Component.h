@@ -1,7 +1,7 @@
 #ifndef _COMPONENT_H__
 #define _COMPONENT_H__
 
-#include "ModuleImporter.h"
+
 #include "W_Inspector.h"
 #include "Config.h"
 
@@ -18,12 +18,15 @@ enum class ComponentType
 	NO_TYPE
 };
 
+class ModuleScene;
+class ModuleImporter;
 class GameObject;
 
 class Component
 {
 public :
 
+	friend ModuleScene;
 	friend ModuleImporter;
 	friend W_Inspector;
 	friend GameObject;

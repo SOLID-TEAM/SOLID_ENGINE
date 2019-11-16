@@ -19,13 +19,14 @@ bool ModuleScene::Init(Config& config)
 
 bool ModuleScene::Start(Config& config)
 {
-	// creates a root gameobject, wich all another go are childs of it
+	// GameObjects ---------------------------
+
 	root_go = new GameObject("Scene Root"); root_go->ignore = true;
 	main_camera = new GameObject("Main Camera", root_go); main_camera->ignore = true;
 	main_camera->CreateComponent<C_Camera>();
 	editor_camera = new CameraEditor(); editor_camera->ignore = true;
 
-
+	// Viewports -----------------------------
 	scene_viewport = new Viewport(editor_camera);
 	game_viewport = new Viewport(main_camera);
 
@@ -80,36 +81,43 @@ update_status ModuleScene::PreUpdate(float dt)
 update_status ModuleScene::Update(float dt)
 {
 
-	if (ImGui::Begin("KDTree"))
-{
-	if (ImGui::Button("Recalculate", ImVec2( 100, 20)))
+	if (ImGui::Begin("Space Partitioning"))
 	{
-		std::stack<GameObject*> go_stack;
-		std::vector<GameObject*> go_vector;
-		
-		go_stack.push(root_go);
 
-		while (!go_stack.empty())
+		if (ImGui::Button("Recalculate", ImVec2(100, 20)))
 		{
-			GameObject* go = go_stack.top();
+			std::stack<GameObject*> go_stack;
+			std::vector<GameObject*> go_vector;
 
-			if (go->bounding_box.IsFinite())
+			go_stack.push(root_go);
+
+			while (!go_stack.empty())
 			{
-				go_vector.push_back(go);
+				GameObject* go = go_stack.top();
+
+				if (go->bounding_box.IsFinite())
+				{
+					go_vector.push_back(go);
+				}
+
+				go_stack.pop();
+
+				for (GameObject* child : go->childs)
+				{
+					go_stack.push(child);
+				}
 			}
 
-			go_stack.pop();
-
-			for (GameObject* child : go->childs)
-			{
-				go_stack.push(child);
-			}
+			kdtree.Fill(3, 1, EncloseAllGo(), go_vector);
 		}
 
-		kdtree.Fill(3, 1, EncloseAllGo() ,go_vector);
+		if (ImGui::Button("Clear", ImVec2(100, 20)))
+		{
+			kdtree.Clear();
+		}
+
+		ImGui::End();
 	}
-	ImGui::End();
-}
 
 	editor_camera->DoUpdate(dt);
 
@@ -148,52 +156,69 @@ void ModuleScene::UpdateAll(float dt, GameObject* go)
 
 update_status ModuleScene::PostUpdate(float dt)
 {
-	App->renderer3D->lights[0].SetPos(editor_camera->transform->position);
-
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleScene::Draw()
 {
-
-	scene_viewport->BeginViewport();
-
-	glEnable(GL_DEPTH_TEST);
-
-	if (root_go != nullptr)
-	{
-		RenderAll(root_go);
-	}
-
-	App->renderer3D->lights[0].Render();
-
-	App->test->main_grid->Render();
-
-	App->renderer3D->RenderKDTree(kdtree, 3.f);
-
-	scene_viewport->EndViewport();
-
-	return UPDATE_CONTINUE;
-}
-
-void ModuleScene::RenderAll(GameObject* go)
-{
 	C_Camera* camera = main_camera->GetComponent<C_Camera>();
 
-	if (main_camera == go || camera->cullling == false )
+	for (Viewport* viewport : viewports)
 	{
-		go->DoRender();
-	}
-	else if (camera->CheckCollisionAABB(go->bounding_box) == true)
-	{
-		go->DoRender();
-	}
-	
+		if (!viewport->active) continue;
+		editor_mode = (viewport  == scene_viewport) ? true : false;
 
-	for (std::vector<GameObject*>::iterator child = go->childs.begin() ; child != go->childs.end(); ++child)
-	{
-		RenderAll((*child));
+		// Begin -----------------------------------------------
+
+		viewport->BeginViewport();
+
+		// Draw GameObjects / Components -----------------------
+
+		std::stack<GameObject*> go_stack;
+
+		go_stack.push(root_go);
+
+		while (!go_stack.empty())
+		{
+			GameObject* go = go_stack.top();
+
+			if (main_camera == go || !camera->cullling)  // Add game object flags to ignore culling or other situations 
+			{
+				go->DoRender();
+			}
+			else if ( camera->CheckCollisionAABB(go->bounding_box) )
+			{
+				go->DoRender();
+			}
+
+			go_stack.pop();
+
+			for (GameObject* child : go->childs)
+			{
+				go_stack.push(child);
+			}
+		}
+
+		// TODO:: Remove light --------------------------------
+
+		App->renderer3D->lights[0].SetPos(viewport->GetCamera()->linked_go->transform->position);
+
+		App->renderer3D->lights[0].Render();
+
+		// Debug Renders --------------------------------------
+
+		if (editor_mode)
+		{
+			App->test->main_grid->Render();
+			App->renderer3D->RenderKDTree(kdtree, 3.f);
+		}
+
+		// End ------------------------------------------------
+
+		viewport->EndViewport();
 	}
+
+	return UPDATE_CONTINUE;
 }
 
 bool ModuleScene::CleanUp()
