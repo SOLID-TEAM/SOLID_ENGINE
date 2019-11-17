@@ -75,6 +75,7 @@ bool R_Model::SaveToFile(UID uid)
 
 	uint bytes = sizeof(int);
 	int qty_n = nodes.size();
+
 	memcpy(cursor, &qty_n, bytes);
 
 	cursor += bytes;
@@ -110,8 +111,9 @@ bool R_Model::LoadInMemory()
 	{
 		char* cursor = buffer;
 
-		int num = cursor[0];
+		int num = 0;
 		uint bytes = sizeof(int);
+		memcpy(&num, cursor, bytes);
 		cursor += bytes;
 		
 		bytes = sizeof(Node);

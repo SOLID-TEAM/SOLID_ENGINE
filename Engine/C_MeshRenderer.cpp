@@ -161,8 +161,8 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 	// Enable client ==============================================
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
-	if(r_mesh->buffers_size[R_Mesh::UVS] != 0) 
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	/*if(r_mesh->buffers_size[R_Mesh::UVS] != 0) 
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);*/
 	if(texture_id != 0) 
 		glClientActiveTexture(GL_TEXTURE0);
 
