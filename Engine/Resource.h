@@ -2,8 +2,9 @@
 #define __RESOURCE_H__
 
 #include "ModuleImporter.h"
-#include <string>
 #include "Config.h"
+
+#include <string>
 
 class Resource
 {

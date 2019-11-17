@@ -13,7 +13,7 @@ public:
 
 	struct Node
 	{
-		std::string         name;
+		std::string			name;
 		float4x4            transform = float4x4::identity;
 		uint                parent = 0;
 		UID                 mesh = 0;
@@ -31,7 +31,8 @@ public:
 	bool        LoadInMemory() override;
 	//void        ReleaseFromMemory() override;
 
-	//bool        Save();
+	bool        SaveToFile(UID uid);
+	bool		LoadFromFile(const char* file);
 	//bool        Save(std::string& output) const;
 	static bool Import(const char* full_path, UID& output);
 
