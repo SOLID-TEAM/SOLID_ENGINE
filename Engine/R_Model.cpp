@@ -18,10 +18,6 @@ R_Model::R_Model(UID uid) : Resource(uid, Resource::Type::MODEL) {}
 
 R_Model::~R_Model() {}
 
-bool R_Model::LoadInMemory()
-{
-	return true;
-}
 
 bool R_Model::Import(const char* path, UID& output_uid)
 {
@@ -96,19 +92,19 @@ bool R_Model::SaveToFile(UID uid)
 
 	App->file_sys->Save(filename.c_str(), buffer, size);
 
-	LoadFromFile(filename.c_str());
+	//LoadFromFile(filename.c_str());
 
 	return true;
 }
 
-bool R_Model::LoadFromFile(const char* file)
+bool R_Model::LoadInMemory()
 {
 	// if we have nodes, delete
 	nodes.clear();
 
 	char* buffer = nullptr;
 
-	uint size = App->file_sys->Load(file, &buffer);
+	uint size = App->file_sys->Load(GetNameFromUID().c_str() , &buffer);
 
 	if (buffer != nullptr)
 	{
@@ -141,7 +137,16 @@ bool R_Model::LoadFromFile(const char* file)
 
 		// load meshes and materials resources
 
+		for (uint i = 0; i < nodes.size(); ++i)
+		{
+			if (nodes[i].mesh > 0)
+				App->resources->Get(nodes[i].mesh)->LoadToMemory();
 
+			if (nodes[i].material > 0)
+			{
+				App->resources->Get(nodes[i].mesh)->LoadToMemory();
+			}
+		}
 	}
 	else
 		return false;
@@ -199,4 +204,23 @@ void R_Model::GenerateNodes(const aiScene* scene, const aiNode* node, uint paren
 		GenerateNodes(scene, node->mChildren[i], parent_id, meshes, materials);
 	}
 	
+}
+
+void R_Model::ReleaseFromMem()
+{
+
+	for (uint i = 0; i < nodes.size(); ++i)
+	{
+		if (nodes[i].mesh != 0)
+		{
+			App->resources->Get(nodes[i].mesh)->Release();
+		}
+
+		if (nodes[i].material != 0)
+		{
+			App->resources->Get(nodes[i].material)->Release();
+		}
+	}
+
+	nodes.clear();
 }

@@ -33,3 +33,15 @@ bool Resource::LoadToMemory()
 
 	return loaded > 0;
 }
+
+std::string Resource::GetNameFromUID() const
+{
+	return std::to_string(uid);
+}
+
+void Resource::Release()
+{
+	loaded--;
+	if (loaded == 0)
+		ReleaseFromMem();
+}

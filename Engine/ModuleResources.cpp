@@ -53,10 +53,11 @@ UID ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type t
 
 	if (import_ok)
 	{
-		Resource* r = CreateNewResource(type);
+		Resource* r = CreateNewResource(type, ret);
 		r->GetName().assign(new_file_in_assets);
 		//r->GetExportedName().assign(written_file.c_str());
 		ret = r->GetUID();
+		LOG("");
 	}
 	else
 	{
@@ -69,12 +70,17 @@ UID ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type t
 Resource* ModuleResources::CreateNewResource(Resource::Type type, UID force_uid)
 {
 	Resource* ret = nullptr;
-	UID uid = GenerateNewUID();
+	UID uid = 0;
+
+	if (force_uid > 0)
+		uid = force_uid;
+	else
+		uid = GenerateNewUID();
 
 	switch (type)
 	{
 	case Resource::Type::MODEL:
-		ret = (Resource*) new R_Model(App->random->Int());
+		ret = (Resource*) new R_Model(uid);
 		break;
 	case Resource::Type::MESH:
 		ret = (Resource*) new R_Mesh(uid);
@@ -183,7 +189,10 @@ void ModuleResources::ImportFileDropped(const char* file)
 		{
 			LOG("[Info:%s] Dropped file duplicated to %s", name.c_str(), (final_path + filename).c_str() );
 
-			ImportFile((final_path + filename).c_str(), type);
+			UID uid = ImportFile((final_path + filename).c_str(), type);
+			
+			// TODO: testing creating gameobjects from model
+			App->scene->CreateGameObjectFromModel(uid);
 
 		}
 		else

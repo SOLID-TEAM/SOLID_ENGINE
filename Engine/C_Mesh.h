@@ -25,7 +25,7 @@ public:
 
 	// Resource functions ---------------------
 
-	void SetMeshResource(R_Mesh* resource);
+	bool SetMeshResource(UID resource);
 
 	void DeleteMeshResource();
 
@@ -35,7 +35,7 @@ public:
 
 public:
 
-	R_Mesh* data = nullptr;
+	UID resource = 0;
 	AABB	bounding_box;
 
 };

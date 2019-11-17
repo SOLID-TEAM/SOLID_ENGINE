@@ -29,15 +29,18 @@ public:
 	//void        Load(const Config& config) override;
 
 	bool        LoadInMemory() override;
-	//void        ReleaseFromMemory() override;
+	void        ReleaseFromMem() override;
 
 	bool        SaveToFile(UID uid);
-	bool		LoadFromFile(const char* file);
+	//bool		LoadFromFile(const char* file);
 	//bool        Save(std::string& output) const;
 	static bool Import(const char* full_path, UID& output);
 
 	/*unsigned    GetNumNodes() const { return nodes.size(); }
 	const Node& GetNode(uint index) const { return nodes[index]; }*/
+
+	uint GetNumNodes() const { return nodes.size(); }
+	const Node& GetNode(uint idx) const { return nodes[idx]; }
 
 private:
 

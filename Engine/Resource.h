@@ -37,15 +37,20 @@ public:
 
 	std::string GetExportedName() const { return exported_file;	}
 
+	std::string GetNameFromUID() const;
+
 	bool IsLoadedToMemory() const;
 	bool LoadToMemory();
 	uint CountReferences() const;
 
 	virtual void Save(Config& config) const;
 	virtual void Load(const Config& config);
+
+	void Release();
 	
+protected:
 	// release memory for loaded data, not resource abstract data
-	virtual void Unload() {};
+	virtual void ReleaseFromMem() = 0;
 	virtual bool LoadInMemory() = 0;
 
 protected:

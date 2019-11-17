@@ -40,7 +40,7 @@ private:
 
 	std::map<UID, Resource*> resources;
 
-	UID last_uid = 0;
+	UID last_uid = 1;
 };
 
 #endif // !__MODULERESOURCES_H__

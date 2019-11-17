@@ -24,7 +24,7 @@ public:
 
 	void CreateAABB();
 
-	void Unload();
+	void ReleaseFromMem();
 
 	bool LoadInMemory();
 
@@ -32,7 +32,7 @@ public:
 	static UID Import(const aiMesh* mesh, const char* file);
 
 	bool SaveToFile(const char* name);
-	bool LoadFromFile(const char* name);
+	//bool LoadFromFile(const char* name);
 
 public:
 

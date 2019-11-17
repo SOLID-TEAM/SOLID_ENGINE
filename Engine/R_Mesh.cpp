@@ -53,7 +53,8 @@ R_Mesh::R_Mesh(UID uid,float* vertices, uint* indices, float* normals, float* uv
 
 R_Mesh::~R_Mesh() 
 {
-	Unload();
+	// ?
+	ReleaseFromMem();
 }
 
 // TODO: rename this like before "GenBuffers" / "GenBuffersAndLoad"
@@ -93,7 +94,7 @@ void R_Mesh::CreateAABB()
 }
 
 // TODO: RENAME
-void R_Mesh::Unload()
+void R_Mesh::ReleaseFromMem()
 {
 	glDeleteBuffers(4, buffers_id);
 
@@ -122,9 +123,6 @@ bool R_Mesh::SaveToFile(const char* name)
 
 	char* data = new char[size];
 	char* cursor = data;
-
-	/*int test = sizeof(GetName().data());
-	int test2 = strlen(GetName().c_str());*/
 
 	uint bytes = sizeof(char) * strlen(GetName().c_str());
 	//strcpy(cursor, GetName().c_str());
@@ -157,25 +155,25 @@ bool R_Mesh::SaveToFile(const char* name)
 	memcpy(cursor, uvs, bytes);
 
 
-	std::string full_name(LIBRARY_MESH_FOLDER + std::string(name) + std::string(".solidmesh"));
+	//std::string full_name(LIBRARY_MESH_FOLDER + std::string(name) + std::string(".solidmesh"));
+	std::string full_name(LIBRARY_MESH_FOLDER + std::string(name));
 
-	exported_file.assign(name + std::string(".solidmesh"));
+	//exported_file.assign(name + std::string(".solidmesh"));
 
 	return App->file_sys->Save(full_name.c_str(), data, size) != -1 ? true:false;
 }
 
 
-bool R_Mesh::LoadFromFile(const char* name)
+bool R_Mesh::LoadInMemory()
 {
 	bool ret = true;
 
 	char* buffer = nullptr;
 
-	App->file_sys->Load(LIBRARY_MESH_FOLDER, std::string(name + std::string(".solidmesh")).c_str(), &buffer);
+	App->file_sys->Load(LIBRARY_MESH_FOLDER, GetNameFromUID().c_str(), &buffer);
 
 	if (buffer != nullptr)
 	{
-
 		char* cursor = buffer;
 
 		uint ranges[BufferType::MAX + 1];
@@ -231,10 +229,6 @@ bool R_Mesh::LoadFromFile(const char* name)
 	return ret;
 }
 
-bool R_Mesh::LoadInMemory()
-{
-	return true;
-}
 
 UID R_Mesh::Import(const aiMesh* mesh, const char* file)
 {
@@ -346,7 +340,7 @@ UID R_Mesh::Import(const aiMesh* mesh, const char* file)
 	LOG("Created mesh data: %s", r_mesh->GetName().c_str());
 
 	// free mesh data
-	r_mesh->Unload();
+	r_mesh->Release();
 	
 	return r_mesh->uid;
 }

@@ -50,6 +50,7 @@ public:
 	// Game Objects functions ----------------------------------------------
 
 	GameObject* CreateGameObject(std::string name = "no_name", GameObject* parent = nullptr);
+	GameObject* CreateGameObjectFromModel(UID uid);
 
 	void DeleteGameObject(GameObject* go);
 

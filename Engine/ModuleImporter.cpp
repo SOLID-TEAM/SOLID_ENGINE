@@ -455,20 +455,20 @@ GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, float3 position,
 	
 
 	// Components --------------------------------------------
-	C_Mesh* c_mesh = gameobject->CreateComponent<C_Mesh>();
-	// TODO: GEN NEW UID FOR PRIMITIVES
-	c_mesh->data = new R_Mesh(0,p_mesh->points, p_mesh->triangles, p_mesh->normals, p_mesh->tcoords, p_mesh->npoints, p_mesh->ntriangles);
-	c_mesh->data->name.assign(name.data());
-	c_mesh->data->GLGenBuffersAndLoad();
-	c_mesh->data->CreateAABB();
+	//C_Mesh* c_mesh = gameobject->CreateComponent<C_Mesh>();
+	//// TODO: GEN NEW UID FOR PRIMITIVES
+	//c_mesh->data = new R_Mesh(0,p_mesh->points, p_mesh->triangles, p_mesh->normals, p_mesh->tcoords, p_mesh->npoints, p_mesh->ntriangles);
+	//c_mesh->data->name.assign(name.data());
+	//c_mesh->data->GLGenBuffersAndLoad();
+	//c_mesh->data->CreateAABB();
 
-	C_Material* c_material = gameobject->CreateComponent< C_Material>();
-	//c_material->data = CreateDefaultMaterial("Default material", color);
-	c_material->textured = false;
+	//C_Material* c_material = gameobject->CreateComponent< C_Material>();
+	////c_material->data = CreateDefaultMaterial("Default material", color);
+	//c_material->textured = false;
 
-	C_MeshRenderer* c_renderer = gameobject->CreateComponent< C_MeshRenderer>();
+	//C_MeshRenderer* c_renderer = gameobject->CreateComponent< C_MeshRenderer>();
 
-	par_shapes_free_mesh(p_mesh);
+	//par_shapes_free_mesh(p_mesh);
 
 	return gameobject;
 }

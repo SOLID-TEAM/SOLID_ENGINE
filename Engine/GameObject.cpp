@@ -115,7 +115,7 @@ const std::vector<Component*>& GameObject::GetComponents() const
 
 R_Mesh* GameObject::GetMeshes()
 {
-	std::vector<Component*>::iterator component = components.begin();
+	/*std::vector<Component*>::iterator component = components.begin();
 
 	for (; component != components.end(); ++component)
 	{
@@ -125,7 +125,7 @@ R_Mesh* GameObject::GetMeshes()
 
 			return cm->data;
 		}
-	}
+	}*/
 
 	return nullptr;
 }

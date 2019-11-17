@@ -6,6 +6,8 @@
 #include "Viewport.h"
 #include "CameraEditor.h"
 
+#include "R_Model.h"
+
 #include "external/MathGeoLib/include/Math/MathAll.h"
 
 ModuleScene::ModuleScene() {}
@@ -330,4 +332,53 @@ bool ModuleScene::LoadScene()
 	LOG("");
 
 	return true;
+}
+
+GameObject* ModuleScene::CreateGameObjectFromModel(UID uid)
+{
+	Resource* r = App->resources->Get(uid);
+
+	if (r->GetType() != Resource::Type::MODEL)
+	{
+		LOG("[Error] bad resource type to create gameobjects from");
+		return nullptr;
+	}
+
+	R_Model* model =  (R_Model*)r;
+
+	model->LoadToMemory();
+
+	std::vector<GameObject*> all_go;
+	uint num_nodes = model->GetNumNodes();
+
+	all_go.reserve(num_nodes);
+
+	for (uint i = 0; i < num_nodes; ++i)
+	{
+		const R_Model::Node& node = model->GetNode(i);
+
+		GameObject* parent = root_go;
+		if (i > 0)
+			parent = all_go[node.parent];
+
+		GameObject* new_go = CreateGameObject(node.name.c_str(), parent);
+
+		//TODO: SET TRANSFORM
+
+		if (node.mesh > 0)
+		{
+			C_Mesh* c_mesh = new_go->CreateComponent< C_Mesh>();
+			
+			if (c_mesh->SetMeshResource(node.mesh))
+			{
+				new_go->CreateComponent<C_MeshRenderer>();
+			}
+		}
+
+
+
+		all_go.push_back(new_go);
+	}
+
+	return nullptr;
 }
