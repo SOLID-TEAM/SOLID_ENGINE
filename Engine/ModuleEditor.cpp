@@ -7,6 +7,7 @@
 #include "SDL/include/SDL_opengl.h"
 
 #include "ImGui/imgui.h"
+#include "ImGuizmo/ImGuizmo.h"
 #include "ImGui/Impl/imgui_impl_sdl.h"
 #include "ImGui/Impl/imgui_impl_opengl3.h"
 
@@ -180,8 +181,31 @@ update_status ModuleEditor::PreUpdate(float dt)
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
-
 	ImGui::NewFrame();
+
+	// Current Gizmo Operation ----------------------------
+
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+	{
+		ImGuizmo::SetOperation(Operation::TRANSLATE);
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+	{
+		ImGuizmo::SetOperation(Operation::ROTATE);
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	{
+		ImGuizmo::SetOperation(Operation::SCALE);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	{
+		ImGuizmo::SetMode(Mode::LOCAL);
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+	{
+		ImGuizmo::SetMode(Mode::WORLD);
+	}
 
 	return UPDATE_CONTINUE;
 }

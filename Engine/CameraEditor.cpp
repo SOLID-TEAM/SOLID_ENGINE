@@ -124,6 +124,8 @@ void CameraEditor::Update(float dt)
 			{
 				if (mouse_left_pressed)
 				{
+					focusing = false;
+
 					if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 					{
 						distance = (transform->position - reference).Length();

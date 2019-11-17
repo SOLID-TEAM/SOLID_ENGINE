@@ -114,6 +114,8 @@ public:
 
 	void RenderDynTree(DynTree& kdtree, float width, float4& color);
 
+	void RenderCircle(float3 postion, float r, int num_segments);
+
 	static void BeginDebugDraw(float4& color);
 
 	static void EndDebugDraw();

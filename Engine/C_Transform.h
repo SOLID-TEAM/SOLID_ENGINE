@@ -19,6 +19,7 @@ public:
 
 	// World -------------------------------------------
 
+
 	void SetPosition(math::float3 position);
 
 	void SetRotation(math::float3 rotation);
@@ -26,6 +27,8 @@ public:
 	void SetRotation(math::Quat q_rotation);
 
 	void SetScale(math::float3 scale);
+
+	void SetGlobalTransform(math::float4x4 matrix);
 
 	math::float3 GetPosition() const;
 

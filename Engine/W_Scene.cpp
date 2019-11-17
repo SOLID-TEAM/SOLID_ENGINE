@@ -7,12 +7,12 @@
 #include "Viewport.h"
 
 #include "ImGui/imgui.h"
+#include "ImGuizmo/ImGuizmo.h"
 
 #include "C_Camera.h"
 
 void W_Scene::Draw()
 {
-	// --------------------
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
 
 	if (ImGui::Begin(name.c_str(), &active , ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize /*| ImGuiWindowFlags_::ImGuiWindowFlags_NoDecoration*/))
@@ -72,6 +72,24 @@ void W_Scene::Draw()
 			viewport_size = current_viewport_size;
 			App->scene->scene_viewport->SetSize(viewport_size.x, viewport_size.y);
 		}
+
+		// Set Guizmo Config ----------------------------------------------
+		ImGuizmo::Enable(true);
+		ImGuizmo::SetRect(min.x , min.y, current_viewport_size.x, current_viewport_size.y);
+		ImGuizmo::SetDrawlist();
+
+		if (App->scene->selected_go != nullptr)
+		{
+			ImGuizmo::DrawGizmo();
+		}
+		else
+		{
+			ImGuizmo::Enable(false);
+		}
+	}
+	else
+	{
+		ImGuizmo::Enable(false);
 	}
 
 	App->scene->scene_viewport->active = active;
@@ -247,6 +265,7 @@ void W_Scene::CameraMenu()
 	if (last_type != type)
 	{
 		editor_camera->SetFrustumType(type);
+		ImGuizmo::SetOrthographic((type == FrustumType::OrthographicFrustum) ? true : false);
 	}
 
 	if (last_fov != fov)

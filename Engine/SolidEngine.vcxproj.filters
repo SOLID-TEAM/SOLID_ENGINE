@@ -61,6 +61,12 @@
     <Filter Include="Sources\Trees">
       <UniqueIdentifier>{113d7f54-e47e-43a3-aa2d-b0f206733eaf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Thirds Party\ImGuizmo">
+      <UniqueIdentifier>{9c92c0bb-a6b0-4b36-bfba-8b9dc1e32b29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Thirds Party\iGizmo">
+      <UniqueIdentifier>{33eead53-9f2d-49bd-93a8-4cba96de8359}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -435,6 +441,12 @@
     <ClInclude Include="DynTree.h">
       <Filter>Sources\Trees</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuizmo\ImGuizmo.h">
+      <Filter>Sources\Thirds Party\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="Gizmo.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -691,6 +703,12 @@
     </ClCompile>
     <ClCompile Include="DynTree.cpp">
       <Filter>Sources\Trees</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
+      <Filter>Sources\Thirds Party\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Gizmo.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

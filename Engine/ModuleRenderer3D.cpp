@@ -321,6 +321,39 @@ void ModuleRenderer3D::RenderDynTree(DynTree& kdtree, float width, float4& color
 	}
 }
 
+void ModuleRenderer3D::RenderCircle(float3 position, float radio, int num_segments)
+{
+	glBegin(GL_LINE_LOOP);
+
+	for (int i = 0; i < num_segments; ++i) 
+	{
+		float theta = 2.0f * 3.1415926f * float(i) / float(num_segments);
+		float x = radio * cosf(theta);
+		float y = radio * sinf(theta);
+		glVertex3f(x + position.x, y + position.y, position.z);
+	}
+
+	glEnd();
+}
+
+void ModuleRenderer3D::BeginDebugDraw(float4& color)
+{
+	glDisable(GL_LIGHTING);
+	glColor4fv(&color[0]);
+}
+
+void ModuleRenderer3D::EndDebugDraw()
+{
+	GLfloat color_default[] = { 1.f, 1.f, 1.f, 1.f };
+	glEnable(GL_LIGHTING);
+	glColor4fv(color_default);
+}
+
+void ModuleRenderer3D::SetDefaultColorMaterial()
+{
+	glColor4fv((float*)&render_config.default_color_mat);
+}
+
 RenderConfig& ModuleRenderer3D::GetRenderConfig()
 {
 	return render_config;
@@ -341,23 +374,6 @@ void ModuleRenderer3D::Load(Config& config)
 
 }
 
-void ModuleRenderer3D::SetDefaultColorMaterial()
-{
-	glColor4fv((float*)&render_config.default_color_mat);
-}
-
-void ModuleRenderer3D::BeginDebugDraw(float4& color )
-{
-	glDisable(GL_LIGHTING);
-	glColor4fv(&color[0]);
-} 
-
-void ModuleRenderer3D::EndDebugDraw()
-{
-	GLfloat color_default[] = { 1.f, 1.f, 1.f, 1.f };
-	glEnable(GL_LIGHTING);
-	glColor4fv(color_default);
-}
 
 FBO::FBO()
 {

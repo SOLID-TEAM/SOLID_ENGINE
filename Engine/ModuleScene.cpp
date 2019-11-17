@@ -6,6 +6,8 @@
 #include "Viewport.h"
 #include "CameraEditor.h"
 
+#include "ImGuizmo/ImGuizmo.h"
+
 #include "external/MathGeoLib/include/Math/MathAll.h"
 
 ModuleScene::ModuleScene() {}
@@ -35,6 +37,7 @@ bool ModuleScene::Start(Config& config)
 
 update_status ModuleScene::PreUpdate(float dt)
 {
+
 	//// delete go from parent, if any | game object to undo --------------------
 
 	// iterates once the list, if any goes wrong inform to user
@@ -134,6 +137,19 @@ update_status ModuleScene::Update(float dt)
 		UndoLastDelete();
 	}
 
+	// Update Gizmo --------------------------------------------
+
+	if (selected_go != nullptr)
+	{
+		float4x4 global_transform = selected_go->transform->global_transform.Transposed();
+		ImGuizmo::Manipulate(editor_camera->GetViewMatrix().Transposed().ptr(), editor_camera->GetProjectionMatrix().Transposed().ptr(), global_transform.ptr());
+
+		if (!global_transform.Equals(selected_go->transform->global_transform.Transposed()))
+		{
+			selected_go->transform->SetGlobalTransform(global_transform.Transposed());
+		}
+	}
+
 	if (root_go != nullptr)
 	{
 		UpdateAll(dt, root_go);
@@ -141,7 +157,6 @@ update_status ModuleScene::Update(float dt)
 
 	return UPDATE_CONTINUE;
 }
-
 
 void ModuleScene::UpdateAll(float dt, GameObject* go)
 {

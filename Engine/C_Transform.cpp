@@ -130,7 +130,12 @@ void C_Transform::SetRotation(math::Quat q_rotation)
 void C_Transform::SetScale(math::float3 scale)
 {
 	global_transform.Scale(scale);
+	UpdateLocalTransformFromGlobal();
+}
 
+void C_Transform::SetGlobalTransform(math::float4x4 matrix)
+{
+	global_transform = matrix;
 	UpdateLocalTransformFromGlobal();
 }
 
