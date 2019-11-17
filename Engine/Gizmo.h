@@ -1,8 +1,6 @@
 //#ifndef _GIZMO_H__
 //#define _GIZMO_H__
 //
-//class IGizmo;
-//
 //class Gizmo
 //{
 //public:

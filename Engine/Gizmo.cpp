@@ -1,28 +1,32 @@
-//#include "Gizmo.h"
-//#include "SDL/include/SDL.h"
-//#include "Application.h"
-//#include "ModuleInput.h"
+//#include "gizmo.h"
+//#include "sdl/include/sdl.h"
+//#include "application.h"
+//#include "moduleinput.h"
+//
+//#include <windows.h>		// header file for windows
+//#include <stdio.h>			// header file for standard input/output
+//#include <gl\gl.h>			// header file for the opengl32 library
+//
+//#include "igizmo/igizmo.h"
 //
 //
-//#include "iGizmo/IGizmo.h"
-//
-//Gizmo::Gizmo(float scale)
+//gizmo::gizmo(float scale)
 //{
-//	gizmo_move = CreateMoveGizmo();
-//	gizmo_rotate = CreateRotateGizmo();
-//	gizmo_scale = CreateScaleGizmo();
+//	gizmo_move = createmovegizmo();
+//	gizmo_rotate = createrotategizmo();
+//	gizmo_scale = createscalegizmo();
 //
 //	gizmo = gizmo_move;
 //
-//	//gizmo->SetEditMatrix(objectMatrix);
-//	//gizmo->SetScreenDimension(screenWidth, screenHeight);
+//	gizmo->seteditmatrix(objectmatrix);
+//	gizmo->setscreendimension(screenwidth, screenheight);
 //
-//	gizmo_move->SetDisplayScale(scale);
-//	gizmo_rotate->SetDisplayScale(scale);
-//	gizmo_scale->SetDisplayScale(scale);
+//	gizmo_move->setdisplayscale(scale);
+//	gizmo_rotate->setdisplayscale(scale);
+//	gizmo_scale->setdisplayscale(scale);
 //}
 //
-//Gizmo::~Gizmo()
+//gizmo::~gizmo()
 //{
 //	delete gizmo_move;
 //	delete gizmo_rotate;
@@ -34,25 +38,25 @@
 //	gizmo_scale = nullptr;
 //}
 //
-//void Gizmo::Update()
+//void gizmo::update()
 //{
-//	float2 mouse_pos(App->input->GetMouseX(), App->input->GetMouseY());
+//	float2 mouse_pos(app->input->getmousex(), app->input->getmousey());
 //
-//	if (App->input->GetMouseButton(0) == KEY_DOWN )
+//	if (app->input->getmousebutton(0) == key_down )
 //	{
-//		gizmo->OnMouseDown(mouse_pos.x, mouse_pos.y);
+//		gizmo->onmousedown(mouse_pos.x, mouse_pos.y);
 //	}
-//	else if (App->input->GetMouseButton(0) == KEY_REPEAT)
+//	else if (app->input->getmousebutton(0) == key_repeat)
 //	{
-//		gizmo->OnMouseMove(mouse_pos.x, mouse_pos.y);
+//		gizmo->onmousemove(mouse_pos.x, mouse_pos.y);
 //	}
-//	else if (App->input->GetMouseButton(0) == KEY_UP)
+//	else if (app->input->getmousebutton(0) == key_up)
 //	{
-//		gizmo->OnMouseUp(mouse_pos.x, mouse_pos.y);
+//		gizmo->onmouseup(mouse_pos.x, mouse_pos.y);
 //	}
 //}
 //
-//void Gizmo::Render()
+//void gizmo::render()
 //{
-//
+//	gizmo->draw();
 //}

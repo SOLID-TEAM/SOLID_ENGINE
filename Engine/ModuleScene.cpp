@@ -111,7 +111,7 @@ update_status ModuleScene::Update(float dt)
 				}
 			}
 
-			kdtree.Fill(3, 1, EncloseAllGo(), go_vector);
+			kdtree.Fill(6, 2, EncloseAllGo(), go_vector);
 		}
 
 		if (ImGui::Button("Clear", ImVec2(100, 20)))
