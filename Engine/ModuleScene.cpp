@@ -30,6 +30,10 @@ bool ModuleScene::Start(Config& config)
 	scene_viewport = new Viewport(editor_camera);
 	game_viewport = new Viewport(main_camera);
 
+	// TESTING LOADING META RESOURCES, here for module order needs for test
+
+	App->resources->LoadAllMetaResources();
+
 	return true;
 }
 

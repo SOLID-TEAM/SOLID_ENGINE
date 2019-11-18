@@ -30,6 +30,7 @@ public:
 
 	bool        LoadInMemory() override;
 	void        ReleaseFromMem() override;
+	void LoadDependencies();
 
 	bool        SaveToFile(UID uid);
 	//bool		LoadFromFile(const char* file);

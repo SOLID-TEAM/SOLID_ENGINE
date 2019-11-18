@@ -33,9 +33,9 @@ public:
 
 	UID GetUID() const { return uid; }
 
-	std::string GetOriginalFilePath() const { return original_file; }
+	std::string& GetOriginalFile() { return original_file; }
 
-	std::string GetExportedName() const { return exported_file;	}
+	std::string& GetExportedFile() { return exported_file;	}
 
 	std::string GetNameFromUID() const;
 
@@ -60,6 +60,7 @@ protected:
 	UID				uid = 0; // we use id as exported resource file too
 	Type		type = Type::NO_TYPE; // and with type, we know how to online load this resource
 
+	// USED only for information, not needed at data level
 	std::string		original_file; // Assets/..bla bla bla
 	std::string		name; // custom name based on import names from model
 	std::string		exported_file; // /Library/<custom type>/bla bla

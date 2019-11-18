@@ -15,11 +15,15 @@ ModuleResources::~ModuleResources() {}
 
 bool ModuleResources::Init(Config& config)
 {
+	// TODO: load last_uid;
+	//LoadAllMetaResources();
+	
 	return true;
 }
 
 bool ModuleResources::Start(Config& config)
 {
+
 	return true;
 }
 
@@ -58,11 +62,33 @@ UID ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type t
 		//r->GetExportedName().assign(written_file.c_str());
 		ret = r->GetUID();
 		LOG("");
+
+		// create metadata
+		CreateNewMetaData(new_file_in_assets, ret);
 	}
 	else
 	{
 		LOG("[Error:%s] Importing %s", name.c_str() ,new_file_in_assets);
 	}
+
+	return ret;
+}
+
+bool ModuleResources::CreateNewMetaData(const char* file_in_assets, UID uid)
+{
+	bool ret = true;
+
+	std::string path, file, extension;
+	App->file_sys->SplitFilePath(file_in_assets, &path, &file, &extension);
+	
+	// TODO: binary?
+	Config new_meta;
+
+	new_meta.AddInt("guid", uid);
+	new_meta.AddInt("Type", (int)GetResourceTypeFromFileExtension(extension));
+
+	std::string final_path(path + file + "." + extension + ".meta");
+	new_meta.SaveConfigToFile(final_path.c_str());
 
 	return ret;
 }
@@ -131,7 +157,7 @@ UID ModuleResources::Find(const char* file_in_assets) const
 
 	for (std::map<UID, Resource*>::const_iterator it = resources.begin(); it != resources.end(); ++it)
 	{
-		if (it->second->GetOriginalFilePath().compare(file) == 0)
+		if (it->second->GetOriginalFile().compare(file) == 0)
 			return it->first;
 	}
 	return 0;
@@ -183,8 +209,9 @@ void ModuleResources::ImportFileDropped(const char* file)
 
 		// duplicate file to our assets folder
 		// TODO: if file exists this overwrites, maybe we don't need this
-		std::string final_path = GetRelativePathToWriteFromType(type, full_path);
+		std::string final_path = GetRelativePathToWriteFromType(type);
 
+		// TODO: new function to duplicate files, currently if the destination is the same of source, names conflict and kabum
 		if (App->file_sys->DuplicateFile(file, final_path.c_str() , std::string("/")))
 		{
 			LOG("[Info:%s] Dropped file duplicated to %s", name.c_str(), (final_path + filename).c_str() );
@@ -211,7 +238,7 @@ void ModuleResources::ImportFileDropped(const char* file)
 }
 
 // TODO: get every specific folder
-std::string ModuleResources::GetRelativePathToWriteFromType(Resource::Type type, std::string filename) const
+std::string ModuleResources::GetRelativePathToWriteFromType(Resource::Type type) const
 {
 	std::string ret;
 
@@ -262,4 +289,64 @@ Resource::Type ModuleResources::GetResourceTypeFromFileExtension(std::string ext
 	}
 
 	return ret;
+}
+
+void ModuleResources::LoadAllMetaResources()
+{
+	std::vector<std::string> filter_ext;
+	filter_ext.push_back(std::string("meta"));
+	PathNode all_nodes = App->file_sys->GetAllFiles(ASSETS_FOLDER, &filter_ext);
+
+	std::vector<std::string> all_metas;
+	GetMetasFromNodes(all_nodes, all_metas);
+
+	LOG("");
+
+	for (uint i = 0; i < all_metas.size(); ++i)
+	{
+		Config meta(all_metas[i].c_str());
+
+		UID resource_uid = meta.GetInt("guid", 0);
+		Resource::Type type = (Resource::Type)meta.GetInt("Type", (int)Resource::Type::NO_TYPE);
+		
+		// check if the resource still exists on library folders
+
+		//
+		Resource* r = CreateNewResource(type, resource_uid);
+
+		std::string path, file;
+		App->file_sys->SplitFilePath(all_metas[i].c_str(), &path, &file);
+		path.pop_back(); // deletes double /
+		r->GetOriginalFile().assign(path + file);
+		r->GetName().assign(file);
+		r->GetExportedFile().assign(GetRelativePathToWriteFromType(type) + std::to_string(resource_uid));
+
+		LoadDependencies(r);
+
+		App->scene->CreateGameObjectFromModel(resource_uid);
+
+	}
+	
+}
+
+void ModuleResources::GetMetasFromNodes(PathNode node, std::vector<std::string>& meta_vector)
+{
+	if (node.file)
+		meta_vector.push_back(std::string(node.path));
+
+	for (uint i = 0; i < node.children.size(); ++i)
+	{
+		GetMetasFromNodes(node.children[i], meta_vector);
+	}
+
+}
+
+// TODO: only resource model has dependencies for now
+// UPDATE when needed
+void ModuleResources::LoadDependencies(Resource* resource)
+{
+	if (resource->GetType() == Resource::Type::MODEL)
+	{
+		resource->LoadToMemory();
+	}
 }

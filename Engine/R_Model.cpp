@@ -91,7 +91,7 @@ bool R_Model::SaveToFile(UID uid)
 		cursor += bytes;
 	}
 
-	App->file_sys->Save(filename.c_str(), buffer, size);
+	App->file_sys->Save(std::string(LIBRARY_MODEL_FOLDER + filename).c_str(), buffer, size);
 
 	//LoadFromFile(filename.c_str());
 
@@ -105,7 +105,7 @@ bool R_Model::LoadInMemory()
 
 	char* buffer = nullptr;
 
-	uint size = App->file_sys->Load(GetNameFromUID().c_str() , &buffer);
+	uint size = App->file_sys->Load(std::string(LIBRARY_MODEL_FOLDER + GetNameFromUID()).c_str() , &buffer);
 
 	if (buffer != nullptr)
 	{
@@ -142,11 +142,29 @@ bool R_Model::LoadInMemory()
 		for (uint i = 0; i < nodes.size(); ++i)
 		{
 			if (nodes[i].mesh > 0)
-				App->resources->Get(nodes[i].mesh)->LoadToMemory();
+			{
+				// if this a fresh init (on engine start when loads all resources), 
+				// we must to load all associated resources, no load to memory
+				Resource* r = App->resources->Get(nodes[i].mesh);
+				if (r == nullptr)
+				{
+					r = App->resources->CreateNewResource(Resource::Type::MESH, nodes[i].mesh);
+					r->GetName().assign(nodes[i].name);
+					//LoadDependencies();
+				}
+				else
+					r->LoadToMemory();
+			}
 
 			if (nodes[i].material > 0)
 			{
-				App->resources->Get(nodes[i].mesh)->LoadToMemory();
+				Resource* r = App->resources->Get(nodes[i].material);
+				if (r == nullptr)
+				{
+					//LoadDependencies();
+				}
+				else
+					r->LoadToMemory();
 			}
 		}
 	}
@@ -154,6 +172,11 @@ bool R_Model::LoadInMemory()
 		return false;
 
 	return true;
+}
+
+void R_Model::LoadDependencies()
+{
+
 }
 
 void R_Model::GenerateMeshes(const aiScene* scene, const char* file, std::vector <UID>& meshes)

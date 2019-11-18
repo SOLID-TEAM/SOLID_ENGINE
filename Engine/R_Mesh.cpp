@@ -63,7 +63,7 @@ void R_Mesh::GLGenBuffersAndLoad()
 	// TODO: REWORK THIS, not all meshes has all this components
 	// Generate Buffers --------------------------------
 	glGenBuffers(4, buffers_id);
-
+	
 	// Vertices ----------------
 	glBindBuffer(GL_ARRAY_BUFFER, buffers_id[VERTICES]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * buffers_size[VERTICES], vertices, GL_STATIC_DRAW);

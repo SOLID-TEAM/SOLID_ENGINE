@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "Module.h"
 #include "Resource.h"
+#include "PathNode.h"
 
 #include <map>
 #include <string>
@@ -26,7 +27,13 @@ public:
 
 	void ImportFileDropped(const char* file);
 	Resource::Type GetResourceTypeFromFileExtension(std::string extension);
-	std::string GetRelativePathToWriteFromType(Resource::Type type, std::string filename) const;
+	std::string GetRelativePathToWriteFromType(Resource::Type type) const;
+
+	void LoadAllMetaResources();
+private:
+	
+	void GetMetasFromNodes(PathNode node, std::vector<std::string>& metas);
+	void LoadDependencies(Resource* resource);
 
 
 public:
@@ -36,6 +43,7 @@ public:
 	const Resource* Get(UID uid) const;
 	Resource* Get(UID uid);
 	Resource* CreateNewResource(Resource::Type type, UID force_uid = 0);
+	bool CreateNewMetaData(const char* new_file_in_assets, UID uid);
 private:
 
 	std::map<UID, Resource*> resources;
