@@ -116,6 +116,8 @@ public:
 
 	void RenderCircle(float3 postion, float r, int num_segments);
 
+	void RenderTest();
+
 	static void BeginDebugDraw(float4& color);
 
 	static void EndDebugDraw();

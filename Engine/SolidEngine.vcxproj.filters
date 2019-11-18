@@ -64,9 +64,6 @@
     <Filter Include="Sources\Thirds Party\ImGuizmo">
       <UniqueIdentifier>{9c92c0bb-a6b0-4b36-bfba-8b9dc1e32b29}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Thirds Party\iGizmo">
-      <UniqueIdentifier>{33eead53-9f2d-49bd-93a8-4cba96de8359}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">

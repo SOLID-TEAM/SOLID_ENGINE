@@ -23,10 +23,16 @@ bool ModuleScene::Start(Config& config)
 {
 	// GameObjects ---------------------------
 
-	root_go = new GameObject("Scene Root"); root_go->ignore = true;
-	main_camera = new GameObject("Main Camera", root_go); main_camera->ignore = true;
+	root_go = new GameObject("Scene Root"); 
+	root_go->is_static = true;
+	root_go->ignore = true;
+
+	main_camera = new GameObject("Main Camera", root_go); 
 	main_camera->CreateComponent<C_Camera>();
-	editor_camera = new CameraEditor(); editor_camera->ignore = true;
+	main_camera->ignore = true;
+
+	editor_camera = new CameraEditor(); 
+	editor_camera->ignore = true;
 
 	// Viewports -----------------------------
 	scene_viewport = new Viewport(editor_camera);
@@ -35,11 +41,145 @@ bool ModuleScene::Start(Config& config)
 	return true;
 }
 
-update_status ModuleScene::PreUpdate(float dt)
+bool ModuleScene::CleanUp()
 {
+	std::vector<GameObject*>::iterator game_objects = root_go->childs.begin();
 
-	//// delete go from parent, if any | game object to undo --------------------
+	for (; game_objects != root_go->childs.end(); ++game_objects)
+	{
+		(*game_objects)->DoCleanUp();
+	}
 
+	// release undo buffers
+	to_undo_buffer_go.clear();
+
+	// GameObjects --------------------------------------------------
+
+	if (editor_camera != nullptr)
+	{
+		delete editor_camera;
+	}
+
+	return true;
+}
+
+update_status ModuleScene::PreUpdate(float dt)	// TODO: SHORTCUTS
+
+{
+	// TESTING SAVE SCENE
+	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		ToSaveScene();
+	}
+	// check CTRL + Z
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
+	{
+		UndoLastDelete();
+	}
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleScene::Update(float dt)
+{
+	// Update hierarchy -----------------------------------------
+
+	UpdateHierarchy();
+
+	// Update Game Objects Lists -------------------------------
+
+	UpdateGoLists();
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	{
+		FillGoLists();
+	}
+
+	// Update All GameObjects -----------------------------------
+
+	if (root_go != nullptr)
+	{
+		std::stack<GameObject*> go_stack;
+
+		go_stack.push(root_go);
+
+		while (!go_stack.empty())
+		{
+			GameObject* go = go_stack.top();
+			go_stack.pop();
+
+			go->DoUpdate(dt);
+
+			for (GameObject* child : go->childs)
+			{
+				go_stack.push(child);
+			}
+		}
+	}
+
+	editor_camera->DoUpdate(dt);
+
+	// Update Gizmo --------------------------------------------
+
+	UpdateGizmo();
+
+	// Update Space partitioning ------------------------------
+
+	UpdateSpacePartitioning();
+
+	// --------------------------------------------------------
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleScene::Draw()
+{
+	for (Viewport* viewport : viewports)
+	{
+		if (!viewport->active) continue;
+		editor_mode = (viewport  == scene_viewport) ? true : false;
+
+		// Begin -----------------------------------------------
+
+		viewport->BeginViewport();
+
+		// Draw GameObjects / Components -----------------------
+		
+		go_render_list.push_back(main_camera);
+
+		for (GameObject* go : go_render_list)
+		{
+			go->DoRender();
+		}
+
+		// TODO:: Remove light --------------------------------
+
+		App->renderer3D->lights[0].SetPos(viewport->GetCamera()->linked_go->transform->position);
+
+		App->renderer3D->lights[0].Render();
+
+		// Debug Renders --------------------------------------
+
+		if (editor_mode)
+		{
+			App->test->main_grid->Render();
+			App->renderer3D->RenderKDTree(kdtree, 3.f);
+		}
+
+		// End ------------------------------------------------
+
+		viewport->EndViewport();
+	}
+
+	// Always clean render list ------------------------------
+
+	go_render_list.clear();
+
+	return UPDATE_CONTINUE;
+}
+
+void ModuleScene::UpdateHierarchy()
+{
 	// iterates once the list, if any goes wrong inform to user
 	for (std::vector<GameObject*>::iterator gotu = temp_to_undo_go.begin(); gotu != temp_to_undo_go.end(); ++gotu)
 	{
@@ -75,70 +215,43 @@ update_status ModuleScene::PreUpdate(float dt)
 
 	if (childrens_to_move.size() > 0)
 		childrens_to_move.clear();
-
-	// ---------------------------------------------------------------------------
-
-	return UPDATE_CONTINUE;
 }
 
-update_status ModuleScene::Update(float dt)
+void ModuleScene::UpdateGoLists()
 {
+	EventGo event_go;
+	GameObject* go = nullptr;
 
-	if (ImGui::Begin("Space Partitioning"))
+	while (!events_go_stack.empty())
 	{
+		event_go = events_go_stack.top();
+		events_go_stack.pop();
 
-		if (ImGui::Button("Recalculate", ImVec2(100, 20)))
+		go = event_go.go;
+
+		if (go == nullptr) continue;
+
+		if (event_go.type == EventGoType::DYNAMIC_TO_STATIC || event_go.type == EventGoType::STATIC_TO_DYNAMIC)
 		{
-			std::stack<GameObject*> go_stack;
-			std::vector<GameObject*> go_vector;
+			std::list<GameObject*>& list_from = (event_go.type == EventGoType::DYNAMIC_TO_STATIC) ? (dynamic_go_list) : (static_go_list);
+			std::list<GameObject*>& list_to = (event_go.type == EventGoType::DYNAMIC_TO_STATIC)   ? (static_go_list) :  (dynamic_go_list);
 
-			go_stack.push(root_go);
-
-			while (!go_stack.empty())
-			{
-				GameObject* go = go_stack.top();
-
-				if (go->bounding_box.IsFinite())
-				{
-					go_vector.push_back(go);
-				}
-
-				go_stack.pop();
-
-				for (GameObject* child : go->childs)
-				{
-					go_stack.push(child);
-				}
-			}
-
-			kdtree.Fill(6, 2, EncloseAllGo(), go_vector);
+			list_from.remove(event_go.go);
+			list_to.push_back(event_go.go);
 		}
-
-		if (ImGui::Button("Clear", ImVec2(100, 20)))
+		else if (event_go.type == EventGoType::DELETE_FROM_STATIC)
 		{
-			kdtree.Clear();
+			static_go_list.remove(event_go.go);
 		}
-
-		ImGui::End();
+		else if (event_go.type == EventGoType::DELETE_FROM_DYNAMIC)
+		{
+			dynamic_go_list.remove(event_go.go);
+		}
 	}
+}
 
-	editor_camera->DoUpdate(dt);
-
-	// TESTING SAVE SCENE
-	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-	{
-		ToSaveScene();
-	}
-
-	// TODO: SHORTCUTS
-	// check CTRL + Z
-	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
-	{
-		UndoLastDelete();
-	}
-
-	// Update Gizmo --------------------------------------------
-
+void ModuleScene::UpdateGizmo()
+{
 	if (selected_go != nullptr)
 	{
 		float4x4 global_transform = selected_go->transform->global_transform.Transposed();
@@ -149,113 +262,88 @@ update_status ModuleScene::Update(float dt)
 			selected_go->transform->SetGlobalTransform(global_transform.Transposed());
 		}
 	}
-
-	if (root_go != nullptr)
-	{
-		UpdateAll(dt, root_go);
-	}
-
-	return UPDATE_CONTINUE;
 }
 
-void ModuleScene::UpdateAll(float dt, GameObject* go)
+void ModuleScene::UpdateSpacePartitioning()
 {
-	go->DoUpdate(dt);
+	uint kdtree_collisions = 0u;
+	uint dyntree_collisions = 0u;
+	uint frustum_collisions = 0u;
 
-	for (std::vector<GameObject*>::iterator child = go->childs.begin(); child != go->childs.end(); ++child)
-	{
-		UpdateAll(dt , (*child));
-	}
-}
-
-
-update_status ModuleScene::PostUpdate(float dt)
-{
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleScene::Draw()
-{
 	C_Camera* camera = main_camera->GetComponent<C_Camera>();
 
-	for (Viewport* viewport : viewports)
+
+	if (camera->cullling)
 	{
-		if (!viewport->active) continue;
-		editor_mode = (viewport  == scene_viewport) ? true : false;
+		// Add dynamic go to render list -----------------------------
 
-		// Begin -----------------------------------------------
-
-		viewport->BeginViewport();
-
-		// Draw GameObjects / Components -----------------------
-
-		std::stack<GameObject*> go_stack;
-
-		go_stack.push(root_go);
-
-		while (!go_stack.empty())
+		for (GameObject* go : dynamic_go_list)
 		{
-			GameObject* go = go_stack.top();
-
-			if (main_camera == go || !camera->cullling)  // Add game object flags to ignore culling or other situations 
+			if (go->bounding_box.IsFinite())
 			{
-				go->DoRender();
-			}
-			else if ( camera->CheckCollisionAABB(go->bounding_box) )
-			{
-				go->DoRender();
-			}
-
-			go_stack.pop();
-
-			for (GameObject* child : go->childs)
-			{
-				go_stack.push(child);
+				camera->CheckCollisionAABB(go->bounding_box) ? go_render_list.push_back(go) : false;
+				++frustum_collisions;
 			}
 		}
 
-		// TODO:: Remove light --------------------------------
+		// Add static game objects -----------------------------------
 
-		App->renderer3D->lights[0].SetPos(viewport->GetCamera()->linked_go->transform->position);
+		kdtree.GetIntersections<C_Camera>(*camera, go_render_list, kdtree_collisions);
+		frustum_collisions += kdtree_collisions;
 
-		App->renderer3D->lights[0].Render();
+	}
+	else
+	{
+		go_render_list.insert(std::end(go_render_list), std::begin(static_go_list), std::end(static_go_list));
+		go_render_list.insert(std::end(go_render_list), std::begin(dynamic_go_list), std::end(dynamic_go_list));
 
-		// Debug Renders --------------------------------------
+	}
 
-		if (editor_mode)
+	// Test Window --------------------------------------------
+
+	if (ImGui::Begin("Space Partitioning"))
+	{
+		if (ImGui::Button("Recalculate", ImVec2(100, 20)))
 		{
-			App->test->main_grid->Render();
-			App->renderer3D->RenderKDTree(kdtree, 3.f);
+			std::vector<GameObject*> go_vector;
+
+			for (GameObject* go : static_go_list)
+			{
+				if (go->bounding_box.IsFinite())
+				{
+					go_vector.push_back(go);
+				}
+
+			}
+
+			kdtree.Fill(6, 1, EncloseAllGo(), go_vector);
 		}
 
-		// End ------------------------------------------------
+		ImGui::SameLine();
 
-		viewport->EndViewport();
+		if (ImGui::Button("Clear", ImVec2(100, 20)))
+		{
+			kdtree.Clear();
+		}
+
+		if (camera->cullling)
+		{
+			int static_size = static_go_list.size() - 1;
+			static_size = static_size < 0 ? 0 : static_size;
+			ImGui::Title("Game Objects"); ImGui::Text("");
+			ImGui::Title("Static",2); ImGui::Text("%i", static_size); // -1 Less root go
+			ImGui::Title("Dynamic",2); ImGui::Text("%i" , dynamic_go_list.size());
+			ImGui::Title("KDTree");	ImGui::Text(( kdtree.Active()) ? "ON" : "OFF");
+			ImGui::Title("Checked Collisions");  ImGui::Text("");
+			ImGui::Title("Frustum",2);  ImGui::Text("%i", frustum_collisions);
+		}
+		else
+		{
+			ImGui::Text("Active Main Camera Culling");
+		}
+
+		ImGui::End();
 	}
-
-	return UPDATE_CONTINUE;
-}
-
-bool ModuleScene::CleanUp()
-{
-	std::vector<GameObject*>::iterator game_objects = root_go->childs.begin();
-
-	for (; game_objects != root_go->childs.end(); ++game_objects)
-	{
-		(*game_objects)->DoCleanUp();
-	}
-
-	// release undo buffers
-	to_undo_buffer_go.clear();
-
-	// GameObjects --------------------------------------------------
-
-	if (editor_camera != nullptr)
-	{
-		delete editor_camera;
-	}
-
-	return true;
 }
 
 GameObject* ModuleScene::Find(std::string name)
@@ -321,6 +409,11 @@ void ModuleScene::UndoLastDelete()
 		LOG("no more gameobjects to restore");
 }
 
+void ModuleScene::PushEvent(GameObject* go, EventGoType type)
+{
+	events_go_stack.push(EventGo(go, type));
+}
+
 
 AABB ModuleScene::EncloseAllStaticGo()
 {
@@ -376,6 +469,32 @@ void ModuleScene::AddGOToUndoDeque(GameObject* go)
 
 	to_undo_buffer_go.push_back(go);
 	LOG("[Info] Added %s to undo buffers", go->GetName());
+}
+
+void ModuleScene::FillGoLists()
+{
+	std::stack<GameObject*> go_stack;
+	go_stack.push(root_go);
+
+	// Clean lists ----------------------------------------------------------
+	events_go_stack = std::stack<EventGo>();
+	static_go_list.clear();
+	dynamic_go_list.clear();
+
+	// Fill lists ----------------------------------------------------------------
+
+	while (!go_stack.empty())
+	{
+		GameObject* go = go_stack.top();
+		go_stack.pop();
+
+		(go->is_static == true) ? static_go_list.push_back(go) : dynamic_go_list.push_back(go);
+
+		for (GameObject* child : go->childs)
+		{
+			go_stack.push(child);
+		}
+	}
 }
 
 

@@ -5,15 +5,23 @@
 #include "GameObject.h"
 
 #include "external/MathGeoLib/include/Geometry/AABB.h"
+#include "C_Camera.h"
 
 #include <queue>
 #include <vector>
+#include <typeinfo>
 
 
 #define BUCKET_MAX 1024 // TODO: Too much??? Test 
 
+class ModuleRenderer3D;
+
 class KDTreeNode
 {
+public:
+
+	friend ModuleRenderer3D;
+
 public:
 
 	KDTreeNode() {};
@@ -32,7 +40,7 @@ public:
 
 	// Vars -------------------------------------
 
-	AABB* aabb = nullptr;
+	AABB aabb;
 	uint depth = 0u;
 	float middle = 0.0f;
 	bool is_leaf = false;
@@ -40,11 +48,14 @@ public:
 	uint dimension = 0u;
 
 	std::vector<GameObject*> bucket;
-
 };
 
 class KDTree
 {
+public:
+
+	friend ModuleRenderer3D;
+
 public:
 
 	~KDTree();
@@ -53,16 +64,16 @@ public:
 
 	void Clear();
 
-	template<typename T>
-	void GetIntersections(T &intersector, std::vector<GameObject*> &intersections) const;
+	bool Active();
 
-	void Render();
+	template<typename T>
+	void GetIntersections(T &intersector, std::vector<GameObject*> &intersections, uint& checked_collisions = 0u) const;
 
 private:
 
 	void Create(uint max_depth, uint max_node_bucket);
 
-public:
+private:
 
 	KDTreeNode* root = nullptr;
 	int max_depth = 6;
@@ -71,9 +82,17 @@ public:
 
 template<typename T>
 
-void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersections) const
+void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersections, uint& checked_collisions) const
 {
 	std::queue<KDTreeNode*> nodes_queue;
+
+	uint checked_cols = checked_collisions;
+
+	if (root == nullptr)
+	{
+		return;
+	}
+
 	nodes_queue.push(root);
 
 	while (!nodes_queue.empty())
@@ -82,23 +101,51 @@ void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersec
 
 		nodes_queue.pop();
 
-		// Check intersection -----------------------------------------
+		// Check filed lief nodes intersection -----------------------------------------
 
-		if (node->is_leaf == true ) 
+		if (node->is_leaf == true && node->bucket_members > 0u)
 		{
-			if (node->bucket_members > 0u && node->aabb->Intersects(intersector))
+			bool ret = false;
+
+			// Check collision with node AABB
+
+			if (typeid(C_Camera) == typeid(T))
 			{
-				for (GameObject* go : node->bucket)
+				C_Camera camera = intersector;
+
+				++checked_cols;
+
+				if (camera.CheckCollisionAABB(node->aabb))
 				{
-					intersections.push_back(go);
+					for (uint i = 0; i < node->bucket_members; ++i)
+					{
+						// Only push if bounding box collide 
+
+						++checked_cols;
+
+						if (camera.CheckCollisionAABB(node->bucket[i]->bounding_box))
+						{
+							intersections.push_back(node->bucket[i]);
+						}
+					}
 				}
+			}
+			else 
+			{
+				LOG("[Error] KDtree GetIntersection(). Intersector type not mached")
+				return;
 			}
 		}
 		else
 		{
-			nodes_queue.push(node->left_child);
-			nodes_queue.push(node->right_child);
+			if (node->left_child != nullptr) nodes_queue.push(node->left_child);
+			if (node->right_child != nullptr) nodes_queue.push(node->right_child);
 		}
+
+		// Equal checked collisions 
+
+		checked_collisions = checked_cols;
+
 	}
 }
 

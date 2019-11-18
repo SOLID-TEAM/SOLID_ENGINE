@@ -17,6 +17,7 @@
 #include "C_Camera.h"
 
 #include <typeinfo>
+#include <list>
 
 class ModuleScene;
 class ModuleEditor;
@@ -25,6 +26,8 @@ class D_Mesh; // Remove
 class KDTree;
 class DynTree;
 class DynTreeNode;
+
+class GameObject;
 
 class GameObject
 {
@@ -51,6 +54,8 @@ public:
 	// Common functions ---------------------------------------------
 
 	void SetActive(bool active);
+
+	void SetIsStatic(bool value);
 
 	const char* GetName() const;
 
@@ -133,6 +138,7 @@ private:
 	OBB obb;
 
 	DynTreeNode* dyn_node = nullptr;
+
 };
 
 // Template functions -----------------------------------------------------

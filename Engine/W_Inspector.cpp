@@ -20,7 +20,14 @@ void W_Inspector::Draw()
 
 			ImGui::Spacing();
 			ImGui::Checkbox("##active", &go->active); ImGui::SameLine(); ImGui::SetNextItemWidth(ImGui::GetWindowContentRegionMax().x - ImGui::GetCursorPosY() - 85.F);  ImGui::InputText("##etc", &go->name); ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 75.F);
-			ImGui::Checkbox("Static", &go->active); 
+			
+			bool go_is_static = go->is_static;
+
+			if (ImGui::Checkbox("Static", &go_is_static))
+			{
+				go->SetIsStatic(go_is_static);
+			}
+
 			ImGui::Spacing();
 
 			// -----------------------------------------------------------------

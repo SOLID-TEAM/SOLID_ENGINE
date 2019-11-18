@@ -104,6 +104,15 @@ void GameObject::SetActive(bool active)
 	this->active = active;
 }
 
+void GameObject::SetIsStatic(bool value)
+{
+	if (is_static != value)
+	{
+		App->scene->PushEvent( this, (is_static == true) ? EventGoType::STATIC_TO_DYNAMIC : EventGoType::DYNAMIC_TO_STATIC );
+		is_static = value;
+	}
+}
+
 const char* GameObject::GetName() const
 {
 	return name.c_str();

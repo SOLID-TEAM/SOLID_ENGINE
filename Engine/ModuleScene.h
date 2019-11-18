@@ -18,6 +18,29 @@
 class CameraEditor;
 class Viewport;
 
+enum class EventGoType
+{
+	STATIC_TO_DYNAMIC,
+	DYNAMIC_TO_STATIC,
+	DELETE_FROM_STATIC,
+	DELETE_FROM_DYNAMIC,
+	UKNNOWKN
+};
+
+struct EventGo 
+{
+	EventGo(){}
+	EventGo(GameObject* go , EventGoType type) : go (go) , type(type) {}
+
+	GameObject* go = nullptr;
+	EventGoType type = EventGoType::UKNNOWKN;
+
+	//bool operator == (EventGo event_go)
+	//{
+	//	return (event_go.go == go && event_go.type == type);
+	//}
+};
+
 class ModuleScene : public Module
 {
 public:
@@ -34,17 +57,14 @@ public:
 
 	update_status Update(float dt);
 	
-	update_status PostUpdate(float dt);
+	//update_status PostUpdate(float dt);
 
 	update_status Draw();
 
 	bool CleanUp();
 
-	void UpdateAll(float dt, GameObject*);
-
-	void RenderAll(GameObject* go);
-
 	bool ToSaveScene();
+
 	bool SaveScene(Config& config, GameObject* go);
 	
 	// Game Objects functions ----------------------------------------------
@@ -63,13 +83,29 @@ public:
 
 	void UndoLastDelete(); // put gameobject to undo buffer
 
+	void PushEvent(GameObject* go, EventGoType type);
+
 private:
+
+	void UpdateHierarchy();
+
+	void UpdateGoLists();
+
+	void UpdateGizmo();
+
+	void UpdateSpacePartitioning();
 
 	AABB EncloseAllStaticGo();
 
 	AABB EncloseAllGo();
 
 	void AddGOToUndoDeque(GameObject* gameObject);
+
+	// Lists operatiions -------------------------------------
+
+	void FillGoLists();
+
+
 
 public:
 
@@ -79,8 +115,11 @@ public:
 
 	// Game Objects -------------------------------
 
-	std::list<GameObject*>	static_go_list;
-	std::list<GameObject*>	dynamic_go_list;
+	std::stack<EventGo>			events_go_stack;
+	std::stack<GameObject*>		to_delete_go_stack;
+	std::list<GameObject*>		static_go_list;
+	std::list<GameObject*>		dynamic_go_list;
+	std::vector<GameObject*>	go_render_list;
 
 	GameObject*				root_go = nullptr;
 	GameObject*				selected_go = nullptr;

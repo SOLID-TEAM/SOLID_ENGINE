@@ -1,20 +1,20 @@
 #include "KDTree.h"
 #include "GameObject.h"
 #include "C_Transform.h"
+#include "ModuleRenderer3D.h"
 
 KDTreeNode::~KDTreeNode()
 {
-	RELEASE(aabb);
 	RELEASE(left_child);
 	RELEASE(right_child);
 }
 
 void KDTreeNode::SplitNode(unsigned dimension, float middle, KDTreeNode* left, KDTreeNode* right) const
 {
-	float3 center_left = aabb->CenterPoint();
-	float3 center_right = aabb->CenterPoint();
+	float3 center_left = aabb.CenterPoint();
+	float3 center_right = aabb.CenterPoint();
 	float3 size_left, size_right;
-	size_left = size_right = aabb->Size();
+	size_left = size_right = aabb.Size();
 
 	switch (dimension)
 	{
@@ -56,8 +56,8 @@ void KDTreeNode::SplitNode(unsigned dimension, float middle, KDTreeNode* left, K
 		}
 	}
 
-	left->aabb->SetFromCenterAndSize(center_left, size_left);
-	right->aabb->SetFromCenterAndSize(center_right, size_right);
+	left->aabb.SetFromCenterAndSize(center_left, size_left);
+	right->aabb.SetFromCenterAndSize(center_right, size_right);
 }
 
 
@@ -70,7 +70,7 @@ void KDTree::Create(uint max_depth, uint max_node_bucket)
 {
 	std::queue<KDTreeNode*> nodes_queue; 
 	root = new KDTreeNode();
-	root->aabb = new AABB();
+	root->aabb.SetNegativeInfinity();
 
 	this->max_depth = max_depth;
 	this->max_bucket_size = max_node_bucket;
@@ -85,8 +85,8 @@ void KDTree::Create(uint max_depth, uint max_node_bucket)
 		{
 			current->left_child = new KDTreeNode();
 			current->right_child = new KDTreeNode();
-			current->left_child->aabb = new AABB();
-			current->right_child->aabb = new AABB();
+			current->left_child->aabb.SetNegativeInfinity();
+			current->right_child->aabb.SetNegativeInfinity();
 			current->left_child->depth = current->depth + 1;
 			current->right_child->depth = current->depth + 1;
 			nodes_queue.push(current->left_child);
@@ -106,13 +106,23 @@ void KDTree::Clear()
 	}
 }
 
+bool KDTree::Active()
+{
+	return (root == nullptr) ? false : true;
+}
+
 void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::vector<GameObject*> go_vec)
 {
+	if (go_vec.size() == 0)
+	{
+		return;
+	}
+
 	Clear();
 	Create(max_depth, max_node_bucket);
 
-	root->is_leaf = false;
-	*root->aabb = global_aabb;
+	//root->is_leaf = false;
+	root->aabb = global_aabb;
 	root->bucket = go_vec;
 	root->bucket_members = go_vec.size();
 
@@ -162,14 +172,14 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 			nodes_queue.push(node->left_child);
 			nodes_queue.push(node->right_child);
 
-			for (unsigned i = 0; i < node->bucket_members; ++i) 
+			for (uint i = 0; i < node->bucket_members; ++i) 
 			{
 
-				if (node->left_child->aabb->Intersects(node->bucket[i]->bounding_box))
+				if (node->left_child->aabb.Intersects(node->bucket[i]->bounding_box))
 				{
 					node->left_child->bucket[node->left_child->bucket_members++] = node->bucket[i];
 				}
-				if (node->right_child->aabb->Intersects(node->bucket[i]->bounding_box))
+				if (node->right_child->aabb.Intersects(node->bucket[i]->bounding_box))
 				{
 					node->right_child->bucket[node->right_child->bucket_members++] = node->bucket[i];
 				}

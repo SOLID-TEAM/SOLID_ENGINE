@@ -7,6 +7,7 @@
 
 #include <gl\glew.h>
 #include "SDL\include\SDL_opengl.h"
+#include "external/MathGeoLib/include/MathGeoLib.h"
 
 #include "KDTree.h"
 #include "DynTree.h"
@@ -284,12 +285,12 @@ void ModuleRenderer3D::RenderKDTree(KDTree& kdtree, float width)
 			}
 
 
-			RenderAABB(*node->aabb, width - (float)node->depth * 0.3f, color);
+			RenderAABB(node->aabb, width - (float)node->depth * 0.3f, color);
 		}
 		else
 		{
 			color = { 1.f, 1.f, 1.f, 1.f };
-			RenderAABB(*node->aabb, width, color);
+			RenderAABB(node->aabb, width, color);
 		}
 
 		
@@ -334,6 +335,11 @@ void ModuleRenderer3D::RenderCircle(float3 position, float radio, int num_segmen
 	}
 
 	glEnd();
+}
+
+void ModuleRenderer3D::RenderTest()
+{
+
 }
 
 void ModuleRenderer3D::BeginDebugDraw(float4& color)
