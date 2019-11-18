@@ -19,6 +19,12 @@ public:
 	float4x4 GetViewMatrix();
 	float4x4 GetProjectionMatrix();
 
+	void LookAt(float3 reference);
+
+	void SetPosition(float3 position);
+
+	void SetRotation(float3 rotation);
+
 public:
 	
 	enum CameraState
@@ -37,9 +43,21 @@ public:
 	bool alt_pressed = false;
 
 private:
+
+	C_Camera* camera = nullptr;
 	bool focusing = false;
+
+	math::float3 reference;
 	math::float3 final_position;
 	math::Quat final_rotation;
-	math::float3 reference;
-	C_Camera* camera = nullptr;
+	float final_yaw = 0.f;
+	float final_pitch = 0.f;
+	float current_yaw = 0.f;
+	float current_pitch = 0.f;
+
+	// Speeds -----------------------
+
+	float lerp_trans_speed = 6.f;
+	float lerp_rot_speed = 14.5f;
+
 };

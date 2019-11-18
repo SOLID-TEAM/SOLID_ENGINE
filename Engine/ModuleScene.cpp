@@ -23,16 +23,27 @@ bool ModuleScene::Start(Config& config)
 {
 	// GameObjects ---------------------------
 
+	// Root ----------------------
 	root_go = new GameObject("Scene Root"); 
 	root_go->is_static = true;
 	root_go->ignore = true;
 
+	// Main camera ---------------
 	main_camera = new GameObject("Main Camera", root_go); 
 	main_camera->CreateComponent<C_Camera>();
 	main_camera->ignore = true;
 
+	// Set transform 
+	main_camera->transform->SetPosition(float3(0, 5, 5));
+	main_camera->transform->LookAt(float3(0, 0, 0));
+
+	// Editor camera ---------------
 	editor_camera = new CameraEditor(); 
 	editor_camera->ignore = true;
+
+	// Set transform 
+	editor_camera->transform->SetPosition(float3(0, 5, -5));
+	editor_camera->transform->LookAt(float3(0, 0, 0));
 
 	// Viewports -----------------------------
 	scene_viewport = new Viewport(editor_camera);

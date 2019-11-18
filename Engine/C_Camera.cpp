@@ -12,7 +12,7 @@ C_Camera::C_Camera(GameObject* go): Component(go, ComponentType::CAMERA)
 	name.assign("Camera");
 
 	frustum.pos = math::float3::zero;
-	frustum.front = math::float3::unitZ;
+	frustum.front = -math::float3::unitZ;
 	frustum.up = math::float3::unitY;
 
 	SetFrustumType(math::FrustumType::PerspectiveFrustum);
@@ -33,9 +33,8 @@ void C_Camera::UpdateTransform()
 	math::float4x4 global_transform = linked_go->transform->global_transform;
 
 	frustum.pos = global_transform.TranslatePart();
-	frustum.front = global_transform.RotatePart().Mul(float3::unitZ).Normalized();
+	frustum.front = global_transform.RotatePart().Mul(-float3::unitZ).Normalized();
 	frustum.up = global_transform.RotatePart().Mul(float3::unitY).Normalized();
-
 
 	UpdateViewMatrix();
 }

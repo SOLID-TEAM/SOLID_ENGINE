@@ -19,7 +19,7 @@ CameraEditor::CameraEditor() : GameObject( "Camera Editor")
 
 void CameraEditor::Start()
 {
-
+	
 }
 
 void CameraEditor::CleanUp()
@@ -47,8 +47,6 @@ void CameraEditor::Update(float dt)
 	const float mouse_z = App->input->GetMouseZ();
 	const float mouse_motion_x = -App->input->GetMouseXMotion();
 	const float mouse_motion_y = App->input->GetMouseYMotion();
-	float lerp_trans_speed = 6.f;
-	float lerp_rot_speed = 14.5f;
 	
 	static Quat current_rotation = final_rotation;
 
@@ -77,7 +75,7 @@ void CameraEditor::Update(float dt)
 				float pitch = mouse_motion_y * rotation_speed;
 
 				final_yaw += yaw;
-				final_pitch += pitch;
+				final_pitch -= pitch;
 
 				final_rotation = (Quat::RotateAxisAngle(float3::unitY, final_yaw * DEGTORAD) * Quat::RotateAxisAngle(float3::unitX, final_pitch * DEGTORAD));;
 			}
@@ -102,7 +100,7 @@ void CameraEditor::Update(float dt)
 			if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) offset -= transform->up * speed;
 			if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) offset += transform->up * speed;
 
-			final_position -= offset;
+			final_position += offset;
 
 			// Lerp ---------------------------------------------------------------
 			transform->SetPosition(float3::Lerp(transform->position, final_position, lerp_trans_speed * dt));
@@ -139,13 +137,13 @@ void CameraEditor::Update(float dt)
 						float yaw = mouse_motion_x * rotation_speed;
 						float pitch = mouse_motion_y * rotation_speed;
 
-						current_yaw = final_yaw += yaw;
+						current_yaw = final_yaw -= yaw;
 						current_pitch = final_pitch += pitch;
 
 						current_rotation = final_rotation = Quat::RotateAxisAngle(float3::unitY, final_yaw * DEGTORAD) * Quat::RotateAxisAngle(float3::unitX, final_pitch * DEGTORAD);
 						transform->SetRotation(final_rotation);
 
-						position = reference + -transform->forward * distance;
+						position = reference + transform->forward * distance;
 						transform->SetPosition(position);
 					}
 				}
@@ -164,7 +162,7 @@ void CameraEditor::Update(float dt)
 					zoom_speed *= 4.f;
 				}
 
-				math::float3 offset = zoom_speed * transform->forward * mouse_z;
+				math::float3 offset = zoom_speed * - transform->forward * mouse_z;
 
 				position += offset;
 				transform->SetPosition(position);
@@ -183,7 +181,7 @@ void CameraEditor::Update(float dt)
 					math::float3 offset(0, 0, 0);
 					focusing = false;
 
-					offset -= transform->right * palm_speed * mouse_motion_x;
+					offset += transform->right * palm_speed * mouse_motion_x;
 					offset += transform->up * palm_speed * mouse_motion_y;
 
 					position += offset;
@@ -205,14 +203,14 @@ void CameraEditor::Update(float dt)
 					if (sphere.Diameter() != 0)
 					{
 						distance = sphere.Diameter() * 1.2f;
-						float3 d_vector = -transform->forward * distance;
+						float3 d_vector = transform->forward * distance;
 						reference = general_aabb.CenterPoint();
 						final_position = reference + d_vector;
 					}
 					else
 					{
 						distance = 3.f;
-						float3 d_vector = -transform->forward * distance;
+						float3 d_vector = transform->forward * distance;
 						reference = selected->transform->position;
 						final_position = reference + d_vector;
 					}
