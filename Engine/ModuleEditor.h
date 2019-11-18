@@ -167,6 +167,9 @@ private:
 	bool show_restore_popup = false;
 	bool show_demo_imgui = false;
 	bool show_about_popup = false;
+	bool show_save_scene = false;
+	bool show_confirmation_load = false;
+	std::string scene_to_load;
 
 public:
 

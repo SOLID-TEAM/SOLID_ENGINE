@@ -42,10 +42,12 @@ public:
 
 	void RenderAll(GameObject* go);
 
-	bool ToSaveScene();
-	bool SaveScene(Config& config, GameObject* go);
+	bool ToSaveScene(const char* scene_name);
+	bool ToLoadScene(const char* scene_name);
 
-	bool LoadScene();
+	std::string GetSceneName() const;
+
+	
 	
 	// Game Objects functions ----------------------------------------------
 
@@ -65,6 +67,8 @@ public:
 	void UndoLastDelete(); // put gameobject to undo buffer
 
 private:
+	bool SaveScene(Config& config, GameObject* go);
+	bool LoadScene(Config& config);
 
 	AABB EncloseAllStaticGo();
 
@@ -90,6 +94,7 @@ public:
 
 private:
 
+	std::string scene_name;
 	std::deque<GameObject*> to_undo_buffer_go;
 	//std::queue<GameObject*> to_delete_buffer_go;
 

@@ -21,6 +21,7 @@ bool ModuleScene::Init(Config& config)
 
 bool ModuleScene::Start(Config& config)
 {
+	scene_name.assign("untitled");
 	// creates a root gameobject, wich all another go are childs of it
 	root_go = new GameObject("Scene Root");
 	main_camera = new GameObject("Main Camera", root_go);
@@ -33,6 +34,11 @@ bool ModuleScene::Start(Config& config)
 	// TESTING LOADING META RESOURCES, here for module order needs for test
 
 	App->resources->LoadAllMetaResources();
+
+	// TODO: get the last scene saved, or simply do nothing and let the user load one
+	//ToLoadScene(scene_name.c_str());
+	// load default scene
+	ToLoadScene("default.solidscene");
 
 	return true;
 }
@@ -87,11 +93,11 @@ update_status ModuleScene::Update(float dt)
 	editor_camera->DoUpdate(dt);
 
 	// TESTING SAVE SCENE
-	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-	{
-		//ToSaveScene();
-		LoadScene();
-	}
+	//if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	//{
+	//	//ToSaveScene();
+	//	LoadScene();
+	//}
 
 	// TODO: SHORTCUTS
 	// check CTRL + Z
@@ -282,22 +288,26 @@ void ModuleScene::AddGoToHierarchyChange(GameObject* target_go, GameObject* sour
 }
 
 // testing function to launch the process of save
-bool ModuleScene::ToSaveScene()
+bool ModuleScene::ToSaveScene(const char* name)
 {
 	Config new_scene_save;
+	this->scene_name.assign(name);
 
+	std::string scene_name(name + std::string(".solidscene"));
 	// save first other scene needed values
 	// name
 	// etc
-	Config other = new_scene_save.AddSection("other");
-	other.AddString("scene_name", "testing.solidscene");
+	Config other = new_scene_save.AddSection("general");
+	other.AddString("scene_name", name);
 	
 	//Config GameObjects = new_scene_save.AddSection("GameObjects");
 	// save all gameobjects needed values
 	new_scene_save.AddArray("GameObjects");
 	SaveScene(new_scene_save, root_go);
 
-	new_scene_save.SaveConfigToFile("testing.solidscene");
+	new_scene_save.SaveConfigToFile((ASSETS_FOLDER + scene_name).c_str());
+
+	
 
 	return true;
 }
@@ -315,17 +325,20 @@ bool ModuleScene::SaveScene(Config& config, GameObject* go)
 	return true;
 }
 
-bool ModuleScene::LoadScene()
+bool ModuleScene::LoadScene(Config& scene)
 {
-	Config config("testing.solidscene");
+	Config general = scene.GetSection("general");
+
+	scene_name.assign(general.GetString("scene_name", scene_name.c_str()));
+
 	std::map<GameObject*, uint> relations;
 
-	int go_count = config.GetArrayCount("GameObjects");
+	int go_count = scene.GetArrayCount("GameObjects");
 
 	for (int i = 0; i < go_count; ++i)
 	{
 		GameObject* new_go = new GameObject();
-		new_go->Load(config.GetArray("GameObjects", i), relations);
+		new_go->Load(scene.GetArray("GameObjects", i), relations);
 	}
 
 	for (std::map<GameObject*, uint>::iterator it = relations.begin(); it != relations.end(); ++it)
@@ -334,6 +347,19 @@ bool ModuleScene::LoadScene()
 	}
 
 	LOG("");
+
+	return true;
+}
+
+bool ModuleScene::ToLoadScene(const char* name)
+{
+	// unload all current scene data
+
+	// load new scene
+	// TODO: maybe the scene is not on assets folder, but for now we dont let decide, scene are saved on assets folder
+	Config scene_to_load(std::string(ASSETS_FOLDER + std::string(name)).c_str());
+
+	LoadScene(scene_to_load);
 
 	return true;
 }
@@ -385,4 +411,9 @@ GameObject* ModuleScene::CreateGameObjectFromModel(UID uid)
 	}
 
 	return nullptr;
+}
+
+std::string ModuleScene::GetSceneName() const
+{
+	return scene_name;
 }

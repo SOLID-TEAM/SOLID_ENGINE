@@ -9,6 +9,7 @@
 #include "ImGui/imgui.h"
 #include "ImGui/Impl/imgui_impl_sdl.h"
 #include "ImGui/Impl/imgui_impl_opengl3.h"
+#include "ImGui/misc/cpp/imgui_stdlib.h" // input text wrapper for std::string
 
 // TODO:: Change site
 #include "R_Mesh.h"
@@ -561,6 +562,39 @@ bool ModuleEditor::DrawMainMenuBar()
 			}
 		}
 
+		if (ImGui::MenuItem("Save scene", ""))
+		{
+			show_save_scene = true;
+			//App->scene->ToSaveScene();
+		}
+
+		if (ImGui::BeginMenu("Load scene", ""))
+		{
+			
+			// TODO: let the user explore directories and select the scene file
+
+			// get all scenes in assets (for now)
+			std::vector<std::string> all_scenes;
+			App->file_sys->GetAllFilesWithExtension(ASSETS_FOLDER, "solidscene", all_scenes);
+
+			for (uint i = 0; i < all_scenes.size(); ++i)
+			{
+				ImGui::MenuItem(all_scenes[i].c_str());
+
+				if (ImGui::IsItemClicked())
+				{
+					// SHOW CONFIRMATION TO DISCARD CURRENT SCENE, then load new scene
+					scene_to_load.assign(all_scenes[i]);
+					show_confirmation_load = true;
+				}
+			}
+
+			
+			ImGui::EndMenu();
+			
+			//App->scene->ToLoadScene();
+		}
+
 		if (ImGui::MenuItem("Restore editor to default config"))
 		{
 			show_restore_popup = true;
@@ -650,6 +684,61 @@ bool ModuleEditor::DrawMainMenuBar()
 
 void ModuleEditor::DrawPopUps()
 {
+	if (show_confirmation_load)
+	{
+		ImGui::OpenPopup("confirmation");
+		if(ImGui::BeginPopupModal("confirmation", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			//ImGui::TextWrapped("Are you sure you want to load %s ?, your changes on current scene will be discarded", scene_to_load.c_str());
+			ImGui::Text("Are you sure you want to load %s ?", scene_to_load.c_str()); 
+			ImGui::TextColored({ 1.0f,0.2f,0.2f,1.0f }, "Your changes on current scene '%s' will be discarded", App->scene->GetSceneName().c_str());
+			ImGui::Separator();
+			if (ImGui::Button("Yes, load", ImVec2(120, 0))) 
+			{
+				show_confirmation_load = false;
+				App->scene->ToLoadScene(scene_to_load.c_str());
+				scene_to_load.clear();
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("No", ImVec2(120, 0))) 
+			{ 
+				show_confirmation_load = false; 
+				scene_to_load.clear(); 
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
+	if (show_save_scene)
+	{
+		ImGui::OpenPopup("Save scene");
+		if(ImGui::BeginPopupModal("Save scene", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			std::string input_name;
+			input_name.assign(App->scene->GetSceneName());
+			static std::string temp_name = input_name;
+			ImGui::InputText("name for .solidscene", &temp_name);
+			ImGui::Separator();
+
+			if (ImGui::Button("Save", ImVec2(120, 0))) 
+			{ 
+				// TODO: check for any possible name collision and re-popup are you sure
+				App->scene->ToSaveScene(temp_name.c_str());
+				ImGui::CloseCurrentPopup(); 
+				show_save_scene = false;  
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); show_save_scene = false; temp_name = input_name; }
+			ImGui::SameLine();
+
+			ImGui::EndPopup();
+		}
+
+	}
+
 	if (show_restore_popup)
 	{
 		ImGui::OpenPopup("Are you sure?");

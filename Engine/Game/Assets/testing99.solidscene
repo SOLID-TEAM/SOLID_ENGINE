@@ -1,10 +1,10 @@
 {
-    "other": {
-        "scene_name": "testing.solidscene"
+    "general": {
+        "scene_name": "testing99"
     },
     "GameObjects": [
         {
-            "UID": 1848418459,
+            "UID": 945154075,
             "name": "Scene Root",
             "Active": true,
             "Components": [
@@ -30,9 +30,9 @@
             ]
         },
         {
-            "UID": 699918076,
-            "Parent UID": 1848418459,
-            "name": "Baker_house",
+            "UID": 1525427848,
+            "Parent UID": 945154075,
+            "name": "Main Camera",
             "Active": true,
             "Components": [
                 {
@@ -55,20 +55,8 @@
                     ]
                 },
                 {
-                    "Type": 1,
-                    "name": "Mesh",
-                    "Resource": 3142413,
-                    "Active": true
-                },
-                {
-                    "Type": 2,
-                    "name": "Material",
-                    "Resource": 2213,
-                    "Active": true
-                },
-                {
-                    "Type": 5,
-                    "name": "Mesh Renderer"
+                    "Type": 3,
+                    "name": "Camera"
                 }
             ]
         }

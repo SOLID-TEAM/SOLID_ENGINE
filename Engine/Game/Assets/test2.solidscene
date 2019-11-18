@@ -1,0 +1,64 @@
+{
+    "general": {
+        "scene_name": "test2"
+    },
+    "GameObjects": [
+        {
+            "UID": 539308249,
+            "name": "Scene Root",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": 0,
+                    "name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        -0,
+                        0,
+                        -0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 575519481,
+            "Parent UID": 539308249,
+            "name": "Main Camera",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": 0,
+                    "name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        -0,
+                        0,
+                        -0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "name": "Camera"
+                }
+            ]
+        }
+    ]
+}
