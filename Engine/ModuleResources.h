@@ -35,6 +35,9 @@ private:
 	void GetMetasFromNodes(PathNode node, std::vector<std::string>& metas);
 	void LoadDependencies(Resource* resource);
 
+	void SaveLastUID();
+	void LoadLastUID();
+
 
 public:
 	UID Find(const char* file_in_assets) const;

@@ -33,6 +33,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module()
 	CreateDir(LIBRARY_MODEL_FOLDER);
 	CreateDir(LIBRARY_MESH_FOLDER);
 	CreateDir(LIBRARY_MATERIAL_FOLDER);
+	CreateDir(LIBRARY_SETTINGS_FOLDER);
 	
 	/*CreateDir("Project");
 	CreateDir("Project/Assets");

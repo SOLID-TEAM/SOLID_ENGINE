@@ -17,6 +17,9 @@ bool ModuleResources::Init(Config& config)
 {
 	// TODO: load last_uid;
 	//LoadAllMetaResources();
+	std::string path(LIBRARY_SETTINGS_FOLDER + std::string("lastuid"));
+	Config uid(path.c_str());
+	last_uid = uid.GetInt("Last_UID", 1);
 	
 	return true;
 }
@@ -147,8 +150,9 @@ Resource* ModuleResources::Get(UID uid)
 
 UID ModuleResources::GenerateNewUID()
 {
-	// TODO: save here and not with editor_config
-	return last_uid++;
+	last_uid++;
+	SaveLastUID();
+	return last_uid;
 }
 
 UID ModuleResources::Find(const char* file_in_assets) const
@@ -349,4 +353,16 @@ void ModuleResources::LoadDependencies(Resource* resource)
 	{
 		resource->LoadToMemory();
 	}
+}
+
+// TODO: adapt with filesystem buffer save
+void ModuleResources::SaveLastUID()
+{
+	Config uid;
+
+	uid.AddInt("Last_UID", last_uid);
+
+	std::string final_path(LIBRARY_SETTINGS_FOLDER + std::string("lastuid"));
+	uid.SaveConfigToFile(final_path.c_str());
+
 }
