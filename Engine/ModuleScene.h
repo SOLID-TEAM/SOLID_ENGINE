@@ -70,6 +70,7 @@ public:
 private:
 	bool SaveScene(Config& config, GameObject* go);
 	bool LoadScene(Config& config);
+	bool LoadSceneNow();
 	
 
 	AABB EncloseAllStaticGo();
@@ -97,7 +98,9 @@ public:
 private:
 
 	bool create_new_scene = false;
+	bool load_new_scene = false;
 	std::string scene_name;
+	std::string scene_to_load;
 	std::deque<GameObject*> to_undo_buffer_go;
 	//std::queue<GameObject*> to_delete_buffer_go;
 

@@ -748,7 +748,7 @@ void ModuleEditor::DrawPopUps()
 		if(ImGui::BeginPopupModal("Save scene", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			std::string input_name;
-			input_name.assign(App->scene->GetSceneName());
+			input_name.assign(App->scene->GetSceneName()); // TODO: fix this, name static
 			static std::string temp_name = input_name;
 			ImGui::InputText("name for .solidscene", &temp_name);
 			ImGui::Separator();

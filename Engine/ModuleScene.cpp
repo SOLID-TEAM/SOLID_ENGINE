@@ -52,6 +52,13 @@ update_status ModuleScene::PreUpdate(float dt)
 		create_new_scene = false;
 	}
 
+	if (load_new_scene)
+	{
+		LoadSceneNow();
+		load_new_scene = false;
+		scene_to_load.clear();
+	}
+
 	//// delete go from parent, if any | game object to undo --------------------
 
 	// iterates once the list, if any goes wrong inform to user
@@ -419,18 +426,47 @@ GameObject* ModuleScene::FindByUID(UID uid, GameObject* go)
 	return ret;
 }
 
+bool ModuleScene::LoadSceneNow()
+{
+	// TODO: maybe the scene is not on assets folder, but for now we dont let decide, scene are saved on assets folder
+	Config to_load(std::string(ASSETS_FOLDER + scene_to_load).c_str());
+
+	return LoadScene(to_load);;
+}
+
 // TODO: pass this on finishupdate on app.cpp
 bool ModuleScene::ToLoadScene(const char* name)
 {
-	// unload all current scene data
+	bool ret = false;
 
-	// load new scene
-	// TODO: maybe the scene is not on assets folder, but for now we dont let decide, scene are saved on assets folder
-	Config scene_to_load(std::string(ASSETS_FOLDER + std::string(name)).c_str());
+	if (name != nullptr)
+	{
+		// TODO: make VFS for all project files on runtime
+		// re-search if this filename exists
+		/*if (App->file_sys->Exists(name))
+		{
+			LOG("");
+		}*/
+		/*std::vector<std::string> file_list, dir_list;
+		file_list.push_back(name);
+		App->file_sys->DiscoverFiles(ASSETS_FOLDER, file_list, dir_list);*/
+		std::vector<std::string> file_list;
+		App->file_sys->GetAllFilesWithExtension(ASSETS_FOLDER, "solidscene", file_list);
 
-	LoadScene(scene_to_load);
+		for (uint i = 0; i < file_list.size(); ++i)
+		{
+			if (file_list[i].compare(name) == 0)
+			{
+				scene_to_load.assign(name);
+				create_new_scene = true;
+				load_new_scene = true;
 
-	return true;
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
 }
 
 GameObject* ModuleScene::CreateGameObjectFromModel(UID uid)

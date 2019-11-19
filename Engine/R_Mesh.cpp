@@ -54,7 +54,7 @@ R_Mesh::R_Mesh(UID uid,float* vertices, uint* indices, float* normals, float* uv
 R_Mesh::~R_Mesh() 
 {
 	// ?
-	ReleaseFromMem();
+	Release();
 }
 
 // TODO: rename this like before "GenBuffers" / "GenBuffersAndLoad"
