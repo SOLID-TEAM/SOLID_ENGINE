@@ -10,7 +10,10 @@
 
 #include "external/MathGeoLib/include/Math/MathAll.h"
 
-ModuleScene::ModuleScene() {}
+ModuleScene::ModuleScene() 
+{
+	name.assign("ModuleScene");
+}
 
 ModuleScene::~ModuleScene() {}
 
@@ -33,21 +36,16 @@ bool ModuleScene::Start(Config& config)
 	main_camera->CreateComponent<C_Camera>();
 	main_camera->ignore = true;
 
-	// Set transform 
-	main_camera->transform->SetPosition(float3(0, 5, 5));
-	main_camera->transform->LookAt(float3(0, 0, 0));
-
 	// Editor camera ---------------
+
 	editor_camera = new CameraEditor(); 
 	editor_camera->ignore = true;
-
-	// Set transform 
-	editor_camera->transform->SetPosition(float3(0, 5, -5));
-	editor_camera->transform->LookAt(float3(0, 0, 0));
 
 	// Viewports -----------------------------
 	scene_viewport = new Viewport(editor_camera);
 	game_viewport = new Viewport(main_camera);
+
+	Load(config);
 
 	return true;
 }
@@ -542,7 +540,6 @@ bool ModuleScene::ToSaveScene()
 
 bool ModuleScene::SaveScene(Config& config, GameObject* go)
 {
-	
 	go->Save(config);
 
 	for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
@@ -551,4 +548,36 @@ bool ModuleScene::SaveScene(Config& config, GameObject* go)
 	}
 
 	return true;
+}
+
+bool ModuleScene::Save(Config& config)
+{
+	if (editor_camera != nullptr)
+	{
+		config.AddFloatArray("Camera editor position", editor_camera->transform->position.ptr(), 3);
+		config.AddFloatArray("Camera editor rotation", editor_camera->transform->rotation.ptr(), 3);
+	}
+	else
+	{
+		config.AddFloatArray("Camera editor position", float3(0.f, 0.f, 0.f).ptr(), 3);
+		config.AddFloatArray("Camera editor rotation", float3(0.f, 0.f, 0.f).ptr(), 3);
+	}
+
+	return true;
+}
+
+void ModuleScene::Load(Config& config)
+{
+	if (editor_camera != nullptr)
+	{
+		editor_camera->SetPosition(float3(
+			config.GetFloat("Camera editor position", 0.f, 0),
+			config.GetFloat("Camera editor position", 0.f, 1),
+			config.GetFloat("Camera editor position", 0.f, 2)));
+
+		editor_camera->SetRotation(float3(
+			config.GetFloat("Camera editor rotation", 0.f, 0),
+			config.GetFloat("Camera editor rotation", 0.f, 1),
+			config.GetFloat("Camera editor rotation", 0.f, 2)));
+	}
 }

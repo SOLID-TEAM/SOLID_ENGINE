@@ -14,16 +14,15 @@
         "maximized": true
     },
     "Input": {},
-    "Camera3D": {},
     "": {},
     "ModuleRandom?": {
         "grid_units": 10,
-        "grid_line_width": 0.5,
+        "grid_line_width": 1,
         "grid_color": [
             1,
             1,
             1,
-            0.60000002384185791
+            0.30000001192092896
         ]
     },
     "Textures": {},
@@ -36,6 +35,7 @@
         "window_active_Hierarchy": true,
         "window_active_Rendering Settings": true,
         "window_active_Scene": true,
+        "window_active_Game": true,
         "window_active_Inspector": true,
         "window_active_Primitives": false,
         "window_active_Delete History": false,
@@ -87,5 +87,17 @@
         "v_n_line_length": 0.40000000596046448,
         "f_n_line_length": 0.40000000596046448
     },
-    "Renderer3D": {}
+    "Renderer3D": {},
+    "ModuleScene": {
+        "Camera editor position": [
+            2.4838771820068359,
+            3.8278515338897705,
+            -8.0127658843994141
+        ],
+        "Camera editor rotation": [
+            15.642789840698242,
+            -14.939447402954102,
+            0
+        ]
+    }
 }

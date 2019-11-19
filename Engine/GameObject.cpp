@@ -50,11 +50,9 @@ void GameObject::DoUpdate(float dt)
 {
 	Update(dt);
 
-	std::vector<Component*>::iterator component = components.begin();
-
-	for (; component != components.end(); ++component)
+	for (Component* component : components)
 	{
-		(*component)->Update(dt);
+		component->Update(dt);
 	}
 }
 
@@ -62,18 +60,15 @@ void GameObject::DoRender()
 {
 	Render();
 
-	std::vector<Component*>::iterator component = components.begin();
-
-	for (; component != components.end(); ++component)
+	for (Component* component : components)
 	{
-		(*component)->Render();
+		component->Render();
 	}
 }
 
 void GameObject::DoCleanUp()
 {
 	CleanUp();
-
 	CleanUpRecursive(this);
 }
 

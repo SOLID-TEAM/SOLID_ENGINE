@@ -12,7 +12,7 @@ C_Camera::C_Camera(GameObject* go): Component(go, ComponentType::CAMERA)
 	name.assign("Camera");
 
 	frustum.pos = math::float3::zero;
-	frustum.front = -math::float3::unitZ;
+	frustum.front = math::float3::unitZ;
 	frustum.up = math::float3::unitY;
 
 	SetFrustumType(math::FrustumType::PerspectiveFrustum);
@@ -33,8 +33,8 @@ void C_Camera::UpdateTransform()
 	math::float4x4 global_transform = linked_go->transform->global_transform;
 
 	frustum.pos = global_transform.TranslatePart();
-	frustum.front = global_transform.RotatePart().Mul(-float3::unitZ).Normalized();
-	frustum.up = global_transform.RotatePart().Mul(float3::unitY).Normalized();
+	frustum.front = global_transform.WorldZ();
+	frustum.up = global_transform.WorldY();
 
 	UpdateViewMatrix();
 }
@@ -155,6 +155,11 @@ bool C_Camera::Render()
 	return true;
 }
 
+void C_Camera::LookAt(float3 reference)
+{
+	linked_go->transform->LookAt(linked_go->transform->position + (linked_go->transform->position - reference));
+}
+
 bool C_Camera::DrawPanelInfo()
 {
 	math::FrustumType type = GetFrustumType();
@@ -226,98 +231,3 @@ bool C_Camera::DrawPanelInfo()
 
 	return true;
 }
-
-//int C_Camera::IntersectAABB(AABB& aabb)
-//{
-//	int    ret = 1;
-//
-//	Plane planes[6];
-//	frustum.GetPlanes(planes);
-//
-//	float3  min = aabb.minPoint, max = aabb.maxPoint;
-//
-//	for (uint i = 0; i < 6; ++i)
-//	{
-//		float3 v_min, v_max;
-//
-//		// X axis 
-//		if (planes[i].normal.x > 0)
-//		{
-//			v_min.x = min.x;
-//			v_max.x = max.x;
-//		}
-//		else {
-//			v_min.x = max.x;
-//			v_max.x = min.x;
-//		}
-//		// Y axis 
-//		if (planes[i].normal.y > 0)
-//		{
-//			v_min.y = min.y;
-//			v_max.y = max.y;
-//		}
-//		else
-//		{
-//			v_min.y = max.y;
-//			v_max.y = min.y;
-//		}
-//		// Z axis 
-//		if (planes[i].normal.z > 0)
-//		{
-//			v_min.z = min.z;
-//			v_max.z = max.z;
-//		}
-//		else {
-//			v_min.z = max.z;
-//			v_max.z = min.z;
-//		}
-//
-//		if (planes[i].normal.Dot(v_min) + planes[i].d > 0)
-//		{
-//			return 2; // OUTSIDE
-//		}
-//
-//		if (planes[i].normal.Dot(v_max) + planes[i].d >= 0)
-//		{
-//			ret = 0;
-//		}
-//	}
-//
-//	return 1;
-//}
-//
-//bool C_Camera::IntersectAABB2(AABB& aabb)
-//{
-//	int    ret = 1;
-//
-//	Plane planes[6];
-//	frustum.GetPlanes(planes);
-//
-//	float3  min = aabb.minPoint, max = aabb.maxPoint;
-//
-//	for (uint i = 0; i < 6; ++i)
-//	{
-//
-//		float4 plane(planes[i].normal.x, planes[i].normal.y, planes[i].normal.z, planes[i].d);
-//
-//		if (plane.x * min.x + plane.y * min.y + plane.z * min.z + plane.w > 0)
-//			continue;
-//		if (plane.x * max.x + plane.y * min.y + plane.z * min.z + plane.w > 0)
-//			continue;
-//		if (plane.x * min.x + plane.y * max.y + plane.z * min.z + plane.w > 0)
-//			continue;
-//		if (plane.x * max.x + plane.y * max.y + plane.z * min.z + plane.w > 0)
-//			continue;
-//		if (plane.x * min.x + plane.y * min.y + plane.z * max.z + plane.w > 0)
-//			continue;
-//		if (plane.x * max.x + plane.y * min.y + plane.z * max.z + plane.w > 0)
-//			continue;
-//		if (plane.x * min.x + plane.y * max.y + plane.z * max.z + plane.w > 0)
-//			continue;
-//		if (plane.x * max.x + plane.y * max.y + plane.z * max.z + plane.w > 0)
-//			continue;
-//
-//		return false;
-//	}
-//	return true;
-//}

@@ -9,12 +9,13 @@
 CameraEditor::CameraEditor() : GameObject( "Camera Editor")
 {
 	camera = CreateComponent<C_Camera>();
-	final_position = { 0.0f, 0.0f, 5.0f };
-	final_rotation = transform->GetGlobalTransform().RotatePart().ToQuat();
-	reference = { 0.0f, 0.0f, 0.0f };
-
 	camera->SetClippingFarPlane(500.f);
 	camera->SetFov(60.f);
+
+	reference = { 0.0f, 0.0f, 0.0f };
+	final_position = { 0.0f, 0.0f, 0.0f };
+	final_pitch = 0.f;
+	final_yaw = 0.f;
 }
 
 void CameraEditor::Start()
@@ -36,6 +37,24 @@ float4x4 CameraEditor::GetProjectionMatrix()
 	return camera->GetProjectionMatrix();
 }
 
+void CameraEditor::SetPosition(float3 position)
+{
+	transform->SetPosition(position);
+	final_position = transform->position;
+	current_pitch = final_pitch = transform->rotation.x;
+	current_yaw = final_yaw = transform->rotation.y;
+	to_update = true;
+}
+
+void CameraEditor::SetRotation(float3 rotation)
+{
+	transform->SetRotation(rotation);
+	final_position = transform->position;
+	current_pitch = final_pitch = transform->rotation.x;
+	current_yaw = final_yaw = transform->rotation.y;
+	to_update = true;
+}
+
 void CameraEditor::Update(float dt)
 {
 	mouse_right_pressed = (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN);
@@ -47,14 +66,8 @@ void CameraEditor::Update(float dt)
 	const float mouse_z = App->input->GetMouseZ();
 	const float mouse_motion_x = -App->input->GetMouseXMotion();
 	const float mouse_motion_y = App->input->GetMouseYMotion();
-	
-	static Quat current_rotation = final_rotation;
 
-	static float final_yaw = 0.f;
-	static float final_pitch = 0.f;
-	
-	static float current_yaw = 0.f;
-	static float current_pitch = 0.f;
+	float3 current_position = transform->position;
 
 	state = IDLE;
 
@@ -75,9 +88,7 @@ void CameraEditor::Update(float dt)
 				float pitch = mouse_motion_y * rotation_speed;
 
 				final_yaw += yaw;
-				final_pitch -= pitch;
-
-				final_rotation = (Quat::RotateAxisAngle(float3::unitY, final_yaw * DEGTORAD) * Quat::RotateAxisAngle(float3::unitX, final_pitch * DEGTORAD));;
+				final_pitch += pitch;
 			}
 
 			// WASD movement ----------------------------------
@@ -100,22 +111,18 @@ void CameraEditor::Update(float dt)
 			if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) offset -= transform->up * speed;
 			if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) offset += transform->up * speed;
 
-			final_position += offset;
+			final_position -= offset;
 
 			// Lerp ---------------------------------------------------------------
-			transform->SetPosition(float3::Lerp(transform->position, final_position, lerp_trans_speed * dt));
 
 			current_yaw = math::Lerp(current_yaw, final_yaw, lerp_rot_speed * dt);
 			current_pitch = math::Lerp(current_pitch, final_pitch, lerp_rot_speed * dt);
 
-			current_rotation = (Quat::RotateAxisAngle(float3::unitY, current_yaw * DEGTORAD) * Quat::RotateAxisAngle(float3::unitX, current_pitch * DEGTORAD));;
-			transform->SetRotation(current_rotation);
-
+			transform->SetRotation(Quat::RotateAxisAngle(float3::unitY, current_yaw * DEGTORAD) * Quat::RotateAxisAngle(float3::unitX, current_pitch * DEGTORAD));
+			transform->SetPosition(float3::Lerp(current_position, final_position, lerp_trans_speed * dt));
 		}
 		else
 		{
-			float3 position = transform->position;
-
 			// Orbit -------------------------------------------------------------------
 
 			if (alt_pressed)
@@ -137,14 +144,12 @@ void CameraEditor::Update(float dt)
 						float yaw = mouse_motion_x * rotation_speed;
 						float pitch = mouse_motion_y * rotation_speed;
 
-						current_yaw = final_yaw -= yaw;
+						current_yaw = final_yaw += yaw;
 						current_pitch = final_pitch += pitch;
+						transform->SetRotation(Quat::RotateAxisAngle(float3::unitY, current_yaw * DEGTORAD) * Quat::RotateAxisAngle(float3::unitX, current_pitch * DEGTORAD));
 
-						current_rotation = final_rotation = Quat::RotateAxisAngle(float3::unitY, final_yaw * DEGTORAD) * Quat::RotateAxisAngle(float3::unitX, final_pitch * DEGTORAD);
-						transform->SetRotation(final_rotation);
-
-						position = reference + transform->forward * distance;
-						transform->SetPosition(position);
+						current_position = reference + -transform->forward * distance;
+						transform->SetPosition(current_position);
 					}
 				}
 			}
@@ -162,12 +167,12 @@ void CameraEditor::Update(float dt)
 					zoom_speed *= 4.f;
 				}
 
-				math::float3 offset = zoom_speed * - transform->forward * mouse_z;
+				math::float3 offset = zoom_speed * transform->forward * mouse_z;
 
-				position += offset;
-				transform->SetPosition(position);
+				current_position += offset;
+				transform->SetPosition(current_position);
 
-				distance = (position - reference).Length();
+				distance = (current_position - reference).Length();
 			}
 
 			// Pan ---------------------------------------------------------------------
@@ -184,8 +189,8 @@ void CameraEditor::Update(float dt)
 					offset += transform->right * palm_speed * mouse_motion_x;
 					offset += transform->up * palm_speed * mouse_motion_y;
 
-					position += offset;
-					transform->SetPosition(position);
+					current_position += offset;
+					transform->SetPosition(current_position);
 				}
 			}
 
@@ -203,14 +208,14 @@ void CameraEditor::Update(float dt)
 					if (sphere.Diameter() != 0)
 					{
 						distance = sphere.Diameter() * 1.2f;
-						float3 d_vector = transform->forward * distance;
+						float3 d_vector = -transform->forward * distance;
 						reference = general_aabb.CenterPoint();
 						final_position = reference + d_vector;
 					}
 					else
 					{
 						distance = 3.f;
-						float3 d_vector = transform->forward * distance;
+						float3 d_vector = - transform->forward * distance;
 						reference = selected->transform->position;
 						final_position = reference + d_vector;
 					}
@@ -230,7 +235,7 @@ void CameraEditor::Update(float dt)
 			}
 			else
 			{
-				final_position = position;
+				final_position = current_position;
 			}
 		}
 	}

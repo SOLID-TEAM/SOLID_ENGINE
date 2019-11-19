@@ -46,15 +46,14 @@ private:
 
 	C_Camera* camera = nullptr;
 	bool focusing = false;
+	bool to_update = false;
 
 	math::float3 reference;
 	math::float3 final_position;
-	math::Quat final_rotation;
 	float final_yaw = 0.f;
 	float final_pitch = 0.f;
-	float current_yaw = 0.f;
 	float current_pitch = 0.f;
-
+	float current_yaw = 0.f;
 	// Speeds -----------------------
 
 	float lerp_trans_speed = 6.f;

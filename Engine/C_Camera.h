@@ -20,6 +20,8 @@ public:
 
 	bool Render();
 
+	void LookAt(float3 reference);
+
 	bool DrawPanelInfo();
 
 	// Degrees 4.0 to 179.0

@@ -67,6 +67,9 @@ public:
 
 	bool SaveScene(Config& config, GameObject* go);
 	
+	bool Save(Config& config);
+	void Load(Config& config);
+
 	// Game Objects functions ----------------------------------------------
 
 	GameObject* CreateGameObject(std::string name = "no_name", GameObject* parent = nullptr);

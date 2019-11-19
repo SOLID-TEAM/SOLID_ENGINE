@@ -15,10 +15,9 @@ C_Transform::C_Transform(GameObject* parent) : Component(parent, ComponentType::
 	local_position = float3::zero;
 	local_rotation = float3::zero;
 	local_scale = float3::one;
-	global_transform = math::float4x4::identity;
 
-	UpdateLocalTransformFromTRS();
-
+	global_transform.SetIdentity();
+	local_transform.SetIdentity();
 }
 
 bool C_Transform::Update(float dt)
@@ -32,18 +31,23 @@ bool C_Transform::Update(float dt)
 		if (parent != nullptr)
 		{
 			global_transform = parent->transform->global_transform * local_transform;
+		}
+		else
+		{
+			global_transform = local_transform;
+		}
 
-			for (std::vector<GameObject*>::iterator child = linked_go->childs.begin(); child != linked_go->childs.end(); ++child)
-			{
-				(*child)->transform->to_update = true;
-			}
+		for (GameObject* child : linked_go->childs)
+		{
+			child->transform->to_update = true;
 		}
 
 		// Update scale value factor ---------------------------------
 
 		position = global_transform.TranslatePart();
-		rotation = global_transform.RotatePart().ToEulerXYZ() * RADTODEG;
-		scale = global_transform.GetScale();
+		rotation = global_transform.RotatePart().ToEulerZYX() * RADTODEG;
+		rotation = { rotation.z, rotation.y ,rotation.x };
+		scale = global_transform.ExtractScale();
 
 		forward = global_transform.WorldZ();
 		up = global_transform.WorldY();
@@ -56,11 +60,9 @@ bool C_Transform::Update(float dt)
 
 		// Update Components related with Transform ------------------
 
-		std::vector< Component*> components = linked_go->GetComponents();
-
-		for (std::vector<Component*>::iterator itr = components.begin(); itr != components.end(); ++itr)
+		for (Component*  component : linked_go->components)
 		{
-			(*itr)->UpdateTransform();
+			component->UpdateTransform();
 		}
 
 		// Update bounding box ---------------------------------------
@@ -94,27 +96,18 @@ bool C_Transform::Update(float dt)
 	return true;
 }
 
-void C_Transform::Rotate(math::float3 axis, float angle)
-{
-	angle *= DEGTORAD;
-	global_transform = global_transform * Quat::RotateAxisAngle(axis, angle);
-
-	UpdateLocalTransformFromGlobal();
-}
-
 // World ==========================================================
 
 void C_Transform::SetPosition(math::float3 position)
 {
 	global_transform.SetTranslatePart(position);
-
 	UpdateLocalTransformFromGlobal();
 }
 
 void C_Transform::SetRotation(math::float3 rotation)
 {
 	rotation *= DEGTORAD;
-	Quat q_rotation = Quat::FromEulerXYZ(rotation.x, rotation.y,rotation.z);
+	Quat q_rotation = Quat::FromEulerZYX(rotation.z, rotation.y,rotation.x);
 	global_transform.SetRotatePart(q_rotation);
 
 	UpdateLocalTransformFromGlobal();
@@ -123,7 +116,6 @@ void C_Transform::SetRotation(math::float3 rotation)
 void C_Transform::SetRotation(math::Quat q_rotation)
 {
 	global_transform.SetRotatePart(q_rotation);
-
 	UpdateLocalTransformFromGlobal();
 }
 
@@ -166,6 +158,10 @@ void C_Transform::UpdateLocalTransformFromGlobal()
 	if (parent != nullptr)
 	{
 		local_transform = parent->transform->global_transform.Inverted() * global_transform;
+	}
+	else
+	{
+		local_transform = global_transform;
 	}
 
 	UpdateTRS();
@@ -216,8 +212,14 @@ math::float4x4 C_Transform::GetLocalTransform() const
 
 void C_Transform::UpdateLocalTransformFromTRS()
 {
-	math::Quat q_rotation = math::Quat::FromEulerXYZ(local_rotation.x, local_rotation.y, local_rotation.z);
-	local_transform = math::float4x4::FromTRS(local_position, q_rotation, local_scale);
+	float3 rotation = local_rotation * DEGTORAD;
+	//math::Quat q_rotation = math::Quat::FromEulerZYX(rotation.z, rotation.y, rotation.x);
+	//local_transform = math::float4x4::FromTRS(local_position, q_rotation, local_scale);
+	local_transform.SetTranslatePart(local_position);
+	local_transform.SetRotatePart(Quat::RotateAxisAngle(float3::unitZ, rotation.z) * Quat::RotateAxisAngle(float3::unitY, rotation.y)* Quat::RotateAxisAngle(float3::unitX, rotation.x));
+	local_transform.RemoveScale();
+	local_transform.Scale(local_scale);
+
 	to_update = true;
 }
 
@@ -226,13 +228,15 @@ void C_Transform::UpdateLocalTransformFromTRS()
 
 void C_Transform::UpdateTRS()
 {
-	math::Quat q_rotation;
-	local_transform.Decompose(local_position, q_rotation, local_scale);
-	local_rotation = q_rotation.ToEulerXYZ();
+	local_position = local_transform.TranslatePart();
+	local_rotation = RadToDeg(local_transform.ToEulerZYX());
+	local_rotation = { local_rotation.z, local_rotation.y ,local_rotation.x };
+	local_scale = local_transform.ExtractScale();
 
 	position = global_transform.TranslatePart();
-	rotation = global_transform.RotatePart().ToEulerXYZ() * RADTODEG;
-	scale = global_transform.GetScale();
+	rotation = RadToDeg(global_transform.ToEulerZYX()) ;
+	rotation = { rotation.z, rotation.y ,rotation.x };
+	scale = global_transform.ExtractScale();
 
 	forward = global_transform.WorldZ();
 	up = global_transform.WorldY();
@@ -246,13 +250,18 @@ bool C_Transform::HasNegativeScale()
 
 void C_Transform::LookAt(math::float3 reference)
 {
-	global_transform.SetRotatePart(float3x3::LookAt(float3::unitZ, (position - reference).Normalized(), float3::unitY, float3::unitY));
+	global_transform.SetRotatePart(Quat::identity);
+	global_transform = global_transform.LookAt( position, reference, float3::unitZ, float3::unitY, float3::unitY);
 
 	GameObject* parent = linked_go->parent;
 
 	if (parent != nullptr)
 	{
-		local_transform  = parent->transform->global_transform.Inverted() * global_transform;
+		local_transform = parent->transform->global_transform.Inverted() * global_transform;
+	}
+	else
+	{
+		local_transform = global_transform;
 	}
 
 	UpdateTRS();
@@ -267,15 +276,15 @@ bool C_Transform::DrawPanelInfo()
 	math::float3 last_rotation	= local_rotation;
 	math::float3 last_scale		= local_scale;
 
-	math::float3 euler_angles = local_rotation * RADTODEG;
+	math::float3 euler_angles = local_rotation ;
 
 	ImGui::Spacing();
-	ImGui::Title("Position", 1);	ImGui::DragScalarN("##position",ImGuiDataType_Float, local_position.ptr(), 3, 0.01f, &f_min, &f_max, "%.2f" , 0.05f);
-	ImGui::Title("Rotation", 1);	ImGui::DragScalarN("##rotation",ImGuiDataType_Float, euler_angles.ptr(), 3, 0.1f,  &f_min, &f_max, "%.2f",  0.05f);
-	ImGui::Title("Scale", 1);		ImGui::DragScalarN("##scale	",  ImGuiDataType_Float, local_scale.ptr(), 3, 0.01f, &f_min, &f_max, "%.2f", 0.05f);
+	ImGui::Title("Position", 1);	ImGui::DragFloat3("##position", local_position.ptr(), 0.01f, f_min, f_max, "%.2f");
+	ImGui::Title("Rotation", 1);	ImGui::DragFloat3("##rotation", euler_angles.ptr(), 0.1f,  f_min, f_max, "%.2f");
+	ImGui::Title("Scale", 1);		ImGui::DragFloat3("##scale	",  local_scale.ptr(), 0.01f, f_min, f_max, "%.2f");
 	ImGui::Spacing();
 
-	local_rotation = euler_angles * DEGTORAD;
+	local_rotation = euler_angles;
 
 
 	if (!last_position.Equals(local_position) || !last_rotation.Equals(local_rotation) || !last_scale.Equals(local_scale))
