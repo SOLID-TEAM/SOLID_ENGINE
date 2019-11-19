@@ -85,7 +85,8 @@ bool C_Mesh::SetMeshResource(UID uid)
 
 void C_Mesh::DeleteMeshResource()
 {
-	App->resources->Get(resource)->Release();
+	if(App->resources->Get(resource) != nullptr)
+		App->resources->Get(resource)->Release();
 }
 
 bool C_Mesh::Save(Config& config)

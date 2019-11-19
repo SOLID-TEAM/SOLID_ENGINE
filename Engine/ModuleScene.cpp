@@ -479,6 +479,10 @@ GameObject* ModuleScene::CreateGameObjectFromModel(UID uid)
 		all_go.push_back(new_go);
 	}
 
+	// TODO: improve models to be a prefab, currently is only used as container of hierarchy and meshes/materials
+	// when we are done creating a usable gameobjects classes from model data, unload model
+	model->Release();
+
 	return nullptr;
 }
 

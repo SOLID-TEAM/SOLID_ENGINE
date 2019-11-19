@@ -25,6 +25,8 @@ public:
 
 	void ReceiveEvent(const Event& e);
 
+	std::map<UID, Resource*> GetAllMapResources() const { return resources; };
+
 	void ImportFileDropped(const char* file);
 	Resource::Type GetResourceTypeFromFileExtension(std::string extension);
 	std::string GetRelativePathToWriteFromType(Resource::Type type) const;

@@ -41,7 +41,8 @@ std::string Resource::GetNameFromUID() const
 
 void Resource::Release()
 {
-	loaded--;
+	if(loaded > 0)
+		loaded--;
 	if (loaded == 0)
 		ReleaseFromMem();
 }
