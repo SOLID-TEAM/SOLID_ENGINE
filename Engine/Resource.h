@@ -23,7 +23,7 @@ public:
 
 public:
 
-	Resource(UID uid, Type type) : uid(uid), type(type){}
+	Resource(UID uid, Type type) : uid(uid), type(type) { loaded = 0u;  }
 
 	virtual ~Resource() {}
 
@@ -56,7 +56,7 @@ protected:
 protected:
 
 	// Data Info -------------------------
-	uint loaded = 0;
+	uint loaded = 0u;
 	UID				uid = 0; // we use id as exported resource file too
 	Type		type = Type::NO_TYPE; // and with type, we know how to online load this resource
 

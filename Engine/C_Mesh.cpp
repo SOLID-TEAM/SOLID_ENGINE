@@ -39,7 +39,8 @@ bool C_Mesh::DrawPanelInfo()
 
 bool C_Mesh::CleanUp()
 {
-	
+	DeleteMeshResource();
+
 	return true;
 }
 
@@ -84,7 +85,7 @@ bool C_Mesh::SetMeshResource(UID uid)
 
 void C_Mesh::DeleteMeshResource()
 {
-	//RELEASE(data);
+	App->resources->Get(resource)->Release();
 }
 
 bool C_Mesh::Save(Config& config)

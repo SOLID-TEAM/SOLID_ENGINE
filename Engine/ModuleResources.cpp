@@ -353,7 +353,8 @@ void ModuleResources::LoadDependencies(Resource* resource)
 {
 	if (resource->GetType() == Resource::Type::MODEL)
 	{
-		resource->LoadToMemory();
+		R_Model* model = static_cast<R_Model*>(resource);
+		model->LoadDependencies();
 	}
 }
 

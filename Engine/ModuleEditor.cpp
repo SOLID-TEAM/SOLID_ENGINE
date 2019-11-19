@@ -725,6 +725,7 @@ void ModuleEditor::DrawPopUps()
 			if (ImGui::Button("Yes, load", ImVec2(120, 0))) 
 			{
 				show_confirmation_load = false;
+				// TODO: delete scene, then load
 				App->scene->ToLoadScene(scene_to_load.c_str());
 				scene_to_load.clear();
 				ImGui::CloseCurrentPopup();

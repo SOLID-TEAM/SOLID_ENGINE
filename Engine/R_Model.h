@@ -30,7 +30,7 @@ public:
 
 	bool        LoadInMemory() override;
 	void        ReleaseFromMem() override;
-	void LoadDependencies();
+	void		LoadDependencies();
 
 	bool        SaveToFile(UID uid);
 	//bool		LoadFromFile(const char* file);
@@ -49,6 +49,8 @@ private:
 	void        GenerateMaterials(const aiScene* scene, const char* file, std::vector<UID>& materials);
 	void        GenerateMeshes(const aiScene* scene, const char* file, std::vector<UID>& meshes);
 	//void        SaveToStream(simple::mem_ostream<std::true_type>& write_stream) const;
+
+	bool LoadNodesFromFile();
 
 private:
 
