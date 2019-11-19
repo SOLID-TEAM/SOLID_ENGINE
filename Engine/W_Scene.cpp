@@ -45,11 +45,12 @@ void W_Scene::Draw()
 
 		bool mouse_is_hovering = ImGui::IsMouseHoveringRect(min, max);
 
-
-
-		if (!App->scene->editor_camera->mouse_right_pressed && !App->scene->editor_camera->mouse_left_pressed)
+		if (App->scene->editor_camera)
 		{
-			App->scene->editor_camera->enable_mouse_input = mouse_is_hovering;
+			if (!App->scene->editor_camera->mouse_right_pressed && !App->scene->editor_camera->mouse_left_pressed)
+			{
+				App->scene->editor_camera->enable_mouse_input = mouse_is_hovering;
+			}
 		}
 		//else
 		//{

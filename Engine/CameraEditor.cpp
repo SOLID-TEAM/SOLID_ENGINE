@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 
-CameraEditor::CameraEditor() : GameObject( "Camera Editor")
+CameraEditor::CameraEditor() : GameObject("Camera Editor", nullptr, true)
 {
 	camera = CreateComponent<C_Camera>();
 	final_position = { 0.0f, 0.0f, 5.0f };

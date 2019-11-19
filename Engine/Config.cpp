@@ -183,3 +183,11 @@ Config Config::GetArray(const char* field, int index) const
 		return Config(json_array_get_object(array, index));
 	return Config((JSON_Object*) nullptr);
 }
+
+float3 Config::GetFloat3(const char* field, const float3& default)
+{
+	return float3(
+		GetFloat(field, default.x, 0),
+		GetFloat(field, default.y, 1),
+		GetFloat(field, default.z, 2));
+}

@@ -35,7 +35,7 @@ public:
 
 public:
 
-	GameObject(std::string name = "Unknown", GameObject* parent = nullptr);
+	GameObject(std::string name = "Unknown", GameObject* parent = nullptr, bool outside_root = false);
 
 	~GameObject();
 
@@ -89,6 +89,8 @@ private:
 	void AddChild(GameObject* child); // Addchild currently is used to hierarchical changes
 
 	void RemoveChild(GameObject* child);
+
+	void SetNewParent(GameObject* parent);
 
 	bool SearchParentRecursive(GameObject* parent, GameObject* parent_match);
 

@@ -169,6 +169,7 @@ private:
 	bool show_about_popup = false;
 	bool show_save_scene = false;
 	bool show_confirmation_load = false;
+	bool show_confirmation_new = false;
 	std::string scene_to_load;
 
 public:

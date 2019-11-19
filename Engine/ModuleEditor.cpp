@@ -562,6 +562,11 @@ bool ModuleEditor::DrawMainMenuBar()
 			}
 		}
 
+		if (ImGui::MenuItem("New scene", ""))
+		{
+			show_confirmation_new = true;
+		}
+
 		if (ImGui::MenuItem("Save scene", ""))
 		{
 			show_save_scene = true;
@@ -684,6 +689,30 @@ bool ModuleEditor::DrawMainMenuBar()
 
 void ModuleEditor::DrawPopUps()
 {
+	if (show_confirmation_new)
+	{
+		ImGui::OpenPopup("confirmation_new");
+		if (ImGui::BeginPopupModal("confirmation_new", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("All your changes to current scene will be deleted");
+			ImGui::Text("Are you sure?");
+			if (ImGui::Button("Yes", ImVec2(120, 0)))
+				{
+					show_confirmation_new = false;
+					App->scene->NewScene();
+					ImGui::CloseCurrentPopup();
+				}
+			ImGui::SameLine();
+			if (ImGui::Button("No", ImVec2(120, 0)))
+			{
+				show_confirmation_new = false;
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
 	if (show_confirmation_load)
 	{
 		ImGui::OpenPopup("confirmation");

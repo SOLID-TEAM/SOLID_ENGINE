@@ -24,7 +24,8 @@ bool ModuleScene::Start(Config& config)
 	scene_name.assign("untitled");
 	// creates a root gameobject, wich all another go are childs of it
 	root_go = new GameObject("Scene Root");
-	main_camera = new GameObject("Main Camera", root_go);
+	root_go->uid = 0; // scene root always 0 uid
+	main_camera = new GameObject("Main Camera", root_go, true);
 	main_camera->CreateComponent<C_Camera>();
 	editor_camera = new CameraEditor();
 
@@ -33,7 +34,7 @@ bool ModuleScene::Start(Config& config)
 
 	// TESTING LOADING META RESOURCES, here for module order needs for test
 
-	App->resources->LoadAllMetaResources();
+	//App->resources->LoadAllMetaResources();
 
 	// TODO: get the last scene saved, or simply do nothing and let the user load one
 	//ToLoadScene(scene_name.c_str());
@@ -45,6 +46,12 @@ bool ModuleScene::Start(Config& config)
 
 update_status ModuleScene::PreUpdate(float dt)
 {
+	if (create_new_scene)
+	{
+		CleanUp();
+		create_new_scene = false;
+	}
+
 	//// delete go from parent, if any | game object to undo --------------------
 
 	// iterates once the list, if any goes wrong inform to user
@@ -90,7 +97,8 @@ update_status ModuleScene::PreUpdate(float dt)
 
 update_status ModuleScene::Update(float dt)
 {
-	editor_camera->DoUpdate(dt);
+	if(editor_camera)
+		editor_camera->DoUpdate(dt);
 
 	// TESTING SAVE SCENE
 	//if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
@@ -128,7 +136,8 @@ void ModuleScene::UpdateAll(float dt, GameObject* go)
 
 update_status ModuleScene::PostUpdate(float dt)
 {
-	App->renderer3D->lights[0].SetPos(editor_camera->transform->position);
+	if(editor_camera != nullptr)
+		App->renderer3D->lights[0].SetPos(editor_camera->transform->position);
 
 	return UPDATE_CONTINUE;
 }
@@ -165,22 +174,43 @@ void ModuleScene::RenderAll(GameObject* go)
 
 bool ModuleScene::CleanUp()
 {
-	std::vector<GameObject*>::iterator game_objects = root_go->childs.begin();
-
-	for (; game_objects != root_go->childs.end(); ++game_objects)
+	// release undo buffers
+	while (to_undo_buffer_go.size() > 0)
 	{
-		(*game_objects)->DoCleanUp();
+		to_undo_buffer_go.front()->DoCleanUp();
+		delete to_undo_buffer_go.front();
+		to_undo_buffer_go.pop_front();
 	}
 
-	// release undo buffers
 	to_undo_buffer_go.clear();
+
+	std::vector<GameObject*>::iterator game_objects = root_go->childs.begin();
+	// TODO: search why dont work normal delete
+	std::queue<GameObject*> delete_forever;
+	for (; game_objects != root_go->childs.end();)
+	{
+		(*game_objects)->DoCleanUp();
+		delete_forever.push((*game_objects));
+		game_objects = root_go->childs.erase(game_objects);
+	}
+
+	while (!delete_forever.empty())
+	{
+		delete delete_forever.front();
+		delete_forever.front() = nullptr;
+		delete_forever.pop();
+	}
+
+	selected_go = nullptr;
 
 	// GameObjects --------------------------------------------------
 
-	if (editor_camera != nullptr)
+	// TODO
+	/*if (editor_camera != nullptr)
 	{
 		delete editor_camera;
-	}
+		editor_camera = nullptr;
+	}*/
 
 	return true;
 }
@@ -314,11 +344,11 @@ bool ModuleScene::ToSaveScene(const char* name)
 
 bool ModuleScene::SaveScene(Config& config, GameObject* go)
 {
-	
-	go->Save(config);
+	//go->Save(config);
 
 	for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
 	{
+		(*it)->Save(config);
 		SaveScene(config, (*it));
 	}
 
@@ -335,22 +365,61 @@ bool ModuleScene::LoadScene(Config& scene)
 
 	int go_count = scene.GetArrayCount("GameObjects");
 
+	if (go_count <= 0) return false;
+
+	/*std::vector<GameObject*> to_load_gos;
+	to_load_gos.reserve(go_count);*/
+
 	for (int i = 0; i < go_count; ++i)
 	{
 		GameObject* new_go = new GameObject();
 		new_go->Load(scene.GetArray("GameObjects", i), relations);
+
+		//to_load_gos.push_back(new_go);
 	}
 
 	for (std::map<GameObject*, uint>::iterator it = relations.begin(); it != relations.end(); ++it)
 	{
+		GameObject* go = (*it).first;
+		uint parent_id = (*it).second;
 
+		if (parent_id == 0) // 0 is root scene
+		{
+			if (go->parent != root_go)
+			{
+				go->SetNewParent(root_go);
+			}
+			continue;
+		}
+		
+		GameObject* parent_match = FindByUID(parent_id, root_go);
+
+		go->SetNewParent(parent_match);
+
+		//LOG("");
 	}
 
-	LOG("");
 
 	return true;
 }
 
+GameObject* ModuleScene::FindByUID(UID uid, GameObject* go)
+{
+	GameObject* ret = nullptr;
+
+	if (uid == go->uid)
+		return go;
+	
+	for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
+	{
+		ret = FindByUID(uid, (*it));
+		if (ret) break;
+	}
+
+	return ret;
+}
+
+// TODO: pass this on finishupdate on app.cpp
 bool ModuleScene::ToLoadScene(const char* name)
 {
 	// unload all current scene data
@@ -416,4 +485,9 @@ GameObject* ModuleScene::CreateGameObjectFromModel(UID uid)
 std::string ModuleScene::GetSceneName() const
 {
 	return scene_name;
+}
+
+void ModuleScene::NewScene()
+{
+	create_new_scene = true;
 }

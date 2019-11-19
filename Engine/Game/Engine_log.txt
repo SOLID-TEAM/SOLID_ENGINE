@@ -3,7 +3,8 @@
 [Init] Loaded configuration file editor_config.json
 [Init] SDL window & surface
 [Init] SDL input event system
-[Init] Loaded configuration file Library/Settings/lastuid
+[Error] Configuration file Library/Settings/lastuid not found
+
 Loading File System
 [Info] Using Developer's Image Library (DevIL) 1.8.0
 [Info] Using Assimp v4.1.0
@@ -14,7 +15,7 @@ Loading File System
 [Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
-
+[Error] Configuration file Assets/default.solidscene not found
 Loading Test assets
 [Start] Loading Editor
 // ---------------------------------------------------
@@ -67,50 +68,6 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
-[Info:ModuleResources] New file dropped C:\Users\Peter\Documents\GitHub\SOLID_ENGINE\Engine\Game\Assets\Models\baker_house\BakerHouse.fbx
-[Info:ModuleResources] Recognized file extension .fbx
-[success] File Duplicated Correctly
-[Info:ModuleResources] Dropped file duplicated to Assets/BakerHouse.fbx
-[Info] Loading mesh data : Untitled.001
-[Info] Vertices:    160 
-[Info] Indices:    324
-[Info] Triangles:  108
-[Info] Normals:   160
-New file created [.Library/Meshes/60] of 6457 bytes
-[Info] Succesfully saved 60
-Created mesh data: Untitled.001
-[Info] Loading mesh data : Untitled
-[Info] Vertices:    1641 
-[Info] Indices:    2751
-[Info] Triangles:  917
-[Info] Normals:   1641
-New file created [.Library/Meshes/61] of 63553 bytes
-[Info] Succesfully saved 61
-Created mesh data: Untitled
-New file created [.Library/Models/725002972] of 340 bytes
-
-[Info:ModuleResources] New file dropped C:\Users\Peter\Documents\GitHub\SOLID_ENGINE\Engine\Game\Assets\Models\baker_house\BakerHouse.fbx
-[Info:ModuleResources] Recognized file extension .fbx
-[success] File Duplicated Correctly
-[Info:ModuleResources] Dropped file duplicated to Assets/BakerHouse.fbx
-[Info] Loading mesh data : Untitled.001
-[Info] Vertices:    160 
-[Info] Indices:    324
-[Info] Triangles:  108
-[Info] Normals:   160
-New file created [.Library/Meshes/62] of 6457 bytes
-[Info] Succesfully saved 62
-Created mesh data: Untitled.001
-[Info] Loading mesh data : Untitled
-[Info] Vertices:    1641 
-[Info] Indices:    2751
-[Info] Triangles:  917
-[Info] Normals:   1641
-New file created [.Library/Meshes/63] of 63553 bytes
-[Info] Succesfully saved 63
-Created mesh data: Untitled
-New file created [.Library/Models/1004957248] of 340 bytes
-
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

@@ -271,3 +271,17 @@ bool C_Transform::Save(Config& config)
 
 	return true;
 }
+
+bool C_Transform::Load(Config& config)
+{
+	position = config.GetFloat3("Position", position);
+	rotation = config.GetFloat3("Rotation", rotation);
+	scale = config.GetFloat3("Scale", scale);
+
+	// TODO
+	SetLocalPosition(position);
+	SetLocalRotation(rotation);
+	SetLocalScale(scale);
+	
+	return true;
+}

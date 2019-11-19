@@ -47,7 +47,7 @@ public:
 
 	std::string GetSceneName() const;
 
-	
+	void NewScene();
 	
 	// Game Objects functions ----------------------------------------------
 
@@ -57,6 +57,7 @@ public:
 	void DeleteGameObject(GameObject* go);
 
 	GameObject* Find(std::string name);
+	GameObject* FindByUID(UID uid, GameObject* go);
 
 	// Commands -------------------------------------------------------------
 
@@ -69,6 +70,7 @@ public:
 private:
 	bool SaveScene(Config& config, GameObject* go);
 	bool LoadScene(Config& config);
+	
 
 	AABB EncloseAllStaticGo();
 
@@ -94,6 +96,7 @@ public:
 
 private:
 
+	bool create_new_scene = false;
 	std::string scene_name;
 	std::deque<GameObject*> to_undo_buffer_go;
 	//std::queue<GameObject*> to_delete_buffer_go;

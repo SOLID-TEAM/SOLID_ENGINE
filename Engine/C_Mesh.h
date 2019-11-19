@@ -31,7 +31,7 @@ public:
 
 	bool Save(Config& config);
 
-	//bool Load(Config& config);
+	bool Load(Config& config);
 
 public:
 

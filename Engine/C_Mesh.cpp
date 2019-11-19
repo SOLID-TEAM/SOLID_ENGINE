@@ -97,3 +97,11 @@ bool C_Mesh::Save(Config& config)
 
 	return true;
 }
+
+bool C_Mesh::Load(Config& config)
+{
+	SetMeshResource(config.GetInt("Resource", resource));
+	active = config.GetBool("Active", active);
+
+	return true;
+}

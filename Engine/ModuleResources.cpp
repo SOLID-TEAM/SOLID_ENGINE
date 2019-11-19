@@ -20,6 +20,8 @@ bool ModuleResources::Init(Config& config)
 	std::string path(LIBRARY_SETTINGS_FOLDER + std::string("lastuid"));
 	Config uid(path.c_str());
 	last_uid = uid.GetInt("Last_UID", 1);
+
+	LoadAllMetaResources();
 	
 	return true;
 }
@@ -327,7 +329,7 @@ void ModuleResources::LoadAllMetaResources()
 
 		LoadDependencies(r);
 
-		App->scene->CreateGameObjectFromModel(resource_uid);
+		//App->scene->CreateGameObjectFromModel(resource_uid);
 
 	}
 	
