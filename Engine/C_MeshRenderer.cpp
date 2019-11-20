@@ -38,8 +38,8 @@ bool C_MeshRenderer::Render()
 	}
 	if (c_mat == nullptr)
 	{
-		//LOG("[Error] no component material attached to this mesh renderer");
-		//return false;
+		LOG("[Error] no component material attached to this mesh renderer");
+		return false;
 	}
 
 	r_mesh = (R_Mesh*)App->resources->Get(c_mesh->resource);
@@ -47,6 +47,14 @@ bool C_MeshRenderer::Render()
 	if (r_mesh == nullptr)
 	{
 		LOG("[Error] Bad mesh resource reference on component mesh renderer");
+		return false;
+	}
+
+	r_mat = (R_Material*)App->resources->Get(c_mat->resource);
+
+	if (r_mat == nullptr)
+	{
+		LOG("[Error] Bad material resource reference on component mesh renderer");
 		return false;
 	}
 
@@ -93,7 +101,7 @@ bool C_MeshRenderer::Render()
 
 	if (vp.mode == V_MODE_SHADED)
 	{
-		RenderMesh(albedo_color.ptr(), custom_tex_id, false);// c_mat->textured);
+		RenderMesh(albedo_color.ptr(), custom_tex_id, true);// c_mat->textured);
 	}
 
 	else if (vp.mode == V_MODE_WIREFRAME)
@@ -103,7 +111,7 @@ bool C_MeshRenderer::Render()
 
 	else if (vp.mode == V_MODE_SHADED_WIREFRAME)
 	{
-		RenderMesh(albedo_color.ptr(), custom_tex_id, false);// c_mat->textured);
+		RenderMesh(albedo_color.ptr(), custom_tex_id, true);// c_mat->textured);
 		RenderWireframe(vp.wire_line_width, (float*)&vp.wire_color);
 	}
 
@@ -161,8 +169,8 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 	// Enable client ==============================================
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
-	/*if(r_mesh->buffers_size[R_Mesh::UVS] != 0) 
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);*/
+	if(r_mesh->buffers_size[R_Mesh::UVS] != 0) 
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	if(texture_id != 0) 
 		glClientActiveTexture(GL_TEXTURE0);
 
@@ -173,7 +181,7 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 
 	// UV's & Texture ------------------------
-	/*if (r_mesh->buffers_size[R_Mesh::UVS] != 0 && r_material != nullptr)
+	if (r_mesh->buffers_size[R_Mesh::UVS] != 0 && r_mat != nullptr)
 	{
 		if (textured)
 		{
@@ -181,14 +189,15 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 				glBindTexture(GL_TEXTURE_2D, custom_tex_id);
 			else
 			{
-				if (r_material->textures[R_Material::DIFFUSE] != nullptr)
-					glBindTexture(GL_TEXTURE_2D, r_material->textures[R_Material::DIFFUSE]->buffer_id);
+				R_Texture* r_tex = (R_Texture*)App->resources->Get(r_mat->textures[R_Material::DIFFUSE]);
+				if (r_tex != nullptr)
+					glBindTexture(GL_TEXTURE_2D, r_tex->buffer_id);
 			}
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, r_mesh->buffers_id[R_Mesh::UVS]);
 		glTexCoordPointer(r_mesh->uv_num_components, GL_FLOAT, 0, (void*)0);
-	}*/
+	}
 
 	// Nomrals -----------------------------
 	glBindBuffer(GL_ARRAY_BUFFER, r_mesh->buffers_id[R_Mesh::NORMALS]);

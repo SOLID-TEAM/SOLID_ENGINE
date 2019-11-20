@@ -33,6 +33,7 @@ private:
 private:
 
 	R_Mesh* r_mesh = nullptr;
+	R_Material* r_mat = nullptr;
 	/*UID mesh_uid;
 	UID material_uid;*/
 

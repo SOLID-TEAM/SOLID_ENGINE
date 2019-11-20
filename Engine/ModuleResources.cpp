@@ -322,14 +322,17 @@ void ModuleResources::LoadAllMetaResources()
 		//
 		Resource* r = CreateNewResource(type, resource_uid);
 
-		std::string path, file;
-		App->file_sys->SplitFilePath(all_metas[i].c_str(), &path, &file);
-		path.pop_back(); // deletes double /
-		r->GetOriginalFile().assign(path + file);
-		r->GetName().assign(file);
-		r->GetExportedFile().assign(GetRelativePathToWriteFromType(type) + std::to_string(resource_uid));
+		if (r != nullptr)
+		{
+			std::string path, file;
+			App->file_sys->SplitFilePath(all_metas[i].c_str(), &path, &file);
+			path.pop_back(); // deletes double /
+			r->GetOriginalFile().assign(path + file);
+			r->GetName().assign(file);
+			r->GetExportedFile().assign(GetRelativePathToWriteFromType(type) + std::to_string(resource_uid));
 
-		LoadDependencies(r);
+			LoadDependencies(r);
+		}
 
 		//App->scene->CreateGameObjectFromModel(resource_uid);
 

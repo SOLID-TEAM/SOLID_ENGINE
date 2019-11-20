@@ -325,7 +325,7 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 				new_component = CreateComponent<C_Mesh>();
 				break;
 			case ComponentType::MATERIAL:
-				LOG("TODO");
+				new_component = CreateComponent<C_Material>();
 				break;
 			case ComponentType::CAMERA:
 				new_component = CreateComponent<C_Camera>();

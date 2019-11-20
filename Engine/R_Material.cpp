@@ -77,7 +77,18 @@
 
 void R_Material::ReleaseFromMem()
 {
+	for (uint i = 0; i < MAX; ++i)
+	{
+		if (textures[i] != 0)
+		{
+			Resource* r = App->resources->Get(textures[i]);
 
+			if (r)
+				r->Release();
+
+			textures[i] = 0;
+		}
+	}
 }
 
 

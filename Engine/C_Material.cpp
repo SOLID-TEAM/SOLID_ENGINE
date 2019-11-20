@@ -18,7 +18,7 @@ bool C_Material::DrawPanelInfo()
 	ImGui::Title("Textured", 1);	ImGui::Checkbox("##textured", &textured);
 
 	ImGui::Separator();
-	ImGui::Title("Diffuse", 1); ImGui::ColorEdit4("Color##2f", (float*)&data->diffuse_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+	//ImGui::Title("Diffuse", 1); ImGui::ColorEdit4("Color##2f", (float*)&data->diffuse_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
 	ImGui::SameLine();
 	App->editor->HelpMarker("Used only when the selected gameObject has no texture or textured mode is unchecked");
 
@@ -70,20 +70,17 @@ bool C_Material::DrawPanelInfo()
 
 bool C_Material::CleanUp()
 {
-	// DELETES only the data, not free the texture itself (TODO: warning for another objects with same texture)
-	//if(data->textures!= nullptr)
-	//	delete data->textures[0]; // TODO: currently only diffuse channel (0) 
-	
-	delete data;
+	Resource* r = App->resources->Get(resource);
+	if (r)
+		r->Release();
 
 	return true;
 }
 
 bool C_Material::Save(Config& config)
 {
-	// TODO: resources
-	int resource_test = 2213;
-	config.AddInt("Resource", resource_test);
+	
+	config.AddInt("Resource", resource);
 	config.AddBool("Active", active);
 
 
@@ -92,6 +89,49 @@ bool C_Material::Save(Config& config)
 
 bool C_Material::Load(Config& config)
 {
+	resource = config.GetInt("Resource", resource);
+	SetMaterialResource(resource);
+	active = config.GetBool("Active", active);
 
 	return true;
 }
+
+bool C_Material::SetMaterialResource(UID uid)
+{
+	bool ret = false;
+
+	// if any resource attached
+	if (resource != 0)
+	{
+		Resource* r = App->resources->Get(resource);
+		if (r != nullptr)
+			r->Release();
+	}
+
+	if (uid != 0)
+	{
+		Resource* new_r = App->resources->Get(uid);
+		if (new_r != nullptr)
+		{
+			if (new_r->GetType() == Resource::Type::MATERIAL)
+			{
+				R_Material* m = (R_Material*)new_r;
+
+				if (m->LoadToMemory())
+				{
+					resource = uid;
+
+					ret = true;
+				}
+			}
+		}
+		else
+		{
+			LOG("[Error] Resource not found");
+		}
+
+	}
+
+	return ret;
+}
+

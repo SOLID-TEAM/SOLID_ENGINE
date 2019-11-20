@@ -510,6 +510,16 @@ GameObject* ModuleScene::CreateGameObjectFromModel(UID uid)
 			}
 		}
 
+		if (node.material > 0)
+		{
+			C_Material* c_mat = new_go->CreateComponent< C_Material>();
+			c_mat->SetMaterialResource(node.material);
+			/*if (c_mat->SetMaterialResource(node.material))
+			{
+				new_go->CreateComponent<C_MeshRenderer>();
+			}*/
+		}
+
 
 
 		all_go.push_back(new_go);
