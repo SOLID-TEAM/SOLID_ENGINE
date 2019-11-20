@@ -167,7 +167,7 @@ bool C_MeshRenderer::Render()
 
 void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 {
-	uint texture_id = 0;
+	R_Texture* r_tex = (R_Texture*)App->resources->Get(r_mat->textures[R_Material::DIFFUSE]);
 
 	glDepthRange(0.1, 1.0);
 
@@ -201,7 +201,7 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 
 	if(r_mesh->buffers_size[R_Mesh::UVS] != 0) 
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	if(texture_id != 0) 
+	if(r_tex) 
 		glClientActiveTexture(GL_TEXTURE0);
 
 	// Bind buffers ===============================================
@@ -219,7 +219,6 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 				glBindTexture(GL_TEXTURE_2D, custom_tex_id);
 			else
 			{
-				R_Texture* r_tex = (R_Texture*)App->resources->Get(r_mat->textures[R_Material::DIFFUSE]);
 				if (r_tex != nullptr)
 					glBindTexture(GL_TEXTURE_2D, r_tex->buffer_id);
 			}
