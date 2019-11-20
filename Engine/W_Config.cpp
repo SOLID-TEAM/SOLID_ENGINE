@@ -358,6 +358,9 @@ void W_Config::Draw()
 					case Resource::Type::TEXTURE:
 						type_str.assign("TEXTURE");
 						break;
+					case Resource::Type::MATERIAL:
+						type_str.assign("MATERIAL");
+						break;
 					default:
 						type_str.assign("moron");
 						break;

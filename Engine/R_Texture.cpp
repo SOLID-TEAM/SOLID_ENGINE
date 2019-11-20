@@ -10,14 +10,11 @@ R_Texture::~R_Texture() {}
 
 bool R_Texture::LoadInMemory()
 {
-	// TODO: update moduletextures to accept resources
-	//return App->textures->Load(this);
-
-	return true;
+	return App->textures->LoadTexResource(this);
 }
 
 // ---------------------------------------------------------
-void R_Texture::ReleaseFromMemory()
+void R_Texture::ReleaseFromMem()
 {
 	if (buffer_id != 0)
 	{

@@ -42,7 +42,7 @@ bool ModuleResources::CleanUp()
 	return true;
 }
 
-UID ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type type, bool force)
+UID ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type type, std::string from_path, bool force)
 {
 	UID ret = 0;
 	bool import_ok = false;
@@ -50,9 +50,10 @@ UID ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type t
 	switch (type)
 	{
 	case Resource::Type::MODEL:
-		import_ok = R_Model::Import(new_file_in_assets, ret);
+		import_ok = R_Model::Import(new_file_in_assets, ret, from_path);
 		break;
 	case Resource::Type::TEXTURE:
+		import_ok = App->textures->Import(new_file_in_assets, ret, from_path);//, ret);
 		break;
 	case Resource::Type::NO_TYPE:
 		break;
@@ -66,8 +67,6 @@ UID ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type t
 		r->GetName().assign(new_file_in_assets);
 		//r->GetExportedName().assign(written_file.c_str());
 		ret = r->GetUID();
-		LOG("");
-
 		// create metadata
 		CreateNewMetaData(new_file_in_assets, ret);
 	}
@@ -117,8 +116,10 @@ Resource* ModuleResources::CreateNewResource(Resource::Type type, UID force_uid)
 		ret = (Resource*) new R_Mesh(uid);
 		break;
 	case Resource::Type::MATERIAL:
+		ret = (Resource*) new R_Material(uid);
 		break;
 	case Resource::Type::TEXTURE:
+		ret = (Resource*) new R_Texture(uid);
 		break;
 	case Resource::Type::NO_TYPE:
 		break;
@@ -201,8 +202,9 @@ void ModuleResources::ImportFileDropped(const char* file)
 	std::string full_path = App->file_sys->NormalizePath(file);
 	std::string extension;
 	std::string filename;
+	std::string path;
 	
-	App->file_sys->SplitFilePath(full_path.c_str(), nullptr, &filename, &extension);
+	App->file_sys->SplitFilePath(full_path.c_str(), &path, &filename, &extension);
 
 	filename += "." + extension;
 
@@ -222,7 +224,7 @@ void ModuleResources::ImportFileDropped(const char* file)
 		{
 			LOG("[Info:%s] Dropped file duplicated to %s", name.c_str(), (final_path + filename).c_str() );
 
-			UID uid = ImportFile((final_path + filename).c_str(), type);
+			UID uid = ImportFile((final_path + filename).c_str(), type, path);
 			
 			// TODO: testing creating gameobjects from model
 			App->scene->CreateGameObjectFromModel(uid);
@@ -315,7 +317,7 @@ void ModuleResources::LoadAllMetaResources()
 		UID resource_uid = meta.GetInt("guid", 0);
 		Resource::Type type = (Resource::Type)meta.GetInt("Type", (int)Resource::Type::NO_TYPE);
 		
-		// check if the resource still exists on library folders
+		// TODO: check if the resource still exists on library folders
 
 		//
 		Resource* r = CreateNewResource(type, resource_uid);

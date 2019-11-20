@@ -23,7 +23,7 @@ public:
 	~R_Texture();
 
 	bool LoadInMemory() override;
-	void ReleaseFromMemory();
+	void ReleaseFromMem();
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 

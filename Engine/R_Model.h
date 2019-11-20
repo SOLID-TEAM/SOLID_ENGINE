@@ -35,7 +35,7 @@ public:
 	bool        SaveToFile(UID uid);
 	//bool		LoadFromFile(const char* file);
 	//bool        Save(std::string& output) const;
-	static bool Import(const char* full_path, UID& output);
+	static bool Import(const char* full_path, UID& output, std::string from_path);
 
 	/*unsigned    GetNumNodes() const { return nodes.size(); }
 	const Node& GetNode(uint index) const { return nodes[index]; }*/
@@ -46,7 +46,7 @@ public:
 private:
 
 	void        GenerateNodes(const aiScene* model, const aiNode* node, uint parent, const std::vector<UID>& meshes, const std::vector<UID>& materials);
-	void        GenerateMaterials(const aiScene* scene, const char* file, std::vector<UID>& materials);
+	void        GenerateMaterials(const aiScene* scene, const char* file, std::vector<UID>& materials, std::string from_path);
 	void        GenerateMeshes(const aiScene* scene, const char* file, std::vector<UID>& meshes);
 	//void        SaveToStream(simple::mem_ostream<std::true_type>& write_stream) const;
 

@@ -2,6 +2,8 @@
 #include "GL/glew.h"
 #include "SDL\include\SDL_opengl.h"
 
+#include "external/Assimp/include/material.h"
+
 #include "Application.h"
 
 //void R_Material::GenerateFileTexture()
@@ -52,43 +54,137 @@
 //	glDeleteFramebuffers(1, &frame_buffer_id);
 //}
 //
-//bool R_Material::SaveToFile(const char* name)
+
+//bool R_Material::LoadFromFile(const char* name)
 //{
-//	uint size = sizeof(diffuse_color);
 //
-//	char* data = new char[size];
+//	char* buffer = nullptr;
 //
-//	char* cursor = data;
+//	App->file_sys->Load(name, &buffer);
 //
-//	memcpy(cursor, &diffuse_color, size);
+//	if (buffer != nullptr)
+//	{
+//		LOG("TODO");
+//	}
+//	else
+//	{
+//		LOG("[Error] Loading material from %", name);
+//	}
 //
-//	// TODO, add more data if needed to save
-//	App->file_sys->Save(name, data, size);
-//	
-//	
 //	return true;
 //}
 
-bool R_Material::LoadFromFile(const char* name)
+
+void R_Material::ReleaseFromMem()
 {
 
-	char* buffer = nullptr;
+}
 
-	App->file_sys->Load(name, &buffer);
 
-	if (buffer != nullptr)
+UID R_Material::Import(const aiMaterial* material, const char* material_name, std::string from_path)
+{
+	UID ret = 0;
+
+	R_Material* m = static_cast<R_Material*>(App->resources->CreateNewResource(Resource::Type::MATERIAL));
+	m->GetName().assign(material_name);
+	
+	// Set albedo color ----------------------------------------------------------
+	
+	aiColor4D color;
+	material->Get(AI_MATKEY_COLOR_DIFFUSE,color);
+	m->diffuse_color = { color.r, color.g, color.b, color.a };
+	
+	// Get assimp path and normalize --------
+	
+	std::string file;       // file_name + file_ex
+	std::string file_name;
+	std::string file_ex;
+	aiString	ai_path;
+	
+	material->GetTexture(aiTextureType_DIFFUSE, 0, &ai_path);  
+	
+	if (ai_path.length > 0)
 	{
-		LOG("TODO");
+		App->file_sys->SplitFilePath(ai_path.C_Str(), nullptr, &file_name, &file_ex);
+		file = ASSETS_FOLDER + file_name + "." + file_ex;
+	
+		// Load material textures ------------------------------------------------- 
+		
+		m->textures[R_Material::DIFFUSE] = App->resources->ImportFile(file.c_str(), Resource::Type::TEXTURE , from_path );
 	}
 	else
 	{
-		LOG("[Error] Loading material from %", name);
+		LOG("[Error] NO TEXTURE ON MODEL");
 	}
+	
 
+	m->SaveToFile(m->GetNameFromUID().c_str());
+
+	return m->GetUID();
+}
+
+bool R_Material::SaveToFile(const char* name)
+{
+	uint size = sizeof(diffuse_color) + sizeof(textures);
+	char* data = new char[size];
+
+	char* cursor = data;
+
+	uint bytes = sizeof(textures);
+	memcpy(cursor, &textures, sizeof(textures));
+
+	cursor += bytes;
+	bytes = sizeof(diffuse_color);
+	memcpy(cursor, &diffuse_color, bytes);
+
+	// TODO, add more data if needed to save
+	App->file_sys->Save(std::string(LIBRARY_MATERIAL_FOLDER + std::string(name)).c_str(), data, size);
+	
+	
 	return true;
 }
 
 bool R_Material::LoadInMemory()
+{
+	bool ret = true;
+
+	char* buffer = nullptr;
+
+	App->file_sys->Load(LIBRARY_MATERIAL_FOLDER, GetNameFromUID().c_str(), &buffer);
+
+	if (buffer != nullptr)
+	{
+		char* cursor = buffer;
+		uint bytes = sizeof(textures);
+
+		memcpy(&textures, cursor, bytes);
+
+		cursor += bytes;
+		bytes = sizeof(diffuse_color);
+
+		memcpy(&diffuse_color, cursor, bytes);
+
+		for (uint i = 0; i < MAX; ++i)
+		{
+			if (textures[i] > 0)
+			{
+				R_Texture* r = (R_Texture*)App->resources->Get(textures[i]);
+
+				if (r != nullptr)
+				{
+					r->LoadToMemory();
+				}
+			}
+		}
+
+	}
+	else ret = false;
+
+
+	return ret;
+}
+
+bool R_Material::LoadDependencies()
 {
 	return true;
 }

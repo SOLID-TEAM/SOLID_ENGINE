@@ -19,7 +19,7 @@ R_Model::R_Model(UID uid) : Resource(uid, Resource::Type::MODEL) {}
 R_Model::~R_Model() {}
 
 
-bool R_Model::Import(const char* path, UID& output_uid)
+bool R_Model::Import(const char* path, UID& output_uid, std::string from_path)
 {
 	bool ret = true;
 	
@@ -33,7 +33,7 @@ bool R_Model::Import(const char* path, UID& output_uid)
 
 		std::vector<UID> meshes, materials;
 		new_model.GenerateMeshes(scene, path, meshes);
-		//new_model.GenerateMaterials
+		new_model.GenerateMaterials(scene, path, materials, from_path);
 		new_model.GenerateNodes(scene, scene->mRootNode, 0, meshes, materials);
 
 		// Free the imported scene
@@ -164,6 +164,11 @@ bool R_Model::LoadInMemory()
 
 			if (nodes[i].material > 0)
 			{
+				Resource* r = App->resources->Get(nodes[i].material);
+				if (r)
+				{
+					r->LoadToMemory();
+				}
 			}
 		}
 	}
@@ -184,12 +189,23 @@ void R_Model::LoadDependencies()
 			{
 				// if this a fresh init (on engine start when loads all resources), 
 				// we must to load all associated resources, no load to memory
-				Resource* r = App->resources->CreateNewResource(Resource::Type::MESH, nodes[i].mesh);
-				r->GetName().assign(nodes[i].name);
+				// check if the resource doesnt exist and create
+				Resource* r = App->resources->Get(nodes[i].mesh);
+				if (r == nullptr)
+				{
+					r = App->resources->CreateNewResource(Resource::Type::MESH, nodes[i].mesh);
+					r->GetName().assign(nodes[i].name);
+				}
 			}
 
 			if (nodes[i].material > 0)
 			{
+				Resource* r = App->resources->Get(nodes[i].material);
+				if (r == nullptr)
+				{
+					r = App->resources->CreateNewResource(Resource::Type::MATERIAL, nodes[i].material);
+					r->GetName().assign(nodes[i].name);
+				}
 			}
 		}
 
@@ -208,6 +224,17 @@ void R_Model::GenerateMeshes(const aiScene* scene, const char* file, std::vector
 	}
 }
 
+void R_Model::GenerateMaterials(const aiScene* scene, const char* filepath, std::vector<UID>& materials, std::string from_path)
+{
+	materials.reserve(scene->mNumMaterials);
+
+	for (uint i = 0; i < scene->mNumMaterials; ++i)
+	{
+		materials.push_back(R_Material::Import(scene->mMaterials[i], scene->mMaterials[i]->GetName().C_Str(), from_path));
+	}
+
+}
+
 void R_Model::GenerateNodes(const aiScene* scene, const aiNode* node, uint parent, const std::vector<UID>& meshes, const std::vector<UID>& materials)
 {
 	Node parent_node;
@@ -220,7 +247,7 @@ void R_Model::GenerateNodes(const aiScene* scene, const aiNode* node, uint paren
 	if (node->mNumMeshes == 1)
 	{
 		parent_node.mesh = meshes[node->mMeshes[0]];
-		//parent_node.material = materials[scene->mMeshes[node->mMeshes[0]]->mMaterialIndex];
+		parent_node.material = materials[scene->mMeshes[node->mMeshes[0]]->mMaterialIndex];
 	}
 	else
 	{
@@ -231,7 +258,7 @@ void R_Model::GenerateNodes(const aiScene* scene, const aiNode* node, uint paren
 			new_node.parent = parent + node->mNumMeshes;
 
 			new_node.mesh = meshes[node->mMeshes[i]];
-			//new_node.material = materials[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex];
+			new_node.material = materials[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex];
 			new_node.name = scene->mMeshes[node->mMeshes[i]]->mName.C_Str();
 			//TODO
 			new_node.name.resize(15);

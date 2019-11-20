@@ -20,6 +20,9 @@ public:
 
 	uint LoadTexture(const char* path);
 
+	bool Import(const char* file, UID& out, std::string path);
+
+
 	// test
 	/*void LoadTextureFromEvent(const char* path, bool& already, uint& id);*/
 
@@ -29,6 +32,7 @@ public:
 	void GetTextureSize(uint id,int& w, int& h) const;
 	const char* GetTextureName(uint id); // TODO: provisional, data class from resources must return correctly its id and name
 
+	bool LoadTexResource(R_Texture* resource);
 
 public:
 	ILuint image_test = 0;

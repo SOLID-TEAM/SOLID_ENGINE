@@ -93,7 +93,7 @@ void R_Mesh::CreateAABB()
 	aabb.Enclose((math::float3*) vertices, buffers_size[VERTICES]);
 }
 
-// TODO: RENAME
+
 void R_Mesh::ReleaseFromMem()
 {
 	glDeleteBuffers(4, buffers_id);

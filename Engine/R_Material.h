@@ -6,6 +6,8 @@
 #include "R_Texture.h"
 #include "external/MathGeoLib/include/MathGeoLib.h"
 
+struct aiMaterial;
+
 class R_Material : public Resource
 {
 public:
@@ -23,10 +25,15 @@ public:
 	//void GenerateFileTexture();
 
 	bool LoadInMemory();
+	void ReleaseFromMem();
 
 
 	bool SaveToFile(const char* name);
-	bool LoadFromFile(const char* name);
+	//bool LoadFromFile(const char* name);
+
+	bool LoadDependencies();
+
+	static UID Import(const aiMaterial* material, const char* material_name, std::string from_path);
 
 public:
 

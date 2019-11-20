@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "ModuleTextures.h"
 
+#include "R_Texture.h"
+
 #include "GL/glew.h"
 
 // DevIL image library
@@ -249,4 +251,61 @@ const char* ModuleTextures::GetTextureName(uint id)
 	LOG("[Error] Texture name not found on user loaded textures"); // TODO: implement user and system maps, user can be delete from user but never from the system
 
 	return nullptr;
+}
+
+bool ModuleTextures::Import(const char* file,  UID& output_id, std::string path)
+{
+	std::string p, f, e;
+	App->file_sys->SplitFilePath(file, &p, &f, &e);
+	std::string full_path(path + f + "." + e);
+	// duplicate texture to own assets folder
+
+	if (App->file_sys->DuplicateFile(full_path.c_str(), ASSETS_FOLDER, std::string("/")))
+	{
+		LOG("[Info] correctly duplicated original image %s to %s", file, ASSETS_FOLDER);
+	}
+
+	if (ilLoadImage(full_path.c_str()))
+	{
+		std::string path, filename, extension;
+		App->file_sys->SplitFilePath(full_path.c_str(), &path, &filename, &extension);
+		//std::string library_path = LIBRARY_TEXTURES_FOLDER + filename + ".DDS";
+		UID new_uid = App->random->Int();
+		output_id = new_uid;
+		std::string library_path = LIBRARY_TEXTURES_FOLDER + std::to_string(new_uid);
+		// Save as dds on own library textures
+		if (ilSave(IL_DDS, library_path.c_str()))
+		{
+			LOG("[Info] Correctly generated library texture %s", library_path.c_str());
+		}
+
+		ilDeleteImage(1);
+	}
+	else
+	{
+		LOG("[Error] importing texture %s", iluErrorString(ilGetError()));
+	}
+
+	return true;
+}
+
+bool ModuleTextures::LoadTexResource(R_Texture* r)
+{
+	std::string full_path = LIBRARY_TEXTURES_FOLDER + r->GetNameFromUID();
+
+	if (ilLoadImage(full_path.c_str()))
+	{
+
+		r->buffer_id = ilutGLBindTexImage();
+
+		// TODO: FILL INFORMATION
+
+
+		ilDeleteImage(1);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	else
+		return false;
+
+	return true;
 }

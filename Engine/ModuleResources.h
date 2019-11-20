@@ -43,7 +43,7 @@ private:
 
 public:
 	UID Find(const char* file_in_assets) const;
-	UID ImportFile(const char* new_file_in_assets, Resource::Type type ,bool force = false);
+	UID ImportFile(const char* new_file_in_assets, Resource::Type type , std::string path, bool force = false);
 	UID GenerateNewUID();
 	const Resource* Get(UID uid) const;
 	Resource* Get(UID uid);
