@@ -219,6 +219,12 @@ bool R_Mesh::LoadInMemory()
 
 		// TODO: we want always load?
 		// TODO: recalc aabb/obb
+
+		// Load aabb ---------------------------------------------------------------
+
+		aabb.SetNegativeInfinity();
+		aabb.Enclose((float3*)vertices, buffers_size[BufferType::VERTICES]);
+
 		GLGenBuffersAndLoad();
 	}
 	else
@@ -310,18 +316,6 @@ UID R_Mesh::Import(const aiMesh* mesh, const char* file)
 			}
 		}
 	}
-	
-	// Load aabb ---------------------------------------------------------------
-	
-	r_mesh->aabb.SetNegativeInfinity();
-	
-	r_mesh->aabb.minPoint.x = mesh->mAABB.mMin.x;
-	r_mesh->aabb.minPoint.y = mesh->mAABB.mMin.y;
-	r_mesh->aabb.minPoint.z = mesh->mAABB.mMin.z;
-	
-	r_mesh->aabb.maxPoint.x = mesh->mAABB.mMax.x;
-	r_mesh->aabb.maxPoint.y = mesh->mAABB.mMax.y;
-	r_mesh->aabb.maxPoint.z = mesh->mAABB.mMax.z;
 
 	// SAVE to own file format
 

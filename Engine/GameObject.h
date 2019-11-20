@@ -82,17 +82,9 @@ public:
 
 	const std::vector<Component*>& GetComponents() const;
 
-	R_Mesh* GetMeshes();
-
 	// Bounding Box Functions --------------------------------------
 
 	AABB GetHierarchyAABB();
-
-	bool Intersects(const LineSegment& line, float& distance, math::float3& hit_point) const;
-
-	// Space functions ---------------------------------------------
-
-
 
 private:
 

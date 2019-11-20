@@ -216,73 +216,74 @@ update_status ModuleEditor::Update(float dt)
 {
 	// DEBUG MESH  ------------------------------------------------------------------------------------------------
 	// check if we need to show debug normals on selected go
-	if ((viewport_options.debug_vertex_normals || viewport_options.debug_face_normals) && App->scene->selected_go != nullptr)
-	{	
-		if (last_go_precalc != App->scene->selected_go)
-		{
-			// check if the gameobject has meshes
-			R_Mesh* smesh = nullptr;
-			if(App->scene->selected_go != nullptr)
-				smesh = App->scene->selected_go->GetMeshes();
 
-			// we calc the two modes at once for the selected go
-			// but we filter what to print from bools cols
-			if (smesh != nullptr)
-			{
-				LOG("[Init] Info: hey, i need to recompute the normals!");
-				
-				// delete previous data and free opengl buffers
-				if (ddmesh != nullptr)
-				{
-					ddmesh->Clean();
-					// re-assign num v and i
-					ddmesh->SetSizes(smesh->buffers_size[R_Mesh::VERTICES], smesh->buffers_size[R_Mesh::INDICES]);
-				}
-				else // if not exists, create one
-					ddmesh = new DebugDataMesh(smesh->buffers_size[R_Mesh::VERTICES], smesh->buffers_size[R_Mesh::INDICES]);
-				
-				// recompute data from selected_go
-				ddmesh->ComputeVertexNormals(smesh, viewport_options.v_n_line_length);
-				ddmesh->ComputeFacesNormals(smesh, viewport_options.f_n_line_length);
+	//if ((viewport_options.debug_vertex_normals || viewport_options.debug_face_normals) && App->scene->selected_go != nullptr)
+	//{	
+	//	if (last_go_precalc != App->scene->selected_go)
+	//	{
+	//		// check if the gameobject has meshes
+	//		R_Mesh* smesh = nullptr;
+	//		if(App->scene->selected_go != nullptr)
+	//			smesh = App->scene->selected_go->GetMeshes();
 
-				// generate opengl buffers and fill -------------------------
-				ddmesh->GenBuffers();
-				ddmesh->FillVertexBuffer();
-				ddmesh->FillFacesBuffer();
-			}
-			else
-			{
-				// if exists any ddmesh, we must to clean it
-				if (ddmesh != nullptr)
-				{
-					ddmesh->Clean();
-					delete ddmesh;
-					ddmesh = nullptr;
-				}
-				LOG("[Error] Warning: gameobject without meshes to debug");
-			}
-			// -----------------------------------------------------------
-			// assign new precalc
-			last_go_precalc = App->scene->selected_go;
-		}
-	}
-	else if (!viewport_options.debug_face_normals && !viewport_options.debug_vertex_normals) // when the two debug options are off and still have a ddmesh
-	{
-		if (ddmesh != nullptr)
-		{
-			ddmesh->Clean();
-			delete ddmesh;
-			ddmesh = nullptr;
-			last_go_precalc = nullptr;
-		}
-	}
-	else if (App->scene->selected_go == nullptr && ddmesh != nullptr)
-	{
-		ddmesh->Clean();
-		delete ddmesh;
-		ddmesh = nullptr;
-		last_go_precalc = nullptr;
-	}
+	//		// we calc the two modes at once for the selected go
+	//		// but we filter what to print from bools cols
+	//		if (smesh != nullptr)
+	//		{
+	//			LOG("[Init] Info: hey, i need to recompute the normals!");
+	//			
+	//			// delete previous data and free opengl buffers
+	//			if (ddmesh != nullptr)
+	//			{
+	//				ddmesh->Clean();
+	//				// re-assign num v and i
+	//				ddmesh->SetSizes(smesh->buffers_size[R_Mesh::VERTICES], smesh->buffers_size[R_Mesh::INDICES]);
+	//			}
+	//			else // if not exists, create one
+	//				ddmesh = new DebugDataMesh(smesh->buffers_size[R_Mesh::VERTICES], smesh->buffers_size[R_Mesh::INDICES]);
+	//			
+	//			// recompute data from selected_go
+	//			ddmesh->ComputeVertexNormals(smesh, viewport_options.v_n_line_length);
+	//			ddmesh->ComputeFacesNormals(smesh, viewport_options.f_n_line_length);
+
+	//			// generate opengl buffers and fill -------------------------
+	//			ddmesh->GenBuffers();
+	//			ddmesh->FillVertexBuffer();
+	//			ddmesh->FillFacesBuffer();
+	//		}
+	//		else
+	//		{
+	//			// if exists any ddmesh, we must to clean it
+	//			if (ddmesh != nullptr)
+	//			{
+	//				ddmesh->Clean();
+	//				delete ddmesh;
+	//				ddmesh = nullptr;
+	//			}
+	//			LOG("[Error] Warning: gameobject without meshes to debug");
+	//		}
+	//		// -----------------------------------------------------------
+	//		// assign new precalc
+	//		last_go_precalc = App->scene->selected_go;
+	//	}
+	//}
+	//else if (!viewport_options.debug_face_normals && !viewport_options.debug_vertex_normals) // when the two debug options are off and still have a ddmesh
+	//{
+	//	if (ddmesh != nullptr)
+	//	{
+	//		ddmesh->Clean();
+	//		delete ddmesh;
+	//		ddmesh = nullptr;
+	//		last_go_precalc = nullptr;
+	//	}
+	//}
+	//else if (App->scene->selected_go == nullptr && ddmesh != nullptr)
+	//{
+	//	ddmesh->Clean();
+	//	delete ddmesh;
+	//	ddmesh = nullptr;
+	//	last_go_precalc = nullptr;
+	//}
 	// ----------------------------------------------------------------------------------------------------------------
 
 	return UPDATE_CONTINUE;
@@ -371,64 +372,64 @@ update_status ModuleEditor::Draw()
 	// re-check for any change on line length while one option remains unchecked and
 	// the user modifies its length, but when we re-activate them only :)
 	// -------------------------------------------------------------------------------------------------------------------------------------------
-	if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
-	{
-		if (last_go_precalc == App->scene->selected_go && ddmesh != nullptr)
-		{
-			if (viewport_options.debug_vertex_normals)
-			{
-				if (ddmesh->v_last_ll != viewport_options.v_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
-				{
-					ddmesh->ComputeVertexNormals(App->scene->selected_go->GetMeshes(), viewport_options.v_n_line_length);
-					ddmesh->FillVertexBuffer();
-				}
-			}
+	//if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
+	//{
+	//	if (last_go_precalc == App->scene->selected_go && ddmesh != nullptr)
+	//	{
+	//		if (viewport_options.debug_vertex_normals)
+	//		{
+	//			if (ddmesh->v_last_ll != viewport_options.v_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
+	//			{
+	//				ddmesh->ComputeVertexNormals(App->scene->selected_go->GetMeshes(), viewport_options.v_n_line_length);
+	//				ddmesh->FillVertexBuffer();
+	//			}
+	//		}
 
-			if (viewport_options.debug_face_normals)
-			{
-				if (ddmesh->f_last_ll != viewport_options.f_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
-				{
-					ddmesh->ComputeFacesNormals(App->scene->selected_go->GetMeshes(), viewport_options.f_n_line_length);
-					ddmesh->FillFacesBuffer();
-				}
-			}
-		}
-	}
+	//		if (viewport_options.debug_face_normals)
+	//		{
+	//			if (ddmesh->f_last_ll != viewport_options.f_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
+	//			{
+	//				ddmesh->ComputeFacesNormals(App->scene->selected_go->GetMeshes(), viewport_options.f_n_line_length);
+	//				ddmesh->FillFacesBuffer();
+	//			}
+	//		}
+	//	}
+	//}
 
 
-	if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
-	{
-		if (ddmesh != nullptr)
-		{
-			// push selected go matrix
-			if (App->scene->selected_go->transform->HasNegativeScale())
-			{
-				glFrontFace(GL_CW);
-			}
+	//if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
+	//{
+	//	if (ddmesh != nullptr)
+	//	{
+	//		// push selected go matrix
+	//		if (App->scene->selected_go->transform->HasNegativeScale())
+	//		{
+	//			glFrontFace(GL_CW);
+	//		}
 
-			glPushMatrix();
-			glMultMatrixf((float*)&App->scene->selected_go->transform->global_transform.Transposed());
+	//		glPushMatrix();
+	//		glMultMatrixf((float*)&App->scene->selected_go->transform->global_transform.Transposed());
 
-			if (viewport_options.debug_vertex_normals)
-			{
-				glColor4fv((float*)&viewport_options.d_vertex_p_color);
-				ddmesh->DebugRenderVertex(viewport_options.v_point_size);
-				glColor4fv((float*)&viewport_options.d_vertex_l_color);
-				ddmesh->DebugRenderVertexNormals(viewport_options.v_n_line_width);
-			}
-			//glColor3f(1.0f, 1.0f, 0.0f);
-			if (viewport_options.debug_face_normals)
-			{
-				glColor4fv((float*)&viewport_options.d_vertex_face_color);
-				ddmesh->DebugRenderFacesVertex(viewport_options.f_v_point_size);
-				glColor4fv((float*)&viewport_options.d_vertex_face_n_color);
-				ddmesh->DebugRenderFacesNormals(viewport_options.f_n_line_width);
-			}
+	//		if (viewport_options.debug_vertex_normals)
+	//		{
+	//			glColor4fv((float*)&viewport_options.d_vertex_p_color);
+	//			ddmesh->DebugRenderVertex(viewport_options.v_point_size);
+	//			glColor4fv((float*)&viewport_options.d_vertex_l_color);
+	//			ddmesh->DebugRenderVertexNormals(viewport_options.v_n_line_width);
+	//		}
+	//		//glColor3f(1.0f, 1.0f, 0.0f);
+	//		if (viewport_options.debug_face_normals)
+	//		{
+	//			glColor4fv((float*)&viewport_options.d_vertex_face_color);
+	//			ddmesh->DebugRenderFacesVertex(viewport_options.f_v_point_size);
+	//			glColor4fv((float*)&viewport_options.d_vertex_face_n_color);
+	//			ddmesh->DebugRenderFacesNormals(viewport_options.f_n_line_width);
+	//		}
 
-			glFrontFace(GL_CCW);
-			glPopMatrix();
-		}
-	}
+	//		glFrontFace(GL_CCW);
+	//		glPopMatrix();
+	//	}
+	//}
 
 	return UPDATE_CONTINUE;
 }
@@ -540,22 +541,23 @@ void ModuleEditor::Load(Config& config)
 	viewport_options.v_n_line_width = config.GetFloat("v_n_line_width", viewport_options.v_n_line_width);
 	viewport_options.f_n_line_width = config.GetFloat("f_n_line_width", viewport_options.f_n_line_width);
 
-	// if we have meshes, and line length doesnt match, recompute normals ----
-	float temp_v = viewport_options.v_n_line_length;
-	viewport_options.v_n_line_length = config.GetFloat("v_n_line_length", viewport_options.v_n_line_length);
-	if (temp_v != viewport_options.v_n_line_length && ddmesh != nullptr && App->scene->selected_go != nullptr)
-	{
-		 ddmesh->ComputeVertexNormals(App->scene->selected_go->GetMeshes(),viewport_options.v_n_line_length);
-		 ddmesh->FillVertexBuffer();
-	}
 
-	float temp_f = viewport_options.f_n_line_length;
-	viewport_options.f_n_line_length = config.GetFloat("f_n_line_length", viewport_options.f_n_line_length);
-	if (temp_f != viewport_options.f_n_line_length && ddmesh != nullptr && App->scene->selected_go != nullptr)
-	{
-		ddmesh->ComputeFacesNormals(App->scene->selected_go->GetMeshes(),viewport_options.f_n_line_length);
-		ddmesh->FillFacesBuffer();
-	}
+	// if we have meshes, and line length doesnt match, recompute normals ----
+	//float temp_v = viewport_options.v_n_line_length;
+	//viewport_options.v_n_line_length = config.GetFloat("v_n_line_length", viewport_options.v_n_line_length);
+	//if (temp_v != viewport_options.v_n_line_length && ddmesh != nullptr && App->scene->selected_go != nullptr)
+	//{
+	//	 ddmesh->ComputeVertexNormals(App->scene->selected_go->GetMeshes(),viewport_options.v_n_line_length);
+	//	 ddmesh->FillVertexBuffer();
+	//}
+
+	//float temp_f = viewport_options.f_n_line_length;
+	//viewport_options.f_n_line_length = config.GetFloat("f_n_line_length", viewport_options.f_n_line_length);
+	//if (temp_f != viewport_options.f_n_line_length && ddmesh != nullptr && App->scene->selected_go != nullptr)
+	//{
+	//	ddmesh->ComputeFacesNormals(App->scene->selected_go->GetMeshes(),viewport_options.f_n_line_length);
+	//	ddmesh->FillFacesBuffer();
+	//}
 	// -----------------------------------------------------------------------
 
 

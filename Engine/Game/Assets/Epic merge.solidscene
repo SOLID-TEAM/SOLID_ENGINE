@@ -1,0 +1,151 @@
+{
+    "general": {
+        "scene_name": "Epic merge"
+    },
+    "GameObjects": [
+        {
+            "UID": 1955767012,
+            "Parent UID": 0,
+            "name": "Main Camera",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": 0,
+                    "name": "Transform",
+                    "Position": [
+                        1.214362621307373,
+                        0.57415032386779785,
+                        -7.8783912658691406
+                    ],
+                    "Rotation": [
+                        0.91006457805633545,
+                        -44.347171783447266,
+                        7.9067950764510897e-07
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1.0000005960464478
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "name": "Camera"
+                }
+            ]
+        },
+        {
+            "UID": 1788980851,
+            "Parent UID": 0,
+            "name": "RootNode",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": 0,
+                    "name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        0,
+                        -0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 879268765,
+            "Parent UID": 1788980851,
+            "name": "Chimney",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": 0,
+                    "name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        0,
+                        -0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 1,
+                    "name": "Mesh",
+                    "Resource": 2,
+                    "Active": true
+                },
+                {
+                    "Type": 5,
+                    "name": "Mesh Renderer"
+                },
+                {
+                    "Type": 2,
+                    "name": "Material",
+                    "Resource": 4,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "UID": 1549330330,
+            "Parent UID": 1788980851,
+            "name": "Baker_house",
+            "Active": true,
+            "Components": [
+                {
+                    "Type": 0,
+                    "name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        0,
+                        -0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 1,
+                    "name": "Mesh",
+                    "Resource": 3,
+                    "Active": true
+                },
+                {
+                    "Type": 5,
+                    "name": "Mesh Renderer"
+                },
+                {
+                    "Type": 2,
+                    "name": "Material",
+                    "Resource": 4,
+                    "Active": true
+                }
+            ]
+        }
+    ]
+}

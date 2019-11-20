@@ -52,9 +52,6 @@
     <Filter Include="Sources\Game Object\Components">
       <UniqueIdentifier>{b20fa3f4-fe07-4fd6-99f3-6c8c3809e8df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Data">
-      <UniqueIdentifier>{cf84c64d-fec2-41af-afa0-2ea3d34dbaa9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Game Object\Custom">
       <UniqueIdentifier>{8e39da0f-096c-4620-aa8b-bf7ae991bc71}</UniqueIdentifier>
     </Filter>
@@ -63,6 +60,9 @@
     </Filter>
     <Filter Include="Sources\Thirds Party\ImGuizmo">
       <UniqueIdentifier>{9c92c0bb-a6b0-4b36-bfba-8b9dc1e32b29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Resources">
+      <UniqueIdentifier>{cf84c64d-fec2-41af-afa0-2ea3d34dbaa9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -393,18 +393,6 @@
     <ClInclude Include="C_Material.h">
       <Filter>Sources\Game Object\Components</Filter>
     </ClInclude>
-    <ClInclude Include="D_Mesh.h">
-      <Filter>Sources\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="Data.h">
-      <Filter>Sources\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="D_Material.h">
-      <Filter>Sources\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="D_Texture.h">
-      <Filter>Sources\Data</Filter>
-    </ClInclude>
     <ClInclude Include="C_MeshRenderer.h">
       <Filter>Sources\Game Object\Components</Filter>
     </ClInclude>
@@ -443,6 +431,27 @@
     </ClInclude>
     <ClInclude Include="Gizmo.h">
       <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="R_Texture.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="R_Model.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="R_Mesh.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="R_Material.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleResources.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -656,18 +665,6 @@
     <ClCompile Include="C_Material.cpp">
       <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
-    <ClCompile Include="D_Mesh.cpp">
-      <Filter>Sources\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="Data.cpp">
-      <Filter>Sources\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="D_Material.cpp">
-      <Filter>Sources\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="D_Texture.cpp">
-      <Filter>Sources\Data</Filter>
-    </ClCompile>
     <ClCompile Include="C_MeshRenderer.cpp">
       <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
@@ -706,6 +703,24 @@
     </ClCompile>
     <ClCompile Include="Gizmo.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Texture.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Model.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Mesh.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Material.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleResources.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

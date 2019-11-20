@@ -36,7 +36,6 @@ private:
 	R_Material* r_mat = nullptr;
 	/*UID mesh_uid;
 	UID material_uid;*/
-
 };
 
 #endif // !_C_MESHRENDERER_H__

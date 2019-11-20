@@ -322,10 +322,6 @@ void ModuleRenderer3D::RenderDynTree(DynTree& kdtree, float width, float4& color
 	}
 }
 
-
-
-
-
 void ModuleRenderer3D::RenderCircle(float3 position, float radio, int num_segments)
 {
 	glBegin(GL_LINE_LOOP);
