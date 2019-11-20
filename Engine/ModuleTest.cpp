@@ -41,8 +41,8 @@ bool ModuleTest::Start(Config& config)
 	main_grid = new Grid(config.GetInt("grid_units", 10));
 	Load(config);
 
-	App->importer->ImportModelFile("Assets/Models/baker_house/BakerHouse.fbx");
-	test = App->scene->Find("BakerHouse");
+	/*App->importer->ImportModelFile("Assets/Models/baker_house/BakerHouse.fbx");
+	test = App->scene->Find("BakerHouse");*/
 
 	return ret;
 }

@@ -4,7 +4,7 @@
 
 #include "ModuleImporter.h"
 #include "C_Material.h"
-#include "D_Material.h"
+#include "R_Material.h"
 
 W_Primitives::W_Primitives(std::string name, bool active) : Window(name, active)
 {
@@ -73,7 +73,7 @@ void W_Primitives::Draw()
 			if (last_created != nullptr)
 			{
 				C_Material* c_mat = last_created->GetComponent< C_Material>();
-				c_mat->data->diffuse_color = { color.x, color.y, color.z, color.w};
+				//c_mat->data->diffuse_color = { color.x, color.y, color.z, color.w};
 			}
 		}
 		if (last_state != active)

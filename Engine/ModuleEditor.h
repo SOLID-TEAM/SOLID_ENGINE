@@ -76,8 +76,8 @@ public:
 
 	bool Clean();
 
-	void ComputeVertexNormals(D_Mesh* goMesh, float length);
-	bool ComputeFacesNormals(D_Mesh* goMesh, float length);
+	void ComputeVertexNormals(R_Mesh* goMesh, float length);
+	bool ComputeFacesNormals(R_Mesh* goMesh, float length);
 
 	bool DebugRenderVertex(float pointSize);
 	bool DebugRenderVertexNormals(float lineWidth);
@@ -166,6 +166,10 @@ private:
 	bool show_restore_popup = false;
 	bool show_demo_imgui = false;
 	bool show_about_popup = false;
+	bool show_save_scene = false;
+	bool show_confirmation_load = false;
+	bool show_confirmation_new = false;
+	std::string scene_to_load;
 
 public:
 

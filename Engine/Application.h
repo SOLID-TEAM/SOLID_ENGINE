@@ -16,6 +16,7 @@
 #include "ModuleFileSystem.h"
 #include "ModuleTextures.h"
 #include "ModuleScene.h"
+#include "ModuleResources.h"
 
 // Tools ---------------------
 #include "Config.h"
@@ -25,6 +26,8 @@
 // Panels --------------------
 #include "W_Config.h"
 #include "W_Console.h"
+
+struct Event;
 
 class Application
 {
@@ -42,6 +45,7 @@ public:
 	void Log(const char* new_entry);
 	int GetFrames();
 	void SaveLogToFile() const;
+	void BroadcastEvent(const Event& event);
 
 	bool WantToSave(bool cleanInit = false);
 	void WantToLoad(bool restoreDefault = false);
@@ -76,6 +80,7 @@ public:
 	ModuleEditor* editor = nullptr;
 	ModuleFileSystem* file_sys = nullptr;
 	ModuleScene* scene = nullptr;
+	ModuleResources* resources = nullptr;
 
 	// Buffers ------------------------------------
 	ImVector<char*> console_log_aux;

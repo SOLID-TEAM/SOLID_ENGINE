@@ -4,9 +4,11 @@
 #include "Component.h"
 #include "external/MathGeoLib/include/MathGeoLib.h"
 
-class D_Mesh;
+
 class C_MeshRenderer;
 class C_Transform;
+class R_Mesh;
+
 
 class C_Mesh : public Component
 {
@@ -30,7 +32,7 @@ public:
 
 	// Resource functions ---------------------
 
-	void SetMeshResource(D_Mesh* resource);
+	bool SetMeshResource(UID resource);
 
 	void DeleteMeshResource();
 
@@ -38,13 +40,12 @@ public:
 
 	bool Save(Config& config);
 
-	//bool Load(Config& config);
-
-	D_Mesh* data = nullptr;
+	bool Load(Config& config);
 
 private:
 
 	AABB	mesh_aabb;
+	UID		resource = 0;
 
 };
 

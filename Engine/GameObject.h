@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 
 #include "external/MathGeoLib/include/Geometry/AABB.h"
 #include "external/MathGeoLib/include/Geometry/OBB.h"
@@ -22,7 +23,7 @@
 class ModuleScene;
 class ModuleEditor;
 class W_Inspector;
-class D_Mesh; // Remove
+class R_Mesh; // Remove
 class KDTree;
 class DynTree;
 class DynTreeNode;
@@ -46,7 +47,7 @@ public:
 
 public:
 
-	GameObject(std::string name = "Unknown", GameObject* parent = nullptr);
+	GameObject(std::string name = "Unknown", GameObject* parent = nullptr, bool outside_root = false);
 
 	~GameObject();
 
@@ -70,6 +71,7 @@ public:
 
 	// SERIALIZE ME
 	bool Save(Config& config);
+	bool Load(Config& config, std::map<GameObject*, uint>& relations);
 
 	// Components Funtions -------------------------------------------
 
@@ -80,7 +82,7 @@ public:
 
 	const std::vector<Component*>& GetComponents() const;
 
-	D_Mesh* GetMeshes();
+	R_Mesh* GetMeshes();
 
 	// Bounding Box Functions --------------------------------------
 
@@ -107,6 +109,8 @@ private:
 	void AddChild(GameObject* child); // Addchild currently is used to hierarchical changes
 
 	void RemoveChild(GameObject* child);
+
+	void SetNewParent(GameObject* parent);
 
 	bool SearchParentRecursive(GameObject* parent, GameObject* parent_match);
 

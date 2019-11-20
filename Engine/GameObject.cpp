@@ -4,11 +4,11 @@
 #include "W_Inspector.h"
 #include "ModuleScene.h"
 
-#include "D_Mesh.h"
+#include "R_Mesh.h"
 #include "KDTree.h"
 #include "DynTree.h"
 
-GameObject::GameObject(std::string name, GameObject* parent) : name(name), parent(parent)
+GameObject::GameObject(std::string name, GameObject* parent, bool outside_root) : name(name), parent(parent)
 {
 	uid = App->random->Int();
 
@@ -17,7 +17,14 @@ GameObject::GameObject(std::string name, GameObject* parent) : name(name), paren
 
 	// Add to its parent childs -----------------------
 	if (parent != nullptr)
+	{
 		parent->childs.push_back(this);
+	}
+	else if(App->scene->root_go != nullptr && !outside_root)
+	{
+		this->parent = App->scene->root_go;
+		App->scene->root_go->childs.push_back(this);
+	}
 
 	// Standard Bounding Box --------------------------
 
@@ -27,6 +34,10 @@ GameObject::GameObject(std::string name, GameObject* parent) : name(name), paren
 
 GameObject::~GameObject()
 {
+	/*if (parent != nullptr)
+	{
+		parent->RemoveChild(this);
+	}*/
 }
 
 // User functions ------------------------------------
@@ -68,7 +79,6 @@ void GameObject::DoRender()
 
 void GameObject::DoCleanUp()
 {
-	CleanUp();
 	CleanUpRecursive(this);
 }
 
@@ -78,20 +88,34 @@ void GameObject::CleanUpRecursive(GameObject* go)
 
 	std::vector<Component*>::iterator component = go->components.begin();
 
-	for (; component != go->components.end(); ++component)
+	for (; component != go->components.end();)
 	{
 		(*component)->CleanUp();
+		//delete_components.push((*component));
+		delete *component;
+		component = go->components.erase(component);
 	}
-
 
 	// for each children
 
 	std::vector<GameObject*>::iterator child = go->childs.begin();
+	std::queue<GameObject*> delete_forever;
 
-	for (; child != go->childs.end(); ++child)
+	for (; child != go->childs.end();) //++child)
 	{
 		CleanUpRecursive((*child));
+		delete_forever.push((*child));
+		child = go->childs.erase(child);
 	}
+
+	while (!delete_forever.empty())
+	{
+		delete delete_forever.front();
+		delete_forever.front() = nullptr;
+		delete_forever.pop();
+	}
+
+	CleanUp();
 }
 
 void GameObject::SetActive(bool active)
@@ -116,23 +140,6 @@ const char* GameObject::GetName() const
 const std::vector<Component*>& GameObject::GetComponents() const
 {
 	return components;
-}
-
-D_Mesh* GameObject::GetMeshes()
-{
-	std::vector<Component*>::iterator component = components.begin();
-
-	for (; component != components.end(); ++component)
-	{
-		if ((*component)->type == ComponentType::MESH)
-		{
-			C_Mesh* cm = dynamic_cast<C_Mesh*>(*component);
-
-			return cm->data;
-		}
-	}
-
-	return nullptr;
 }
 
 AABB GameObject::GetHierarchyAABB()
@@ -181,6 +188,18 @@ bool GameObject::SearchParentRecursive(GameObject* parent, GameObject* parent_ma
 		match = SearchParentRecursive(parent->parent, parent_match);
 
 	return match;
+}
+
+void GameObject::SetNewParent(GameObject* new_parent)
+{
+	if (new_parent == nullptr)
+		return;
+
+	if (parent != nullptr)
+		parent->RemoveChild(this);
+	
+	parent = new_parent;
+	new_parent->childs.push_back(this); // TODO: review addchild, or rename and add a simple addchild, current addchild is pointed to hierarchical moves on editor
 }
 
 
@@ -269,3 +288,63 @@ bool GameObject::Save(Config& config)
 
 	return true;
 }
+
+bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
+{
+	// set stored uuid
+	uid = config.GetInt("UID", uid);
+	uint parent_id = config.GetInt("Parent UID", 0);
+	// store relations to next hierarchical assignment
+	relationship[this] = parent_id;
+
+	name.assign(config.GetString("name", "noname"));
+	active = config.GetBool("active", true);
+
+	// load all components
+	int num_components = config.GetArrayCount("Components");
+
+	for (uint i = 0 ; i < num_components; ++i)
+	{
+		Config c_config(config.GetArray("Components", i));
+
+		ComponentType type = (ComponentType)c_config.GetInt("Type", (int)ComponentType::NO_TYPE);
+
+		if (type != ComponentType::NO_TYPE)
+		{
+			Component* new_component = nullptr;
+			// TODO: improve this with our template
+			switch (type)
+			{
+			case ComponentType::TRANSFORM:
+				new_component = transform;
+				break;
+			case ComponentType::MESH:
+				new_component = CreateComponent<C_Mesh>();
+				break;
+			case ComponentType::MATERIAL:
+				new_component = CreateComponent<C_Material>();
+				break;
+			case ComponentType::CAMERA:
+				new_component = CreateComponent<C_Camera>();
+				break;
+			case ComponentType::LIGHT:
+				break;
+			case ComponentType::MESH_RENDERER:
+				new_component = CreateComponent<C_MeshRenderer>();
+				break;
+			case ComponentType::NO_TYPE:
+				break;
+			default:
+				break;
+			}
+
+			if (new_component != nullptr)
+			{
+				new_component->Load(c_config);
+			}
+		}
+	}
+
+	return true;
+}
+

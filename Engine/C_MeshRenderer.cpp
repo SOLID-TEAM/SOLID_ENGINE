@@ -8,8 +8,8 @@
 #include "C_Mesh.h"
 #include "C_Material.h"
 
-#include "D_Mesh.h"
-#include "D_Material.h"
+#include "R_Mesh.h"
+#include "R_Material.h"
 
 #define EMISSION_DEFAULT {0.F, 0.F, 0.F, 1.F}
 #define EMISSION_LINES   {1.F, 1.F, 1.F, 1.F}
@@ -60,32 +60,48 @@ bool C_MeshRenderer::Render()
 		return false;
 	}
 
-	d_mesh = c_mesh->data;
-	d_material = c_mat->data;
+	r_mesh = (R_Mesh*)App->resources->Get(c_mesh->resource);
+
+	if (r_mesh == nullptr)
+	{
+		LOG("[Error] Bad mesh resource reference on component mesh renderer");
+		return false;
+	}
+
+	r_mat = (R_Material*)App->resources->Get(c_mat->resource);
+
+	if (r_mat == nullptr)
+	{
+		LOG("[Error] Bad material resource reference on component mesh renderer");
+		return false;
+	}
+
+	//r_mesh = c_mesh->data;
+	//r_material = c_mat->data;
 
 	uint custom_tex_id = 0;
 
-	if (c_mat->view_checker)
-	{
-		// check if checker still is valid (not deleted gl buffer on the way)
-		if (glIsTexture(c_mat->checker_gl_id))
-		{
-			custom_tex_id = c_mat->checker_gl_id;
-		}
-		else
-		{
-			if (c_mat->checker_gl_id != 0)
-				c_mat->checker_gl_id = 0;
-		}
-	}
+	//if (c_mat->view_checker)
+	//{
+	//	// check if checker still is valid (not deleted gl buffer on the way)
+	//	if (glIsTexture(c_mat->checker_gl_id))
+	//	{
+	//		custom_tex_id = c_mat->checker_gl_id;
+	//	}
+	//	else
+	//	{
+	//		if (c_mat->checker_gl_id != 0)
+	//			c_mat->checker_gl_id = 0;
+	//	}
+	//}
 
 	// CHECK if textured for apply or not default albedo color for mesh data
 	float4 albedo_color = { 1.0f,1.0f,1.0f,1.0f }; // TODO: change variable type if needed
 
-	if (!c_mat->textured)
+	/*if (!c_mat->textured)
 	{
-		albedo_color = d_material->diffuse_color;
-	}
+		albedo_color = r_material->diffuse_color;
+	}*/
 
 	// Push matrix ---------------------------------------------------------
 	glPushMatrix();
@@ -103,7 +119,7 @@ bool C_MeshRenderer::Render()
 
 	if (vp.mode == V_MODE_SHADED || App->scene->editor_mode == false)
 	{
-		RenderMesh(albedo_color.ptr(), custom_tex_id, c_mat->textured);
+		RenderMesh(albedo_color.ptr(), custom_tex_id, true);// c_mat->textured);
 	}
 	else if (vp.mode == V_MODE_WIREFRAME)
 	{
@@ -111,7 +127,7 @@ bool C_MeshRenderer::Render()
 	}
 	else if (vp.mode == V_MODE_SHADED_WIREFRAME)
 	{
-		RenderMesh(albedo_color.ptr(), custom_tex_id, c_mat->textured);
+		RenderMesh(albedo_color.ptr(), custom_tex_id, true);// c_mat->textured);
 		RenderWireframe(vp.wire_line_width, vp.wire_color);
 	}
 
@@ -159,20 +175,20 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 	glColor4fv(color);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	if (d_material->textures[D_Material::DIFFUSE] != nullptr) // TODO: clean this and perform for possible another textures
-	{
-		if (d_material->textures[D_Material::DIFFUSE]->buffer_id != 0)
-		{
-			if (glIsTexture(d_material->textures[D_Material::DIFFUSE]->buffer_id))
-			{
-				texture_id = d_material->textures[D_Material::DIFFUSE]->buffer_id;
-			}
-			else
-			{
-				d_material->textures[D_Material::DIFFUSE]->buffer_id = 0;
-			}
-		}
-	}
+	//if (r_mat->textures[R_Material::DIFFUSE] != 0) // TODO: clean this and perform for possible another textures
+	//{
+	//	if (r_mat->textures[R_Material::DIFFUSE]->buffer_id != 0)
+	//	{
+	//		if (glIsTexture(r_mat->textures[R_Material::DIFFUSE]->buffer_id))
+	//		{
+	//			texture_id = r_material->textures[R_Material::DIFFUSE]->buffer_id;
+	//		}
+	//		else
+	//		{
+	//			r_material->textures[R_Material::DIFFUSE]->buffer_id = 0;
+	//		}
+	//	}
+	//}
 
 	glEnable(GL_STENCIL_TEST);
 
@@ -182,7 +198,8 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 	// Enable client ==============================================
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
-	if(d_mesh->buffers_size[D_Mesh::UVS] != 0) 
+
+	if(r_mesh->buffers_size[R_Mesh::UVS] != 0) 
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	if(texture_id != 0) 
 		glClientActiveTexture(GL_TEXTURE0);
@@ -190,11 +207,11 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 	// Bind buffers ===============================================
 
 	// Vertices ------------------------------
-	glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::VERTICES]);
+	glBindBuffer(GL_ARRAY_BUFFER, r_mesh->buffers_id[R_Mesh::VERTICES]);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 
 	// UV's & Texture ------------------------
-	if (d_mesh->buffers_size[D_Mesh::UVS] != 0 && d_material != nullptr)
+	if (r_mesh->buffers_size[R_Mesh::UVS] != 0 && r_mat != nullptr)
 	{
 		if (textured)
 		{
@@ -202,24 +219,25 @@ void C_MeshRenderer::RenderMesh(float* color, uint custom_tex_id, bool textured)
 				glBindTexture(GL_TEXTURE_2D, custom_tex_id);
 			else
 			{
-				if (d_material->textures[D_Material::DIFFUSE] != nullptr)
-					glBindTexture(GL_TEXTURE_2D, d_material->textures[D_Material::DIFFUSE]->buffer_id);
+				R_Texture* r_tex = (R_Texture*)App->resources->Get(r_mat->textures[R_Material::DIFFUSE]);
+				if (r_tex != nullptr)
+					glBindTexture(GL_TEXTURE_2D, r_tex->buffer_id);
 			}
 		}
 
-		glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::UVS]);
-		glTexCoordPointer(d_mesh->uv_num_components, GL_FLOAT, 0, (void*)0);
+		glBindBuffer(GL_ARRAY_BUFFER, r_mesh->buffers_id[R_Mesh::UVS]);
+		glTexCoordPointer(r_mesh->uv_num_components, GL_FLOAT, 0, (void*)0);
 	}
 
 	// Nomrals -----------------------------
-	glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::NORMALS]);
+	glBindBuffer(GL_ARRAY_BUFFER, r_mesh->buffers_id[R_Mesh::NORMALS]);
 	glNormalPointer(GL_FLOAT, 0, (void*)0);
 
 	// Indices ------------------------------
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::INDICES]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r_mesh->buffers_id[R_Mesh::INDICES]);
 
 	// Draw =====================================================
-	glDrawElements(GL_TRIANGLES, d_mesh->buffers_size[D_Mesh::INDICES], GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, r_mesh->buffers_size[R_Mesh::INDICES], GL_UNSIGNED_INT, (void*)0);
 
 	// Unbind buffers ===========================================
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -252,13 +270,13 @@ void C_MeshRenderer::RenderWireframe(float width, float4& color) // need very fe
 	// Bind buffers ===============================================
 
 	// Vertices ---------------
-	glBindBuffer(GL_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::VERTICES]);
+	glBindBuffer(GL_ARRAY_BUFFER, r_mesh->buffers_id[R_Mesh::VERTICES]);
 	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 	// Indices ----------------
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_mesh->buffers_id[D_Mesh::INDICES]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r_mesh->buffers_id[R_Mesh::INDICES]);
 
 	// Draw =======================================================
-	glDrawElements(GL_TRIANGLES, d_mesh->buffers_size[D_Mesh::INDICES] , GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, r_mesh->buffers_size[R_Mesh::INDICES] , GL_UNSIGNED_INT, (void*)0);
 
 	// Bind buffers ===============================================
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -20,10 +20,12 @@ Application::Application()
 	file_sys = new ModuleFileSystem();
 	textures = new ModuleTextures();
 	scene = new ModuleScene();
+	resources = new ModuleResources();
 
 	// Main Modules
 	AddModule(window);
 	AddModule(input);
+	AddModule(resources);
 	// Scenes
 	AddModule(scene);
 	AddModule(test);
@@ -370,4 +372,10 @@ bool Application::LoadConfig(Config& config)
 int Application::GetFrames()
 {
 	return frames;
+}
+
+void Application::BroadcastEvent(const Event& e)
+{
+	for (std::list<Module*>::iterator it = list_modules.begin(); it != list_modules.end(); ++it)
+		(*it)->ReceiveEvent(e);
 }

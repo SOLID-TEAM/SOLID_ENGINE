@@ -3,7 +3,7 @@
 
 #include "Component.h"
 
-class D_Material;
+class R_Material;
 
 class C_Material : public Component
 {
@@ -17,9 +17,11 @@ public:
 	bool Save(Config& config);
 	bool Load(Config& config);
 
+	bool SetMaterialResource(UID uid);
+
 public:
 
-	D_Material* data = nullptr;
+	UID resource = 0;
 	bool textured = true;
 	bool view_checker = false;
 	uint checker_gl_id = 0;

@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 
-CameraEditor::CameraEditor() : GameObject( "Camera Editor")
+CameraEditor::CameraEditor() : GameObject("Camera Editor", nullptr, true)
 {
 	camera = CreateComponent<C_Camera>();
 	camera->SetClippingFarPlane(500.f);

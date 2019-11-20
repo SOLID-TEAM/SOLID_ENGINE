@@ -65,9 +65,13 @@ public:
 
 	bool CleanUp();
 
-	bool ToSaveScene();
+	bool ToSaveScene(const char* scene_name);
 
-	bool SaveScene(Config& config, GameObject* go);
+	bool ToLoadScene(const char* scene_name);
+
+	std::string GetSceneName() const;
+
+	void NewScene();
 	
 	bool Save(Config& config);
 
@@ -77,9 +81,13 @@ public:
 
 	GameObject* CreateGameObject(std::string name = "no_name", GameObject* parent = nullptr);
 
+	GameObject* CreateGameObjectFromModel(UID uid);
+
 	void DeleteGameObject(GameObject* go);
 
 	GameObject* Find(std::string name);
+
+	GameObject* FindByUID(UID uid, GameObject* go);
 
 	// Commands -------------------------------------------------------------
 
@@ -96,6 +104,13 @@ public:
 	void PushDebugRender(DebugRender debug_render);
 
 private:
+
+	bool SaveScene(Config& config, GameObject* go);
+
+	bool LoadScene(Config& config);
+
+	bool LoadSceneNow();
+	
 
 	void UpdateHierarchy();
 
@@ -155,6 +170,10 @@ public:
 
 private:
 
+	bool create_new_scene = false;
+	bool load_new_scene = false;
+	std::string scene_name;
+	std::string scene_to_load;
 	std::deque<GameObject*> to_undo_buffer_go;
 	//std::queue<GameObject*> to_delete_buffer_go;
 

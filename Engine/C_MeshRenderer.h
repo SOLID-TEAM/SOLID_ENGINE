@@ -3,8 +3,8 @@
 
 #include "Component.h"
 
-class D_Mesh;
-class D_Material;
+class R_Mesh;
+class R_Material;
 
 class C_MeshRenderer : public Component
 {
@@ -32,8 +32,10 @@ private:
 
 private:
 
-	D_Mesh*     d_mesh = nullptr;
-	D_Material* d_material = nullptr;
+	R_Mesh* r_mesh = nullptr;
+	R_Material* r_mat = nullptr;
+	/*UID mesh_uid;
+	UID material_uid;*/
 
 };
 

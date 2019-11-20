@@ -46,6 +46,8 @@ enum update_status
 #define LIBRARY_MODEL_FOLDER "Library/Models/"
 #define LIBRARY_MESH_FOLDER "Library/Meshes/" // mesh own file format data
 #define LIBRARY_MATERIAL_FOLDER "Library/Materials/" // textures in dds
+#define LIBRARY_SETTINGS_FOLDER "Library/Settings/"
+#define LIBRARY_TEXTURES_FOLDER "Library/Textures/"
 
 
 // Deletes a buffer

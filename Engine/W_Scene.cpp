@@ -54,9 +54,12 @@ void W_Scene::Draw()
 
 		bool mouse_is_hovering = ImGui::IsMouseHoveringRect(min, max);
 
-		if (!App->scene->editor_camera->mouse_right_pressed && !App->scene->editor_camera->mouse_left_pressed)
+		if (App->scene->editor_camera)
 		{
-			App->scene->editor_camera->enable_mouse_input = mouse_is_hovering;
+			if (!App->scene->editor_camera->mouse_right_pressed && !App->scene->editor_camera->mouse_left_pressed)
+			{
+				App->scene->editor_camera->enable_mouse_input = mouse_is_hovering;
+			}
 		}
 
 		// Attach texture to window ----------------------------------------
@@ -171,17 +174,17 @@ void W_Scene::DebugMenu()
 	ImGui::Title("Line Width",  2);		ImGui::SliderFloat("##d_vertex_line_width", &vp.v_n_line_width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
 	ImGui::Title("Line Lenght", 2);
 
-	if (ImGui::SliderFloat("##d_vertex_line_lenght", &vp.v_n_line_length, config.min_n_length, config.max_n_length, "%.1f", 1.0f))
-	{
-		if (vp.debug_vertex_normals)
-		{
-			if (App->editor->ddmesh != nullptr)
-			{
-				App->editor->ddmesh->ComputeVertexNormals(App->scene->selected_go->GetMeshes(), vp.v_n_line_length);
-				App->editor->ddmesh->FillVertexBuffer();
-			}
-		}
-	}
+	//if (ImGui::SliderFloat("##d_vertex_line_lenght", &vp.v_n_line_length, config.min_n_length, config.max_n_length, "%.1f", 1.0f))
+	//{
+	//	if (vp.debug_vertex_normals)
+	//	{
+	//		if (App->editor->ddmesh != nullptr)
+	//		{
+	//			App->editor->ddmesh->ComputeVertexNormals(App->scene->selected_go->GetMeshes(), vp.v_n_line_length);
+	//			App->editor->ddmesh->FillVertexBuffer();
+	//		}
+	//	}
+	//}
 
 	ImGui::Spacing();
 	ImGui::Spacing();
@@ -193,17 +196,17 @@ void W_Scene::DebugMenu()
 	ImGui::Title("Line Width",  2);		ImGui::SliderFloat("##d_face_line_width", &vp.f_n_line_width, config.min_line_w, config.max_line_w, "%.1f", 1.0f);
 	ImGui::Title("Line Lenght", 2);
 
-	if (ImGui::SliderFloat("##d_face_line_lenght", &vp.f_n_line_length, config.min_n_length, config.max_n_length, "%.1f", 1.0f))
-	{
-		if (vp.debug_face_normals)
-		{
-			if (App->editor->ddmesh != nullptr)
-			{
-				App->editor->ddmesh->ComputeFacesNormals(App->scene->selected_go->GetMeshes(), vp.f_n_line_length);
-				App->editor->ddmesh->FillFacesBuffer();
-			}
-		}
-	}
+	//if (ImGui::SliderFloat("##d_face_line_lenght", &vp.f_n_line_length, config.min_n_length, config.max_n_length, "%.1f", 1.0f))
+	//{
+	//	if (vp.debug_face_normals)
+	//	{
+	//		if (App->editor->ddmesh != nullptr)
+	//		{
+	//			App->editor->ddmesh->ComputeFacesNormals(App->scene->selected_go->GetMeshes(), vp.f_n_line_length);
+	//			App->editor->ddmesh->FillFacesBuffer();
+	//		}
+	//	}
+	//}
 }
 
 void W_Scene::CameraMenu()

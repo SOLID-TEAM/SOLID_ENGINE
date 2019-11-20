@@ -7,6 +7,8 @@
 #include "CameraEditor.h"
 
 #include "ImGuizmo/ImGuizmo.h"
+#include "R_Model.h"
+
 
 #include "external/MathGeoLib/include/Math/MathAll.h"
 
@@ -24,62 +26,109 @@ bool ModuleScene::Init(Config& config)
 
 bool ModuleScene::Start(Config& config)
 {
-	// GameObjects ---------------------------
+
+	// Scene ---------------------
+
+	scene_name.assign("untitled");
 
 	// Root ----------------------
-	root_go = new GameObject("Scene Root"); 
+	root_go = new GameObject("Scene Root");
+	root_go->uid = 0; // scene root always 0 uid
 	root_go->is_static = true;
 	root_go->ignore = true;
 
 	// Main camera ---------------
-	main_camera = new GameObject("Main Camera", root_go); 
+
+	main_camera = new GameObject("Main Camera", root_go, true);
 	main_camera->CreateComponent<C_Camera>();
 	main_camera->ignore = true;
 
 	// Editor camera ---------------
 
-	editor_camera = new CameraEditor(); 
+	editor_camera = new CameraEditor();
 	editor_camera->ignore = true;
 
 	// Viewports -----------------------------
+
 	scene_viewport = new Viewport(editor_camera);
 	game_viewport = new Viewport(main_camera);
 
 	Load(config);
+	
+	// TODO: get the last scene saved, or simply do nothing and let the user load one
+	//ToLoadScene(scene_name.c_str());
+	// load default scene
+
+	ToLoadScene("default.solidscene");
 
 	return true;
 }
 
 bool ModuleScene::CleanUp()
 {
-	std::vector<GameObject*>::iterator game_objects = root_go->childs.begin();
-
-	for (; game_objects != root_go->childs.end(); ++game_objects)
+	// release undo buffers
+	while (to_undo_buffer_go.size() > 0)
 	{
-		(*game_objects)->DoCleanUp();
+		to_undo_buffer_go.front()->DoCleanUp();
+		delete to_undo_buffer_go.front();
+		to_undo_buffer_go.pop_front();
 	}
 
-	// release undo buffers
 	to_undo_buffer_go.clear();
+
+	std::vector<GameObject*>::iterator game_objects = root_go->childs.begin();
+	// TODO: search why dont work normal delete
+	std::queue<GameObject*> delete_forever;
+	for (; game_objects != root_go->childs.end();)
+	{
+		(*game_objects)->DoCleanUp();
+		delete_forever.push((*game_objects));
+		game_objects = root_go->childs.erase(game_objects);
+	}
+
+	while (!delete_forever.empty())
+	{
+		delete delete_forever.front();
+		delete_forever.front() = nullptr;
+		delete_forever.pop();
+	}
+
+	selected_go = nullptr;
 
 	// GameObjects --------------------------------------------------
 
-	if (editor_camera != nullptr)
+	// TODO
+	/*if (editor_camera != nullptr)
 	{
 		delete editor_camera;
-	}
+		editor_camera = nullptr;
+	}*/
 
 	return true;
 }
 
 update_status ModuleScene::PreUpdate(float dt)	// TODO: SHORTCUTS
-
 {
-	// TESTING SAVE SCENE
-	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+
+	if (create_new_scene)
 	{
-		ToSaveScene();
+		CleanUp();
+		create_new_scene = false;
+		// Main camera ---------------
+
+		main_camera = new GameObject("Main Camera", root_go, true);
+		main_camera->CreateComponent<C_Camera>();
+		main_camera->ignore = true;
+		game_viewport->SetCamera(main_camera);
 	}
+
+	if (load_new_scene)
+	{
+		LoadSceneNow();
+		load_new_scene = false;
+		scene_to_load.clear();
+	}
+
 	// check CTRL + Z
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{
@@ -106,7 +155,7 @@ update_status ModuleScene::Update(float dt)
 
 	// Update All GameObjects -----------------------------------
 
-	editor_camera->DoUpdate(dt);
+	if (editor_camera) editor_camera->DoUpdate(dt);
 
 	if (root_go != nullptr)
 	{
@@ -242,11 +291,7 @@ void ModuleScene::UpdateMousePicking()
 			}
 		}
 
-
-
 		selected_go = near_go;
-	
-
 	}
 }
 
@@ -592,34 +637,26 @@ void ModuleScene::AddGoToHierarchyChange(GameObject* target_go, GameObject* sour
 }
 
 // testing function to launch the process of save
-bool ModuleScene::ToSaveScene()
+bool ModuleScene::ToSaveScene(const char* name)
 {
 	Config new_scene_save;
+	this->scene_name.assign(name);
 
+	std::string scene_name(name + std::string(".solidscene"));
 	// save first other scene needed values
 	// name
 	// etc
-	Config other = new_scene_save.AddSection("other");
-	other.AddString("scene_name", "testing.solidscene");
+	Config other = new_scene_save.AddSection("general");
+	other.AddString("scene_name", name);
 	
 	//Config GameObjects = new_scene_save.AddSection("GameObjects");
 	// save all gameobjects needed values
 	new_scene_save.AddArray("GameObjects");
 	SaveScene(new_scene_save, root_go);
 
-	new_scene_save.SaveConfigToFile("testing.solidscene");
+	new_scene_save.SaveConfigToFile((ASSETS_FOLDER + scene_name).c_str());
 
-	return true;
-}
-
-bool ModuleScene::SaveScene(Config& config, GameObject* go)
-{
-	go->Save(config);
-
-	for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
-	{
-		SaveScene(config, (*it));
-	}
+	
 
 	return true;
 }
@@ -655,3 +692,196 @@ void ModuleScene::Load(Config& config)
 			config.GetFloat("Camera editor rotation", 0.f, 2)));
 	}
 }
+
+
+bool ModuleScene::SaveScene(Config& config, GameObject* go)
+{
+	for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
+	{
+		(*it)->Save(config);
+		SaveScene(config, (*it));
+	}
+
+	return true;
+}
+
+bool ModuleScene::LoadScene(Config& scene)
+{
+	Config general = scene.GetSection("general");
+
+	scene_name.assign(general.GetString("scene_name", scene_name.c_str()));
+
+	std::map<GameObject*, uint> relations;
+
+	int go_count = scene.GetArrayCount("GameObjects");
+
+	if (go_count <= 0) return false;
+
+	/*std::vector<GameObject*> to_load_gos;
+	to_load_gos.reserve(go_count);*/
+
+	for (int i = 0; i < go_count; ++i)
+	{
+		GameObject* new_go = new GameObject();
+		new_go->Load(scene.GetArray("GameObjects", i), relations);
+
+		//to_load_gos.push_back(new_go);
+	}
+
+	for (std::map<GameObject*, uint>::iterator it = relations.begin(); it != relations.end(); ++it)
+	{
+		GameObject* go = (*it).first;
+		uint parent_id = (*it).second;
+
+		if (parent_id == 0) // 0 is root scene
+		{
+			if (go->parent != root_go)
+			{
+				go->SetNewParent(root_go);
+			}
+			continue;
+		}
+		
+		GameObject* parent_match = FindByUID(parent_id, root_go);
+
+		go->SetNewParent(parent_match);
+
+		//LOG("");
+	}
+
+
+	return true;
+}
+
+GameObject* ModuleScene::FindByUID(UID uid, GameObject* go)
+{
+	GameObject* ret = nullptr;
+
+	if (uid == go->uid)
+		return go;
+	
+	for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
+	{
+		ret = FindByUID(uid, (*it));
+		if (ret) break;
+	}
+
+	return ret;
+}
+
+bool ModuleScene::LoadSceneNow()
+{
+	// TODO: maybe the scene is not on assets folder, but for now we dont let decide, scene are saved on assets folder
+	Config to_load(std::string(ASSETS_FOLDER + scene_to_load).c_str());
+
+	return LoadScene(to_load);;
+}
+
+// TODO: pass this on finishupdate on app.cpp
+bool ModuleScene::ToLoadScene(const char* name)
+{
+	bool ret = false;
+
+	if (name != nullptr)
+	{
+		// TODO: make VFS for all project files on runtime
+		// re-search if this filename exists
+		/*if (App->file_sys->Exists(name))
+		{
+			LOG("");
+		}*/
+		/*std::vector<std::string> file_list, dir_list;
+		file_list.push_back(name);
+		App->file_sys->DiscoverFiles(ASSETS_FOLDER, file_list, dir_list);*/
+		std::vector<std::string> file_list;
+		App->file_sys->GetAllFilesWithExtension(ASSETS_FOLDER, "solidscene", file_list);
+
+		for (uint i = 0; i < file_list.size(); ++i)
+		{
+			if (file_list[i].compare(name) == 0)
+			{
+				scene_to_load.assign(name);
+				create_new_scene = true;
+				load_new_scene = true;
+
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
+}
+
+GameObject* ModuleScene::CreateGameObjectFromModel(UID uid)
+{
+	Resource* r = App->resources->Get(uid);
+
+	if (r->GetType() != Resource::Type::MODEL)
+	{
+		LOG("[Error] bad resource type to create gameobjects from");
+		return nullptr;
+	}
+
+	R_Model* model =  (R_Model*)r;
+
+	model->LoadToMemory();
+
+	std::vector<GameObject*> all_go;
+	uint num_nodes = model->GetNumNodes();
+
+	all_go.reserve(num_nodes);
+
+	for (uint i = 0; i < num_nodes; ++i)
+	{
+		const R_Model::Node& node = model->GetNode(i);
+
+		GameObject* parent = root_go;
+		if (i > 0)
+			parent = all_go[node.parent];
+
+		GameObject* new_go = CreateGameObject(node.name.c_str(), parent);
+
+		//TODO: SET TRANSFORM
+
+		if (node.mesh > 0)
+		{
+			C_Mesh* c_mesh = new_go->CreateComponent< C_Mesh>();
+			
+			if (c_mesh->SetMeshResource(node.mesh))
+			{
+				new_go->CreateComponent<C_MeshRenderer>();
+			}
+		}
+
+		if (node.material > 0)
+		{
+			C_Material* c_mat = new_go->CreateComponent< C_Material>();
+			c_mat->SetMaterialResource(node.material);
+			/*if (c_mat->SetMaterialResource(node.material))
+			{
+				new_go->CreateComponent<C_MeshRenderer>();
+			}*/
+		}
+
+
+
+		all_go.push_back(new_go);
+	}
+
+	// TODO: improve models to be a prefab, currently is only used as container of hierarchy and meshes/materials
+	// when we are done creating a usable gameobjects classes from model data, unload model
+	model->Release();
+
+	return nullptr;
+}
+
+std::string ModuleScene::GetSceneName() const
+{
+	return scene_name;
+}
+
+void ModuleScene::NewScene()
+{
+	create_new_scene = true;
+}
+

@@ -3,8 +3,8 @@
 
 #include <string>
 
-struct PhysBody3D;
 class Config;
+struct Event;
 
 class Module
 {
@@ -56,8 +56,8 @@ public:
 		return true; 
 	}
 
-	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
-	{}
+	/*virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
+	{}*/
 
 	// ---------------------------------------------------
 	bool IsActive() const
@@ -69,6 +69,8 @@ public:
 	{
 		return name.data();
 	}
+
+	virtual void ReceiveEvent(const Event& event) {}
 
 	virtual bool Save(Config& config)
 	{

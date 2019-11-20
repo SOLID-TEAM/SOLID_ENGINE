@@ -336,6 +336,44 @@ void W_Config::Draw()
 			
 		}
 
+		if (ImGui::CollapsingHeader("Loaded Resources"))
+		{
+			std::map<UID, Resource*> all_map = App->resources->GetAllMapResources();
+			std::map<UID, Resource*>::iterator all = all_map.begin();
+			
+			for (; all != all_map.end(); ++all)
+			{
+				Resource* r = (*all).second;
+				ImGui::Separator();
+				ImGui::Text("Resource UID: %s", r->GetNameFromUID().c_str());
+				std::string type_str;
+				switch (r->GetType())
+				{
+					case Resource::Type::MESH:
+						type_str.assign("MESH");
+						break;
+					case Resource::Type::MODEL:
+						type_str.assign("MODEL");
+						break;
+					case Resource::Type::TEXTURE:
+						type_str.assign("TEXTURE");
+						break;
+					case Resource::Type::MATERIAL:
+						type_str.assign("MATERIAL");
+						break;
+					default:
+						type_str.assign("moron");
+						break;
+					break;
+				}
+				ImGui::Text("Type: %s", type_str.c_str());
+				ImGui::Text("Name: %s", (*all).second->GetName().c_str());
+				ImGui::Text("Load: %i", r->CountReferences());
+
+			}
+			
+		}
+
 		
 	}
 	ImGui::End();
