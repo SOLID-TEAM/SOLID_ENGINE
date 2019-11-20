@@ -5,6 +5,7 @@
 #include "GameObject.h"
 
 #include "external/MathGeoLib/include/Geometry/AABB.h"
+#include "external/MathGeoLib/include/Geometry/LineSegment.h"
 #include "C_Camera.h"
 
 #include <queue>
@@ -67,7 +68,7 @@ public:
 	bool Active();
 
 	template<typename T>
-	void GetIntersections(T &intersector, std::vector<GameObject*> &intersections, uint& checked_collisions = 0u) const;
+	void GetIntersections(T &intersector, std::vector<GameObject*> &intersections, uint& checked_collisions);
 
 private:
 
@@ -82,7 +83,7 @@ private:
 
 template<typename T>
 
-void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersections, uint& checked_collisions) const
+void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersections, uint& checked_collisions)
 {
 	std::queue<KDTreeNode*> nodes_queue;
 
@@ -111,7 +112,7 @@ void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersec
 
 			if (typeid(C_Camera) == typeid(T))
 			{
-				C_Camera camera = intersector;
+				C_Camera& camera = (C_Camera&)intersector;
 
 				++checked_cols;
 
@@ -124,6 +125,27 @@ void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersec
 						++checked_cols;
 
 						if (camera.CheckCollisionAABB(node->bucket[i]->bounding_box))
+						{
+							intersections.push_back(node->bucket[i]);
+						}
+					}
+				}
+			}
+			else if (typeid(LineSegment) == typeid(T))
+			{
+				LineSegment& ray = (LineSegment&)intersector;
+
+				++checked_cols;
+
+				if (node->aabb.Intersects(ray))
+				{
+					for (uint i = 0; i < node->bucket_members; ++i)
+					{
+						// Only push if bounding box collide 
+
+						++checked_cols;
+
+						if (node->bucket[i]->bounding_box.Intersects(ray))
 						{
 							intersections.push_back(node->bucket[i]);
 						}

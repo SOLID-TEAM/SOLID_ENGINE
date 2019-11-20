@@ -2,6 +2,7 @@
 #define _C_MESH_H__
 
 #include "Component.h"
+#include "external/MathGeoLib/include/MathGeoLib.h"
 
 class D_Mesh;
 class C_MeshRenderer;
@@ -32,6 +33,8 @@ public:
 	void SetMeshResource(D_Mesh* resource);
 
 	void DeleteMeshResource();
+
+	bool Intersects(const LineSegment& line, float& distance, math::float3& hit_point);
 
 	bool Save(Config& config);
 

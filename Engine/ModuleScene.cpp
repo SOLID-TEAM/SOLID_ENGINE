@@ -106,6 +106,8 @@ update_status ModuleScene::Update(float dt)
 
 	// Update All GameObjects -----------------------------------
 
+	editor_camera->DoUpdate(dt);
+
 	if (root_go != nullptr)
 	{
 		std::stack<GameObject*> go_stack;
@@ -126,8 +128,6 @@ update_status ModuleScene::Update(float dt)
 		}
 	}
 
-	editor_camera->DoUpdate(dt);
-
 	// Update Gizmo --------------------------------------------
 
 	UpdateGizmo();
@@ -137,6 +137,8 @@ update_status ModuleScene::Update(float dt)
 	UpdateSpacePartitioning();
 
 	// --------------------------------------------------------
+
+	UpdateMousePicking();
 
 	return UPDATE_CONTINUE;
 }
@@ -172,7 +174,7 @@ update_status ModuleScene::Draw()
 		if (editor_mode)
 		{
 			App->test->main_grid->Render();
-			App->renderer3D->RenderKDTree(kdtree, 3.f);
+ 			App->renderer3D->RenderKDTree(kdtree, 3.f);
 		}
 
 		// End ------------------------------------------------
@@ -182,10 +184,72 @@ update_status ModuleScene::Draw()
 
 	// Always clean render list ------------------------------
 
+	debug_renders.clear();
 	go_render_list.clear();
 
 	return UPDATE_CONTINUE;
 }
+
+void ModuleScene::UpdateMousePicking()
+{
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && IsGizmoActived() == false )
+	{
+ 		std::vector<GameObject*> intersections;
+		float2 screen_point(App->input->GetMouseX(), App->input->GetMouseY());
+		C_Camera* camera = editor_camera->GetComponent<C_Camera>();
+
+		if (!scene_viewport->ScreenPointToViewport(screen_point)) 
+		{
+ 			return; // Point not contained in viewport pixel size
+		}
+
+		LineSegment& ray = camera->ViewportPointToRay(screen_point);
+
+		float3 hit_point;
+		float curr_triangle_dist;
+		float near_triangle_dist = FLOAT_INF;
+		GameObject* near_go = nullptr;
+		uint check = 0;
+
+		// Get all static ray intersections -------------------------------------
+	
+		kdtree.GetIntersections(ray, intersections, check);
+
+		// Get all dynamic ray intersections ------------------------------------
+
+		for (GameObject* go : dynamic_go_list)
+		{
+			if (go->bounding_box.IsFinite() && go->bounding_box.Intersects(ray))
+			{
+				intersections.push_back(go);
+			}
+		}
+
+		// Check all meshes -----------------------------------------------------
+
+		for (GameObject* go : intersections)
+		{
+			C_Mesh* mesh = go->GetComponent<C_Mesh>();
+			curr_triangle_dist = FLOAT_INF;
+
+			if (mesh != nullptr && mesh->Intersects(ray, curr_triangle_dist, hit_point))
+			{
+				if (curr_triangle_dist < near_triangle_dist)
+				{
+					near_go = go;
+					near_triangle_dist = curr_triangle_dist;
+				}
+			}
+		}
+
+
+
+		selected_go = near_go;
+	
+
+	}
+}
+
 
 void ModuleScene::UpdateHierarchy()
 {
@@ -263,10 +327,12 @@ void ModuleScene::UpdateGizmo()
 {
 	if (selected_go != nullptr)
 	{
+		(selected_go->is_static) ? ImGuizmo::Enable(false) : ImGuizmo::Enable(true);
+
 		float4x4 global_transform = selected_go->transform->global_transform.Transposed();
 		ImGuizmo::Manipulate(editor_camera->GetViewMatrix().Transposed().ptr(), editor_camera->GetProjectionMatrix().Transposed().ptr(), global_transform.ptr());
 
-		if (!global_transform.Equals(selected_go->transform->global_transform.Transposed()))
+		if (!selected_go->is_static && !global_transform.Equals(selected_go->transform->global_transform.Transposed()))
 		{
 			selected_go->transform->SetGlobalTransform(global_transform.Transposed());
 		}
@@ -280,7 +346,6 @@ void ModuleScene::UpdateSpacePartitioning()
 	uint frustum_collisions = 0u;
 
 	C_Camera* camera = main_camera->GetComponent<C_Camera>();
-
 
 	if (camera->cullling)
 	{
@@ -423,6 +488,10 @@ void ModuleScene::PushEvent(GameObject* go, EventGoType type)
 	events_go_stack.push(EventGo(go, type));
 }
 
+void ModuleScene::PushDebugRender(DebugRender debug_render)
+{
+	debug_renders.push_back(debug_render);
+}
 
 AABB ModuleScene::EncloseAllStaticGo()
 {
@@ -504,6 +573,11 @@ void ModuleScene::FillGoLists()
 			go_stack.push(child);
 		}
 	}
+}
+
+bool ModuleScene::IsGizmoActived()
+{
+	return (ImGuizmo::IsOver() || ImGuizmo::IsUsing());
 }
 
 

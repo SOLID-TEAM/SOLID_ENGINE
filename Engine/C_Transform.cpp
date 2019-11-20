@@ -45,7 +45,7 @@ bool C_Transform::Update(float dt)
 		// Update scale value factor ---------------------------------
 
 		position = global_transform.TranslatePart();
-		rotation = global_transform.RotatePart().ToEulerZYX() * RADTODEG;
+		rotation = global_transform.ToEulerZYX() * RADTODEG;
 		rotation = { rotation.z, rotation.y ,rotation.x };
 		scale = global_transform.ExtractScale();
 
@@ -62,7 +62,10 @@ bool C_Transform::Update(float dt)
 
 		for (Component*  component : linked_go->components)
 		{
-			component->UpdateTransform();
+			if (component != this)
+			{
+  				component->UpdateTransform();
+			}
 		}
 
 		// Update bounding box ---------------------------------------

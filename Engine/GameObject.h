@@ -26,7 +26,6 @@ class D_Mesh; // Remove
 class KDTree;
 class DynTree;
 class DynTreeNode;
-
 class GameObject;
 
 class GameObject
@@ -86,6 +85,12 @@ public:
 	// Bounding Box Functions --------------------------------------
 
 	AABB GetHierarchyAABB();
+
+	bool Intersects(const LineSegment& line, float& distance, math::float3& hit_point) const;
+
+	// Space functions ---------------------------------------------
+
+
 
 private:
 

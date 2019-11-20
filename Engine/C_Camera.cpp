@@ -11,9 +11,7 @@ C_Camera::C_Camera(GameObject* go): Component(go, ComponentType::CAMERA)
 {
 	name.assign("Camera");
 
-	frustum.pos = math::float3::zero;
-	frustum.front = math::float3::unitZ;
-	frustum.up = math::float3::unitY;
+	UpdateTransform();
 
 	SetFrustumType(math::FrustumType::PerspectiveFrustum);
 	SetAspectRatio(16.f, 9.f );
@@ -33,8 +31,8 @@ void C_Camera::UpdateTransform()
 	math::float4x4 global_transform = linked_go->transform->global_transform;
 
 	frustum.pos = global_transform.TranslatePart();
-	frustum.front = global_transform.WorldZ();
-	frustum.up = global_transform.WorldY();
+	frustum.front = global_transform.RotatePart().Mul(float3::unitZ).Normalized();
+	frustum.up = global_transform.RotatePart().Mul(float3::unitY).Normalized();
 
 	UpdateViewMatrix();
 }
@@ -124,6 +122,11 @@ bool C_Camera::CheckCollisionAABB(AABB& aabb)
 	return true;
 }
 
+LineSegment C_Camera::ViewportPointToRay(float2 normalized_point)
+{
+	return frustum.UnProjectLineSegment(normalized_point.x, normalized_point.y);
+}
+
 void C_Camera::UpdateFov()
 {
 	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * aspect_ratio);
@@ -155,10 +158,6 @@ bool C_Camera::Render()
 	return true;
 }
 
-void C_Camera::LookAt(float3 reference)
-{
-	linked_go->transform->LookAt(linked_go->transform->position + (linked_go->transform->position - reference));
-}
 
 bool C_Camera::DrawPanelInfo()
 {

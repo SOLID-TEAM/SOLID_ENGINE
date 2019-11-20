@@ -3,66 +3,15 @@
 #include "Globals.h"
 #include "Light.h"
 #include <string>
+#include <typeinfo>
 
 #include "external/MathGeoLib/include/Math/float4.h"
+#include "external/MathGeoLib/include/Geometry/AABB.h"
+#include "external/MathGeoLib/include/Geometry/OBB.h"
+#include "external/MathGeoLib/include/Geometry/Frustum.h"
+
 
 #define MAX_LIGHTS 8
-
-class FBO
-{
-public:
-
-	enum BufferType
-	{
-		DEPTH_TEAXTURE,
-		NORMAL_FBO,
-		NORMAL_TEXTURE,
-		NORMAL_DEPTH_RBO,
-		MULTISAMPLING_FBO,
-		MULTISAMPLING_COLOR_RBO,
-		MULTISAMPLING_DEPTH_RBO,
-	};
-
-	FBO();
-
-	~FBO();
-
-	void BeginFBO();
-
-	void EndFBO();
-
-	void GenerateFBO();
-
-	void UpdateFBO(float width, float height);
-
-	void DeleteFBO(); 
-
-	uint GetFBOTexture();
-
-	// Only multiple of 2 values // 0 : MSAA disabled // 2-16 : MSAA enabled
-	void SetMSAA( uint MSAA) 
-	{
-		if (MSAA % 2 != 0 || MSAA > 0 || MSAA <= 16)
-		{
-			msaa = MSAA;
-		}
-	}
-
-	uint GetMSAA()
-	{
-		return msaa;
-	}
-
-public:
-
-	float4 clear_color = { 0.1, 0.1, 0.1, 1.f };
-
-private:
-	bool z_buffer_mode = true;
-	uint ID[8];
-	uint msaa = 4;
-	float width = 0, height = 0;
-};
 
 struct RenderConfig
 {
@@ -82,6 +31,34 @@ struct RenderConfig
 	float max_alpha = 1.f;
 
 	ImVec4 default_color_mat = { 1.0f,1.0f,1.0f,1.0f };
+};
+
+struct DebugRender
+{
+public:
+
+	template<class T>
+	void Set(T* obj_to_render, float4 color, float width )
+	{
+		if (typeid(T) == typeid(AABB) || typeid(T) == typeid(OBB) || typeid(T) == typeid(Frustum) == true)
+		{
+			this->obj_to_render = (void*)obj_to_render;
+			this->color = color;
+			this->width = width;
+			type_name = typeid(T).name();
+		} 
+		else
+		{
+			LOG("[Error] RenderDebug(). Type is not alowed");
+		}
+	}
+
+	void Render();
+
+	void* obj_to_render = nullptr;
+	float4 color;
+	float width = 0.f;
+	std::string type_name;
 };
 
 typedef void*  SDL_GLContext;
@@ -116,12 +93,9 @@ public:
 
 	void RenderCircle(float3 postion, float r, int num_segments);
 
-	void RenderTest();
-
 	static void BeginDebugDraw(float4& color);
 
 	static void EndDebugDraw();
-
 
 	bool Save(Config& config);
 

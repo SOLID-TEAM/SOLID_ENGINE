@@ -3,7 +3,7 @@
 #include "Globals.h"
 #include "Module.h"
 #include "GameObject.h"
-
+#include "ModuleRenderer3D.h"
 #include "KDTree.h"
 #include <queue>
 #include <map>
@@ -61,6 +61,8 @@ public:
 
 	update_status Draw();
 
+	void UpdateMousePicking();
+
 	bool CleanUp();
 
 	bool ToSaveScene();
@@ -68,6 +70,7 @@ public:
 	bool SaveScene(Config& config, GameObject* go);
 	
 	bool Save(Config& config);
+
 	void Load(Config& config);
 
 	// Game Objects functions ----------------------------------------------
@@ -87,6 +90,10 @@ public:
 	void UndoLastDelete(); // put gameobject to undo buffer
 
 	void PushEvent(GameObject* go, EventGoType type);
+
+	// Debug ----------------------------------------------------------------
+
+	void PushDebugRender(DebugRender debug_render);
 
 private:
 
@@ -108,7 +115,9 @@ private:
 
 	void FillGoLists();
 
+	// Others ------------------------------------------------
 
+	bool IsGizmoActived();
 
 public:
 
@@ -135,6 +144,10 @@ public:
 
 	Viewport* scene_viewport = nullptr;
 	Viewport* game_viewport = nullptr;
+
+	// Debug -------------------------------------
+
+	std::vector<DebugRender> debug_renders;
 
 	// Trees -------------------------------------
 

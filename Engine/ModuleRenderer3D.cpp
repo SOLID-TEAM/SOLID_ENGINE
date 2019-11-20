@@ -322,6 +322,10 @@ void ModuleRenderer3D::RenderDynTree(DynTree& kdtree, float width, float4& color
 	}
 }
 
+
+
+
+
 void ModuleRenderer3D::RenderCircle(float3 position, float radio, int num_segments)
 {
 	glBegin(GL_LINE_LOOP);
@@ -335,11 +339,6 @@ void ModuleRenderer3D::RenderCircle(float3 position, float radio, int num_segmen
 	}
 
 	glEnd();
-}
-
-void ModuleRenderer3D::RenderTest()
-{
-
 }
 
 void ModuleRenderer3D::BeginDebugDraw(float4& color)
@@ -380,175 +379,9 @@ void ModuleRenderer3D::Load(Config& config)
 
 }
 
-
-FBO::FBO()
+void DebugRender::Render()
 {
-	for (int i = 0; i < 8; ++i)
-	{
-		ID[i] = 0;
-	}
-
-	GenerateFBO();
+	if (type_name == typeid(AABB).name())			App->renderer3D->RenderAABB((AABB&)obj_to_render, width, color);
+	else if (type_name == typeid(OBB).name())		App->renderer3D->RenderOBB((OBB&)obj_to_render, width, color);
+	else if (type_name == typeid(Frustum).name())	App->renderer3D->RenderFrustum((Frustum&)obj_to_render, width, color);
 }
-
-FBO::~FBO()
-{
-	DeleteFBO();
-}
-
-void FBO::BeginFBO()
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, ID[MULTISAMPLING_FBO]);
-	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-}
-
-void FBO::EndFBO()
-{
-	// Blit Frame buffer -------------------------------------------------------
-
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, ID[MULTISAMPLING_FBO]);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, ID[NORMAL_FBO]);
-
-	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-
-	// Generate Mipmap --------------------------------------------------------
-
-	glBindTexture(GL_TEXTURE_2D, ID[NORMAL_TEXTURE]);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	// Copy depht component ---------------------------------------------------
-
-	//glBindTexture(GL_TEXTURE_2D, ID[DEPTH_TEAXTURE]);
-	//glReadBuffer(GL_BACK); // Ensure we are reading from the back buffer.
-	//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, 0, 0, width, height, 0);
-
-}
-
-void FBO::UpdateFBO( float width, float height)
-{
-	this->width = width;
-	this->height = height;
-	bool fboUsed = true;
-	// Normal =====================================================================
-
-	// Texture ---------------------------------------------
-
-	glBindTexture(GL_TEXTURE_2D, ID[NORMAL_TEXTURE]);
-
-	{
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	}
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	// Depth & Stencil -------------------------------------
-
-	glBindRenderbuffer(GL_RENDERBUFFER, ID[NORMAL_DEPTH_RBO]);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	// Frame -----------------------------------------------
-
-	glBindFramebuffer(GL_FRAMEBUFFER, ID[NORMAL_FBO]);
-
-	// Attachment ------------------------------------------
-
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ID[NORMAL_TEXTURE], 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, ID[NORMAL_DEPTH_RBO]);
-
-	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (status != GL_FRAMEBUFFER_COMPLETE) 
-		fboUsed = false;
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	// Multisample ================================================================
-
-	// Color -----------------------------------------------
-
-	glBindRenderbuffer(GL_RENDERBUFFER, ID[MULTISAMPLING_COLOR_RBO]);
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaa, GL_RGBA8, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	// Depth & Stencil -------------------------------------
-
-	glBindRenderbuffer(GL_RENDERBUFFER, ID[MULTISAMPLING_DEPTH_RBO]);
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaa, GL_DEPTH24_STENCIL8, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-
-	// Frame -----------------------------------------------
-
-	glBindFramebuffer(GL_FRAMEBUFFER, ID[MULTISAMPLING_FBO]);
-
-	// Attachment ------------------------------------------
-
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, ID[MULTISAMPLING_COLOR_RBO]);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, ID[MULTISAMPLING_DEPTH_RBO]);
-
-
-	GLenum status_2 = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (status_2 != GL_FRAMEBUFFER_COMPLETE)
-		fboUsed *= false;
-	
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-}
-
-//if (z_buffer_mode)
-//{
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-//	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width, height, 0, GL_LUMINANCE, GL_FLOAT, 0);
-//}
-//else
-
-void FBO::GenerateFBO()
-{
-	glGenTextures(1,		&ID[NORMAL_TEXTURE]);
-	glGenTextures(1,		&ID[DEPTH_TEAXTURE]);
-
-	glGenFramebuffers(1,	&ID[NORMAL_FBO]);
-	glGenFramebuffers(1,	&ID[MULTISAMPLING_FBO]);
-
-	glGenRenderbuffers(1,	&ID[NORMAL_DEPTH_RBO]);
-	glGenRenderbuffers(1,	&ID[MULTISAMPLING_COLOR_RBO]);
-	glGenRenderbuffers(1,	&ID[MULTISAMPLING_DEPTH_RBO]);
-
-}
-
-void FBO::DeleteFBO()
-{
-	glDeleteTextures(1,		&ID[NORMAL_TEXTURE]);
-	glDeleteTextures(1,		&ID[DEPTH_TEAXTURE]);
-
-	glDeleteFramebuffers(1, &ID[NORMAL_FBO]);
-	glDeleteFramebuffers(1, &ID[MULTISAMPLING_FBO]);
-
-	glDeleteRenderbuffers(1, &ID[NORMAL_DEPTH_RBO]);
-	glDeleteRenderbuffers(1, &ID[MULTISAMPLING_COLOR_RBO]);
-	glDeleteRenderbuffers(1, &ID[MULTISAMPLING_DEPTH_RBO]);
-}
-
-uint FBO::GetFBOTexture()
-{
-	return ID[NORMAL_TEXTURE];
-}
-
-
-
-

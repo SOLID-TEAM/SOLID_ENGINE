@@ -65,34 +65,29 @@ void W_Scene::Draw()
 
 		ImGui::Image((ImTextureID)App->scene->scene_viewport->GetTexture(), ImVec2(current_viewport_size.x, current_viewport_size.y), ImVec2(0, 1), ImVec2(1, 0));
 
-		// Set viewport values --------------------------------------------
-
-		if (!(current_viewport_size == viewport_size))
-		{
-			viewport_size = current_viewport_size;
-			App->scene->scene_viewport->SetSize(viewport_size.x, viewport_size.y);
-		}
-
 		// Set Guizmo Config ----------------------------------------------
-		ImGuizmo::Enable(true);
-		ImGuizmo::SetRect(min.x , min.y, current_viewport_size.x, current_viewport_size.y);
+
+		ImGuizmo::SetRect(min.x, min.y, current_viewport_size.x, current_viewport_size.y);
 		ImGuizmo::SetDrawlist();
 
 		if (App->scene->selected_go != nullptr)
 		{
 			ImGuizmo::DrawGizmo();
 		}
-		else
+
+		// Set viewport values --------------------------------------------
+
+		App->scene->scene_viewport->SetPos(float2(min.x,min.y)); // Viewport position after menu bar 
+
+		if (!(current_viewport_size == viewport_size)) // Viewport resize if window size change
 		{
-			ImGuizmo::Enable(false);
+			viewport_size = current_viewport_size;
+			App->scene->scene_viewport->SetSize(viewport_size.x, viewport_size.y);
 		}
 	}
-	else
-	{
-		ImGuizmo::Enable(false);
-	}
 
-	App->scene->scene_viewport->active = active;
+
+	App->scene->scene_viewport->active = active; // Active/disavtive with window active
 
 	//    --------------------------------------------------------------------
 

@@ -20,15 +20,11 @@ public:
 
 	bool Render();
 
-	void LookAt(float3 reference);
-
 	bool DrawPanelInfo();
-
-	// Degrees 4.0 to 179.0
 
 	void SetAspectRatio( float width, float height);
 
-	void SetFov(float fov);
+	void SetFov(float fov); // Degrees 4.0 to 179.0
 
 	void SetClippingNearPlane(float distance);
 
@@ -49,6 +45,8 @@ public:
 	math::float4x4 GetViewMatrix();
 
 	bool CheckCollisionAABB(AABB& aabb);
+
+	LineSegment ViewportPointToRay(float2 point);
 
 private:
 

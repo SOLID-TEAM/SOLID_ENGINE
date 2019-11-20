@@ -287,7 +287,7 @@ update_status ModuleEditor::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleEditor::PostUpdate(float dt)
+update_status ModuleEditor::Draw()
 {
 	// DockSpace ------------------------------------------
 	static bool dock_space = true;
@@ -394,11 +394,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 		}
 	}
 
-	return UPDATE_CONTINUE;
-}
 
-update_status ModuleEditor::Draw()
-{
 	if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
 	{
 		if (ddmesh != nullptr)
@@ -435,7 +431,6 @@ update_status ModuleEditor::Draw()
 
 	return UPDATE_CONTINUE;
 }
-
 
 // In your own code you may want to display an actual icon if you are using a merged icon fonts (see misc/fonts/README.txt)
 void ModuleEditor::HelpMarker(const char* desc) const

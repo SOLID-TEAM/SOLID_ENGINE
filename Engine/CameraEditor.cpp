@@ -41,18 +41,13 @@ void CameraEditor::SetPosition(float3 position)
 {
 	transform->SetPosition(position);
 	final_position = transform->position;
-	current_pitch = final_pitch = transform->rotation.x;
-	current_yaw = final_yaw = transform->rotation.y;
-	to_update = true;
 }
 
 void CameraEditor::SetRotation(float3 rotation)
 {
 	transform->SetRotation(rotation);
-	final_position = transform->position;
 	current_pitch = final_pitch = transform->rotation.x;
 	current_yaw = final_yaw = transform->rotation.y;
-	to_update = true;
 }
 
 void CameraEditor::Update(float dt)
@@ -75,7 +70,7 @@ void CameraEditor::Update(float dt)
 	{
 		if (mouse_right_pressed)
 		{
-			focusing = false;
+ 			focusing = false;
 
 			// Look Around -------------------------------------
 

@@ -46,7 +46,6 @@ private:
 
 	C_Camera* camera = nullptr;
 	bool focusing = false;
-	bool to_update = false;
 
 	math::float3 reference;
 	math::float3 final_position;

@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "ModuleRenderer3D.h"
 #include "GL/glew.h"
 #include "ImGui/imgui.h"
 
@@ -22,6 +23,23 @@ C_MeshRenderer::C_MeshRenderer(GameObject* parent): Component(parent, ComponentT
 C_MeshRenderer::~C_MeshRenderer()
 {
 
+}
+
+bool C_MeshRenderer::Update(float dt)
+{
+	//ViewportOptions& vp = App->editor->viewport_options;
+
+	//if (vp.debug_bounding_box)
+	//{
+	//	DebugRender render_bb;
+	//	render_bb.Set(&linked_go->bounding_box, vp.bb_color , 1.2f);
+	//	App->scene->PushDebugRender(render_bb);
+	//	DebugRender render_obb;
+	//	render_obb.Set(&linked_go->obb, float4(1.f, .9f, 0.1f, 1.f), 1.2f);
+	//	App->scene->PushDebugRender(render_obb);
+	//}
+
+	return true;
 }
 
 bool C_MeshRenderer::Render()
@@ -83,16 +101,14 @@ bool C_MeshRenderer::Render()
 
 	ViewportOptions& vp = App->editor->viewport_options;
 
-	if (vp.mode == V_MODE_SHADED)
+	if (vp.mode == V_MODE_SHADED || App->scene->editor_mode == false)
 	{
 		RenderMesh(albedo_color.ptr(), custom_tex_id, c_mat->textured);
 	}
-
 	else if (vp.mode == V_MODE_WIREFRAME)
 	{
 		RenderWireframe(vp.wire_line_width,vp.wire_color);
 	}
-
 	else if (vp.mode == V_MODE_SHADED_WIREFRAME)
 	{
 		RenderMesh(albedo_color.ptr(), custom_tex_id, c_mat->textured);
@@ -114,9 +130,8 @@ bool C_MeshRenderer::Render()
 	if (vp.debug_bounding_box && App->scene->editor_mode)
 	{
 		App->renderer3D->RenderAABB(linked_go->bounding_box, 1.2f , vp.bb_color);
-		App->renderer3D->RenderOBB(linked_go->obb, 1.2f,	float4(1.f, .9f, 0.1f, 1.f));
+		App->renderer3D->RenderOBB(linked_go->obb, 1.2f, float4(1.f, .9f, 0.1f, 1.f));
 	}
-
 
 	// Pop matrix -----------------------------------------------------------
 	glPopMatrix();

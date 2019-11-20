@@ -130,9 +130,7 @@ public:
 	update_status PreUpdate(float dt);
 
 	update_status Update(float dt);
-
-	update_status PostUpdate(float dt);
-
+;
 	update_status Draw(); // for viewport draw loop
 
 	bool Save(Config& config);

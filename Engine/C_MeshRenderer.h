@@ -18,6 +18,8 @@ public:
 
 	~C_MeshRenderer();
 
+	bool Update(float dt);
+
 	bool Render();
 
 private:
