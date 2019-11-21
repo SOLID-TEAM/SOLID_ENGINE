@@ -12,15 +12,26 @@ C_Material::C_Material(GameObject* parent) : Component(parent, ComponentType::MA
 
 bool C_Material::DrawPanelInfo()
 {
-	// TODO: individual data for each gameobject/d_mesh
+	R_Material* r = (R_Material*)App->resources->Get(resource);
+	if (r != nullptr)
+	{
+		ImGui::Spacing();
+		ImGui::Title("Name", 1);		ImGui::Text("%s", r->GetName().c_str());
+		ImGui::Title("Resource", 1);	ImGui::Text("%i", r->GetUID());
+		ImGui::Separator();
+		
+		ImGui::Spacing();
+	}
 
-	ImGui::Spacing();
-	ImGui::Title("Textured", 1);	ImGui::Checkbox("##textured", &textured);
 
-	ImGui::Separator();
-	//ImGui::Title("Diffuse", 1); ImGui::ColorEdit4("Color##2f", (float*)&data->diffuse_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-	ImGui::SameLine();
-	App->editor->HelpMarker("Used only when the selected gameObject has no texture or textured mode is unchecked");
+
+	/*ImGui::Spacing();
+	ImGui::Title("Textured", 1);	ImGui::Checkbox("##textured", &textured);*/
+
+	//ImGui::Separator();
+	////ImGui::Title("Diffuse", 1); ImGui::ColorEdit4("Color##2f", (float*)&data->diffuse_color, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+	//ImGui::SameLine();
+	//App->editor->HelpMarker("Used only when the selected gameObject has no texture or textured mode is unchecked");
 
 	// TODO: rework how the texture is shown and add more options
 	//if (data->textures[0] != nullptr)
@@ -59,10 +70,10 @@ bool C_Material::DrawPanelInfo()
 
 	//}
 	
-	ImGui::Separator();
+	/*ImGui::Separator();
 	App->editor->ShowCheckerTexture(checker_gl_id, view_checker);
 
-	ImGui::Spacing();
+	ImGui::Spacing();*/
 
 
 	return true;
@@ -89,8 +100,7 @@ bool C_Material::Save(Config& config)
 
 bool C_Material::Load(Config& config)
 {
-	resource = config.GetInt("Resource", resource);
-	SetMaterialResource(resource);
+	SetMaterialResource(config.GetInt("Resource", resource));
 	active = config.GetBool("Active", active);
 
 	return true;
@@ -115,7 +125,7 @@ bool C_Material::SetMaterialResource(UID uid)
 		{
 			if (new_r->GetType() == Resource::Type::MATERIAL)
 			{
-				R_Material* m = (R_Material*)new_r;
+				R_Material* m =  static_cast<R_Material*>(new_r);
 
 				if (m->LoadToMemory())
 				{

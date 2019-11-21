@@ -194,6 +194,7 @@ void R_Model::LoadDependencies()
 				if (r == nullptr)
 				{
 					r = App->resources->CreateNewResource(Resource::Type::MESH, nodes[i].mesh);
+					// TODO0: load mesh data and get the mesh from its own name, not tree node name, same for material below
 					r->GetName().assign(nodes[i].name);
 				}
 			}
@@ -204,6 +205,7 @@ void R_Model::LoadDependencies()
 				if (r == nullptr)
 				{
 					r = App->resources->CreateNewResource(Resource::Type::MATERIAL, nodes[i].material);
+					// TODO1
 					r->GetName().assign(nodes[i].name);
 				}
 			}

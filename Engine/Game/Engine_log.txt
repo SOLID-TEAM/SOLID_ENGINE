@@ -3,18 +3,16 @@
 [Init] Loaded configuration file editor_config.json
 [Init] SDL window & surface
 [Init] SDL input event system
-[Init] Loaded configuration file Library/Settings/lastuid
+[Error] Configuration file Library/Settings/lastuid not found
 
-[Init] Loaded configuration file Assets//BakerHouse.fbx.meta
-[Init] Loaded configuration file Assets//Baker_house.png.meta
 Loading File System
 [Info] Using Developer's Image Library (DevIL) 1.8.0
 [Info] Using Assimp v4.1.0
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
 [Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 441.12
+[Info] Renderer: GeForce GTX 970/PCIe/SSE2
+[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
 Loading Test assets
@@ -69,31 +67,6 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
-[Info:ModuleResources] New file dropped D:\Documentos\GitHub Projects\SOLID_ENGINE\Engine\Game\Assets\Models\baker_house\BakerHouse.fbx
-[Info:ModuleResources] Recognized file extension .fbx
-[success] File Duplicated Correctly
-[Info:ModuleResources] Dropped file duplicated to Assets/BakerHouse.fbx
-[Info] Loading mesh data : Untitled.001
-[Info] Vertices:    160 
-[Info] Indices:    324
-[Info] Triangles:  108
-[Info] Normals:   160
-New file created [.Library/Meshes/11] of 6457 bytes
-[Info] Succesfully saved 11
-Created mesh data: Untitled.001
-[Info] Loading mesh data : Untitled
-[Info] Vertices:    1641 
-[Info] Indices:    2751
-[Info] Triangles:  917
-[Info] Normals:   1641
-New file created [.Library/Meshes/12] of 63553 bytes
-[Info] Succesfully saved 12
-Created mesh data: Untitled
-[success] File Duplicated Correctly
-[Info] correctly duplicated original image Assets/Baker_house.png to Assets/
-[Info] Correctly generated library texture Library/Textures/524384716
-New file created [.Library/Materials/13] of 48 bytes
-New file created [.Library/Models/966313636] of 340 bytes
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

@@ -258,13 +258,9 @@ bool ModuleTextures::Import(const char* file,  UID& output_id, std::string path)
 	std::string p, f, e;
 	App->file_sys->SplitFilePath(file, &p, &f, &e);
 	std::string full_path(path + f + "." + e);
-	// duplicate texture to own assets folder
 
-	if (App->file_sys->DuplicateFile(full_path.c_str(), ASSETS_FOLDER, std::string("/")))
-	{
-		LOG("[Info] correctly duplicated original image %s to %s", file, ASSETS_FOLDER);
-	}
-
+	uint texture = 0;
+	ilBindImage(texture);
 	if (ilLoadImage(full_path.c_str()))
 	{
 		std::string path, filename, extension;
@@ -274,16 +270,26 @@ bool ModuleTextures::Import(const char* file,  UID& output_id, std::string path)
 		output_id = new_uid;
 		std::string library_path = LIBRARY_TEXTURES_FOLDER + std::to_string(new_uid);
 		// Save as dds on own library textures
+
+		
 		if (ilSave(IL_DDS, library_path.c_str()))
 		{
 			LOG("[Info] Correctly generated library texture %s", library_path.c_str());
 		}
 
-		ilDeleteImage(1);
+		ilDeleteImages(1, &texture);
+
+		// duplicate texture to own assets folder
+
+		if (App->file_sys->DuplicateFile(full_path.c_str(), ASSETS_FOLDER, std::string("/")))
+		{
+			LOG("[Info] correctly duplicated original image %s to %s", file, ASSETS_FOLDER);
+		}
 	}
 	else
 	{
 		LOG("[Error] importing texture %s", iluErrorString(ilGetError()));
+		return false;
 	}
 
 	return true;
@@ -293,6 +299,8 @@ bool ModuleTextures::LoadTexResource(R_Texture* r)
 {
 	std::string full_path = LIBRARY_TEXTURES_FOLDER + r->GetNameFromUID();
 
+	uint texture = 0;
+	ilBindImage(texture);
 	if (ilLoadImage(full_path.c_str()))
 	{
 
@@ -301,8 +309,9 @@ bool ModuleTextures::LoadTexResource(R_Texture* r)
 		// TODO: FILL INFORMATION
 
 
-		ilDeleteImage(1);
 		glBindTexture(GL_TEXTURE_2D, 0);
+
+		ilDeleteImages(1, &texture);
 	}
 	else
 		return false;
