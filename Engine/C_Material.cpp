@@ -100,8 +100,7 @@ bool C_Material::Save(Config& config)
 
 bool C_Material::Load(Config& config)
 {
-	resource = config.GetInt("Resource", resource);
-	SetMaterialResource(resource);
+	SetMaterialResource(config.GetInt("Resource", resource));
 	active = config.GetBool("Active", active);
 
 	return true;
@@ -126,7 +125,7 @@ bool C_Material::SetMaterialResource(UID uid)
 		{
 			if (new_r->GetType() == Resource::Type::MATERIAL)
 			{
-				R_Material* m = (R_Material*)new_r;
+				R_Material* m =  static_cast<R_Material*>(new_r);
 
 				if (m->LoadToMemory())
 				{

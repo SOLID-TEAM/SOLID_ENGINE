@@ -162,8 +162,6 @@ bool C_Mesh::Intersects(const LineSegment& ray, float& near_distance, math::floa
 
 bool C_Mesh::Save(Config& config)
 {
-	//// TODO: resources
-	//int resource = 3142413;
 	config.AddInt("Resource", resource);
 	config.AddBool("Active", active);
 	return true;
