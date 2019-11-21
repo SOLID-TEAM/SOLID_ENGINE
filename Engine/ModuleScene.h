@@ -9,6 +9,7 @@
 #include <map>
 #include <list>
 #include <stack>
+#include <map>
 
 #include "Config.h"
 
@@ -170,6 +171,7 @@ public:
 	// Test --------------------------------------
 
 	LineSegment ray_test;
+	std::vector<float3> hit_points;
 
 private:
 

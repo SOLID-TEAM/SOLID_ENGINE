@@ -7,8 +7,9 @@
 #include "CameraEditor.h"
 
 #include "ImGuizmo/ImGuizmo.h"
-#include "R_Model.h"
 
+#include "R_Model.h"
+#include "R_Mesh.h"
 
 #include "external/MathGeoLib/include/Math/MathAll.h"
 
@@ -226,10 +227,17 @@ update_status ModuleScene::Draw()
 		glVertex3fv(ray_test.b.ptr());
 		glEnd();
 
-		glPointSize(20);
+		glPointSize(10);
+		glColor3f(3.f, 0.f,0.f);
 		glBegin(GL_POINTS);
-		glVertex3fv(ray_test.a.ptr());
+
+		for (float3 hit_point : hit_points)
+		{
+			glVertex3fv(hit_point.ptr());
+		}
+
 		glEnd();
+
 		// Debug Renders --------------------------------------
 
 		if (editor_mode)
@@ -255,7 +263,7 @@ void ModuleScene::UpdateMousePicking()
 {
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && IsGizmoActived() == false )
 	{
- 		std::vector<GameObject*> intersections;
+ 		std::vector< GameObject*> intersections;
 		float2 screen_point(ImGui::GetMousePos().x, ImGui::GetMousePos().y);
 		C_Camera* camera = editor_camera->GetComponent<C_Camera>();
 
@@ -265,17 +273,9 @@ void ModuleScene::UpdateMousePicking()
 		}
 
 		LineSegment& ray = ray_test = camera->ViewportPointToRay(screen_point);
-
-		float3 hit_point;
-		//Test
-		float near_dist = FLOAT_INF;
-		float current_dist;
-
-		float curr_triangle_dist;
-		float near_triangle_dist = FLOAT_INF;
-		GameObject* near_go = nullptr;
 		uint check = 0;
 
+		hit_points.clear();
 		// Get all static ray intersections -------------------------------------
 	
 		kdtree.GetIntersections(ray, intersections, check);
@@ -292,24 +292,52 @@ void ModuleScene::UpdateMousePicking()
 
 		// Check all meshes -----------------------------------------------------
 
+		LineSegment local_ray;
+		Triangle triangle;
+		float* vertices = nullptr;
+		uint* indices = nullptr;
+		uint indx = 0u;
+		R_Mesh* res = nullptr;
+		C_Mesh* mesh = nullptr;
+		float triangle_dist = 100.f;
+		float near_triangle_dist = triangle_dist;
+		GameObject* near_go = nullptr;
+
 		for (GameObject* go : intersections)
 		{
-			C_Mesh* mesh = go->GetComponent<C_Mesh>();
-			curr_triangle_dist = FLOAT_INF;
+			mesh = go->GetComponent<C_Mesh>();
+			if (mesh != nullptr) res = (R_Mesh*)App->resources->Get(mesh->GetResource());
+			if (res == nullptr) 
+				continue;
 
-			if (mesh != nullptr && mesh->Intersects(ray, curr_triangle_dist, hit_point))
+			local_ray = ray;
+			local_ray.Transform(go->transform->GetGlobalTransform().Inverted());
+			vertices = res->vertices;
+			indices = res->indices;
+
+			for (uint i = 0u; i < res->buffers_size[R_Mesh::INDICES]; i += 3u)
 			{
-				//if (curr_triangle_dist < near_triangle_dist)
-				//{
-				//	near_go = go;
-				//	near_triangle_dist = curr_triangle_dist;
-				//}
-				current_dist = hit_point.Distance(ray.a);
+				// Set triangle -------------------------------------------------
+				indx = indices[i];
+				triangle.a = (float3)&vertices[indx *3];
+				indx = indices[i + 1u];
+				triangle.b = (float3)&vertices[indx * 3];
+				indx = indices[i + 2u];
+				triangle.c = (float3)&vertices[indx * 3];
 
-				if (current_dist < near_dist)
+				// Check intersection -------------------------------------------
+				float3 hit_point;
+
+				if (local_ray.Intersects(triangle, &triangle_dist, &hit_point))
 				{
-					near_go = go;
-					near_dist = current_dist;
+					hit_point = go->transform->GetGlobalTransform().MulPos(hit_point);
+					hit_points.push_back(hit_point);
+
+					if (triangle_dist < near_triangle_dist)
+					{
+						near_go = go;
+						near_triangle_dist = triangle_dist;
+					}
 				}
 			}
 		}

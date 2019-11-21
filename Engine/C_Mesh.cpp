@@ -90,87 +90,15 @@ bool C_Mesh::SetMeshResource(UID uid)
 
 }
 
+UID C_Mesh::GetResource()
+{
+	return resource;
+}
+
 void C_Mesh::DeleteMeshResource()
 {
 	if (App->resources->Get(resource) != nullptr)
 		App->resources->Get(resource)->Release();
-}
-
-// TODO: Create hit struct to save triangle , point, normal, etc.
-
-bool C_Mesh::Intersects(const LineSegment& ray, float& near_distance, math::float3& hit_point) 
-{
-	// Operation vars -------------------------
-	LineSegment local_ray;
-
-	Triangle triangle;
-	math::float3 local_hit_point;
-	bool intersects = false;
-	float curr_distance;
-
-	//Test
-	float near_dist = FLOAT_INF;
-	float current_dist;
-
-	// Resource vars ---------------------------
-	float* vertices = nullptr;
-	uint* indices = nullptr;
-	uint indx = 0u;
-	R_Mesh* res = (R_Mesh*)App->resources->Get(resource);
-
-
-	if (res == nullptr) 
-		return false; // If resource is null return false
-
-	// Set vars -------------------------------
-	
-	local_ray = ray;  
-	local_ray.Transform(linked_go->transform->GetGlobalTransform().Inverted()); // Inverted transformation to get local ray
-	vertices = res->vertices;
-	indices = res->indices;
-
-	near_distance = FLOAT_INF;
-
-	for (uint i = 0u; i < res->buffers_size[R_Mesh::INDICES]; i += 3u)
-	{
-		// Set triangle -------------------------------------------------
-		indx = indices[i];
-		triangle.a = { vertices[indx], vertices[indx + 1u], vertices[indx + 2u] };
-		indx = indices[i + 1u];
-		triangle.b = { vertices[indx], vertices[indx + 1u], vertices[indx + 2u] };
-		indx = indices[i + 2u];
-		triangle.c = { vertices[indx], vertices[indx + 1u], vertices[indx + 2u] };
-	
-		// Check intersection -------------------------------------------
-
-		if (local_ray.Intersects(triangle, &curr_distance, &local_hit_point))
-		{
-			intersects = true;
-
-			//if (curr_distance < near_distance)
-			//{
-			//	near_distance = curr_distance;
-			//	hit_point = local_hit_point;
-			//}
-
-			current_dist = local_hit_point.Distance(local_ray.a);
-
-			if (current_dist < near_dist)
-			{
-				near_dist = current_dist;
-				hit_point = local_hit_point;
-			}
-		}
-	}
-
-	if (intersects == true)
-	{
-		// Transform local point to global point -----------------------
-
-		hit_point = linked_go->transform->GetGlobalTransform().MulPos(local_hit_point);
-	}
-
-	return intersects;
 }
 
 bool C_Mesh::Save(Config& config)

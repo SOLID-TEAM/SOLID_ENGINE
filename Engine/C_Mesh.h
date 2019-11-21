@@ -34,9 +34,9 @@ public:
 
 	bool SetMeshResource(UID resource);
 
-	void DeleteMeshResource();
+	UID GetResource();
 
-	bool Intersects(const LineSegment& line, float& distance, math::float3& hit_point);
+	void DeleteMeshResource();
 
 	bool Save(Config& config);
 
