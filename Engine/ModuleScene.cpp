@@ -94,6 +94,7 @@ bool ModuleScene::CleanUp()
 	}
 
 	selected_go = nullptr;
+	main_camera = nullptr;
 
 	// GameObjects --------------------------------------------------
 
@@ -148,7 +149,7 @@ update_status ModuleScene::Update(float dt)
 
 	UpdateGoLists();
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) //TEST 
 	{
 		FillGoLists();
 	}
@@ -841,7 +842,7 @@ GameObject* ModuleScene::CreateGameObjectFromModel(UID uid)
 
 		GameObject* new_go = CreateGameObject(node.name.c_str(), parent);
 
-		//TODO: SET TRANSFORM
+		//@TODO: SET TRANSFORM
 
 		if (node.mesh > 0)
 		{

@@ -269,8 +269,9 @@ bool GameObject::Save(Config& config)
 
 	myConfig.AddInt("UID", uid);
 	if (parent) myConfig.AddInt("Parent UID", parent->uid);
-	myConfig.AddString("name", name.c_str());
+	myConfig.AddString("Name", name.c_str());
 	myConfig.AddBool("Active", active);
+	myConfig.AddBool("Static", is_static);
 
 	// components
 	myConfig.AddArray("Components");
@@ -278,11 +279,10 @@ bool GameObject::Save(Config& config)
 	{
 		Config component;
 		component.AddInt("Type", (int)(*it)->type);
-		component.AddString("name", (*it)->name.c_str());
+		component.AddString("Name", (*it)->name.c_str());
 		(*it)->Save(component);
 		myConfig.AddArrayEntry(component);
 	}
-
 
 	config.AddArrayEntry(myConfig);
 
@@ -297,8 +297,9 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 	// store relations to next hierarchical assignment
 	relationship[this] = parent_id;
 
-	name.assign(config.GetString("name", "noname"));
-	active = config.GetBool("active", true);
+	name.assign(config.GetString("Name", "noname"));
+	active = config.GetBool("Active", true);
+	is_static = config.GetBool("Static", true);
 
 	// load all components
 	int num_components = config.GetArrayCount("Components");

@@ -319,7 +319,7 @@ bool C_Transform::Load(Config& config)
 	rotation = config.GetFloat3("Rotation", rotation);
 	scale = config.GetFloat3("Scale", scale);
 
-	// TODO
+	// @TODO
 	SetLocalPosition(position);
 	SetLocalRotation(rotation);
 	SetLocalScale(scale);
