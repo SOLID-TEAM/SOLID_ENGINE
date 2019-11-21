@@ -121,7 +121,7 @@ UID R_Material::Import(const aiMaterial* material, const char* material_name, st
 	
 		// Load material textures ------------------------------------------------- 
 		
-		m->textures[R_Material::DIFFUSE] = App->resources->ImportFile(file.c_str(), Resource::Type::TEXTURE , from_path );
+		m->textures[R_Material::DIFFUSE] = App->resources->ImportFile(file.c_str(), Resource::Type::TEXTURE , from_path, true );
 	}
 	else
 	{
@@ -136,6 +136,7 @@ UID R_Material::Import(const aiMaterial* material, const char* material_name, st
 
 bool R_Material::SaveToFile(const char* name)
 {
+	// TODO: STORE material name on string with null termination | And load it
 	uint size = sizeof(diffuse_color) + sizeof(textures);
 	char* data = new char[size];
 

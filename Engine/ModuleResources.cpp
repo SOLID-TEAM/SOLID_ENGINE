@@ -47,6 +47,13 @@ UID ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type t
 	UID ret = 0;
 	bool import_ok = false;
 
+	if (force)
+	{
+		ret = Find(new_file_in_assets);
+		if (ret > 0)
+			return ret;
+	}
+
 	switch (type)
 	{
 	case Resource::Type::MODEL:
@@ -64,9 +71,14 @@ UID ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type t
 	if (import_ok)
 	{
 		Resource* r = CreateNewResource(type, ret);
-		r->GetName().assign(new_file_in_assets);
-		//r->GetExportedName().assign(written_file.c_str());
+		std::string p, f, e;
+		App->file_sys->SplitFilePath(new_file_in_assets, &p, &f, &e);
+
 		ret = r->GetUID();
+		r->GetOriginalFile().assign(new_file_in_assets);
+		r->GetName().assign(f + "." +e);
+		r->GetExportedFile().assign(GetRelativePathToWriteFromType(type) + std::to_string(ret));
+		
 		// create metadata
 		CreateNewMetaData(new_file_in_assets, ret);
 	}
@@ -308,8 +320,6 @@ void ModuleResources::LoadAllMetaResources()
 	std::vector<std::string> all_metas;
 	GetMetasFromNodes(all_nodes, all_metas);
 
-	LOG("");
-
 	for (uint i = 0; i < all_metas.size(); ++i)
 	{
 		Config meta(all_metas[i].c_str());
@@ -333,8 +343,6 @@ void ModuleResources::LoadAllMetaResources()
 
 			LoadDependencies(r);
 		}
-
-		//App->scene->CreateGameObjectFromModel(resource_uid);
 
 	}
 	
