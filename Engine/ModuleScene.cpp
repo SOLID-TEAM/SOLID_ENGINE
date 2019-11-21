@@ -219,6 +219,13 @@ update_status ModuleScene::Draw()
 
 		App->renderer3D->lights[0].Render();
 
+		// Test -----------------------------------------------
+
+		glBegin(GL_LINES);
+		glVertex3fv((GLfloat*)&ray_test.a[0]);
+		glVertex3fv((GLfloat*)&ray_test.b[0]);
+		glEnd();
+
 		// Debug Renders --------------------------------------
 
 		if (editor_mode)
@@ -253,7 +260,7 @@ void ModuleScene::UpdateMousePicking()
  			return; // Point not contained in viewport pixel size
 		}
 
-		LineSegment& ray = camera->ViewportPointToRay(screen_point);
+		LineSegment& ray = ray_test = camera->ViewportPointToRay(screen_point);
 
 		float3 hit_point;
 		float curr_triangle_dist;

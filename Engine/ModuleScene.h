@@ -110,7 +110,6 @@ private:
 	bool LoadScene(Config& config);
 
 	bool LoadSceneNow();
-	
 
 	void UpdateHierarchy();
 
@@ -167,6 +166,10 @@ public:
 	// Trees -------------------------------------
 
 	KDTree kdtree;
+
+	// Test --------------------------------------
+
+	LineSegment ray_test;
 
 private:
 
