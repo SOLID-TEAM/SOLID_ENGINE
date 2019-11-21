@@ -107,6 +107,11 @@ bool C_Mesh::Intersects(const LineSegment& ray, float& near_distance, math::floa
 	math::float3 local_hit_point;
 	bool intersects = false;
 	float curr_distance;
+
+	//Test
+	float near_dist = FLOAT_INF;
+	float current_dist;
+
 	// Resource vars ---------------------------
 	float* vertices = nullptr;
 	uint* indices = nullptr;
@@ -142,9 +147,17 @@ bool C_Mesh::Intersects(const LineSegment& ray, float& near_distance, math::floa
 		{
 			intersects = true;
 
-			if (curr_distance < near_distance)
+			//if (curr_distance < near_distance)
+			//{
+			//	near_distance = curr_distance;
+			//	hit_point = local_hit_point;
+			//}
+
+			current_dist = local_hit_point.Distance(local_ray.a);
+
+			if (current_dist < near_dist)
 			{
-				near_distance = curr_distance;
+				near_dist = current_dist;
 				hit_point = local_hit_point;
 			}
 		}

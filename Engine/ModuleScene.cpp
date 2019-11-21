@@ -222,10 +222,14 @@ update_status ModuleScene::Draw()
 		// Test -----------------------------------------------
 
 		glBegin(GL_LINES);
-		glVertex3fv((GLfloat*)&ray_test.a[0]);
-		glVertex3fv((GLfloat*)&ray_test.b[0]);
+		glVertex3fv(ray_test.a.ptr());
+		glVertex3fv(ray_test.b.ptr());
 		glEnd();
 
+		glPointSize(20);
+		glBegin(GL_POINTS);
+		glVertex3fv(ray_test.a.ptr());
+		glEnd();
 		// Debug Renders --------------------------------------
 
 		if (editor_mode)
@@ -252,7 +256,7 @@ void ModuleScene::UpdateMousePicking()
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && IsGizmoActived() == false )
 	{
  		std::vector<GameObject*> intersections;
-		float2 screen_point(App->input->GetMouseX(), App->input->GetMouseY());
+		float2 screen_point(ImGui::GetMousePos().x, ImGui::GetMousePos().y);
 		C_Camera* camera = editor_camera->GetComponent<C_Camera>();
 
 		if (!scene_viewport->ScreenPointToViewport(screen_point)) 
@@ -263,6 +267,10 @@ void ModuleScene::UpdateMousePicking()
 		LineSegment& ray = ray_test = camera->ViewportPointToRay(screen_point);
 
 		float3 hit_point;
+		//Test
+		float near_dist = FLOAT_INF;
+		float current_dist;
+
 		float curr_triangle_dist;
 		float near_triangle_dist = FLOAT_INF;
 		GameObject* near_go = nullptr;
@@ -291,10 +299,17 @@ void ModuleScene::UpdateMousePicking()
 
 			if (mesh != nullptr && mesh->Intersects(ray, curr_triangle_dist, hit_point))
 			{
-				if (curr_triangle_dist < near_triangle_dist)
+				//if (curr_triangle_dist < near_triangle_dist)
+				//{
+				//	near_go = go;
+				//	near_triangle_dist = curr_triangle_dist;
+				//}
+				current_dist = hit_point.Distance(ray.a);
+
+				if (current_dist < near_dist)
 				{
 					near_go = go;
-					near_triangle_dist = curr_triangle_dist;
+					near_dist = current_dist;
 				}
 			}
 		}

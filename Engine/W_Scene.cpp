@@ -51,7 +51,6 @@ void W_Scene::Draw()
 
 		ImVec2 min = ImGui::GetCursorScreenPos();
 		ImVec2 max = ImGui::GetCursorScreenPos() + ImGui::GetContentRegionAvail();
-
 		bool mouse_is_hovering = ImGui::IsMouseHoveringRect(min, max);
 
 		if (App->scene->editor_camera)
