@@ -5,8 +5,8 @@
         "framerate_cap": 60
     },
     "Window": {
-        "window_width": 1920,
-        "window_height": 1080,
+        "window_width": 1564,
+        "window_height": 271,
         "fullscreen": false,
         "fullscreen_desktop": false,
         "resizable": true,
@@ -101,6 +101,6 @@
         ]
     },
     "ModuleResources": {
-        "Last_UID": 37
+        "Last_UID": 672
     }
 }

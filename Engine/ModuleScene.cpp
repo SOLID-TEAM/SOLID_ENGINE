@@ -97,7 +97,11 @@ bool ModuleScene::CleanUp()
 	selected_go = nullptr;
 	main_camera = nullptr;
 
-	// GameObjects --------------------------------------------------
+	// Clear lists --------------------------------------------------
+
+	static_go_list.clear();
+	dynamic_go_list.clear();
+	go_render_list.clear();
 
 	// TODO
 	/*if (editor_camera != nullptr)
@@ -276,6 +280,7 @@ void ModuleScene::UpdateMousePicking()
 		uint check = 0;
 
 		hit_points.clear();
+
 		// Get all static ray intersections -------------------------------------
 	
 		kdtree.GetIntersections(ray, intersections, check);
@@ -416,6 +421,7 @@ void ModuleScene::UpdateGoLists()
 		{
 			dynamic_go_list.remove(event_go.go);
 		}
+
 	}
 }
 

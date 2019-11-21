@@ -3,16 +3,26 @@
 [Init] Loaded configuration file editor_config.json
 [Init] SDL window & surface
 [Init] SDL input event system
-[Error] Configuration file Library/Settings/lastuid not found
-
+[Init] Loaded configuration file Library/Settings/lastuid
+[Init] Loaded configuration file Assets//BakerHouse.fbx.meta
+[Init] Loaded configuration file Assets//Baker_house.png.meta
+[Init] Loaded configuration file Assets//Building_V01_C.png.meta
+[Init] Loaded configuration file Assets//Building_V02_C.png.meta
+[Init] Loaded configuration file Assets//Street environment_V01.FBX.meta
+[Init] Loaded configuration file Assets//building 01_c.tga.meta
+[Init] Loaded configuration file Assets//building 06_ c.tga.meta
+[Init] Loaded configuration file Assets//building03_c.tga.meta
+[Init] Loaded configuration file Assets//building05 _c.tga.meta
+[Init] Loaded configuration file Assets//building_016_c.tga.meta
+[Init] Loaded configuration file Assets//building_025_c.tga.meta
 Loading File System
 [Info] Using Developer's Image Library (DevIL) 1.8.0
 [Info] Using Assimp v4.1.0
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
 [Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 970/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 436.30
+[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
+[Info] OpenGL version supported: 4.6.0 NVIDIA 441.12
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
 Loading Test assets
@@ -67,6 +77,251 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
+[Info:ModuleResources] New file dropped D:\Documentos\GitHub Projects\SOLID_ENGINE\Engine\Game\Assets\Models\street\Street environment_V01.FBX
+[Info:ModuleResources] Recognized file extension .FBX
+[success] File Duplicated Correctly
+[Info:ModuleResources] Dropped file duplicated to Assets/Street environment_V01.FBX
+[Info] Loading mesh data : City_building_004
+[Info] Vertices:    3850 
+[Info] Indices:    5988
+[Info] Triangles:  1996
+[Info] Normals:   3850
+New file created [.Library/Meshes/673] of 147198 bytes
+[Info] Succesfully saved 673
+Created mesh data: City_building_004
+[Info] Loading mesh data : City_building_001
+[Info] Vertices:    2147 
+[Info] Indices:    4176
+[Info] Triangles:  1392
+[Info] Normals:   2147
+New file created [.Library/Meshes/674] of 85454 bytes
+[Info] Succesfully saved 674
+Created mesh data: City_building_001
+[Info] Loading mesh data : City_building_007
+[Info] Vertices:    436 
+[Info] Indices:    684
+[Info] Triangles:  228
+[Info] Normals:   436
+New file created [.Library/Meshes/675] of 16734 bytes
+[Info] Succesfully saved 675
+Created mesh data: City_building_007
+[Info] Loading mesh data : City_building_008
+[Info] Vertices:    419 
+[Info] Indices:    864
+[Info] Triangles:  288
+[Info] Normals:   419
+New file created [.Library/Meshes/676] of 16910 bytes
+[Info] Succesfully saved 676
+Created mesh data: City_building_008
+[Info] Loading mesh data : City_building_010
+[Info] Vertices:    4 
+[Info] Indices:    6
+[Info] Triangles:  2
+[Error], Mesh contains 2 no triangle faces
+[Info] Normals:   4
+New file created [.Library/Meshes/677] of 198 bytes
+[Info] Succesfully saved 677
+Created mesh data: City_building_010
+[Info] Loading mesh data : City_building_010
+[Info] Vertices:    3268 
+[Info] Indices:    4998
+[Info] Triangles:  1666
+[Info] Normals:   3268
+New file created [.Library/Meshes/678] of 124614 bytes
+[Info] Succesfully saved 678
+Created mesh data: City_building_010
+[Info] Loading mesh data : City_building_013
+[Info] Vertices:    2452 
+[Info] Indices:    4197
+[Info] Triangles:  1399
+[Info] Normals:   2452
+New file created [.Library/Meshes/679] of 95298 bytes
+[Info] Succesfully saved 679
+Created mesh data: City_building_013
+[Info] Loading mesh data : City_building_028
+[Info] Vertices:    6069 
+[Info] Indices:    8292
+[Info] Triangles:  2764
+[Info] Normals:   6069
+New file created [.Library/Meshes/680] of 227422 bytes
+[Info] Succesfully saved 680
+Created mesh data: City_building_028
+[Info] Loading mesh data : Line002
+[Info] Vertices:    48 
+[Info] Indices:    72
+[Info] Triangles:  24
+[Info] Normals:   48
+New file created [.Library/Meshes/681] of 1468 bytes
+[Info] Succesfully saved 681
+Created mesh data: Line002
+[Info] Loading mesh data : Plane001
+[Info] Vertices:    25 
+[Info] Indices:    96
+[Info] Triangles:  32
+[Info] Normals:   25
+New file created [.Library/Meshes/682] of 1221 bytes
+[Info] Succesfully saved 682
+Created mesh data: Plane001
+[Info] Loading mesh data : City_building_014
+[Info] Vertices:    4218 
+[Info] Indices:    6636
+[Info] Triangles:  2212
+[Info] Normals:   4218
+New file created [.Library/Meshes/683] of 161566 bytes
+[Info] Succesfully saved 683
+Created mesh data: City_building_014
+[Info] Loading mesh data : City_building_022
+[Info] Vertices:    4670 
+[Info] Indices:    8496
+[Info] Triangles:  2832
+[Info] Normals:   4670
+New file created [.Library/Meshes/684] of 183470 bytes
+[Info] Succesfully saved 684
+Created mesh data: City_building_022
+[Info] Loading mesh data : City_building_026
+[Info] Vertices:    4523 
+[Info] Indices:    8232
+[Info] Triangles:  2744
+[Info] Normals:   4523
+New file created [.Library/Meshes/685] of 177710 bytes
+[Info] Succesfully saved 685
+Created mesh data: City_building_026
+[Info] Loading mesh data : Object010
+[Info] Vertices:    1440 
+[Info] Indices:    2160
+[Info] Triangles:  720
+[Info] Normals:   1440
+New file created [.Library/Meshes/686] of 43230 bytes
+[Info] Succesfully saved 686
+Created mesh data: Object010
+[Info] Loading mesh data : City_building_033
+[Info] Vertices:    4772 
+[Info] Indices:    7986
+[Info] Triangles:  2662
+[Info] Normals:   4772
+New file created [.Library/Meshes/687] of 184694 bytes
+[Info] Succesfully saved 687
+Created mesh data: City_building_033
+[Info] Loading mesh data : City_building_034
+[Info] Vertices:    3481 
+[Info] Indices:    6378
+[Info] Triangles:  2126
+[Info] Normals:   3481
+New file created [.Library/Meshes/688] of 136950 bytes
+[Info] Succesfully saved 688
+Created mesh data: City_building_034
+[Info] Loading mesh data : City_building_037
+[Info] Vertices:    2548 
+[Info] Indices:    4530
+[Info] Triangles:  1510
+[Info] Normals:   2548
+New file created [.Library/Meshes/689] of 99702 bytes
+[Info] Succesfully saved 689
+Created mesh data: City_building_037
+[Info] Loading mesh data : City_building_038
+[Info] Vertices:    3972 
+[Info] Indices:    7392
+[Info] Triangles:  2464
+[Info] Normals:   3972
+New file created [.Library/Meshes/690] of 156718 bytes
+[Info] Succesfully saved 690
+Created mesh data: City_building_038
+[Info] Correctly generated library texture Library/Textures/969140055
+[success] File Duplicated Correctly
+[Info] correctly duplicated original image Assets/building03_c.tga to Assets/
+New file created [.Library/Materials/691] of 48 bytes
+New file created [.Library/Materials/692] of 48 bytes
+[Info] Correctly generated library texture Library/Textures/711064062
+[success] File Duplicated Correctly
+[Info] correctly duplicated original image Assets/building_016_c.tga to Assets/
+New file created [.Library/Materials/693] of 48 bytes
+[Info] Correctly generated library texture Library/Textures/1198029858
+[success] File Duplicated Correctly
+[Info] correctly duplicated original image Assets/building_025_c.tga to Assets/
+New file created [.Library/Materials/694] of 48 bytes
+[Error] NO TEXTURE ON MODEL
+New file created [.Library/Materials/695] of 48 bytes
+[Error] NO TEXTURE ON MODEL
+New file created [.Library/Materials/696] of 48 bytes
+[Info] Correctly generated library texture Library/Textures/1919377985
+[success] File Duplicated Correctly
+[Info] correctly duplicated original image Assets/building 01_c.tga to Assets/
+New file created [.Library/Materials/697] of 48 bytes
+[Info] Correctly generated library texture Library/Textures/1844759110
+[success] File Duplicated Correctly
+[Info] correctly duplicated original image Assets/building 06_ c.tga to Assets/
+New file created [.Library/Materials/698] of 48 bytes
+[Info] Correctly generated library texture Library/Textures/1567004828
+[success] File Duplicated Correctly
+[Info] correctly duplicated original image Assets/building05 _c.tga to Assets/
+New file created [.Library/Materials/699] of 48 bytes
+New file created [.Library/Materials/700] of 48 bytes
+[Error] NO TEXTURE ON MODEL
+New file created [.Library/Materials/701] of 48 bytes
+New file created [.Library/Models/2126378941] of 7060 bytes
+[Init] Loaded configuration file Assets/Blabla.solidscene
+[Info] I Scene Root i lost treat with my child Sky001_$AssimpF
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Line002
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Dummy001_$Assim
+[Info] I Scene Root i lost treat with my child Sky001_$AssimpF
+[Info] I Scene Root i lost treat with my child Dummy001_$Assim
+[Info] I Scene Root i lost treat with my child Sky001
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Dummy001
+[Info] I Scene Root i lost treat with my child Sky001_$AssimpF
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Plane001
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Spot001.Target_
+[Info] I Scene Root i lost treat with my child Camera001.Targe
+[Info] I Scene Root i lost treat with my child Spot001_$Assimp
+[Info] I Scene Root i lost treat with my child Spot001.Target_
+[Info] I Scene Root i lost treat with my child Spot001.Target_
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Object010
+[Info] I Scene Root i lost treat with my child Camera001_$Assi
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Camera001_$Assi
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Camera001
+[Info] I Scene Root i lost treat with my child Camera001.Targe
+[Info] I Scene Root i lost treat with my child Camera001.Targe
+[Info] I Scene Root i lost treat with my child Object010_$Assi
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Camera001_$Assi
+[Info] I Scene Root i lost treat with my child Spot001_$Assimp
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Camera001.Targe
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Spot001_$Assimp
+[Info] I Scene Root i lost treat with my child Spot001_$Assimp
+[Info] I Scene Root i lost treat with my child Spot001
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Object010_$Assi
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child City_building_0
+[Info] I Scene Root i lost treat with my child Spot001.Target
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

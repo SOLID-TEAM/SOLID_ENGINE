@@ -67,13 +67,14 @@ bool ModuleEditor::Init(Config& config)
 	style.SeparationType = ImGuiSeparationType::ImGui_WindowSeparation;
 	// -----------------------------------------------
 	// TODO: rework individual window size constraints
-	style.WindowMinSize = ImVec2(240.f, 278.f);//ImVec2(278.f, 278.f);
+	//style.WindowMinSize = ImVec2(240.f, 278.f);//ImVec2(278.f, 278.f);
 	style.WindowRounding = 0.0f;// <- Set this on init or use ImGui::PushStyleVar()
 	style.ChildRounding = 0.0f;
 	style.FrameRounding = 0.0f;
 	style.GrabRounding = 0.0f;
 	style.PopupRounding = 0.0f;
 	style.ScrollbarRounding = 0.0f;
+	style.Colors[ImGuiCol_::ImGuiCol_Separator] = ImVec4(0.1f, 0.1f, 0.1f, 1.f);
 
 	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -214,129 +215,66 @@ update_status ModuleEditor::PreUpdate(float dt)
 // Update
 update_status ModuleEditor::Update(float dt)
 {
-	// DEBUG MESH  ------------------------------------------------------------------------------------------------
-	// check if we need to show debug normals on selected go
-
-	//if ((viewport_options.debug_vertex_normals || viewport_options.debug_face_normals) && App->scene->selected_go != nullptr)
-	//{	
-	//	if (last_go_precalc != App->scene->selected_go)
-	//	{
-	//		// check if the gameobject has meshes
-	//		R_Mesh* smesh = nullptr;
-	//		if(App->scene->selected_go != nullptr)
-	//			smesh = App->scene->selected_go->GetMeshes();
-
-	//		// we calc the two modes at once for the selected go
-	//		// but we filter what to print from bools cols
-	//		if (smesh != nullptr)
-	//		{
-	//			LOG("[Init] Info: hey, i need to recompute the normals!");
-	//			
-	//			// delete previous data and free opengl buffers
-	//			if (ddmesh != nullptr)
-	//			{
-	//				ddmesh->Clean();
-	//				// re-assign num v and i
-	//				ddmesh->SetSizes(smesh->buffers_size[R_Mesh::VERTICES], smesh->buffers_size[R_Mesh::INDICES]);
-	//			}
-	//			else // if not exists, create one
-	//				ddmesh = new DebugDataMesh(smesh->buffers_size[R_Mesh::VERTICES], smesh->buffers_size[R_Mesh::INDICES]);
-	//			
-	//			// recompute data from selected_go
-	//			ddmesh->ComputeVertexNormals(smesh, viewport_options.v_n_line_length);
-	//			ddmesh->ComputeFacesNormals(smesh, viewport_options.f_n_line_length);
-
-	//			// generate opengl buffers and fill -------------------------
-	//			ddmesh->GenBuffers();
-	//			ddmesh->FillVertexBuffer();
-	//			ddmesh->FillFacesBuffer();
-	//		}
-	//		else
-	//		{
-	//			// if exists any ddmesh, we must to clean it
-	//			if (ddmesh != nullptr)
-	//			{
-	//				ddmesh->Clean();
-	//				delete ddmesh;
-	//				ddmesh = nullptr;
-	//			}
-	//			LOG("[Error] Warning: gameobject without meshes to debug");
-	//		}
-	//		// -----------------------------------------------------------
-	//		// assign new precalc
-	//		last_go_precalc = App->scene->selected_go;
-	//	}
-	//}
-	//else if (!viewport_options.debug_face_normals && !viewport_options.debug_vertex_normals) // when the two debug options are off and still have a ddmesh
-	//{
-	//	if (ddmesh != nullptr)
-	//	{
-	//		ddmesh->Clean();
-	//		delete ddmesh;
-	//		ddmesh = nullptr;
-	//		last_go_precalc = nullptr;
-	//	}
-	//}
-	//else if (App->scene->selected_go == nullptr && ddmesh != nullptr)
-	//{
-	//	ddmesh->Clean();
-	//	delete ddmesh;
-	//	ddmesh = nullptr;
-	//	last_go_precalc = nullptr;
-	//}
-	// ----------------------------------------------------------------------------------------------------------------
-
+	
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleEditor::Draw()
 {
-	// DockSpace ------------------------------------------
 	static bool dock_space = true;
-	static bool opt_fullscreen_persistant = true;
-	bool opt_fullscreen = opt_fullscreen_persistant;
-	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-	if (opt_fullscreen)
-	{
-		ImGuiViewport* viewport = ImGui::GetMainViewport();
-		ImGui::SetNextWindowPos(viewport->Pos);
-		ImGui::SetNextWindowSize(viewport->Size);
-		ImGui::SetNextWindowViewport(viewport->ID);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-	}
-
-	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-		window_flags |= ImGuiWindowFlags_NoBackground;
-
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::Begin("DockSpace", &dock_space, window_flags);
-	ImGui::PopStyleVar();
-
-	if (opt_fullscreen)
-		ImGui::PopStyleVar(2);
-
-	// DockSpace
-
-	ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_::ImGuiDockNodeFlags_PassthruCentralNode;
+	static ImGuiWindowFlags window_flags =  ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse
+		| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
 	// Main Menu Bar --------------------------------------
 
 	if (!DrawMainMenuBar())
 		return update_status::UPDATE_STOP;
 
+	// Draw Controller Bar ------------------------------
+
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+	ImGui::SetNextWindowPos({ viewport->Pos.x, viewport->Pos.y + 13 });
+	ImGui::SetNextWindowSize({ viewport->Size.x, 15 });
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
+	ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_WindowBg , ImVec4(0.1f, 0.1f, 0.1f,1.f));
+
+	ImGui::Begin("PlayPauseNext", 0, window_flags);
+	ImGui::End();
+	ImGui::PopStyleVar(4);
+	ImGui::PopStyleColor();
+
+	// DockSpace ------------------------------------------
+
+	ImGui::SetNextWindowPos({ viewport->Pos.x, viewport->Pos.y + 45 });
+	ImGui::SetNextWindowSize({ viewport->Size.x, viewport->Size.y - 45 });
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+	// Begin Dock space ------------------------------------
+
+	ImGui::Begin("DockSpace", &dock_space, window_flags);
+	ImGui::PopStyleVar(3);
+
+	// DockSpace Setter -----------------------------------
+
+	ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+
 	// Draw all windows ----------------------------------- 
 
-	for (std::vector<Window*>::iterator itr = windows.begin(); itr != windows.end(); ++itr)
+	for (Window* window : windows)
 	{
-		if ((*itr)->active)
+		if (window->active)
 		{
-			(*itr)->Draw();
+			window->Draw();
 		}
 	}
 
@@ -345,6 +283,8 @@ update_status ModuleEditor::Draw()
 	DrawPopUps();
 
 	if (show_demo_imgui) ImGui::ShowDemoWindow(&show_demo_imgui);
+
+	// End DockSpace --------------------------------------
 
 	ImGui::End();
 
@@ -363,73 +303,6 @@ update_status ModuleEditor::Draw()
 		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
 	}
 
-	// -----------------------------------------------------
-
-	// CHECK BEFORE Render but after all editor logic --------------------------------------------------------------------------------------------
-	// -this block must to be moved and the end of this module (editor) or anyhere but before starts Draw loop -----------------------------------
-	// when a certain line goes to tall to short, last frame is printed before this calc ocurrs, something uggly but nothing wrong ---------------
-	// -------------------------------------------------------------------------------------------------------------------------------------------
-	// re-check for any change on line length while one option remains unchecked and
-	// the user modifies its length, but when we re-activate them only :)
-	// -------------------------------------------------------------------------------------------------------------------------------------------
-	//if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
-	//{
-	//	if (last_go_precalc == App->scene->selected_go && ddmesh != nullptr)
-	//	{
-	//		if (viewport_options.debug_vertex_normals)
-	//		{
-	//			if (ddmesh->v_last_ll != viewport_options.v_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
-	//			{
-	//				ddmesh->ComputeVertexNormals(App->scene->selected_go->GetMeshes(), viewport_options.v_n_line_length);
-	//				ddmesh->FillVertexBuffer();
-	//			}
-	//		}
-
-	//		if (viewport_options.debug_face_normals)
-	//		{
-	//			if (ddmesh->f_last_ll != viewport_options.f_n_line_length) // TODO: WARNING: compare two floats values with the diff with epsilon
-	//			{
-	//				ddmesh->ComputeFacesNormals(App->scene->selected_go->GetMeshes(), viewport_options.f_n_line_length);
-	//				ddmesh->FillFacesBuffer();
-	//			}
-	//		}
-	//	}
-	//}
-
-
-	//if (viewport_options.debug_vertex_normals || viewport_options.debug_face_normals)
-	//{
-	//	if (ddmesh != nullptr)
-	//	{
-	//		// push selected go matrix
-	//		if (App->scene->selected_go->transform->HasNegativeScale())
-	//		{
-	//			glFrontFace(GL_CW);
-	//		}
-
-	//		glPushMatrix();
-	//		glMultMatrixf((float*)&App->scene->selected_go->transform->global_transform.Transposed());
-
-	//		if (viewport_options.debug_vertex_normals)
-	//		{
-	//			glColor4fv((float*)&viewport_options.d_vertex_p_color);
-	//			ddmesh->DebugRenderVertex(viewport_options.v_point_size);
-	//			glColor4fv((float*)&viewport_options.d_vertex_l_color);
-	//			ddmesh->DebugRenderVertexNormals(viewport_options.v_n_line_width);
-	//		}
-	//		//glColor3f(1.0f, 1.0f, 0.0f);
-	//		if (viewport_options.debug_face_normals)
-	//		{
-	//			glColor4fv((float*)&viewport_options.d_vertex_face_color);
-	//			ddmesh->DebugRenderFacesVertex(viewport_options.f_v_point_size);
-	//			glColor4fv((float*)&viewport_options.d_vertex_face_n_color);
-	//			ddmesh->DebugRenderFacesNormals(viewport_options.f_n_line_width);
-	//		}
-
-	//		glFrontFace(GL_CCW);
-	//		glPopMatrix();
-	//	}
-	//}
 
 	return UPDATE_CONTINUE;
 }

@@ -309,8 +309,10 @@ bool C_Transform::Save(Config& config)
 bool C_Transform::Load(Config& config)
 {
 	// @TODO
+
 	SetLocalPosition(config.GetFloat3("Position", local_position));
 	SetLocalRotation(config.GetFloat3("Rotation", local_rotation));
 	SetLocalScale(config.GetFloat3("Scale", local_scale));
+
 	return true;
 }

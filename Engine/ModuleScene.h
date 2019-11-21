@@ -143,7 +143,7 @@ public:
 	// Game Objects -------------------------------
 
 	std::stack<EventGo>			events_go_stack;
-	std::stack<GameObject*>		to_delete_go_stack;
+	//std::stack<GameObject*>	to_delete_go_stack;
 	std::list<GameObject*>		static_go_list;
 	std::list<GameObject*>		dynamic_go_list;
 	std::vector<GameObject*>	go_render_list;
@@ -180,8 +180,6 @@ private:
 	std::string scene_name;
 	std::string scene_to_load;
 	std::deque<GameObject*> to_undo_buffer_go;
-	//std::queue<GameObject*> to_delete_buffer_go;
-
 	std::vector<GameObject*> temp_to_undo_go;
 
 	// store childrens we must to move

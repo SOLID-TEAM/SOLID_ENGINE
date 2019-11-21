@@ -199,6 +199,13 @@ update_status ModuleInput::PreUpdate(float dt)
 
 			if (event.window.event == SDL_WINDOWEVENT_RESTORED)
 				App->window->maximized = false;
+			
+			if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+			{
+				App->window->current_w = event.window.data1;
+				App->window->current_h= event.window.data2;
+			}
+				
 		}
 	}
 
