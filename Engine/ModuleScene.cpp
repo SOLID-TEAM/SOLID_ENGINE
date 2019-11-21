@@ -842,7 +842,13 @@ GameObject* ModuleScene::CreateGameObjectFromModel(UID uid)
 
 		GameObject* new_go = CreateGameObject(node.name.c_str(), parent);
 
-		//@TODO: SET TRANSFORM
+		// Set transform -------------------------------
+
+		float3 rotation = node.transform.RotatePart().ToEulerZYX() * RADTODEG;
+
+		new_go->transform->SetLocalPosition(node.transform.TranslatePart());
+		new_go->transform->SetLocalRotation( float3(rotation.z, rotation.y, rotation.x));
+		new_go->transform->SetLocalScale(node.transform.GetScale());
 
 		if (node.mesh > 0)
 		{

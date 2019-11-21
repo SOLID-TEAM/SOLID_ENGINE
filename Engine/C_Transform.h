@@ -56,7 +56,7 @@ public:
 
 	math::float4x4 GetLocalTransform() const;
 
-	void UpdateLocalTransformFromTRS();
+	void UpdateGlobalTransformFromLocal();
 
 	// ----------------------------------------------
 
