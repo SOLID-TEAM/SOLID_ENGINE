@@ -174,7 +174,6 @@ void C_Transform::SetLocalScale(math::float3 scale)
 {
 	local_transform.RemoveScale();
 	local_transform.Scale(scale);
-
 	UpdateGlobalTransformFromLocal();
 }
 

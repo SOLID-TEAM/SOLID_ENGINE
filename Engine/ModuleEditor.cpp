@@ -7,13 +7,11 @@
 #include "SDL/include/SDL_opengl.h"
 
 #include "ImGui/imgui.h"
+#include "IconFontAwesome/IconsFontAwesome5.h"
 #include "ImGuizmo/ImGuizmo.h"
 #include "ImGui/Impl/imgui_impl_sdl.h"
 #include "ImGui/Impl/imgui_impl_opengl3.h"
 #include "ImGui/misc/cpp/imgui_stdlib.h" // input text wrapper for std::string
-
-// TODO:: Change site
-#include "R_Mesh.h"
 
 // Windows include 
 
@@ -28,6 +26,7 @@
 #include "W_DeleteHistory.h"
 
 #include "C_Transform.h"
+
 
 ModuleEditor::ModuleEditor(bool start_enabled) : Module(start_enabled)
 {
@@ -111,6 +110,14 @@ bool ModuleEditor::Start(Config& config)
 	w_primitives =		new W_Primitives("Primitives",			false);
 	w_delete_history =	new W_DeleteHistory("Delete History",	false);
 
+	ImGuiIO& io = ImGui::GetIO();
+	io.Fonts->AddFontDefault();
+	
+	ImFontConfig configu;
+	configu.MergeMode = true;
+	configu.GlyphMinAdvanceX = 13.f;
+	static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+	icons_font = io.Fonts->AddFontFromFileTTF("Assets/Fonts/solid_icons.ttf", 13.0f, &configu, icon_ranges);
 
 	Load(config);
 
@@ -179,7 +186,6 @@ void ModuleEditor::DestroyWindow(Window* panel_to_destroy)
 update_status ModuleEditor::PreUpdate(float dt)
 {
 	// ImGui Internal System ------------------------------
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -231,28 +237,71 @@ update_status ModuleEditor::Draw()
 	if (!DrawMainMenuBar())
 		return update_status::UPDATE_STOP;
 
-	// Draw Controller Bar ------------------------------
+	// ----------------------------------------------------
 
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-	ImGui::SetNextWindowPos({ viewport->Pos.x, viewport->Pos.y + 13 });
+	ImGui::SetNextWindowPos({ viewport->Pos.x, viewport->Pos.y + 19 });
 	ImGui::SetNextWindowSize({ viewport->Size.x, 15 });
 	ImGui::SetNextWindowViewport(viewport->ID);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4.f, 5.f));
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
 	ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_WindowBg , ImVec4(0.1f, 0.1f, 0.1f,1.f));
+	//ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Text, ImVec4(0.1f, 0.1f, 0.1f, 1.f));
 
-	ImGui::Begin("PlayPauseNext", 0, window_flags);
+	// Controller Bar -------------------------------------------
+
+	float line_cursor_x = 0.f;
+	float button_s_w = 30.f;
+	float button_l_w = 80.f;
+	float button_h = 22.f;
+	float padding = 3.f;
+
+	ImGui::Begin("ControllerBar", 0, window_flags);
+
+	ImVec2 win_size = ImGui::GetContentRegionAvail();
+	float win_center = win_size.x * 0.5f;
+
+	ImGui::NewLine();
+	line_cursor_x += 15;
+	ImGui::SameLine(line_cursor_x);
+	ImGui::Button(ICON_FA_HAND_PAPER, { button_s_w, button_h });
+	line_cursor_x += button_s_w + padding;
+	ImGui::SameLine(line_cursor_x);
+	ImGui::Button(ICON_FA_ARROWS_ALT, { button_s_w, button_h });
+	line_cursor_x += button_s_w + padding;
+	ImGui::SameLine(line_cursor_x);
+	ImGui::Button(ICON_FA_SYNC, { button_s_w, button_h });
+	line_cursor_x += button_s_w + padding;
+	ImGui::SameLine(line_cursor_x);
+	ImGui::Button(ICON_FA_EXPAND_ARROWS_ALT, { button_s_w, button_h });
+	line_cursor_x += button_s_w + padding * 8;
+	ImGui::SameLine(line_cursor_x);
+	ImGui::Button(ICON_FA_CUBE " Local", { button_l_w, button_h });
+	line_cursor_x += button_l_w + padding;
+	ImGui::SameLine(line_cursor_x);
+	ImGui::Button(ICON_FA_GLOBE " Global", { button_l_w, button_h });
+	line_cursor_x = win_center - ( (button_s_w + padding) * 3.f ) * 0.5f;
+	ImGui::SameLine(line_cursor_x);
+	ImGui::Button(ICON_FA_PLAY, { button_s_w, button_h });
+	line_cursor_x += button_s_w + padding;
+	ImGui::SameLine(line_cursor_x);
+	ImGui::Button(ICON_FA_PAUSE, { button_s_w, button_h });
+	line_cursor_x += button_s_w + padding;
+	ImGui::SameLine(line_cursor_x);
+	ImGui::Button(ICON_FA_STEP_FORWARD, { button_s_w, button_h });
+
 	ImGui::End();
+
 	ImGui::PopStyleVar(4);
 	ImGui::PopStyleColor();
 
 	// DockSpace ------------------------------------------
 
-	ImGui::SetNextWindowPos({ viewport->Pos.x, viewport->Pos.y + 45 });
-	ImGui::SetNextWindowSize({ viewport->Size.x, viewport->Size.y - 45 });
+	ImGui::SetNextWindowPos({ viewport->Pos.x, viewport->Pos.y + 50 });
+	ImGui::SetNextWindowSize({ viewport->Size.x, viewport->Size.y - 50 });
 	ImGui::SetNextWindowViewport(viewport->ID);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -260,7 +309,8 @@ update_status ModuleEditor::Draw()
 
 	// Begin Dock space ------------------------------------
 
-	ImGui::Begin("DockSpace", &dock_space, window_flags);
+	ImGui::Begin("DockSpaceWindow", &dock_space, window_flags);
+	DrawControllerBar();
 	ImGui::PopStyleVar(3);
 
 	// DockSpace Setter -----------------------------------
@@ -302,7 +352,6 @@ update_status ModuleEditor::Draw()
 		ImGui::RenderPlatformWindowsDefault();
 		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
 	}
-
 
 	return UPDATE_CONTINUE;
 }
@@ -435,6 +484,7 @@ void ModuleEditor::Load(Config& config)
 
 
 }
+
 
 bool ModuleEditor::DrawMainMenuBar()
 {
@@ -582,6 +632,11 @@ bool ModuleEditor::DrawMainMenuBar()
 	ImGui::EndMainMenuBar();
 
 	return ret;
+}
+
+void ModuleEditor::DrawControllerBar()
+{
+	
 }
 
 void ModuleEditor::DrawPopUps()
@@ -848,26 +903,26 @@ void DebugDataMesh::ComputeVertexNormals(R_Mesh* goMesh, float length)
 	// start point and finish point
 	// TODO: improve this, thinking in deepth if this is possible with memcpy
 
-	if (debug_v_normals != nullptr) delete[] debug_v_normals;
+	//if (debug_v_normals != nullptr) delete[] debug_v_normals;
 
-	debug_v_normals = new float[n_vertices * 6]; // 3 for startpoint, 3 more for endpoint
+	//debug_v_normals = new float[n_vertices * 6]; // 3 for startpoint, 3 more for endpoint
 
-	uint n_count = 0;
-	for (uint i = 0; i < n_vertices * 3; i += 3)
-	{
-		debug_v_normals[n_count] = goMesh->vertices[i]; // x
-		debug_v_normals[n_count + 1] = goMesh->vertices[i + 1]; // y
-		debug_v_normals[n_count + 2] = goMesh->vertices[i + 2]; //z
+	//uint n_count = 0;
+	//for (uint i = 0; i < n_vertices * 3; i += 3)
+	//{
+	//	debug_v_normals[n_count] = goMesh->vertices[i]; // x
+	//	debug_v_normals[n_count + 1] = goMesh->vertices[i + 1]; // y
+	//	debug_v_normals[n_count + 2] = goMesh->vertices[i + 2]; //z
 
-		debug_v_normals[n_count + 3] = goMesh->vertices[i] + goMesh->normals[i] * length; // x
-		debug_v_normals[n_count + 4] = goMesh->vertices[i + 1] + goMesh->normals[i + 1] * length; // y
-		debug_v_normals[n_count + 5] = goMesh->vertices[i + 2] + goMesh->normals[i + 2] * length; // z
+	//	debug_v_normals[n_count + 3] = goMesh->vertices[i] + goMesh->normals[i] * length; // x
+	//	debug_v_normals[n_count + 4] = goMesh->vertices[i + 1] + goMesh->normals[i + 1] * length; // y
+	//	debug_v_normals[n_count + 5] = goMesh->vertices[i + 2] + goMesh->normals[i + 2] * length; // z
 
-		n_count += 6;
-	}
+	//	n_count += 6;
+	//}
 
-	// updates internal line length
-	v_last_ll = length;
+	//// updates internal line length
+	//v_last_ll = length;
 
 }
 
@@ -892,35 +947,35 @@ bool DebugDataMesh::ComputeFacesNormals(R_Mesh* goMesh, float length)
 	{
 		// find the midface averaged vertex
 
-		float* v1 = &goMesh->vertices[goMesh->indices[i] * 3];     // get first face vertex
-		float* v2 = &goMesh->vertices[goMesh->indices[i + 1] * 3]; // get second face vertex
-		float* v3 = &goMesh->vertices[goMesh->indices[i + 2] * 3]; // get third face vertex
+		//float* v1 = &goMesh->vertices[goMesh->indices[i] * 3];     // get first face vertex
+		//float* v2 = &goMesh->vertices[goMesh->indices[i + 1] * 3]; // get second face vertex
+		//float* v3 = &goMesh->vertices[goMesh->indices[i + 2] * 3]; // get third face vertex
 
-		float debug_f_vertices[3];
-		debug_f_vertices[0] = (v1[0] + v2[0] + v3[0]) / 3.0f; // x coord
-		debug_f_vertices[1] = (v1[1] + v2[1] + v3[1]) / 3.0f; // y coord
-		debug_f_vertices[2] = (v1[2] + v2[2] + v3[2]) / 3.0f; // z coord
+		//float debug_f_vertices[3];
+		//debug_f_vertices[0] = (v1[0] + v2[0] + v3[0]) / 3.0f; // x coord
+		//debug_f_vertices[1] = (v1[1] + v2[1] + v3[1]) / 3.0f; // y coord
+		//debug_f_vertices[2] = (v1[2] + v2[2] + v3[2]) / 3.0f; // z coord
 
-		// compute the averaged normal of the 3 vertex of each face
+		//// compute the averaged normal of the 3 vertex of each face
 
-		float* n1 = &goMesh->normals[goMesh->indices[i] * 3];     // get first face vertex normal
-		float* n2 = &goMesh->normals[goMesh->indices[i + 1] * 3]; // get second face vertex normal
-		float* n3 = &goMesh->normals[goMesh->indices[i + 2] * 3]; // get third face vertex normal
+		//float* n1 = &goMesh->normals[goMesh->indices[i] * 3];     // get first face vertex normal
+		//float* n2 = &goMesh->normals[goMesh->indices[i + 1] * 3]; // get second face vertex normal
+		//float* n3 = &goMesh->normals[goMesh->indices[i + 2] * 3]; // get third face vertex normal
 
-		float avg_n[3];
-		avg_n[0] = (n1[0] + n2[0] + n3[0]) / 3.0f; // x coord
-		avg_n[1] = (n1[1] + n2[1] + n3[1]) / 3.0f; // y coord
-		avg_n[2] = (n1[2] + n2[2] + n3[2]) / 3.0f; // z coord
+		//float avg_n[3];
+		//avg_n[0] = (n1[0] + n2[0] + n3[0]) / 3.0f; // x coord
+		//avg_n[1] = (n1[1] + n2[1] + n3[1]) / 3.0f; // y coord
+		//avg_n[2] = (n1[2] + n2[2] + n3[2]) / 3.0f; // z coord
 
-		debug_f_normals[n_count] = debug_f_vertices[0]; // x
-		debug_f_normals[n_count + 1] = debug_f_vertices[1]; // y
-		debug_f_normals[n_count + 2] = debug_f_vertices[2]; //z
+		//debug_f_normals[n_count] = debug_f_vertices[0]; // x
+		//debug_f_normals[n_count + 1] = debug_f_vertices[1]; // y
+		//debug_f_normals[n_count + 2] = debug_f_vertices[2]; //z
 
-		debug_f_normals[n_count + 3] = debug_f_vertices[0] + avg_n[0] * length; // x
-		debug_f_normals[n_count + 4] = debug_f_vertices[1] + avg_n[1] * length; // y
-		debug_f_normals[n_count + 5] = debug_f_vertices[2] + avg_n[2] * length; // z
+		//debug_f_normals[n_count + 3] = debug_f_vertices[0] + avg_n[0] * length; // x
+		//debug_f_normals[n_count + 4] = debug_f_vertices[1] + avg_n[1] * length; // y
+		//debug_f_normals[n_count + 5] = debug_f_vertices[2] + avg_n[2] * length; // z
 
-		n_count += 6;
+		//n_count += 6;
 	}
 
 	// updates internal line length

@@ -2,13 +2,14 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "Viewport.h"
+#include "IconFontAwesome/IconsFontAwesome5.h"
 
 void W_Game::Draw()
 {
 	// --------------------
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
 
-	if (ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize /*| ImGuiWindowFlags_::ImGuiWindowFlags_NoDecoration*/))
+	if (ImGui::Begin(" " ICON_FA_GAMEPAD " Game", &active, ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar  /*| ImGuiWindowFlags_::ImGuiWindowFlags_NoDecoration*/))
 	{
 		if (ImGui::BeginMenuBar())
 		{

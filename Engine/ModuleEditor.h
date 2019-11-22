@@ -114,6 +114,8 @@ public:
 	
 };
 
+struct ImFont;
+
 class ModuleEditor : public Module
 {
 public:
@@ -153,6 +155,8 @@ private:
 
 	bool DrawMainMenuBar();
 
+	void DrawControllerBar();
+
 	void DrawPopUps();
 
 private:
@@ -183,6 +187,10 @@ public:
 	W_Inspector*		w_inspector = nullptr;
 	W_Primitives*		w_primitives = nullptr;
 	W_DeleteHistory*	w_delete_history = nullptr;
+
+	// Fonts ------------------------------
+
+	ImFont* icons_font = nullptr;
 
 	// GameObjects ------------------------
 

@@ -7,7 +7,7 @@
 #include "CameraEditor.h"
 
 #include "ImGuizmo/ImGuizmo.h"
-
+#include "IconFontAwesome/IconsFontAwesome5.h"
 #include "R_Model.h"
 #include "R_Mesh.h"
 
@@ -224,24 +224,6 @@ update_status ModuleScene::Draw()
 
 		App->renderer3D->lights[0].Render();
 
-		// Test -----------------------------------------------
-
-		glBegin(GL_LINES);
-		glVertex3fv(ray_test.a.ptr());
-		glVertex3fv(ray_test.b.ptr());
-		glEnd();
-
-		glPointSize(10);
-		glColor3f(3.f, 0.f,0.f);
-		glBegin(GL_POINTS);
-
-		for (float3 hit_point : hit_points)
-		{
-			glVertex3fv(hit_point.ptr());
-		}
-
-		glEnd();
-
 		// Debug Renders --------------------------------------
 
 		if (editor_mode)
@@ -276,10 +258,8 @@ void ModuleScene::UpdateMousePicking()
  			return; // Point not contained in viewport pixel size
 		}
 
-		LineSegment& ray = ray_test = camera->ViewportPointToRay(screen_point);
+		LineSegment& ray = camera->ViewportPointToRay(screen_point);
 		uint check = 0;
-
-		hit_points.clear();
 
 		// Get all static ray intersections -------------------------------------
 	
@@ -336,7 +316,6 @@ void ModuleScene::UpdateMousePicking()
 				if (local_ray.Intersects(triangle, &triangle_dist, &hit_point))
 				{
 					hit_point = go->transform->GetGlobalTransform().MulPos(hit_point);
-					hit_points.push_back(hit_point);
 
 					if (triangle_dist < near_triangle_dist)
 					{
@@ -479,29 +458,6 @@ void ModuleScene::UpdateSpacePartitioning()
 
 	if (ImGui::Begin("Space Partitioning"))
 	{
-		if (ImGui::Button("Recalculate", ImVec2(100, 20)))
-		{
-			std::vector<GameObject*> go_vector;
-
-			for (GameObject* go : static_go_list)
-			{
-				if (go->bounding_box.IsFinite())
-				{
-					go_vector.push_back(go);
-				}
-
-			}
-
-			kdtree.Fill(6, 1, EncloseAllGo(), go_vector);
-		}
-
-		ImGui::SameLine();
-
-		if (ImGui::Button("Clear", ImVec2(100, 20)))
-		{
-			kdtree.Clear();
-		}
-
 		if (camera->cullling)
 		{
 			int static_size = static_go_list.size() - 1;
@@ -509,7 +465,34 @@ void ModuleScene::UpdateSpacePartitioning()
 			ImGui::Title("Game Objects"); ImGui::Text("");
 			ImGui::Title("Static",2); ImGui::Text("%i", static_size); // -1 Less root go
 			ImGui::Title("Dynamic",2); ImGui::Text("%i" , dynamic_go_list.size());
+			ImGui::Spacing();
+
+			ImGui::Separator();
+			if (ImGui::Button(ICON_FA_REDO_ALT, ImVec2(100, 20)))
+			{
+				std::vector<GameObject*> go_vector;
+
+				for (GameObject* go : static_go_list)
+				{
+					if (go->bounding_box.IsFinite())
+					{
+						go_vector.push_back(go);
+					}
+
+				}
+
+				kdtree.Fill(6, 1, EncloseAllGo(), go_vector);
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button(ICON_FA_ERASER, ImVec2(100, 20)))
+			{
+				kdtree.Clear();
+			}
+
 			ImGui::Title("KDTree");	ImGui::Text(( kdtree.Active()) ? "ON" : "OFF");
+
 			ImGui::Title("Checked Collisions");  ImGui::Text("");
 			ImGui::Title("Frustum",2);  ImGui::Text("%i", frustum_collisions);
 		}

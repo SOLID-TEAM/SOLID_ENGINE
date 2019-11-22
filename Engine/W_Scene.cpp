@@ -8,6 +8,7 @@
 
 #include "ImGui/imgui.h"
 #include "ImGuizmo/ImGuizmo.h"
+#include "IconFontAwesome/IconsFontAwesome5.h"
 
 #include "C_Camera.h"
 
@@ -15,7 +16,7 @@ void W_Scene::Draw()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
 
-	if (ImGui::Begin(name.c_str(), &active , ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize /*| ImGuiWindowFlags_::ImGuiWindowFlags_NoDecoration*/))
+	if (ImGui::Begin(" " ICON_FA_CUBES " Scene", &active , ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar  /*| ImGuiWindowFlags_::ImGuiWindowFlags_NoDecoration*/))
 	{
 		if (ImGui::BeginMenuBar())
 		{	
@@ -24,19 +25,19 @@ void W_Scene::Draw()
 
 			ModesMenu();
 
-			if (ImGui::BeginMenu("Debug"))
-			{
-				DebugMenu();
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Grid"))
+			if (ImGui::BeginMenu(ICON_FA_BORDER_ALL))
 			{
 				GridMenu();
 				ImGui::EndMenu();
 			}
-			if (ImGui::BeginMenu("Camera"))
+			if (ImGui::BeginMenu(ICON_FA_VIDEO))
 			{
 				CameraMenu();
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu(ICON_FA_EYE))
+			{
+				DebugMenu();
 				ImGui::EndMenu();
 			}
 
@@ -45,7 +46,6 @@ void W_Scene::Draw()
 			ImGui::PopStyleVar();
 			ImGui::SetSeparationType(ImGuiSeparationType::ImGui_WindowSeparation);
 		}
-
 
 		// Input camera ----------------------------------------------------
 

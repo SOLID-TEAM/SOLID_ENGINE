@@ -168,11 +168,6 @@ public:
 
 	KDTree kdtree;
 
-	// Test --------------------------------------
-
-	LineSegment ray_test;
-	std::vector<float3> hit_points;
-
 private:
 
 	bool create_new_scene = false;
