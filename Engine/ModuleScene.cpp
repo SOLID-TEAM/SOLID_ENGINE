@@ -132,7 +132,6 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 	{
 		LoadSceneNow();
 		load_new_scene = false;
-		scene_to_load.clear();
 	}
 
 	// check CTRL + Z
@@ -146,6 +145,12 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 
 update_status ModuleScene::Update()
 {
+	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		App->scene->ToSaveScene("backup_scene", LIBRARY_SETTINGS_FOLDER);
+	}
+
+
 	// Update hierarchy -----------------------------------------
 
 	UpdateHierarchy();
@@ -677,7 +682,8 @@ void ModuleScene::AddGoToHierarchyChange(GameObject* target_go, GameObject* sour
 }
 
 // testing function to launch the process of save
-bool ModuleScene::ToSaveScene(const char* name)
+// TODO: add a intermediate pass for wait to order module interests and then save
+bool ModuleScene::ToSaveScene(const char* name, const char* destination_path)
 {
 	Config new_scene_save;
 	this->scene_name.assign(name);
@@ -694,7 +700,7 @@ bool ModuleScene::ToSaveScene(const char* name)
 	new_scene_save.AddArray("GameObjects");
 	SaveScene(new_scene_save, root_go);
 
-	new_scene_save.SaveConfigToFile((ASSETS_FOLDER + scene_name).c_str());
+	new_scene_save.SaveConfigToFile((destination_path + scene_name).c_str());
 
 	
 
@@ -813,12 +819,13 @@ bool ModuleScene::LoadSceneNow()
 {
 	// TODO: maybe the scene is not on assets folder, but for now we dont let decide, scene are saved on assets folder
 	Config to_load(std::string(ASSETS_FOLDER + scene_to_load).c_str());
+	scene_to_load.clear();
 
 	return LoadScene(to_load);;
 }
 
 // TODO: pass this on finishupdate on app.cpp
-bool ModuleScene::ToLoadScene(const char* name)
+bool ModuleScene::ToLoadScene(const char* name, const char* source_path, bool clean)
 {
 	bool ret = false;
 
@@ -834,14 +841,15 @@ bool ModuleScene::ToLoadScene(const char* name)
 		file_list.push_back(name);
 		App->file_sys->DiscoverFiles(ASSETS_FOLDER, file_list, dir_list);*/
 		std::vector<std::string> file_list;
-		App->file_sys->GetAllFilesWithExtension(ASSETS_FOLDER, "solidscene", file_list);
+		App->file_sys->GetAllFilesWithExtension(source_path, "solidscene", file_list);
 
 		for (uint i = 0; i < file_list.size(); ++i)
 		{
 			if (file_list[i].compare(name) == 0)
 			{
 				scene_to_load.assign(name);
-				create_new_scene = true;
+				if(clean)
+					create_new_scene = true;
 				load_new_scene = true;
 
 				ret = true;

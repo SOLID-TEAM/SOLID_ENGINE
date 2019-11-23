@@ -1,6 +1,8 @@
 #include "ModuleTime.h"
 #include "Config.h"
 
+#include "Application.h"
+
 ModuleTime::ModuleTime()
 {
 	name.assign("ModuleTime");
@@ -100,7 +102,9 @@ void ModuleTime::StartGame()
 		game_state = GameState::RUN;
 		time_since_load = 0.f;
 
-		// J_TODO: Save scene ------------------------------
+		// Save scene ------------------------------
+		App->scene->ToSaveScene(App->scene->GetSceneName().c_str(), LIBRARY_SETTINGS_FOLDER);
+
 	}
 }
 
@@ -127,7 +131,10 @@ void ModuleTime::StopGame()
 		game_state = GameState::STOP;
 		time_since_load = 0.f;
 
-		// J_TODO: Load scene ------------------------------
+		// Load scene ------------------------------
+		std::string scene_name(App->scene->GetSceneName());
+		App->scene->ToLoadScene(scene_name.c_str(), LIBRARY_SETTINGS_FOLDER);
+		App->file_sys->Remove((LIBRARY_SETTINGS_FOLDER + scene_name).c_str());
 	}
 
 }

@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "W_Hierarchy.h"
 #include "ImGui/imgui.h"
+#include "ImGui/imgui_internal.h"
 #include "R_Mesh.h"
 
 W_Hierarchy::W_Hierarchy(std::string name, bool active) : Window(name, active)
@@ -103,6 +104,23 @@ void W_Hierarchy::DrawAll(GameObject* go)
 		ImGui::Text("Move %s", go->GetName());
 
 		ImGui::EndDragDropSource();
+	}
+
+	if (ImGui::BeginDragDropTargetCustom(ImGui::GetCurrentWindow()->Rect(), ImGui::GetID("Hierarchy")))
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("gameobject_object"))
+		{
+			IM_ASSERT(payload->DataSize == sizeof(GameObject*));
+			GameObject** source_go = (GameObject**)payload->Data;
+
+			App->scene->selected_go = (*source_go);
+
+			App->scene->AddGoToHierarchyChange(App->scene->root_go, (*source_go));
+
+			//LOG("[Info] Moved %s to %s", (*source_go)->GetName(), go->GetName());
+		}
+
+		ImGui::EndDragDropTarget();
 	}
 
 	if (ImGui::BeginDragDropTarget())

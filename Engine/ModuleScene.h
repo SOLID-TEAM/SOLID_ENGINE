@@ -66,9 +66,9 @@ public:
 
 	bool CleanUp();
 
-	bool ToSaveScene(const char* scene_name);
+	bool ToSaveScene(const char* scene_name, const char* destination_path = ASSETS_FOLDER);
 
-	bool ToLoadScene(const char* scene_name);
+	bool ToLoadScene(const char* scene_name, const char* source_path = ASSETS_FOLDER, bool clean = true);
 
 	std::string GetSceneName() const;
 

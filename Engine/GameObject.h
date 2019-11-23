@@ -86,6 +86,8 @@ public:
 
 	AABB GetHierarchyAABB();
 
+	void RemoveChild(GameObject* child);
+
 private:
 
 	void  DoStart();
@@ -100,7 +102,7 @@ private:
 
 	void AddChild(GameObject* child); // Addchild currently is used to hierarchical changes
 
-	void RemoveChild(GameObject* child);
+	
 
 	void SetNewParent(GameObject* parent);
 
