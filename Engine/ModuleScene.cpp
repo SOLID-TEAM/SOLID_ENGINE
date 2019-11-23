@@ -414,12 +414,23 @@ void ModuleScene::UpdateGizmo()
 {
 	if (selected_go != nullptr)
 	{
-		(selected_go->is_static) ? ImGuizmo::Enable(false) : ImGuizmo::Enable(true);
+		bool enable_gizmo;
+		
+		if (App->time->game_state != GameState::STOP)
+		{
+			enable_gizmo = !selected_go->is_static;
+		}
+		else
+		{
+			enable_gizmo = true;
+		}
+	
+		ImGuizmo::Enable(enable_gizmo);
 
 		float4x4 global_transform = selected_go->transform->global_transform.Transposed();
 		ImGuizmo::Manipulate(editor_camera->GetViewMatrix().Transposed().ptr(), editor_camera->GetProjectionMatrix().Transposed().ptr(), global_transform.ptr());
 
-		if (!selected_go->is_static && !global_transform.Equals(selected_go->transform->global_transform.Transposed()))
+		if (enable_gizmo && !global_transform.Equals(selected_go->transform->global_transform.Transposed()))
 		{
 			selected_go->transform->SetGlobalTransform(global_transform.Transposed());
 		}
