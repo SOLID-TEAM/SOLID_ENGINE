@@ -250,8 +250,7 @@ update_status ModuleEditor::Draw()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4.f, 5.f));
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
 	ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_WindowBg , ImVec4(0.1f, 0.1f, 0.1f,1.f));
-	//ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Text, ImVec4(0.1f, 0.1f, 0.1f, 1.f));
-
+	
 	// Controller Bar -------------------------------------------
 
 	float line_cursor_x = 0.f;
@@ -287,12 +286,16 @@ update_status ModuleEditor::Draw()
 	line_cursor_x = win_center - ( (button_s_w + padding) * 3.f ) * 0.5f;
 	ImGui::SameLine(line_cursor_x);
 
-	if (App->time->GetGameState() == GameState::RUN)
+	if (App->time->GetGameState() != GameState::STOP)
 	{
+		ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 1.f));
+
 		if (ImGui::Button(ICON_FA_STOP, { button_s_w, button_h }))
 		{
 			App->time->StopGame();
 		}
+
+		ImGui::PopStyleColor();
 	}
 	else
 	{
@@ -307,10 +310,14 @@ update_status ModuleEditor::Draw()
 
 	if (App->time->GetGameState() == GameState::PAUSE)
 	{
+		ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 1.f));
+
 		if (ImGui::Button(ICON_FA_PAUSE, { button_s_w, button_h }))
 		{
 			App->time->ResumeGame();
 		}
+
+		ImGui::PopStyleColor();
 	}
 	else
 	{
