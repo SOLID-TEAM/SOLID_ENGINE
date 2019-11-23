@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "ModuleRenderer3D.h"
-
+#include <stack>
 KDTreeNode::KDTreeNode()
 {
 	aabb.SetNegativeInfinity();
@@ -175,8 +175,9 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 			nodes_queue.push(node->left_child);
 			nodes_queue.push(node->right_child);
 
-			for (GameObject* go : node->bucket)
+			for (uint i = 0; i < node->bucket.size(); ++i)
 			{
+				GameObject* go = node->bucket[i];
 				bool intersect_left = false;
 				bool intersect_right = false;
 
@@ -198,13 +199,14 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 				else if (intersect_left)
 				{
 					node->left_child->bucket.push_back(go);
+					std::remove(begin(node->bucket), end(node->bucket), go);
 				}
 				else
 				{
 					node->right_child->bucket.push_back(go);
+					std::remove(begin(node->bucket), end(node->bucket), go);
 				}
 			}
-		
 		}
 
 	}

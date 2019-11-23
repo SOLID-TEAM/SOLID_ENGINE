@@ -155,13 +155,13 @@ void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersec
 
 		if (typeid(C_Camera) == typeid(T))
 		{
-			if (node->left_child != nullptr && camera.CheckCollisionAABB(node->left_child->aabb)) nodes_queue.push(node->left_child);
-			if (node->right_child != nullptr && camera.CheckCollisionAABB(node->right_child->aabb)) nodes_queue.push(node->right_child);
+			if (node->left_child != nullptr && node->left_child->bucket.size() > 0 &&camera.CheckCollisionAABB(node->left_child->aabb)) nodes_queue.push(node->left_child);
+			if (node->right_child != nullptr && node->left_child->bucket.size() > 0  && camera.CheckCollisionAABB(node->right_child->aabb)) nodes_queue.push(node->right_child);
 		}
 		else if (typeid(LineSegment) == typeid(T))
 		{
-			if (node->left_child != nullptr && node->left_child->aabb.Intersects(ray)) nodes_queue.push(node->left_child);
-			if (node->right_child != nullptr && node->right_child->aabb.Intersects(ray)) nodes_queue.push(node->right_child);
+			if (node->left_child != nullptr && node->left_child->bucket.size() > 0  && node->left_child->aabb.Intersects(ray)) nodes_queue.push(node->left_child);
+			if (node->right_child != nullptr && node->left_child->bucket.size() > 0  && node->right_child->aabb.Intersects(ray)) nodes_queue.push(node->right_child);
 		}
 	}
 

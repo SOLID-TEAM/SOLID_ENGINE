@@ -196,6 +196,7 @@ Viewport::~Viewport()
 void Viewport::SetCamera(GameObject* camera_go)
 {
 	camera = camera_go->GetComponent< C_Camera>();
+	camera->SetAspectRatio(width, height);
 	to_update = true;
 }
 

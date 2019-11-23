@@ -13,7 +13,7 @@ public:
 
 	bool Update();
 
-	void Rotate(math::float3 axis, float angle);
+	//void Rotate(math::float3 axis, float angle);
 
 	bool DrawPanelInfo();
 
@@ -62,8 +62,6 @@ public:
 
 	// ----------------------------------------------
 
-	void UpdateTRS();
-
 	bool HasNegativeScale();
 
 	void LookAt(math::float3 eye);
@@ -71,7 +69,13 @@ public:
 	// save/load
 
 	bool Save(Config& config);
+
 	bool Load(Config& config);
+
+private:
+
+	Quat EulerToQuat( float3 euler);
+	float3 QuatToEuler(Quat quat);
 
 public:
 

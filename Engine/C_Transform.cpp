@@ -35,7 +35,6 @@ bool C_Transform::Update()
 			child->transform->to_update = true;
 		}
 
-		// TODO : Not working at all. Revise 
 		math::float3 global_scale;
 		global_transform.Decompose(float3(), Quat(), global_scale);
 		negative_scale = !((local_scale.x * local_scale.y * local_scale.z * global_scale.x * global_scale.y * global_scale.z) >= 0.f);
@@ -86,17 +85,14 @@ bool C_Transform::Update()
 void C_Transform::SetPosition(math::float3 position)
 {
 	this->position = position;
-	global_transform.SetTranslatePart(position);
+	global_transform = global_transform.FromTRS(position, EulerToQuat(rotation), scale);
 	UpdateLocalTransformFromGlobal();
 }
 
-void C_Transform::SetRotation(math::float3 rotation)
+void C_Transform::SetRotation(math::float3 euler)
 {
-	rotation *= DEGTORAD;
-	Quat q_rotation = Quat::FromEulerZYX(rotation.z, rotation.y,rotation.x);
-	global_transform.SetRotatePart(q_rotation);
-
-	this->rotation = rotation;
+	this->rotation = euler;
+	global_transform = global_transform.FromTRS(position, EulerToQuat(rotation), scale);
 
 	forward = global_transform.WorldZ();
 	up = global_transform.WorldY();
@@ -107,10 +103,8 @@ void C_Transform::SetRotation(math::float3 rotation)
 
 void C_Transform::SetRotation(math::Quat q_rotation)
 {
-	global_transform.SetRotatePart(q_rotation);
-
-	rotation = q_rotation.ToEulerZYX() * RADTODEG;
-	rotation = { rotation.z, rotation.y ,rotation.x };
+	rotation = QuatToEuler(q_rotation);
+	global_transform = global_transform.FromTRS(position, q_rotation, scale);
 
 	forward = global_transform.WorldZ();
 	up = global_transform.WorldY();
@@ -122,18 +116,16 @@ void C_Transform::SetRotation(math::Quat q_rotation)
 void C_Transform::SetScale(math::float3 scale)
 {
 	this->scale = scale;
-	global_transform.Scale(scale);
+	global_transform = global_transform.FromTRS(position, EulerToQuat(rotation), scale);
 	UpdateLocalTransformFromGlobal();
 }
 
 void C_Transform::SetGlobalTransform(math::float4x4 matrix)
 {
 	global_transform = matrix;
-
-	Quat q_rotation;
-	global_transform.Decompose(position, q_rotation, scale);
-	rotation = q_rotation.ToEulerZYX() * RADTODEG;
-	rotation = { rotation.z, rotation.y, rotation.x };
+	Quat rot;
+	global_transform.Decompose(position, rot, scale);
+	rotation = QuatToEuler(rot);
 
 	UpdateLocalTransformFromGlobal();
 }
@@ -145,7 +137,7 @@ math::float3 C_Transform::GetPosition() const
 
 math::float3 C_Transform::GetRotation() const
 {
-	return global_transform.ToEulerXYZ() * RADTODEG;
+	return rotation;
 }
 
 math::float3 C_Transform::GetScale() const
@@ -171,11 +163,10 @@ void C_Transform::UpdateLocalTransformFromGlobal()
 		local_transform = global_transform;
 	}
 
-	local_position = local_transform.TranslatePart();
-	local_rotation = local_transform.ToEulerZYX() * RADTODEG;
-	local_rotation = { local_rotation.z, local_rotation.y ,local_rotation.x };
-	local_scale = local_transform.GetScale();
-
+	Quat rot;
+	local_transform.Decompose(local_position, rot, local_scale);
+	local_rotation = QuatToEuler(rot);
+	
 	to_update = true;
 }
 
@@ -183,34 +174,31 @@ void C_Transform::UpdateLocalTransformFromGlobal()
 
 void C_Transform::SetLocalPosition(math::float3 position)
 {
-	this->local_position = position;
-	local_transform.SetTranslatePart(position);
+	local_position = position;
+	local_transform = local_transform.FromTRS(local_position, EulerToQuat(local_rotation), local_scale);
 	UpdateGlobalTransformFromLocal();
 }
 
-void C_Transform::SetLocalRotation(math::float3 rotation)
+void C_Transform::SetLocalRotation(math::float3 rot)
 {
-	this->local_rotation = rotation;
-	float3 aux_rotation = rotation * DEGTORAD;
-	local_transform.SetRotatePart(Quat::RotateAxisAngle(float3::unitZ, aux_rotation.z) * Quat::RotateAxisAngle(float3::unitY, aux_rotation.y) * Quat::RotateAxisAngle(float3::unitX, aux_rotation.x));
+	local_rotation = rot;
+	local_transform = local_transform.FromTRS(local_position, EulerToQuat(local_rotation), local_scale);
 	UpdateGlobalTransformFromLocal();
 }
 
 void C_Transform::SetLocalScale(math::float3 scale)
 {
-	this->local_scale = scale;
-	local_transform.Scale(scale);
+	local_scale = scale;
+	local_transform = local_transform.FromTRS(local_position, EulerToQuat(local_rotation), local_scale);
 	UpdateGlobalTransformFromLocal();
 }
 
 void C_Transform::SetLocalTransform(math::float4x4 matrix)
 {
 	local_transform = matrix;
-
-	Quat q_rotation;
-	local_transform.Decompose(local_position, q_rotation, local_scale);
-	local_rotation = q_rotation.ToEulerZYX() * RADTODEG;
-	local_rotation = { local_rotation.z, local_rotation.y, local_rotation.x };
+	Quat rot;
+	local_transform.Decompose(local_position, rot, local_scale);
+	local_rotation = QuatToEuler(rot);
 
 	UpdateGlobalTransformFromLocal();
 }
@@ -251,9 +239,7 @@ void C_Transform::UpdateGlobalTransformFromLocal()
 
 	Quat rot;
 	global_transform.Decompose(position, rot, scale);
-
-	rotation = rot.ToEulerZYX() * RADTODEG;
-	rotation = { rotation.z, rotation.y ,rotation.x };
+	rotation = QuatToEuler(rot);
 
 	forward = global_transform.WorldZ();
 	up = global_transform.WorldY();
@@ -263,14 +249,6 @@ void C_Transform::UpdateGlobalTransformFromLocal()
 }
 
 // Transforms Set/Get/Update =============================================================
-
-
-void C_Transform::UpdateTRS()
-{
-
-
-
-}
 
 bool C_Transform::HasNegativeScale()
 {
@@ -293,15 +271,13 @@ void C_Transform::LookAt(math::float3 reference)
 		local_transform = global_transform;
 	}
 
-	UpdateTRS();
-
 	to_update = true;
 }
 
 bool C_Transform::DrawPanelInfo()
 {
 	math::float3 delta_position	= local_position;
-	math::float3 delta_rotation	= local_rotation;
+	math::float3 delta_rotation = local_rotation;
 	math::float3 delta_scale	= local_scale;
 
 	ImGui::Spacing();
@@ -343,9 +319,22 @@ bool C_Transform::Load(Config& config)
 {
 	// @TODO
 
-	SetLocalPosition(config.GetFloat3("Position", local_position));
-	SetLocalRotation(config.GetFloat3("Rotation", local_rotation));
-	SetLocalScale(config.GetFloat3("Scale", local_scale));
+	SetLocalPosition(config.GetFloat3("Position", {0.f ,0.f, 0.f}));
+	SetLocalRotation(config.GetFloat3("Rotation", { 0.f ,0.f, 0.f }));
+	SetLocalScale(config.GetFloat3("Scale", { 0.f ,0.f, 0.f }));
 
 	return true;
+}
+
+Quat C_Transform::EulerToQuat(float3 euler)
+{
+	euler *= DEGTORAD;
+	return Quat::FromEulerZYX(euler.z, euler.y, euler.x);
+}
+
+float3 C_Transform::QuatToEuler(Quat quat)
+{
+	float3 euler = quat.ToEulerZYX() * RADTODEG;
+	euler = { euler.z, euler.y, euler.x };
+	return euler;
 }

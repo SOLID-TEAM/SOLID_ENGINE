@@ -472,7 +472,7 @@ void ModuleScene::UpdateSpacePartitioning()
 			}
 		}
 
-		kdtree.Fill(8, 6, EncloseAllStaticGo(), go_vector);
+		kdtree.Fill(6, 3, EncloseAllStaticGo(), go_vector);
 		update_kdtree = false;
 	}
 }

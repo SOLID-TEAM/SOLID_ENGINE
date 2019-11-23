@@ -64,8 +64,6 @@ public:
 
 	update_status Draw();
 
-	void UpdateMousePicking();
-
 	bool CleanUp();
 
 	bool ToSaveScene(const char* scene_name, const char* destination_path = ASSETS_FOLDER);
@@ -121,6 +119,8 @@ private:
 	void UpdateGizmo();
 
 	void UpdateSpacePartitioning();
+
+	void UpdateMousePicking();
 
 	void UpdateGoToRender();
 

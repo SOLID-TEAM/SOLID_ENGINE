@@ -249,10 +249,23 @@ void ModuleRenderer3D::RenderKDTree(KDTree& kdtree, float width)
 
 	glDepthFunc(GL_ALWAYS);
 
+	std::stack<KDTreeNode*> nodes_to_render;
+
 	while (!nodes_stack.empty())
 	{
 		KDTreeNode* node = nodes_stack.top();
 		nodes_stack.pop();
+
+		nodes_to_render.push(node);
+
+		if (node->left_child != nullptr ) nodes_stack.push(node->left_child);
+		if (node->right_child != nullptr) nodes_stack.push(node->right_child);
+	}
+	
+	while (!nodes_to_render.empty())
+	{
+		KDTreeNode* node = nodes_to_render.top();
+		nodes_to_render.pop();
 
 		if (node != kdtree.root)
 		{
@@ -276,11 +289,8 @@ void ModuleRenderer3D::RenderKDTree(KDTree& kdtree, float width)
 			color = { 1.f, 1.f, 1.f, 1.f };
 			RenderAABB(node->aabb, width, color);
 		}
-
-		if (node->left_child != nullptr ) nodes_stack.push(node->left_child);
-		if (node->right_child != nullptr) nodes_stack.push(node->right_child);
 	}
-	
+
 	glDepthFunc(GL_LESS);
 }
 
