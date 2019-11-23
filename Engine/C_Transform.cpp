@@ -208,7 +208,7 @@ void C_Transform::SetLocalTransform(math::float4x4 matrix)
 	local_transform = matrix;
 
 	Quat q_rotation;
-	global_transform.Decompose(local_position, q_rotation, local_scale);
+	local_transform.Decompose(local_position, q_rotation, local_scale);
 	local_rotation = q_rotation.ToEulerZYX() * RADTODEG;
 	local_rotation = { local_rotation.z, local_rotation.y, local_rotation.x };
 
