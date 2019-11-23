@@ -8,7 +8,7 @@
 #include "KDTree.h"
 #include "DynTree.h"
 
-GameObject::GameObject(std::string name, GameObject* parent, bool outside_root) : name(name), parent(parent)
+GameObject::GameObject(std::string name, GameObject* parent, bool is_static) : name(name), is_static(is_static) ,parent(parent)
 {
 	uid = App->random->Int();
 
@@ -19,11 +19,6 @@ GameObject::GameObject(std::string name, GameObject* parent, bool outside_root) 
 	if (parent != nullptr)
 	{
 		parent->childs.push_back(this);
-	}
-	else if(App->scene->root_go != nullptr && !outside_root)
-	{
-		this->parent = App->scene->root_go;
-		App->scene->root_go->childs.push_back(this);
 	}
 
 	// Standard Bounding Box --------------------------
@@ -157,7 +152,7 @@ AABB GameObject::GetHierarchyAABB()
 
 		if (go->obb.IsFinite())
 		{
-			hierarchy_aabb.Enclose(go->obb);
+			hierarchy_aabb.Enclose(go->bounding_box);
 		}
 		else
 		{

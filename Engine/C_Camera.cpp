@@ -1,4 +1,4 @@
-#include "C_Camera.h"
+ #include "C_Camera.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleScene.h"
@@ -16,8 +16,8 @@ C_Camera::C_Camera(GameObject* go): Component(go, ComponentType::CAMERA)
 	SetFrustumType(math::FrustumType::PerspectiveFrustum);
 	SetAspectRatio(16.f, 9.f );
 	SetClippingNearPlane(0.01f);
-	SetClippingFarPlane(20.F);
-	SetFov(60.f);
+	SetClippingFarPlane(300.f);
+	SetFov(45.f);
 
 }
 

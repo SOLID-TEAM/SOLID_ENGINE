@@ -19,8 +19,6 @@ public:
 	float4x4 GetViewMatrix();
 	float4x4 GetProjectionMatrix();
 
-	void LookAt(float3 reference);
-
 	void SetPosition(float3 position);
 
 	void SetRotation(float3 rotation);

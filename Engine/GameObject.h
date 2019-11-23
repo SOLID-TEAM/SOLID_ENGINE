@@ -47,7 +47,7 @@ public:
 
 public:
 
-	GameObject(std::string name = "Unknown", GameObject* parent = nullptr, bool outside_root = false);
+	GameObject(std::string name, GameObject* parent , bool is_static);
 
 	~GameObject();
 
@@ -132,7 +132,7 @@ private:
 
 	bool active = true;
 
-	bool ignore = false;
+	bool ignore_culling = false;
 
 	std::vector<Component*> components;
 

@@ -109,7 +109,6 @@ void ModuleTime::StartGame()
 
 		// Save scene ------------------------------
 		App->scene->ToSaveScene(App->scene->GetSceneName().c_str(), LIBRARY_SETTINGS_FOLDER);
-
 	}
 }
 

@@ -23,6 +23,8 @@ enum class EventGoType
 {
 	STATIC_TO_DYNAMIC,
 	DYNAMIC_TO_STATIC,
+	ADD_TO_STATIC,
+	ADD_TO_DYNAMIC,
 	DELETE_FROM_STATIC,
 	DELETE_FROM_DYNAMIC,
 	UKNNOWKN
@@ -80,7 +82,7 @@ public:
 
 	// Game Objects functions ----------------------------------------------
 
-	GameObject* CreateGameObject(std::string name = "no_name", GameObject* parent = nullptr);
+	GameObject* CreateGameObject(std::string name , GameObject* parent = nullptr, bool is_static = false );
 
 	GameObject* CreateGameObjectFromModel(UID uid);
 
@@ -126,10 +128,6 @@ private:
 
 	void AddGOToUndoDeque(GameObject* gameObject);
 
-	// Lists operatiions -------------------------------------
-
-	void FillGoLists();
-
 	// Others ------------------------------------------------
 
 	bool IsGizmoActived();
@@ -143,10 +141,10 @@ public:
 	// Game Objects -------------------------------
 
 	std::stack<EventGo>			events_go_stack;
-	//std::stack<GameObject*>	to_delete_go_stack;
 	std::list<GameObject*>		static_go_list;
 	std::list<GameObject*>		dynamic_go_list;
-	std::vector<GameObject*>	go_render_list;
+	std::vector<GameObject*>	go_to_render;
+	std::vector<GameObject*>	go_ignore_culling;
 
 	GameObject*				root_go = nullptr;
 	GameObject*				selected_go = nullptr;
@@ -167,6 +165,8 @@ public:
 	// Trees -------------------------------------
 
 	KDTree kdtree;
+	bool update_kdtree = false;
+	bool render_kdtree = false;
 
 private:
 

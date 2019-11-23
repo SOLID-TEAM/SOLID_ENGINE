@@ -66,6 +66,37 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
+[Info:ModuleResources] New file dropped D:\Documentos\GitHub Projects\SOLID_ENGINE\Engine\Game\Assets\Models\pirate_chest\pirate_chest.fbx
+[Info:ModuleResources] Recognized file extension .fbx
+[success] File Duplicated Correctly
+[Info:ModuleResources] Dropped file duplicated to Assets/pirate_chest.fbx
+[Info] Loading mesh data : Mesh
+[Info] Vertices:    4227 
+[Info] Indices:    11268
+[Info] Triangles:  3756
+[Info] Normals:   4227
+[Info] More than 1 uv|w channel for mesh
+New file created [.Library/Meshes/2] of 180369 bytes
+[Info] Succesfully saved 2
+Created mesh data: Mesh
+[Info] Loading mesh data : Mesh.001
+[Info] Vertices:    17653 
+[Info] Indices:    66546
+[Info] Triangles:  22182
+[Info] Normals:   17653
+[Info] More than 1 uv|w channel for mesh
+New file created [.Library/Meshes/3] of 831117 bytes
+[Info] Succesfully saved 3
+Created mesh data: Mesh.001
+[Info] Correctly generated library texture Library/Textures/686511614
+[success] File Duplicated Correctly
+[Info] correctly duplicated original image Assets/Txt_Pirate_A_Chest_A_A.dds to Assets/
+New file created [.Library/Materials/4] of 48 bytes
+[Info] Correctly generated library texture Library/Textures/1229030662
+[success] File Duplicated Correctly
+[Info] correctly duplicated original image Assets/Txt_Pirate_A_Octopus_A.dds to Assets/
+New file created [.Library/Materials/5] of 48 bytes
+New file created [.Library/Models/2005288034] of 564 bytes
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

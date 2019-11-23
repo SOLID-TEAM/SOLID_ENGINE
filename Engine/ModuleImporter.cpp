@@ -437,11 +437,11 @@ GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, float3 position,
 
 	if (App->scene->selected_go != nullptr)
 	{
-		gameobject = new GameObject(name, App->scene->selected_go);
+		gameobject = App->scene->CreateGameObject(name, App->scene->selected_go , false);
 	}
 	else
 	{
-		gameobject = new GameObject(name, App->scene->root_go);
+		gameobject = App->scene->CreateGameObject(name, App->scene->root_go , false);
 	}
 	
 
