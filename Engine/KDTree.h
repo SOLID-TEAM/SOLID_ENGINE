@@ -89,8 +89,26 @@ void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersec
 		return;
 	}
 
-	nodes_queue.push(root);
+	C_Camera& camera = (C_Camera&)intersector;
+	LineSegment& ray = (LineSegment&)intersector;
 
+	if (typeid(C_Camera) == typeid(T))
+	{
+		
+		++checked_cols;
+		if (camera.CheckCollisionAABB(root->aabb)) nodes_queue.push(root);
+	}
+	else if (typeid(LineSegment) == typeid(T))
+	{
+		++checked_cols;
+		if (root->aabb.Intersects(ray)) nodes_queue.push(root);
+	}
+	else
+	{
+		LOG("[Error] KDtree GetIntersection(). Intersector type not mached")
+			return;
+	}
+	
 	while (!nodes_queue.empty())
 	{
 		KDTreeNode* node = nodes_queue.front();
@@ -107,56 +125,44 @@ void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersec
 
 			if (typeid(C_Camera) == typeid(T))
 			{
-				C_Camera& camera = (C_Camera&)intersector;
-
-				++checked_cols;
-
-				if (camera.CheckCollisionAABB(node->aabb))
+				for (GameObject* go : node->bucket)
 				{
-					for (GameObject* go : node->bucket)
+					// Only push if bounding box collide 
+
+					++checked_cols;
+
+					if (camera.CheckCollisionAABB(go->bounding_box))
 					{
-						// Only push if bounding box collide 
-
-						++checked_cols;
-
-						if (camera.CheckCollisionAABB(go->bounding_box))
-						{
-							intersections.push_back(go);
-						}
+						intersections.push_back(go);
 					}
 				}
 			}
 			else if (typeid(LineSegment) == typeid(T))
 			{
-				LineSegment& ray = (LineSegment&)intersector;
-
-				++checked_cols;
-
-				if (node->aabb.Intersects(ray))
+				for (GameObject* go : node->bucket)
 				{
-					for (GameObject* go : node->bucket)
+					// Only push if bounding box collide 
+
+					++checked_cols;
+
+					if (go->bounding_box.Intersects(ray))
 					{
-						// Only push if bounding box collide 
-
-						++checked_cols;
-
-						if (go->bounding_box.Intersects(ray))
-						{
-							intersections.push_back(go);
-						}
+						intersections.push_back(go);
 					}
 				}
 			}
-			else 
-			{
-				LOG("[Error] KDtree GetIntersection(). Intersector type not mached")
-				return;
-			}
 		}
 
-
-		if (node->left_child != nullptr) nodes_queue.push(node->left_child);
-		if (node->right_child != nullptr) nodes_queue.push(node->right_child);
+		if (typeid(C_Camera) == typeid(T))
+		{
+			if (node->left_child != nullptr && camera.CheckCollisionAABB(node->left_child->aabb)) nodes_queue.push(node->left_child);
+			if (node->right_child != nullptr && camera.CheckCollisionAABB(node->right_child->aabb)) nodes_queue.push(node->right_child);
+		}
+		else if (typeid(LineSegment) == typeid(T))
+		{
+			if (node->left_child != nullptr && node->left_child->aabb.Intersects(ray)) nodes_queue.push(node->left_child);
+			if (node->right_child != nullptr && node->right_child->aabb.Intersects(ray)) nodes_queue.push(node->right_child);
+		}
 	}
 
 	checked_collisions = checked_cols;

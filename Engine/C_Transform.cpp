@@ -121,7 +121,7 @@ void C_Transform::SetRotation(math::Quat q_rotation)
 
 void C_Transform::SetScale(math::float3 scale)
 {
-	global_transform.RemoveScale();
+	this->scale = scale;
 	global_transform.Scale(scale);
 	UpdateLocalTransformFromGlobal();
 }
@@ -129,6 +129,12 @@ void C_Transform::SetScale(math::float3 scale)
 void C_Transform::SetGlobalTransform(math::float4x4 matrix)
 {
 	global_transform = matrix;
+
+	Quat q_rotation;
+	global_transform.Decompose(position, q_rotation, scale);
+	rotation = q_rotation.ToEulerZYX() * RADTODEG;
+	rotation = { rotation.z, rotation.y, rotation.x };
+
 	UpdateLocalTransformFromGlobal();
 }
 
@@ -166,11 +172,9 @@ void C_Transform::UpdateLocalTransformFromGlobal()
 	}
 
 	local_position = local_transform.TranslatePart();
-	local_rotation = RadToDeg(local_transform.ToEulerZYX());
+	local_rotation = local_transform.ToEulerZYX() * RADTODEG;
 	local_rotation = { local_rotation.z, local_rotation.y ,local_rotation.x };
 	local_scale = local_transform.GetScale();
-
-	//UpdateTRS();
 
 	to_update = true;
 }
@@ -195,8 +199,19 @@ void C_Transform::SetLocalRotation(math::float3 rotation)
 void C_Transform::SetLocalScale(math::float3 scale)
 {
 	this->local_scale = scale;
-	local_transform.RemoveScale();
 	local_transform.Scale(scale);
+	UpdateGlobalTransformFromLocal();
+}
+
+void C_Transform::SetLocalTransform(math::float4x4 matrix)
+{
+	local_transform = matrix;
+
+	Quat q_rotation;
+	global_transform.Decompose(local_position, q_rotation, local_scale);
+	local_rotation = q_rotation.ToEulerZYX() * RADTODEG;
+	local_rotation = { local_rotation.z, local_rotation.y, local_rotation.x };
+
 	UpdateGlobalTransformFromLocal();
 }
 
@@ -234,11 +249,11 @@ void C_Transform::UpdateGlobalTransformFromLocal()
 		global_transform = local_transform;
 	}
 
-	//UpdateTRS();
-	position = global_transform.TranslatePart();
-	rotation = global_transform.ToEulerZYX() * RADTODEG;
+	Quat rot;
+	global_transform.Decompose(position, rot, scale);
+
+	rotation = rot.ToEulerZYX() * RADTODEG;
 	rotation = { rotation.z, rotation.y ,rotation.x };
-	scale = global_transform.GetScale();
 
 	forward = global_transform.WorldZ();
 	up = global_transform.WorldY();

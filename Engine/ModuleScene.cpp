@@ -586,7 +586,6 @@ GameObject* ModuleScene::CreateGameObject(std::string name , GameObject* parent,
 
 void ModuleScene::DeleteGameObject(GameObject* go)
 {
-	PushEvent(go, (go->is_static) ? EventGoType::DELETE_FROM_STATIC: EventGoType::DELETE_FROM_DYNAMIC);
 	temp_to_undo_go.push_back(go);
 }
 
@@ -681,6 +680,7 @@ void ModuleScene::AddGOToUndoDeque(GameObject* go)
 		delete to_undo_buffer_go.front();
 		to_undo_buffer_go.pop_front();
 	}
+
 
 	to_undo_buffer_go.push_back(go);
 	LOG("[Info] Added %s to undo buffers", go->GetName());
@@ -913,11 +913,7 @@ GameObject* ModuleScene::CreateGameObjectFromModel(UID uid)
 
 		// Set transform -------------------------------
 
-		float3 rotation = node.transform.RotatePart().ToEulerZYX() * RADTODEG;
-
-		new_go->transform->SetLocalPosition(node.transform.TranslatePart());
-		new_go->transform->SetLocalRotation( float3(rotation.z, rotation.y, rotation.x));
-		new_go->transform->SetLocalScale(node.transform.GetScale());
+		new_go->transform->SetLocalTransform(node.transform);
 
 		if (node.mesh > 0)
 		{

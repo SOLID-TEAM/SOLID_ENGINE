@@ -48,6 +48,8 @@ public:
 
 	void SetLocalScale(math::float3 scale);
 
+	void SetLocalTransform(math::float4x4 matrix);
+
 	math::float3 GetLocalPosition() const;
 
 	math::float3 GetLocalRotation() const;

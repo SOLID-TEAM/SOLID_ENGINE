@@ -63,7 +63,7 @@ void C_Camera::SetClippingNearPlane(float distance)
 
 void C_Camera::SetClippingFarPlane(float distance)
 {
-	if (distance > 1000.f) distance = 1000.f;
+	if (distance > 1000.f) distance = 10000.f;
 
 	frustum.farPlaneDistance = distance;
 	UpdateProjectionMatrix();
