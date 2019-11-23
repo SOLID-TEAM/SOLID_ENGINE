@@ -13,6 +13,8 @@ public:
 
 	void Draw();
 
+	void DrawStaticPopUp();
+
 };
 
 #endif // !_W_INSPECTOR_H__

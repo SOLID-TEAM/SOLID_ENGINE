@@ -122,6 +122,8 @@ private:
 
 	void UpdateSpacePartitioning();
 
+	void UpdateGoToRender();
+
 	AABB EncloseAllStaticGo();
 
 	AABB EncloseAllGo();
@@ -167,6 +169,9 @@ public:
 	KDTree kdtree;
 	bool update_kdtree = false;
 	bool render_kdtree = false;
+	uint frustum_collisions = 0u;
+	uint kdtree_collisions = 0u;
+	uint dyntree_collisions = 0u;
 
 private:
 

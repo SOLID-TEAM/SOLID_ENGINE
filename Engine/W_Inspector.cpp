@@ -25,8 +25,18 @@ void W_Inspector::Draw()
 
 			if (ImGui::Checkbox("Static", &go_is_static))
 			{
-				go->SetIsStatic(go_is_static);
+				if (go->childs.empty())
+				{
+					go->SetIsStatic(!go->is_static);
+				}
+				else
+				{
+					ImGui::OpenPopup("static_popup");
+				}
+				
 			}
+
+			DrawStaticPopUp();
 
 			ImGui::Spacing();
 
@@ -60,4 +70,37 @@ void W_Inspector::Draw()
 	}
 
 	ImGui::End();
+}
+
+void W_Inspector::DrawStaticPopUp()
+{
+	if (ImGui::BeginPopupModal("static_popup", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		GameObject* go = App->scene->selected_go;
+
+		ImGui::Text("Do you want to enable static flag for all the child objects as well?");
+
+		if (ImGui::Button("Yes, change children"))
+		{
+			go->SetIsStaticToHierarchy(!go->is_static);
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("No, this object only"))
+		{
+			go->SetIsStatic(!go->is_static);
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
 }

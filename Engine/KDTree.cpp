@@ -3,6 +3,11 @@
 #include "C_Transform.h"
 #include "ModuleRenderer3D.h"
 
+KDTreeNode::KDTreeNode()
+{
+	aabb.SetNegativeInfinity();
+}
+
 KDTreeNode::~KDTreeNode()
 {
 	RELEASE(left_child);
@@ -79,21 +84,19 @@ void KDTree::Create(uint max_depth, uint max_node_bucket)
 
 	while (!nodes_queue.empty())
 	{
-		KDTreeNode* current = nodes_queue.front(); nodes_queue.pop();
-		current->bucket.resize(BUCKET_MAX);
+		KDTreeNode* current = nodes_queue.front(); 
+		nodes_queue.pop();
+
 		if (current->depth <= max_depth)
 		{
 			current->left_child = new KDTreeNode();
 			current->right_child = new KDTreeNode();
-			current->left_child->aabb.SetNegativeInfinity();
-			current->right_child->aabb.SetNegativeInfinity();
 			current->left_child->depth = current->depth + 1;
 			current->right_child->depth = current->depth + 1;
 			nodes_queue.push(current->left_child);
 			nodes_queue.push(current->right_child);
 		}
-		else
-			current->is_leaf = true;
+
 	}
 }
 
@@ -113,18 +116,18 @@ bool KDTree::Active()
 
 void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::vector<GameObject*> go_vec)
 {
+	Clear();
+
 	if (go_vec.size() == 0)
 	{
 		return;
 	}
 
-	Clear();
 	Create(max_depth, max_node_bucket);
 
 	//root->is_leaf = false;
 	root->aabb = global_aabb;
 	root->bucket = go_vec;
-	root->bucket_members = go_vec.size();
 
 	std::queue<KDTreeNode*> nodes_queue;
 	nodes_queue.push(root);
@@ -135,7 +138,7 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 		
 		nodes_queue.pop();
 
-		if (node->bucket_members > max_bucket_size && node->depth <= max_depth)
+		if (node->bucket.size() > max_bucket_size && node->depth <= max_depth)
 		{
 			// Choose dimension --------------------------------
 
@@ -143,7 +146,7 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 
 			// Sort per position dimention ---------------------
 
-			std::sort(node->bucket.begin(), node->bucket.begin() + node->bucket_members, [dimension](const GameObject* go1, const GameObject *go2)
+			std::sort(node->bucket.begin(), node->bucket.end() , [dimension](const GameObject* go1, const GameObject *go2)
 			{
 				if (go1 == nullptr || go2 == nullptr)
 				{
@@ -155,14 +158,14 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 
 			// Calculate middle -------------------------------
 
-			if (node->bucket_members % 2 == 0)
+			if (node->bucket.size() % 2 == 0)
 			{
-				uint middle = (node->bucket_members * 0.5f); 
+				uint middle = (node->bucket.size() * 0.5f);
 				node->middle = (node->bucket[middle - 1]->transform->position[dimension] + node->bucket[middle]->transform->position[dimension]) * 0.5f;
 			}
 			else
 			{
-				uint middle = (node->bucket_members * 0.5f);
+				uint middle = (node->bucket.size() * 0.5f);
 				node->middle = node->bucket[middle]->transform->position[dimension];
 			}
 
@@ -172,23 +175,37 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 			nodes_queue.push(node->left_child);
 			nodes_queue.push(node->right_child);
 
-			for (uint i = 0; i < node->bucket_members; ++i) 
+			for (GameObject* go : node->bucket)
 			{
+				bool intersect_left = false;
+				bool intersect_right = false;
 
-				if (node->left_child->aabb.Intersects(node->bucket[i]->bounding_box))
+				if (node->left_child->aabb.Intersects(go->bounding_box))
 				{
-					node->left_child->bucket[node->left_child->bucket_members++] = node->bucket[i];
+					intersect_left = true;
+					
 				}
-				if (node->right_child->aabb.Intersects(node->bucket[i]->bounding_box))
+				if (node->right_child->aabb.Intersects(go->bounding_box))
 				{
-					node->right_child->bucket[node->right_child->bucket_members++] = node->bucket[i];
+					intersect_right = true;
+					
+				}
+
+				if (intersect_left && intersect_right)
+				{
+					continue;
+				}
+				else if (intersect_left)
+				{
+					node->left_child->bucket.push_back(go);
+				}
+				else
+				{
+					node->right_child->bucket.push_back(go);
 				}
 			}
-			node->is_leaf = false;
+		
 		}
-		else
-		{
-			node->is_leaf = true;
-		}
+
 	}
 }

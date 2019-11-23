@@ -5,6 +5,7 @@
 #include "C_Transform.h"
 #include "Viewport.h"
 #include "CameraEditor.h"
+#include "W_Scene.h"
 
 #include "ImGuizmo/ImGuizmo.h"
 #include "IconFontAwesome/IconsFontAwesome5.h"
@@ -193,6 +194,10 @@ update_status ModuleScene::Update()
 
 	UpdateMousePicking();
 
+	// Update render list ------------------------------------- (Pre Render/Draw Function ?)
+
+	UpdateGoToRender();
+
 	return UPDATE_CONTINUE;
 }
 
@@ -226,7 +231,7 @@ update_status ModuleScene::Draw()
 		if (editor_mode)
 		{
 			App->test->main_grid->Render();
- 			if (render_kdtree && camera->cullling)
+ 			if (render_kdtree && camera->cullling && App->time->game_state != GameState::STOP)
 				App->renderer3D->RenderKDTree(kdtree, 3.f);
 		}
 
@@ -245,7 +250,7 @@ update_status ModuleScene::Draw()
 
 void ModuleScene::UpdateMousePicking()
 {
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && IsGizmoActived() == false )
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && IsGizmoActived() == false && App->editor->w_scene->is_focused )
 	{
  		std::vector< GameObject*> intersections;
 		float2 screen_point(ImGui::GetMousePos().x, ImGui::GetMousePos().y);
@@ -408,6 +413,10 @@ void ModuleScene::UpdateGoLists()
 			update_kdtree = true;
 		}
 	}
+
+	dynamic_go_list.unique();
+	static_go_list.unique();
+
 }
 
 void ModuleScene::UpdateGizmo()
@@ -439,9 +448,9 @@ void ModuleScene::UpdateGizmo()
 
 void ModuleScene::UpdateSpacePartitioning()
 {
-	uint kdtree_collisions = 0u;
-	uint dyntree_collisions = 0u;
-	uint frustum_collisions = 0u;
+	kdtree_collisions = 0u;
+	dyntree_collisions = 0u;
+	frustum_collisions = 0u;
 
 	// Update kdtree for static game objects --------------------------
 
@@ -463,15 +472,18 @@ void ModuleScene::UpdateSpacePartitioning()
 			}
 		}
 
-		kdtree.Fill(6, 1, EncloseAllGo(), go_vector);
+		kdtree.Fill(8, 6, EncloseAllStaticGo(), go_vector);
 		update_kdtree = false;
 	}
+}
 
+void ModuleScene::UpdateGoToRender()
+{
 	// Fill render list ----------------------------------------------
 
 	C_Camera* camera = main_camera->GetComponent<C_Camera>();
 
-	if (camera->cullling) // Check if go is colliding with main camera frustum optimizing the game
+	if (camera->cullling && App->time->game_state != GameState::STOP) // Check if go is colliding with main camera frustum optimizing the game
 	{
 		// Add dynamic go to render list -----------------------------
 
@@ -506,8 +518,10 @@ void ModuleScene::UpdateSpacePartitioning()
 	if (ImGui::Begin("Space Partitioning"))
 	{
 		ImGui::Title("Game Objects"); ImGui::Text("");
-		ImGui::Title("Static", 2); ImGui::Text("%i", static_go_list.size()); 
+		ImGui::Title("Static", 2); ImGui::Text("%i", static_go_list.size());
 		ImGui::Title("Dynamic", 2); ImGui::Text("%i", dynamic_go_list.size());
+		ImGui::Title("Rendering", 2); ImGui::Text("%i", go_to_render.size());
+
 		ImGui::Spacing();
 
 
@@ -515,10 +529,10 @@ void ModuleScene::UpdateSpacePartitioning()
 		{
 			ImGui::Separator();
 
-			ImGui::Title("KDTree");	ImGui::Text(( kdtree.Active()) ? "ON" : "OFF");
+			ImGui::Title("KDTree");	ImGui::Text((kdtree.Active()) ? "ON" : "OFF");
 			ImGui::Title("Render", 2); ImGui::Checkbox("##render_kdtree", &render_kdtree);
 			ImGui::Title("Checked Collisions");  ImGui::Text("");
-			ImGui::Title("Frustum",2);  ImGui::Text("%i", frustum_collisions);
+			ImGui::Title("Frustum", 2);  ImGui::Text("%i", frustum_collisions);
 		}
 		else
 		{
@@ -620,7 +634,10 @@ AABB ModuleScene::EncloseAllStaticGo()
 
 	for (GameObject* go : static_go_list)
 	{
-		global_aabb.Enclose(go->bounding_box);
+		if (go->bounding_box.IsFinite())
+		{
+			global_aabb.Enclose(go->bounding_box);
+		}
 	}
 
 	return global_aabb;

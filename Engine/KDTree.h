@@ -12,9 +12,6 @@
 #include <vector>
 #include <typeinfo>
 
-
-#define BUCKET_MAX 1024 // TODO: Too much??? Test 
-
 class ModuleRenderer3D;
 
 class KDTreeNode
@@ -25,7 +22,7 @@ public:
 
 public:
 
-	KDTreeNode() {};
+	KDTreeNode();
 
 	~KDTreeNode();
 
@@ -44,8 +41,6 @@ public:
 	AABB aabb;
 	uint depth = 0u;
 	float middle = 0.0f;
-	bool is_leaf = false;
-	uint bucket_members = 0u;
 	uint dimension = 0u;
 
 	std::vector<GameObject*> bucket;
@@ -104,7 +99,7 @@ void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersec
 
 		// Check filed lief nodes intersection -----------------------------------------
 
-		if (node->is_leaf == true && node->bucket_members > 0u)
+		if (node->bucket.size() > 0u)
 		{
 			bool ret = false;
 
@@ -118,15 +113,15 @@ void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersec
 
 				if (camera.CheckCollisionAABB(node->aabb))
 				{
-					for (uint i = 0; i < node->bucket_members; ++i)
+					for (GameObject* go : node->bucket)
 					{
 						// Only push if bounding box collide 
 
 						++checked_cols;
 
-						if (camera.CheckCollisionAABB(node->bucket[i]->bounding_box))
+						if (camera.CheckCollisionAABB(go->bounding_box))
 						{
-							intersections.push_back(node->bucket[i]);
+							intersections.push_back(go);
 						}
 					}
 				}
@@ -139,15 +134,15 @@ void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersec
 
 				if (node->aabb.Intersects(ray))
 				{
-					for (uint i = 0; i < node->bucket_members; ++i)
+					for (GameObject* go : node->bucket)
 					{
 						// Only push if bounding box collide 
 
 						++checked_cols;
 
-						if (node->bucket[i]->bounding_box.Intersects(ray))
+						if (go->bounding_box.Intersects(ray))
 						{
-							intersections.push_back(node->bucket[i]);
+							intersections.push_back(go);
 						}
 					}
 				}
@@ -158,17 +153,13 @@ void KDTree::GetIntersections(T &intersector, std::vector<GameObject*> &intersec
 				return;
 			}
 		}
-		else
-		{
-			if (node->left_child != nullptr) nodes_queue.push(node->left_child);
-			if (node->right_child != nullptr) nodes_queue.push(node->right_child);
-		}
 
-		// Equal checked collisions 
 
-		checked_collisions = checked_cols;
-
+		if (node->left_child != nullptr) nodes_queue.push(node->left_child);
+		if (node->right_child != nullptr) nodes_queue.push(node->right_child);
 	}
+
+	checked_collisions = checked_cols;
 }
 
 #endif

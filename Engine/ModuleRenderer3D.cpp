@@ -238,8 +238,8 @@ void ModuleRenderer3D::RenderFrustum(math::Frustum& frustum, float width, float4
 void ModuleRenderer3D::RenderKDTree(KDTree& kdtree, float width)
 {
 	std::stack<KDTreeNode*> nodes_stack;
-	std::stack<KDTreeNode*> nodes_to_render;
-	
+	float4 color;
+
 	if (kdtree.root == nullptr)
 	{
 		return;
@@ -247,27 +247,12 @@ void ModuleRenderer3D::RenderKDTree(KDTree& kdtree, float width)
 
 	nodes_stack.push(kdtree.root);
 
+	glDepthFunc(GL_ALWAYS);
+
 	while (!nodes_stack.empty())
 	{
 		KDTreeNode* node = nodes_stack.top();
-
-		nodes_to_render.push(node);
-
 		nodes_stack.pop();
-
-		if (node->is_leaf == false)
-		{
-			if (node->left_child->bucket_members > 0) nodes_stack.push(node->left_child);
-			if (node->right_child->bucket_members > 0) nodes_stack.push(node->right_child);
-		}
-	}
-	
-	glDepthFunc(GL_ALWAYS);
-
-	while (!nodes_to_render.empty())
-	{
-		KDTreeNode* node = nodes_to_render.top();
-		float4 color;
 
 		if (node != kdtree.root)
 		{
@@ -284,7 +269,6 @@ void ModuleRenderer3D::RenderKDTree(KDTree& kdtree, float width)
 				break;
 			}
 
-
 			RenderAABB(node->aabb, width - (float)node->depth * 0.3f, color);
 		}
 		else
@@ -293,9 +277,8 @@ void ModuleRenderer3D::RenderKDTree(KDTree& kdtree, float width)
 			RenderAABB(node->aabb, width, color);
 		}
 
-		
-
-		nodes_to_render.pop();
+		if (node->left_child != nullptr ) nodes_stack.push(node->left_child);
+		if (node->right_child != nullptr) nodes_stack.push(node->right_child);
 	}
 	
 	glDepthFunc(GL_LESS);

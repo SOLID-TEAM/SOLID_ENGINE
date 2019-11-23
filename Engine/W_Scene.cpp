@@ -49,6 +49,7 @@ void W_Scene::Draw()
 
 		// Input camera ----------------------------------------------------
 
+		is_focused = ImGui::IsWindowFocused();
 		ImVec2 min = ImGui::GetCursorScreenPos();
 		ImVec2 max = ImGui::GetCursorScreenPos() + ImGui::GetContentRegionAvail();
 		bool mouse_is_hovering = ImGui::IsMouseHoveringRect(min, max);

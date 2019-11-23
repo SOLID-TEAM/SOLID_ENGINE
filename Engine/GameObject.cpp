@@ -127,6 +127,30 @@ void GameObject::SetIsStatic(bool value)
 	}
 }
 
+void GameObject::SetIsStaticToHierarchy(bool value)
+{
+	std::stack<GameObject*> go_stack;
+
+	go_stack.push(this);
+
+	while (!go_stack.empty())
+	{
+		GameObject* go = go_stack.top();
+		go_stack.pop();
+
+		if (go->is_static != value)
+		{
+			App->scene->PushEvent(go, (go->is_static == true) ? EventGoType::STATIC_TO_DYNAMIC : EventGoType::DYNAMIC_TO_STATIC);
+			go->is_static = value;
+		}
+
+		for (GameObject* child : go->childs)
+		{
+			go_stack.push(child);
+		}
+	}
+}
+
 const char* GameObject::GetName() const
 {
 	return name.c_str();

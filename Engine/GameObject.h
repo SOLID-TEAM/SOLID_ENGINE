@@ -57,6 +57,8 @@ public:
 
 	void SetIsStatic(bool value);
 
+	void SetIsStaticToHierarchy(bool value);
+
 	const char* GetName() const;
 
 	// Virtual functions -------------------------------------------

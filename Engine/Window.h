@@ -42,6 +42,7 @@ protected:
 public:
 
 	bool	active = false;
+	bool    is_focused = false;
 
 protected:
 

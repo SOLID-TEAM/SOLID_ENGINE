@@ -59,7 +59,7 @@ private:
 
 public:
 
-	bool cullling = false;
+	bool cullling = true;
 
 private:
 
