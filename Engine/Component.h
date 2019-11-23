@@ -41,7 +41,7 @@ public:
 
 	virtual void Disable();
 
-	virtual bool Update(float dt);
+	virtual bool Update();
 
 	virtual void UpdateTransform();
 

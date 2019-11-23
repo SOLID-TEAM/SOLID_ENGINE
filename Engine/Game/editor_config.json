@@ -1,12 +1,11 @@
 {
     "App": {
         "name": "SOLID_ENGINE",
-        "organization": "SOLID_TEAM",
-        "framerate_cap": 60
+        "organization": "SOLID_TEAM"
     },
     "Window": {
-        "window_width": 1564,
-        "window_height": 271,
+        "window_width": 2048,
+        "window_height": 1089,
         "fullscreen": false,
         "fullscreen_desktop": false,
         "resizable": true,
@@ -90,17 +89,20 @@
     "Renderer3D": {},
     "ModuleScene": {
         "Camera editor position": [
-            8.1095790863037109,
-            8.2197084426879883,
-            -9.7634639739990234
+            10.059353828430176,
+            6.7220754623413086,
+            -10.033777236938477
         ],
         "Camera editor rotation": [
-            12.747061729431152,
-            -36.265251159667969,
-            5.2944756134820636e-07
+            32.777675628662109,
+            -35.626800537109375,
+            -1.0503738394618267e-06
         ]
     },
     "ModuleResources": {
-        "Last_UID": 672
+        "Last_UID": 1
+    },
+    "ModuleTime": {
+        "framerate_cap": 69
     }
 }

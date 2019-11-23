@@ -75,7 +75,7 @@ public:
 
 	bool Init(Config& config);
 
-	update_status PostUpdate(float dt);
+	update_status PostUpdate();
 
 	bool CleanUp();
 

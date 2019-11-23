@@ -23,7 +23,7 @@ public:
 
 	bool Init(Config& config);
 
-	update_status PreUpdate(float dt);
+	update_status PreUpdate();
 
 	void SetMouseX(int x);
 

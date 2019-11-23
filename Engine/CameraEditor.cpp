@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "CameraEditor.h"
 #include "ModuleScene.h"
-
+#include "ModuleTime.h"
 #include "GameObject.h"
 #include "C_Transform.h"
 
@@ -50,8 +50,10 @@ void CameraEditor::SetRotation(float3 rotation)
 	current_yaw = final_yaw = transform->rotation.y;
 }
 
-void CameraEditor::Update(float dt)
+void CameraEditor::Update()
 {
+	float dt = App->time->UnscaledDeltaTime();
+
 	mouse_right_pressed = (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN);
 	mouse_left_pressed = (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN);
 	mouse_wheel_pressed = (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_DOWN);

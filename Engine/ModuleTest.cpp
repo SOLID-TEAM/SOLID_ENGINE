@@ -85,14 +85,14 @@ void ModuleTest::Load(Config& config)
 }
 
 // Update
-update_status ModuleTest::Update(float dt)
+update_status ModuleTest::Update()
 {
 	//test->transform->LookAt(float3(0.f, 0.f, 0.f));
 
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleTest::PostUpdate(float dt)
+update_status ModuleTest::PostUpdate()
 {
 	
 

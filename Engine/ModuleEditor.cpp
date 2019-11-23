@@ -183,7 +183,7 @@ void ModuleEditor::DestroyWindow(Window* panel_to_destroy)
 }
 
 
-update_status ModuleEditor::PreUpdate(float dt)
+update_status ModuleEditor::PreUpdate()
 {
 	// ImGui Internal System ------------------------------
 
@@ -219,7 +219,7 @@ update_status ModuleEditor::PreUpdate(float dt)
 }
 
 // Update
-update_status ModuleEditor::Update(float dt)
+update_status ModuleEditor::Update()
 {
 	
 	return UPDATE_CONTINUE;

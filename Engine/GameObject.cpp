@@ -46,7 +46,7 @@ void GameObject::CleanUp(){}
 
 void GameObject::Start(){}
 
-void GameObject::Update(float dt){}
+void GameObject::Update(){}
 
 void GameObject::Render(){}
 
@@ -57,13 +57,13 @@ void GameObject::DoStart()
 	Start();
 }
 
-void GameObject::DoUpdate(float dt)
+void GameObject::DoUpdate()
 {
-	Update(dt);
+	Update();
 
 	for (Component* component : components)
 	{
-		component->Update(dt);
+		component->Update();
 	}
 }
 

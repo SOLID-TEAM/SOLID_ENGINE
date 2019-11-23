@@ -17,7 +17,7 @@ C_Mesh::C_Mesh(GameObject* parent) : Component(parent, ComponentType::MESH)
 C_Mesh::~C_Mesh() {}
 
 
-bool C_Mesh::Update(float dt)
+bool C_Mesh::Update()
 {
 	return true;
 }

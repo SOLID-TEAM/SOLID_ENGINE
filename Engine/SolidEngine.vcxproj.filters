@@ -453,6 +453,9 @@
     <ClInclude Include="ModuleResources.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleTime.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -720,6 +723,9 @@
       <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleResources.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleTime.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>

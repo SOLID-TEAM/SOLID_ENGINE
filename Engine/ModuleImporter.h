@@ -40,8 +40,8 @@ public:
 
 	bool Init(Config& config);
 	bool Start(Config& config);
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
+	update_status Update();
+	update_status PostUpdate();
 	bool CleanUp();
 
 	bool Save(Config& config);

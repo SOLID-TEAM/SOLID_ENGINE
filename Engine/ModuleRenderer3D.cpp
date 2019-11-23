@@ -123,7 +123,7 @@ bool ModuleRenderer3D::Init(Config& config)
 	return ret;
 }
 
-update_status ModuleRenderer3D::PostUpdate(float dt)
+update_status ModuleRenderer3D::PostUpdate()
 {
 	// Always swap window  ------------------------
 

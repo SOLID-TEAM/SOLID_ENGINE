@@ -36,7 +36,7 @@ void W_Config::Draw()
 		{
 			ImGui::Spacing();
 			static int cap = 60;
-			ImGui::Title("Framerate"); if (ImGui::SliderInt("##Framerate cap", &cap, 0, 144, "%f")) App->AdjustCappedMs(cap);
+			ImGui::Title("Framerate"); if (ImGui::SliderInt("##Framerate cap", &cap, 0, 144, "%f")) App->time->SetCap(cap);
 			ImGui::Spacing();
 
 			ImGui::PlotConfig conf;

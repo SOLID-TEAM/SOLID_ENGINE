@@ -58,12 +58,12 @@ bool ModuleImporter::Start(Config& config)
 	return true;
 }
 
-update_status ModuleImporter::Update(float dt)
+update_status ModuleImporter::Update()
 {
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleImporter::PostUpdate(float dt)
+update_status ModuleImporter::PostUpdate()
 {
 	
 	return UPDATE_CONTINUE;

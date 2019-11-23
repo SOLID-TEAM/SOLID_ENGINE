@@ -129,9 +129,9 @@ public:
 
 	bool CleanUp();
 
-	update_status PreUpdate(float dt);
+	update_status PreUpdate();
 
-	update_status Update(float dt);
+	update_status Update();
 ;
 	update_status Draw(); // for viewport draw loop
 

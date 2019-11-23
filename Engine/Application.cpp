@@ -9,8 +9,7 @@ Application::Application()
 	app_name.assign("SOLID_ENGINE");
 	organization_name.assign("SOLID_TEAM");
 
-	random = new math::LCG();
-
+	time = new ModuleTime();
 	window = new ModuleWindow();
 	input = new ModuleInput();
 	test = new ModuleTest();
@@ -23,19 +22,18 @@ Application::Application()
 	resources = new ModuleResources();
 
 	// Main Modules
+
+	AddModule(time);	// Time first
 	AddModule(window);
 	AddModule(input);
 	AddModule(resources);
-	// Scenes
 	AddModule(scene);
 	AddModule(test);
-
 	AddModule(file_sys);
 	AddModule(textures);
 	AddModule(importer);
 	AddModule(editor);
-	// Renderer last!
-	AddModule(renderer3D);
+	AddModule(renderer3D); // Renderer last!
 
 }
 
@@ -58,8 +56,10 @@ bool Application::Init()
 
 	LOG("-------------- Application Init --------------");
 
-	// Config Tool Creation --------------------------------
+	// Tool Creation --------------------------------
 	config = new Config(config_filename.data());
+	hardware = new HardwareInfo();
+	random = new math::LCG();
 
 	// Call Init() in all modules
 	std::list<Module*>::iterator item = list_modules.begin();
@@ -85,13 +85,6 @@ bool Application::Init()
 	// loads application config
 	LoadConfig(config->GetSection("App"));
 
-	// set fps data before start/init modules
-	fps_counter = 0;
-	frames = 0;
-	capped_ms = 1000 / max_frames;
-	last_frame_ms = 0;
-	last_fps = 0;
-
 	// modules init --------
 
 	item = list_modules.begin();
@@ -101,9 +94,6 @@ bool Application::Init()
 		ret = (*item)->Init((config->GetSection((*item)->GetName())));
 		++item;
 	}
-
-	// Tools Creation --------------------------------
-	hardware = new HardwareInfo();
 
 	// After all Init calls we call Start() in all modules
 
@@ -116,67 +106,25 @@ bool Application::Init()
 		++item;
 	}
 	
-	ms_timer.Start();
 	return ret;
 }
 
-// ---------------------------------------------
-void Application::PrepareUpdate()
-{
-	dt = (float)ms_timer.Read() / 1000.0f;
-	ms_timer.Start();
-}
-
-// ---------------------------------------------
-void Application::FinishUpdate()
-{
-	// framerate calcs
-	++fps_counter;
-	++frames;
-
-	if (fps_timer.Read() >= 1000)
-	{
-		last_fps = fps_counter;
-		fps_counter = 0;
-		fps_timer.Start();
-	}
-
-	// gets last frame ms before delay comes in
-	last_frame_ms = ms_timer.Read();
-
-	// limit framerate
-	if (capped_ms > 0 && (last_frame_ms < capped_ms))
-		SDL_Delay((Uint32)capped_ms - last_frame_ms);
-
-	// testing after sdl delay for plot purposes too
-	last_frame_ms = ms_timer.Read();
-
-	// save last fps to module editor vector
-	
-	hardware->UpdateDynamicVars();
-
-	editor->w_config->AddMemoryLog(App->hardware->ram_usage.peak_actual_mem);
-	editor->w_config->AddFpsLog((float)last_fps, (float)last_frame_ms);
-
-}
-
-// Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
-	PrepareUpdate();
 
-	/*if (input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-	{
-		if(WantToSave())
-			LOG("[Info] Editor config %s succesfully overwritten", config_filename.data());
-	}*/
-	
+	// Update tools ---------------------------------
+	hardware->UpdateDynamicVars();
+	editor->w_config->AddMemoryLog(App->hardware->ram_usage.peak_actual_mem);
+	editor->w_config->AddFpsLog(time->fps, time->last_frame_ms);
+
+	// Update modules ------------------------------
+
 	std::list<Module*>::iterator item = list_modules.begin();
-	
+
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->PreUpdate(dt);
+		ret = (*item)->PreUpdate();
 		++item;
 	}
 
@@ -184,7 +132,7 @@ update_status Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->Update(dt);
+		ret = (*item)->Update();
 		++item;
 	}
 
@@ -192,7 +140,7 @@ update_status Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->PostUpdate(dt);
+		ret = (*item)->PostUpdate();
 		++item;
 	}
 
@@ -204,7 +152,6 @@ update_status Application::Update()
 		++item;
 	}
 
-	FinishUpdate();
 	return ret;
 }
 
@@ -215,14 +162,13 @@ bool Application::CleanUp()
 
 	while(item != list_modules.rend() && ret == true)
 	{
-		//ret = (*item)->SetActiveAndGet(false);
 		ret = (*item)->CleanUp();
 		++item;
 	}
 
 	SaveLogToFile();
-	delete config;
 
+	delete config;
 	delete random;
 
 	return ret;
@@ -247,16 +193,6 @@ void Application::RequestBrowser(const char* url) const
 {
 	ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL); //SW_SHOWNA);
 		// SW_SHOWNA = show window in current state
-}
-
-void Application::AdjustCappedMs(int max_frames)
-{
-	if (max_frames > 0)
-		capped_ms = 1000 / max_frames;
-	else
-		capped_ms = 0;
-
-	this->max_frames = max_frames;
 }
 
 void Application::Log(const char* new_entry)
@@ -354,7 +290,7 @@ bool Application::SaveConfig(Config& config)
 
 	ret = config.AddString("name", app_name.data());
 	ret = config.AddString("organization", organization_name.data());
-	ret = config.AddInt("framerate_cap", max_frames);
+
 
 	return ret;
 }
@@ -365,15 +301,9 @@ bool Application::LoadConfig(Config& config)
 
 	app_name.assign(config.GetString("name", app_name.data()));
 	organization_name.assign(config.GetString("organization", organization_name.data()));
-	AdjustCappedMs(config.GetInt("framerate_cap", max_frames));
 
 	return ret;
 }
-int Application::GetFrames()
-{
-	return frames;
-}
-
 void Application::BroadcastEvent(const Event& e)
 {
 	for (std::list<Module*>::iterator it = list_modules.begin(); it != list_modules.end(); ++it)

@@ -7,6 +7,7 @@
 #include <string>
 // Modules -------------------
 #include "Module.h"
+#include "ModuleTime.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleTest.h"
@@ -34,29 +35,33 @@ class Application
 public:
 
 	Application();
+
 	~Application();
 
 	bool Init();
+
 	update_status Update();
+
 	bool CleanUp();
 
 	void RequestBrowser(const char* b_path) const;
-	void AdjustCappedMs(int max_frames);
+
 	void Log(const char* new_entry);
-	int GetFrames();
+
 	void SaveLogToFile() const;
+
 	void BroadcastEvent(const Event& event);
 
 	bool WantToSave(bool cleanInit = false);
+
 	void WantToLoad(bool restoreDefault = false);
 
 private:
 
 	void AddModule(Module* mod);
-	void PrepareUpdate();
-	void FinishUpdate();
 
 	bool SaveConfig(Config& config);
+
 	bool LoadConfig(Config& config);
 
 public:
@@ -65,12 +70,11 @@ public:
 	HardwareInfo* hardware = nullptr;
 	Config* config = nullptr;
 	std::string config_filename;
-	int max_frames = 60;
-
-	// random
 	LCG* random = nullptr;
 
 	// Modules --------------------------------
+
+	ModuleTime* time = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
 	ModuleTest* test = nullptr;
@@ -85,23 +89,13 @@ public:
 	// Buffers ------------------------------------
 	ImVector<char*> console_log_aux;
 	std::string log_buffer;
-
 	std::string app_name;
 	std::string organization_name;
+
 private:
 
 	// General ----------------------------------
 	std::list<Module*> list_modules;
-
-	// Framerate --------------------------------
-	Timer	ms_timer;
-	Timer fps_timer;
-	Uint32 frames; // stores total life application looped frames
-	float	dt;
-	int fps_counter;
-	int capped_ms;
-	Uint32 last_frame_ms; // stores amount of ms of last frame cycle
-	int last_fps; // stores last second total frames
 };
 
 extern Application* App;

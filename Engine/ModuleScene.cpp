@@ -113,7 +113,7 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
-update_status ModuleScene::PreUpdate(float dt)	// TODO: SHORTCUTS
+update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 {
 
 	if (create_new_scene)
@@ -144,7 +144,7 @@ update_status ModuleScene::PreUpdate(float dt)	// TODO: SHORTCUTS
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleScene::Update(float dt)
+update_status ModuleScene::Update()
 {
 	// Update hierarchy -----------------------------------------
 
@@ -161,7 +161,7 @@ update_status ModuleScene::Update(float dt)
 
 	// Update All GameObjects -----------------------------------
 
-	if (editor_camera) editor_camera->DoUpdate(dt);
+	if (editor_camera) editor_camera->DoUpdate();
 
 	if (root_go != nullptr)
 	{
@@ -174,7 +174,7 @@ update_status ModuleScene::Update(float dt)
 			GameObject* go = go_stack.top();
 			go_stack.pop();
 
-			go->DoUpdate(dt);
+			go->DoUpdate();
 
 			for (GameObject* child : go->childs)
 			{

@@ -25,7 +25,7 @@ C_MeshRenderer::~C_MeshRenderer()
 
 }
 
-bool C_MeshRenderer::Update(float dt)
+bool C_MeshRenderer::Update()
 {
 	//ViewportOptions& vp = App->editor->viewport_options;
 

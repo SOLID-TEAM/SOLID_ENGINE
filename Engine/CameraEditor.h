@@ -13,7 +13,7 @@ public:
 	CameraEditor();
 
 	void Start();
-	void Update(float dt);
+	void Update();
 	void CleanUp();
 
 	float4x4 GetViewMatrix();

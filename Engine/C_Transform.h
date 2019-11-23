@@ -11,7 +11,7 @@ public:
 
 	~C_Transform();
 
-	bool Update(float dt);
+	bool Update();
 
 	void Rotate(math::float3 axis, float angle);
 

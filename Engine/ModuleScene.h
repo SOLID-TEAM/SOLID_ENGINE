@@ -54,11 +54,11 @@ public:
 
 	bool Start(Config& config);
 
-	update_status PreUpdate(float dt);
+	update_status PreUpdate();
 
-	update_status Update(float dt);
+	update_status Update();
 	
-	//update_status PostUpdate(float dt);
+	//update_status PostUpdate();
 
 	update_status Draw();
 

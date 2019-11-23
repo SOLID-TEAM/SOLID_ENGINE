@@ -21,7 +21,7 @@ void Component::Disable()
 		active = !active;
 }
 
-bool Component::Update(float dt)
+bool Component::Update()
 {
 	return true;
 }

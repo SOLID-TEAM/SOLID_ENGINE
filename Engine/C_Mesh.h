@@ -24,7 +24,7 @@ public:
 
 	~C_Mesh();
 
-	bool Update(float dt);
+	bool Update();
 
 	bool DrawPanelInfo();
 

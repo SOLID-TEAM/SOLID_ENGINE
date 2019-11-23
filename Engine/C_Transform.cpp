@@ -20,7 +20,7 @@ C_Transform::C_Transform(GameObject* parent) : Component(parent, ComponentType::
 	local_transform.SetIdentity();
 }
 
-bool C_Transform::Update(float dt)
+bool C_Transform::Update()
 {
 	if (to_update)
 	{
