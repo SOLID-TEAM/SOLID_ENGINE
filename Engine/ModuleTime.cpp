@@ -85,6 +85,11 @@ uint ModuleTime::GetCap()
 	return (uint)max_fps;
 }
 
+GameState ModuleTime::GetGameState()
+{
+	return game_state;
+}
+
 uint ModuleTime::RealTimeSinceStartup()
 {
 	return real_time_since_startup;
@@ -139,11 +144,11 @@ void ModuleTime::StopGame()
 
 }
 
-void ModuleTime::StepFowrardTime()
+void ModuleTime::StepFowrardGame()
 {
 	if (game_state != GameState::STOP)
 	{
-		game_state == GameState::STEP_FORWARD;
+		game_state = GameState::STEP_FORWARD;
 	}
 }
 

@@ -60,6 +60,8 @@ private:
 
 	// Game functions -------------------------
 
+	GameState GetGameState();
+
 	uint RealTimeSinceStartup();
 
 	uint TimeSinceGameLoad();
@@ -72,7 +74,7 @@ private:
 
 	void StopGame();
 
-	void StepFowrardTime();
+	void StepFowrardGame();
 
 private:
 

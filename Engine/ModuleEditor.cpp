@@ -287,17 +287,37 @@ update_status ModuleEditor::Draw()
 	line_cursor_x = win_center - ( (button_s_w + padding) * 3.f ) * 0.5f;
 	ImGui::SameLine(line_cursor_x);
 
-	if ( ImGui::Button(ICON_FA_PLAY, { button_s_w, button_h }) )
+	if (App->time->GetGameState() == GameState::RUN)
 	{
-		App->time->StartGame();
+		if (ImGui::Button(ICON_FA_STOP, { button_s_w, button_h }))
+		{
+			App->time->StopGame();
+		}
+	}
+	else
+	{
+		if (ImGui::Button(ICON_FA_PLAY, { button_s_w, button_h }))
+		{
+			App->time->StartGame();
+		}
 	}
 
 	line_cursor_x += button_s_w + padding;
 	ImGui::SameLine(line_cursor_x);
 
-	if (ImGui::Button(ICON_FA_PAUSE, { button_s_w, button_h }))
+	if (App->time->GetGameState() == GameState::PAUSE)
 	{
-		App->time->PauseGame();
+		if (ImGui::Button(ICON_FA_PAUSE, { button_s_w, button_h }))
+		{
+			App->time->ResumeGame();
+		}
+	}
+	else
+	{
+		if (ImGui::Button(ICON_FA_PAUSE, { button_s_w, button_h }))
+		{
+			App->time->PauseGame();
+		}
 	}
 
 	line_cursor_x += button_s_w + padding;
@@ -305,8 +325,13 @@ update_status ModuleEditor::Draw()
 
 	if (ImGui::Button(ICON_FA_STEP_FORWARD, { button_s_w, button_h }))
 	{
-		App->time->StopGame();
+		App->time->StepFowrardGame();
 	}
+
+	line_cursor_x += button_s_w + padding * 8;
+	ImGui::SameLine(line_cursor_x);
+
+	ImGui::Text("Time : %f", App->time->time_since_load);
 
 	ImGui::End();
 
