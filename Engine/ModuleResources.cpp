@@ -303,7 +303,8 @@ Resource::Type ModuleResources::GetResourceTypeFromFileExtension(std::string ext
 	if (extension == "png" ||
 		extension == "jpg" ||
 		extension == "dds" ||
-		extension == "tif")
+		extension == "tif" ||
+		extension == "tga")
 	{
 		ret = Resource::Type::TEXTURE;
 	}
