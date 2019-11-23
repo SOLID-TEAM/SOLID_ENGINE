@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleEditor.h"
+#include "ModuleTime.h"
 #include "Config.h"
 
 #include "GL/glew.h"
@@ -285,13 +286,27 @@ update_status ModuleEditor::Draw()
 	ImGui::Button(ICON_FA_GLOBE " Global", { button_l_w, button_h });
 	line_cursor_x = win_center - ( (button_s_w + padding) * 3.f ) * 0.5f;
 	ImGui::SameLine(line_cursor_x);
-	ImGui::Button(ICON_FA_PLAY, { button_s_w, button_h });
+
+	if ( ImGui::Button(ICON_FA_PLAY, { button_s_w, button_h }) )
+	{
+		App->time->StartGame();
+	}
+
 	line_cursor_x += button_s_w + padding;
 	ImGui::SameLine(line_cursor_x);
-	ImGui::Button(ICON_FA_PAUSE, { button_s_w, button_h });
+
+	if (ImGui::Button(ICON_FA_PAUSE, { button_s_w, button_h }))
+	{
+		App->time->PauseGame();
+	}
+
 	line_cursor_x += button_s_w + padding;
 	ImGui::SameLine(line_cursor_x);
-	ImGui::Button(ICON_FA_STEP_FORWARD, { button_s_w, button_h });
+
+	if (ImGui::Button(ICON_FA_STEP_FORWARD, { button_s_w, button_h }))
+	{
+		App->time->StopGame();
+	}
 
 	ImGui::End();
 

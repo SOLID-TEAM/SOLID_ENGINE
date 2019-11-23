@@ -17,6 +17,7 @@ enum class GameState
 };
 
 class ModuleScene;
+class ModuleEditor;
 class Application;
 class W_Config;
 
@@ -25,6 +26,7 @@ class ModuleTime : public Module
 public:
 
 	friend W_Config;
+	friend ModuleEditor;
 	friend ModuleScene;
 	friend Application;
 
@@ -58,11 +60,17 @@ private:
 
 	// Game functions -------------------------
 
-	void StartTime();
+	uint RealTimeSinceStartup();
 
-	void PauseTime();
+	uint TimeSinceGameLoad();
 
-	void StopTime();
+	void StartGame();
+
+	void PauseGame();
+
+	void ResumeGame();
+
+	void StopGame();
 
 	void StepFowrardTime();
 
@@ -76,7 +84,7 @@ private:
 
 	// Game Time -------------------------
 	float	time_scale = DEFAULT_SCALE;	// Game speed multiplicator
-	float	time = 0.0f;						// Time since game start (seconds)
+	float	time_since_load = 0.0f;						// Time since game start (seconds)
 	float	delta_time = 0.0f;					// Last frame time (seconds)
 
 	// Real Time -------------------------

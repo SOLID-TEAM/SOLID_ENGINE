@@ -54,12 +54,12 @@ update_status ModuleTime::PreUpdate()
 	if (game_state == GameState::RUN)
 	{
 		delta_time = real_time_delta_time * time_scale;
-		time += delta_time;
+		time_since_load += delta_time;
 	}
 	else if (game_state == GameState::STEP_FORWARD)
 	{
 		delta_time = real_time_delta_time * time_scale;
-		time += delta_time;
+		time_since_load += delta_time;
 		game_state = GameState::PAUSE;
 	}
 	else
@@ -83,18 +83,28 @@ uint ModuleTime::GetCap()
 	return (uint)max_fps;
 }
 
-void ModuleTime::StartTime()
+uint ModuleTime::RealTimeSinceStartup()
+{
+	return real_time_since_startup;
+}
+
+uint ModuleTime::TimeSinceGameLoad()
+{
+	return time_since_load;
+}
+
+void ModuleTime::StartGame()
 {
 	if (game_state != GameState::RUN)
 	{
 		game_state = GameState::RUN;
-		time = 0.f;
+		time_since_load = 0.f;
 
 		// J_TODO: Save scene ------------------------------
 	}
 }
 
-void ModuleTime::PauseTime()
+void ModuleTime::PauseGame()
 {
 	if (game_state != GameState::STOP)
 	{
@@ -102,12 +112,20 @@ void ModuleTime::PauseTime()
 	}
 }
 
-void ModuleTime::StopTime()
+void ModuleTime::ResumeGame()
+{
+	if (game_state == GameState::PAUSE)
+	{
+		game_state = GameState::RUN;
+	}
+}
+
+void ModuleTime::StopGame()
 {
 	if (game_state != GameState::STOP)
 	{
 		game_state = GameState::STOP;
-		time = 0.f;
+		time_since_load = 0.f;
 
 		// J_TODO: Load scene ------------------------------
 	}
