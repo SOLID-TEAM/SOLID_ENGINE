@@ -85,6 +85,7 @@ bool C_Transform::Update()
 
 void C_Transform::SetPosition(math::float3 position)
 {
+	this->position = position;
 	global_transform.SetTranslatePart(position);
 	UpdateLocalTransformFromGlobal();
 }
@@ -95,12 +96,26 @@ void C_Transform::SetRotation(math::float3 rotation)
 	Quat q_rotation = Quat::FromEulerZYX(rotation.z, rotation.y,rotation.x);
 	global_transform.SetRotatePart(q_rotation);
 
+	this->rotation = rotation;
+
+	forward = global_transform.WorldZ();
+	up = global_transform.WorldY();
+	right = global_transform.WorldX();
+
 	UpdateLocalTransformFromGlobal();
 }
 
 void C_Transform::SetRotation(math::Quat q_rotation)
 {
 	global_transform.SetRotatePart(q_rotation);
+
+	rotation = q_rotation.ToEulerZYX() * RADTODEG;
+	rotation = { rotation.z, rotation.y ,rotation.x };
+
+	forward = global_transform.WorldZ();
+	up = global_transform.WorldY();
+	right = global_transform.WorldX();
+
 	UpdateLocalTransformFromGlobal();
 }
 
@@ -150,7 +165,12 @@ void C_Transform::UpdateLocalTransformFromGlobal()
 		local_transform = global_transform;
 	}
 
-	UpdateTRS();
+	local_position = local_transform.TranslatePart();
+	local_rotation = RadToDeg(local_transform.ToEulerZYX());
+	local_rotation = { local_rotation.z, local_rotation.y ,local_rotation.x };
+	local_scale = local_transform.GetScale();
+
+	//UpdateTRS();
 
 	to_update = true;
 }
@@ -159,12 +179,14 @@ void C_Transform::UpdateLocalTransformFromGlobal()
 
 void C_Transform::SetLocalPosition(math::float3 position)
 {
+	this->local_position = position;
 	local_transform.SetTranslatePart(position);
 	UpdateGlobalTransformFromLocal();
 }
 
 void C_Transform::SetLocalRotation(math::float3 rotation)
 {
+	this->local_rotation = rotation;
 	float3 aux_rotation = rotation * DEGTORAD;
 	local_transform.SetRotatePart(Quat::RotateAxisAngle(float3::unitZ, aux_rotation.z) * Quat::RotateAxisAngle(float3::unitY, aux_rotation.y) * Quat::RotateAxisAngle(float3::unitX, aux_rotation.x));
 	UpdateGlobalTransformFromLocal();
@@ -172,6 +194,7 @@ void C_Transform::SetLocalRotation(math::float3 rotation)
 
 void C_Transform::SetLocalScale(math::float3 scale)
 {
+	this->local_scale = scale;
 	local_transform.RemoveScale();
 	local_transform.Scale(scale);
 	UpdateGlobalTransformFromLocal();
@@ -211,7 +234,15 @@ void C_Transform::UpdateGlobalTransformFromLocal()
 		global_transform = local_transform;
 	}
 
-	UpdateTRS();
+	//UpdateTRS();
+	position = global_transform.TranslatePart();
+	rotation = global_transform.ToEulerZYX() * RADTODEG;
+	rotation = { rotation.z, rotation.y ,rotation.x };
+	scale = global_transform.GetScale();
+
+	forward = global_transform.WorldZ();
+	up = global_transform.WorldY();
+	right = global_transform.WorldX();
 
 	to_update = true;
 }
@@ -221,19 +252,9 @@ void C_Transform::UpdateGlobalTransformFromLocal()
 
 void C_Transform::UpdateTRS()
 {
-	local_position = local_transform.TranslatePart();
-	local_rotation = RadToDeg(local_transform.ToEulerZYX());
-	local_rotation = { local_rotation.z, local_rotation.y ,local_rotation.x };
-	local_scale = local_transform.GetScale();
 
-	position = global_transform.TranslatePart();
-	rotation = RadToDeg(global_transform.ToEulerZYX()) ;
-	rotation = { rotation.z, rotation.y ,rotation.x };
-	scale = global_transform.GetScale();
 
-	forward = global_transform.WorldZ();
-	up = global_transform.WorldY();
-	right = global_transform.WorldX();
+
 }
 
 bool C_Transform::HasNegativeScale()
@@ -264,16 +285,14 @@ void C_Transform::LookAt(math::float3 reference)
 
 bool C_Transform::DrawPanelInfo()
 {
-	const double f_min = -1000000000000000.0, f_max = 1000000000000000.0;
-
 	math::float3 delta_position	= local_position;
 	math::float3 delta_rotation	= local_rotation;
 	math::float3 delta_scale	= local_scale;
 
 	ImGui::Spacing();
-	ImGui::Title("Position", 1);	ImGui::DragFloat3("##position", delta_position.ptr(), 0.01f, f_min, f_max, "%.2f");
-	ImGui::Title("Rotation", 1);	ImGui::DragFloat3("##rotation", delta_rotation.ptr(), 0.1f,  f_min, f_max, "%.2f");
-	ImGui::Title("Scale", 1);		ImGui::DragFloat3("##scale	",	delta_scale.ptr(), 0.01f, f_min, f_max, "%.2f");
+	ImGui::Title("Position", 1);	ImGui::DragFloat3("##position", delta_position.ptr(), 0.01f);
+	ImGui::Title("Rotation", 1);	ImGui::DragFloat3("##rotation", delta_rotation.ptr(), 0.1f);
+	ImGui::Title("Scale", 1);		ImGui::DragFloat3("##scale	",	delta_scale.ptr(), 0.01f);
 	ImGui::Spacing();
 
 
