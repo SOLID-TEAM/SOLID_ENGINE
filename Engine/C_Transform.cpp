@@ -28,7 +28,7 @@ bool C_Transform::Update()
 
 		// Update Global Transform from parent -----------------------
 
-		UpdateLocalTransformFromGlobal();
+		UpdateGlobalTransformFromLocal();
 
 		for (GameObject* child : linked_go->childs)
 		{
