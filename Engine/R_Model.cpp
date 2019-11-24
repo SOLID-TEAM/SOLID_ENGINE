@@ -34,7 +34,7 @@ bool R_Model::Import(const char* path, UID& output_uid, std::string from_path)
 		std::vector<UID> meshes, materials;
 		new_model.GenerateMeshes(scene, path, meshes);
 		new_model.GenerateMaterials(scene, path, materials, from_path);
-		new_model.GenerateNodes(scene, scene->mRootNode, 0, meshes, materials);
+		new_model.GenerateNodes(scene, scene->mRootNode, 0, meshes, materials, aiMatrix4x4());
 
 		// Free the imported scene
 		aiReleaseImport(scene);
@@ -237,44 +237,55 @@ void R_Model::GenerateMaterials(const aiScene* scene, const char* filepath, std:
 
 }
 
-void R_Model::GenerateNodes(const aiScene* scene, const aiNode* node, uint parent, const std::vector<UID>& meshes, const std::vector<UID>& materials)
+void R_Model::GenerateNodes(const aiScene* scene, const aiNode* node, uint parent, const std::vector<UID>& meshes, const std::vector<UID>& materials, aiMatrix4x4 accTransform)
 {
-	Node parent_node;
+	uint parent_id;
+	aiMatrix4x4 transform ;
 
-	parent_node.parent = parent;
-	parent_node.name.assign(node->mName.C_Str());
-	parent_node.name.resize(15); // TODO: changes the way we save the own file format for evade the hack on there
-	parent_node.transform = reinterpret_cast<const float4x4&>(node->mTransformation);
+	// TODO: apply accumulated transformations if we need filter empty nodes
+	/*if (node->mNumMeshes > 0)
+	{*/
+		uint parent_index = nodes.size();
 
-	if (node->mNumMeshes == 1)
-	{
-		parent_node.mesh = meshes[node->mMeshes[0]];
-		parent_node.material = materials[scene->mMeshes[node->mMeshes[0]]->mMaterialIndex];
-	}
-	else
-	{
-		for (uint i = 0; i < node->mNumMeshes; ++i)
+		Node n_node;
+		n_node.parent = parent;
+		n_node.name = node->mName.C_Str();
+		n_node.name.resize(15); // TODO
+		n_node.transform = reinterpret_cast<const float4x4&>(node->mTransformation);
+		nodes.push_back(n_node);
+
+		if (node->mNumMeshes == 1)
 		{
-			Node new_node;
-
-			new_node.parent = parent + node->mNumMeshes;
-
-			new_node.mesh = meshes[node->mMeshes[i]];
-			new_node.material = materials[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex];
-			new_node.name = scene->mMeshes[node->mMeshes[i]]->mName.C_Str();
-			//TODO
-			new_node.name.resize(15);
-
-			nodes.push_back(new_node);
+			nodes[parent_index].mesh = meshes[node->mMeshes[0]];
+			nodes[parent_index].material = materials[scene->mMeshes[node->mMeshes[0]]->mMaterialIndex];
 		}
-	}
+		else
+		{
+			for (uint i = 0; i < node->mNumMeshes; ++i)
+			{
+				Node m_mesh;
+				m_mesh.parent = parent_index;
+				m_mesh.name = scene->mMeshes[node->mMeshes[i]]->mName.C_Str();
+				m_mesh.name.resize(15); // TODO
+				m_mesh.mesh = meshes[node->mMeshes[i]];
+				m_mesh.material = materials[scene->mMeshes[node->mMeshes[i]]->mMaterialIndex];
+			
+				nodes.push_back(m_mesh);
+			}
+		}
 
-	uint parent_id = nodes.size();
-	nodes.push_back(parent_node);
+		parent_id = parent_index;
+		transform = aiMatrix4x4();
+	//}
+	//else
+	//{
+	//	parent_id = parent;
+	//	transform = node->mTransformation * accTransform;
+	//}
 
 	for (uint i = 0; i < node->mNumChildren; ++i)
 	{
-		GenerateNodes(scene, node->mChildren[i], parent_id, meshes, materials);
+		GenerateNodes(scene, node->mChildren[i], parent_id, meshes, materials, transform);
 	}
 	
 }
