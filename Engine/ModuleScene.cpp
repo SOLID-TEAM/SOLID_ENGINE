@@ -28,7 +28,6 @@ bool ModuleScene::Init(Config& config)
 
 bool ModuleScene::Start(Config& config)
 {
-
 	// Scene ---------------------
 
 	scene_name.assign("untitled");

@@ -197,26 +197,29 @@ update_status ModuleEditor::PreUpdate()
 
 	// Current Gizmo Operation ----------------------------
 
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+	if (App->scene->editor_camera != nullptr && !App->scene->editor_camera->mouse_right_pressed)
 	{
-		ImGuizmo::SetOperation(Operation::TRANSLATE);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
-	{
-		ImGuizmo::SetOperation(Operation::ROTATE);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-	{
-		ImGuizmo::SetOperation(Operation::SCALE);
-	}
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+		{
+			ImGuizmo::SetOperation(Operation::TRANSLATE);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+		{
+			ImGuizmo::SetOperation(Operation::ROTATE);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		{
+			ImGuizmo::SetOperation(Operation::SCALE);
+		}
 
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-	{
-		ImGuizmo::SetMode(Mode::LOCAL);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-	{
-		ImGuizmo::SetMode(Mode::WORLD);
+		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+		{
+			ImGuizmo::SetMode(Mode::LOCAL);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+		{
+			ImGuizmo::SetMode(Mode::WORLD);
+		}
 	}
 
 	return UPDATE_CONTINUE;
@@ -270,22 +273,52 @@ update_status ModuleEditor::Draw()
 	ImGui::NewLine();
 	line_cursor_x += 15;
 	ImGui::SameLine(line_cursor_x);
-	ImGui::Button(ICON_FA_HAND_PAPER, { button_s_w, button_h });
+
+	if (ImGui::Button(ICON_FA_HAND_PAPER, { button_s_w, button_h }))
+	{
+		ImGuizmo::SetOperation(Operation::TRANSLATE);
+	}
+
 	line_cursor_x += button_s_w + padding;
 	ImGui::SameLine(line_cursor_x);
-	ImGui::Button(ICON_FA_ARROWS_ALT, { button_s_w, button_h });
+
+	if (ImGui::Button(ICON_FA_ARROWS_ALT, { button_s_w, button_h }))
+	{
+		ImGuizmo::SetOperation(Operation::TRANSLATE);
+	}
+
 	line_cursor_x += button_s_w + padding;
 	ImGui::SameLine(line_cursor_x);
-	ImGui::Button(ICON_FA_SYNC, { button_s_w, button_h });
+
+	if (ImGui::Button(ICON_FA_SYNC, { button_s_w, button_h }))
+	{
+		ImGuizmo::SetOperation(Operation::ROTATE);
+	}
+
 	line_cursor_x += button_s_w + padding;
 	ImGui::SameLine(line_cursor_x);
-	ImGui::Button(ICON_FA_EXPAND_ARROWS_ALT, { button_s_w, button_h });
+
+	if (ImGui::Button(ICON_FA_EXPAND_ARROWS_ALT, { button_s_w, button_h }))
+	{
+		ImGuizmo::SetOperation(Operation::SCALE);
+	}
+
 	line_cursor_x += button_s_w + padding * 8;
 	ImGui::SameLine(line_cursor_x);
-	ImGui::Button(ICON_FA_CUBE " Local", { button_l_w, button_h });
+
+	if (ImGui::Button(ICON_FA_CUBE " Local", { button_l_w, button_h }) )
+	{
+		ImGuizmo::SetMode(Mode::LOCAL);
+	}
+
 	line_cursor_x += button_l_w + padding;
 	ImGui::SameLine(line_cursor_x);
-	ImGui::Button(ICON_FA_GLOBE " Global", { button_l_w, button_h });
+
+	if (ImGui::Button(ICON_FA_GLOBE " Global", { button_l_w, button_h }))
+	{
+		ImGuizmo::SetMode(Mode::WORLD);
+	}
+
 	line_cursor_x = win_center - ( (button_s_w + padding) * 3.f ) * 0.5f;
 	ImGui::SameLine(line_cursor_x);
 

@@ -127,8 +127,8 @@ void W_Inspector::DrawResourceInfo()
 	ImGui::Spacing();
 
 	ImGui::Title("Name");				ImGui::Text( "%s", res->GetName().c_str());
-	ImGui::Title("Referemces");			ImGui::Text( "%u", res->CountReferences());
-	ImGui::Title("Orgiginal File");		ImGui::Text("%s", res->GetOriginalFile().c_str());
+	ImGui::Title("References");			ImGui::Text( "%u", res->CountReferences());
+	ImGui::Title("Original File");		ImGui::Text("%s", res->GetOriginalFile().c_str());
 	ImGui::Title("Exported File");		ImGui::Text("%s", res->GetExportedFile().c_str());
 }
 
