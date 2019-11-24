@@ -127,7 +127,7 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 
 	//root->is_leaf = false;
 	root->aabb = global_aabb;
-	root->bucket = go_vec;
+	root->bucket.insert(root->bucket.end(), go_vec.begin(), go_vec.end());
 
 	std::queue<KDTreeNode*> nodes_queue;
 	nodes_queue.push(root);
@@ -138,7 +138,7 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 		
 		nodes_queue.pop();
 
-		if (node->bucket.size() > max_bucket_size && node->depth <= max_depth)
+		if (node->bucket.size() > max_bucket_size && node->depth < max_depth)
 		{
 			// Choose dimension --------------------------------
 
@@ -175,7 +175,9 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 			nodes_queue.push(node->left_child);
 			nodes_queue.push(node->right_child);
 
-			for (uint i = 0; i < node->bucket.size(); ++i)
+			std::stack<int> indices;
+
+			for (int i = 0 ; i < node->bucket.size() ; ++i )
 			{
 				GameObject* go = node->bucket[i];
 				bool intersect_left = false;
@@ -199,13 +201,20 @@ void KDTree::Fill(uint max_depth, uint max_node_bucket, AABB global_aabb , std::
 				else if (intersect_left)
 				{
 					node->left_child->bucket.push_back(go);
-					std::remove(begin(node->bucket), end(node->bucket), go);
+					indices.push(i);
 				}
 				else
 				{
 					node->right_child->bucket.push_back(go);
-					std::remove(begin(node->bucket), end(node->bucket), go);
+					indices.push(i);
 				}
+			}
+
+			while (!indices.empty())
+			{
+				int i = indices.top();
+				indices.pop();
+				node->bucket.erase(node->bucket.begin() + i );
 			}
 		}
 
