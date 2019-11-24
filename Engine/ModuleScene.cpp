@@ -632,8 +632,10 @@ void ModuleScene::UpdateGoToRender()
 			ImGui::Title("Active Camera Culling", 2);  ImGui::Text("");
 		}
 
-		ImGui::End();
+		
 	}
+
+	ImGui::End();
 }
 
 GameObject* ModuleScene::Find(std::string name)
