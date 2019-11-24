@@ -145,8 +145,6 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 
 	if (load_new_scene)
 	{
-
-
 		LoadSceneNow();
 		load_new_scene = false;
 
@@ -196,7 +194,6 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 
 update_status ModuleScene::Update()
 {
-
 	// Update hierarchy -----------------------------------------
 
 	UpdateHierarchy();
@@ -407,7 +404,22 @@ void ModuleScene::UpdateHierarchy()
 
 				// Delete from lists -----------------
 
-				PushEvent((*gotu), ((*gotu)->is_static) ? EventGoType::DELETE_FROM_STATIC : EventGoType::DELETE_FROM_DYNAMIC );
+				std::stack<GameObject*> go_stack;
+
+				go_stack.push((*gotu));
+				
+				while (!go_stack.empty())
+				{
+					GameObject* go = go_stack.top();
+					go_stack.pop();
+
+					PushEvent(go, (go->is_static) ? EventGoType::DELETE_FROM_STATIC : EventGoType::DELETE_FROM_DYNAMIC);
+
+					for (GameObject* child : go->childs)
+					{
+						go_stack.push(child);
+					}
+				}
 
 				// Add to undo buffer ---------------
 				AddGOToUndoDeque(*gotu);
@@ -686,7 +698,22 @@ void ModuleScene::UndoLastDelete()
 
 			// Add To Lists ----------------------
 
-			PushEvent(to_undo_buffer_go.back(),( to_undo_buffer_go.back()->is_static) ? EventGoType::ADD_TO_STATIC : EventGoType::ADD_TO_DYNAMIC);
+			std::stack<GameObject*> go_stack;
+
+			go_stack.push(to_undo_buffer_go.back());
+
+			while (!go_stack.empty())
+			{
+				GameObject* go = go_stack.top();
+				go_stack.pop();
+
+				PushEvent(go , (go->is_static) ? EventGoType::ADD_TO_STATIC : EventGoType::ADD_TO_DYNAMIC);
+
+				for (GameObject* child : go->childs)
+				{
+					go_stack.push(child);
+				}
+			}
 
 			// TODO: if the parent is already deleted the object doesn't re-arrange on scene (not tested) || currently this never gonna happen
 			LOG("[Info] Succesfully re-attached child %s to its parent %s", to_undo_buffer_go.back()->GetName(), to_undo_buffer_go.back()->parent->GetName());

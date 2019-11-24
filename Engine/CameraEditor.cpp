@@ -183,7 +183,7 @@ void CameraEditor::Update()
 					math::float3 offset(0, 0, 0);
 					focusing = false;
 
-					offset += transform->right * palm_speed * mouse_motion_x;
+					offset -= transform->right * palm_speed * mouse_motion_x;
 					offset += transform->up * palm_speed * mouse_motion_y;
 
 					current_position += offset;
