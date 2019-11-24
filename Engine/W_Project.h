@@ -22,6 +22,7 @@ private:
 
 private:
 
+	Resource* selected_resource = nullptr;
 	Resource::Type resource_type = Resource::Type::NO_TYPE;
 	std::vector<Resource*> visible_resources;
 	float folder_column_width = 0.f;

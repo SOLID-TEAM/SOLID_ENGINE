@@ -87,7 +87,7 @@ void W_Project::DrawTree()
 			else if (selected ==  "All Materials")	resource_type = Resource::Type::MATERIAL;
 			else if (selected ==  "All Textures")	resource_type = Resource::Type::TEXTURE;
 
-			visible_resources = App->resources->GetAllResourcesByType(resource_type);
+			visible_resources = App->resources->GetAllResourcesByType(resource_type); // TODO: Update with fix time this vector
 		}
 
 		if (open) ImGui::TreePop();
@@ -101,6 +101,7 @@ void W_Project::DrawTree()
 
 void W_Project::DrawFolder()
 {
+	
 	float total_width = folder_column_width;
 	float item_width = 80 , item_height = 80;
 	ImVec2 last_cursor_pos ={ 0,0 };
@@ -111,7 +112,32 @@ void W_Project::DrawFolder()
 	for (Resource* resource : visible_resources)
 	{
 		ImGui::PushID(resource);
+
+		ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Button, (resource == selected_resource) ? ImVec4(1.f, 0.75f, 0.f, 1.f) : ImVec4(0.f, 0.f, 0.f, 0.f));
+		// TODO: Change texture
 		ImGui::ImageButton((ImTextureID)App->scene->scene_viewport->GetTexture(), { item_width,item_height }, { 1,1 }, { 0,0 });
+		ImGui::PopStyleColor();
+
+		if (ImGui::IsItemClicked())
+		{
+			selected_resource = resource;
+			// TODO: Select resource and show info
+		}
+		if (ImGui::IsMouseDoubleClicked(0))
+		{
+			// TODO:Create model
+		}
+
+		// Drag  same as double click ?
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoDisableHover)) 
+		{
+			ImGui::SetDragDropPayload("resource_node", &resource, sizeof(Resource), ImGuiCond_Once);
+			ImGui::Text(resource->GetName().c_str());
+
+			ImGui::EndDragDropSource();
+		}
+
+
 
 		ImGui::NewLine();
 		ImGui::SameLine();
