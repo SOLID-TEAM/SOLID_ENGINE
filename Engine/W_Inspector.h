@@ -4,6 +4,7 @@
 #include "Window.h"
 
 class GameObject;
+class SelectedObject;
 
 class W_Inspector : public Window
 {
@@ -13,7 +14,13 @@ public:
 
 	void Draw();
 
+private:
+
+	void DrawGameObjectInfo();
+
 	void DrawStaticPopUp();
+
+	void DrawResourceInfo();
 
 };
 
