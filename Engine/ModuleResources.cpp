@@ -285,7 +285,7 @@ std::string ModuleResources::GetRelativePathToWriteFromType(Resource::Type type)
 	switch (type)
 	{
 	case Resource::Type::MODEL:
-		ret.assign(ASSETS_FOLDER);
+		ret.assign(ASSETS_MODEL_FOLDER);
 		break;
 	case Resource::Type::MESH:
 		ret.assign(ASSETS_FOLDER);
@@ -294,7 +294,7 @@ std::string ModuleResources::GetRelativePathToWriteFromType(Resource::Type type)
 		ret.assign(ASSETS_FOLDER);
 		break;
 	case Resource::Type::TEXTURE:
-		ret.assign(ASSETS_FOLDER);
+		ret.assign(ASSETS_TEXTURES_FOLDER);
 		break;
 	case Resource::Type::NO_TYPE:
 		break;
@@ -357,7 +357,6 @@ void ModuleResources::LoadAllMetaResources()
 		{
 			std::string path, file;
 			App->file_sys->SplitFilePath(all_metas[i].c_str(), &path, &file);
-			path.pop_back(); // deletes double /
 			r->GetOriginalFile().assign(path + file);
 			r->GetName().assign(file);
 			r->GetExportedFile().assign(GetRelativePathToWriteFromType(type) + std::to_string(resource_uid));
@@ -372,7 +371,36 @@ void ModuleResources::LoadAllMetaResources()
 void ModuleResources::GetMetasFromNodes(PathNode node, std::vector<std::string>& meta_vector)
 {
 	if (node.file)
-		meta_vector.push_back(std::string(node.path));
+	{
+		std::string p, f, e;
+		App->file_sys->SplitFilePath(node.path.c_str(), &p, &f, &e);
+		
+		std::string output;
+		// scan all path to find double /
+		// TODO: improve this
+		for (uint i = 0; i < p.length(); ++i)
+		{
+			if (p[i] != '/')
+				output += p[i];
+			else
+			{
+				if (i < p.length())
+				{
+					if (p[i + 1] == '/')
+					{
+						output += '/';
+					}
+				}
+			}
+		}
+		// check if the last character has or not /
+		if (output.back() != '/')
+			output.push_back('/');
+
+		std::string clean_path = output + f + "." + e;
+		meta_vector.push_back(clean_path);
+	}
+		
 
 	for (uint i = 0; i < node.children.size(); ++i)
 	{

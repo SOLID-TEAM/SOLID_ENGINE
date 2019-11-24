@@ -117,7 +117,7 @@ UID R_Material::Import(const aiMaterial* material, const char* material_name, st
 	if (ai_path.length > 0)
 	{
 		App->file_sys->SplitFilePath(ai_path.C_Str(), nullptr, &file_name, &file_ex);
-		file = ASSETS_FOLDER + file_name + "." + file_ex;
+		file = ASSETS_TEXTURES_FOLDER + file_name + "." + file_ex;
 	
 		// Load material textures ------------------------------------------------- 
 		

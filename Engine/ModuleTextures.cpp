@@ -280,10 +280,10 @@ bool ModuleTextures::Import(const char* file,  UID& output_id, std::string path)
 		ilDeleteImages(1, &texture);
 
 		// duplicate texture to own assets folder
-
-		if (App->file_sys->DuplicateFile(full_path.c_str(), ASSETS_FOLDER, std::string("/")))
+		std::string path_to_copy = App->resources->GetRelativePathToWriteFromType(Resource::Type::TEXTURE);
+		if (App->file_sys->DuplicateFile(full_path.c_str(), path_to_copy.c_str(), std::string("/")))
 		{
-			LOG("[Info] correctly duplicated original image %s to %s", file, ASSETS_FOLDER);
+			LOG("[Info] correctly duplicated original image %s to %s", file, path_to_copy.c_str());
 		}
 	}
 	else
