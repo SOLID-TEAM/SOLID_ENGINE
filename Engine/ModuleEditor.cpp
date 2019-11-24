@@ -858,6 +858,29 @@ void ModuleEditor::ShowSoftwareInfo() const
 	ImGui::Separator();
 }
 
+
+void ModuleEditor::SetSelectedObject(void* object, SelectedObject::Type type)
+{
+	selected_object.data = object;
+	selected_object.type = type;
+}
+
+bool ModuleEditor::IsSelectedObjectValid(SelectedObject::Type type)
+{
+	return (selected_object.type == type && selected_object.data != nullptr);
+}
+
+void ModuleEditor::DeselectSelectedObject()
+{
+	selected_object.data = nullptr;
+	selected_object.type = SelectedObject::Type::NO_TYPE;
+}
+
+const SelectedObject& ModuleEditor::GetSelectedObject()
+{
+	return selected_object;
+}
+
 void ModuleEditor::ShowCheckerTexture(uint& checker_id, bool& active) const
 {
 
@@ -912,6 +935,7 @@ void ModuleEditor::ShowCheckerTexture(uint& checker_id, bool& active) const
 		}
 	//}
 }
+
 
 // DEBUG DATA MESH CLASS HELPER ----------------------------------------------------------------------------------------------------------
 

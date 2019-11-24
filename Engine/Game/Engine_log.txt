@@ -75,6 +75,10 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
+ ------------------------------------------------------- 
+[Info] Succesfully erased child Main Camera from parent Scene Root
+[Info] Added Main Camera to undo buffers
+ ------------------------------------------------------- 
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

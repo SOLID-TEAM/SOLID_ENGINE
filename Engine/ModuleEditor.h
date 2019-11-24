@@ -117,6 +117,20 @@ public:
 
 struct ImFont;
 
+class SelectedObject
+{
+public:
+
+	enum class Type
+	{
+		NO_TYPE,
+		GAME_OBJECT,
+		RESOURCE
+	} type ;
+
+	void*  data = nullptr;
+};
+
 class ModuleEditor : public Module
 {
 public:
@@ -144,6 +158,14 @@ public:
 
 	void DestroyWindow(Window* panel_to_add);
 
+	void SetSelectedObject(void* object, SelectedObject::Type type);
+
+	bool IsSelectedObjectValid(SelectedObject::Type type);
+
+	void DeselectSelectedObject();
+
+	const SelectedObject& GetSelectedObject();
+
 	// temporaly utils for imgui prefab functions
 
 	void HelpMarker(const char* desc) const;
@@ -151,6 +173,7 @@ public:
 	void ShowSoftwareInfo() const;
 
 	void ShowCheckerTexture(uint& checker_tex, bool& active) const;
+
 
 private:
 
@@ -162,7 +185,13 @@ private:
 
 private:
 
+	// Windows -----------------------------
+
 	std::vector<Window*> windows;
+
+	// Selection ---------------------------
+
+	SelectedObject		selected_object;
 
 	// General editor info ---------
 
