@@ -25,7 +25,8 @@ The code is written in C++.
 
 ### v2.0:
 - KDTree for acceleration of mouse picking and frustum culling.
-- Space partitioning window
+- Space partitioning window.
+- Icons for layout.
 
 ## Features
 
@@ -51,6 +52,7 @@ The code is written in C++.
 - View all textures loaded in vram on Configuration->Loaded textures vram
 
 ### 2.0 added features:
+- Correctly transformations on hierarchy moves.
 - Textures, models, meshes, materials and components migrated to resources system.
 - Models, materials and meshes on own binary file format.
 - Resources loaded from .meta files generated on importing a asset.
