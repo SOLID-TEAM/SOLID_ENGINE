@@ -24,8 +24,9 @@ The code is written in C++.
 - ImGui modified as unity editor Gui.
 
 ### v2.0:
-- KDTree for acceleration of mouse picking and frustrum culling.
-- Space partitioning window
+- KDTree for acceleration of mouse picking and frustum culling.
+- Space partitioning window.
+- Icons for layout.
 
 ## Features
 
@@ -51,9 +52,15 @@ The code is written in C++.
 - View all textures loaded in vram on Configuration->Loaded textures vram
 
 ### 2.0 added features:
+- Correctly transformations on hierarchy moves.
 - Textures, models, meshes, materials and components migrated to resources system.
 - Models, materials and meshes on own binary file format.
 - Resources loaded from .meta files generated on importing a asset.
+- Added gizmos: when a gameobject selected press (or use icons on upper left to select one edit mode):
+	- Translate : keyboard W
+	- Rotate : keyboard E
+	- Scale : keyboard R
+	- Change local/world: number 1/2 respectively.
 - View all loaded resources under panel configuration->loaded resources.
 - View resources relative data under each component (material, mesh).
 - Project panel, visualize all resources by type, and drag and drop models "prefabs" to scene window to instantiate one copy referenced to same resources.
@@ -88,7 +95,8 @@ The code is written in C++.
 	- Assimp 4.1
 	- DevIL 1.8
 	- ImGui 1.8 ( Docking Branch)
-	- ImGuizmo
+	- ImGuizmo 
+	- IconFontAwesome 5
 	- MathGeoLib 1.5
 	- PCG Random Number Generator 0.94
 	- Parson
