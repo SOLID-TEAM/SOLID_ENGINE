@@ -16,6 +16,7 @@ class W_Config;
 class W_Console;
 class W_Hierarchy;
 class W_Rendering;
+class W_Project;
 class W_Scene;
 class W_Game;
 class W_Inspector;
@@ -182,6 +183,7 @@ public:
 	W_Console*			w_console = nullptr;
 	W_Hierarchy*		w_hierarchy = nullptr;
 	W_Rendering*		w_rendering = nullptr;
+	W_Project*			w_project = nullptr;
 	W_Scene*			w_scene = nullptr;
 	W_Game*				w_game = nullptr;
 	W_Inspector*		w_inspector = nullptr;

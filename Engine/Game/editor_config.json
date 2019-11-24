@@ -4,8 +4,8 @@
         "organization": "SOLID_TEAM"
     },
     "Window": {
-        "window_width": 322,
-        "window_height": 259,
+        "window_width": 2048,
+        "window_height": 1089,
         "fullscreen": false,
         "fullscreen_desktop": false,
         "resizable": true,
@@ -34,6 +34,7 @@
         "window_active_Hierarchy": true,
         "window_active_Rendering Settings": true,
         "window_active_Scene": true,
+        "window_active_Project": true,
         "window_active_Game": true,
         "window_active_Inspector": true,
         "window_active_Primitives": false,
@@ -95,8 +96,8 @@
         ],
         "Camera editor rotation": [
             33.403964996337891,
-            -1.0558005571365356,
-            -1.0673982586695274e-07
+            -1.055800199508667,
+            -5.3369912933476371e-08
         ]
     },
     "ModuleResources": {

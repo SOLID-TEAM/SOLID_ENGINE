@@ -208,6 +208,18 @@ void ModuleResources::ReceiveEvent(const Event& e)
 
 }
 
+std::vector<Resource*> ModuleResources::GetAllResourcesByType(Resource::Type type)
+{
+	std::vector<Resource*> to_return;
+
+	for (auto const& [key, resource] : resources)
+	{
+		if (resource->GetType() == type)  to_return.push_back(resource);
+	}
+
+	return to_return;
+}
+
 // TODO: add functionality to import directories
 void ModuleResources::ImportFileDropped(const char* file)
 {

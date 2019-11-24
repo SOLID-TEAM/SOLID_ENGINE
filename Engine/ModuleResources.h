@@ -26,6 +26,7 @@ public:
 	void ReceiveEvent(const Event& e);
 
 	std::map<UID, Resource*> GetAllMapResources() const { return resources; };
+	std::vector	<Resource*> GetAllResourcesByType(Resource::Type type);
 
 	void ImportFileDropped(const char* file);
 	Resource::Type GetResourceTypeFromFileExtension(std::string extension);

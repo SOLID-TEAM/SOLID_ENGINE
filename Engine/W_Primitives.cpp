@@ -46,12 +46,9 @@ void W_Primitives::Draw()
 			{
 				last_created = App->importer->CreatePrimitive(PrimitiveType(counter), { 0,0,0 }, { 1,1,1 }, GetSlicesAndStacks(counter), {color.x, color.y, color.z, color.w});
 			}
-
 			++counter;
 		}
 
-		
-		
 		ImGuiColorEditFlags flags =  ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_AlphaBar;
 		ImGuiColorEditFlags misc_flags = ImGuiColorEditFlags_AlphaPreviewHalf | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip; //  ImGuiColorEditFlags_NoDragDrop | 
 		//if (!alpha)            flags |= ImGuiColorEditFlags_NoAlpha;        // This is by default if you call ColorPicker3() instead of ColorPicker4()
