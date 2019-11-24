@@ -404,7 +404,12 @@ void ModuleScene::UpdateHierarchy()
 				(*gotu)->parent->childs.erase(it);
 				LOG(" ------------------------------------------------------- ");
 				LOG("[Info] Succesfully erased child %s from parent %s", (*gotu)->GetName(), (*gotu)->parent->GetName());
-				// add to undo buffer
+
+				// Delete from lists -----------------
+
+				PushEvent((*gotu), ((*gotu)->is_static) ? EventGoType::DELETE_FROM_STATIC : EventGoType::DELETE_FROM_DYNAMIC );
+
+				// Add to undo buffer ---------------
 				AddGOToUndoDeque(*gotu);
 				LOG(" ------------------------------------------------------- ");
 				// "unselect from hierarchy"
@@ -678,6 +683,11 @@ void ModuleScene::UndoLastDelete()
 		{
 			// re-add child to its parent
 			to_undo_buffer_go.back()->parent->childs.push_back(to_undo_buffer_go.back());
+
+			// Add To Lists ----------------------
+
+			PushEvent(to_undo_buffer_go.back(),( to_undo_buffer_go.back()->is_static) ? EventGoType::ADD_TO_STATIC : EventGoType::ADD_TO_DYNAMIC);
+
 			// TODO: if the parent is already deleted the object doesn't re-arrange on scene (not tested) || currently this never gonna happen
 			LOG("[Info] Succesfully re-attached child %s to its parent %s", to_undo_buffer_go.back()->GetName(), to_undo_buffer_go.back()->parent->GetName());
 			// restore hierarchy selection
