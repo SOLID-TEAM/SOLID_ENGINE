@@ -23,18 +23,24 @@ The code is written in C++.
 - Window Scene Viewport **FBO** with modifiable **MSAA**.
 - ImGui modified as unity editor Gui.
 
+### v2.0:
+- KDTree for acceleration of mouse picking and frustrum culling.
+- Space partitioning window
+
 ## Features
 
 ### View port
 - Selectable shading modes.
 - Debug visualization for selected gameobject of vertex normals and face normals.
 - Configurable grid
+### v2.0:
+- Game Viewport
 
 ### Game Objects
 - Drag & Drop to Reorder GameObjects in the Hierarchy Window.
 - Create Primitives GameObjects in the Primitives Window.
 - Delete GameObjects by right-clicking them at Hierarchy.
-- 
+- Ctrl + z with delete history (window).
 ### Components
 - Added: Transform, Mesh Renderer , Mesh & Material Components
 - Component material has one option to activate a procedurally checker texture.
@@ -44,17 +50,33 @@ The code is written in C++.
 - Change Grid and Debug Settings in Scene Window Menus
 - View all textures loaded in vram on Configuration->Loaded textures vram
 
+### 2.0 added features:
+- Textures, models, meshes, materials and components migrated to resources system.
+- Models, materials and meshes on own binary file format.
+- Resources loaded from .meta files generated on importing a asset.
+- View all loaded resources under panel configuration->loaded resources.
+- View resources relative data under each component (material, mesh).
+- Project panel, visualize all resources by type, and drag and drop models "prefabs" to scene window to instantiate one copy referenced to same resources.
+- Gameobjects separateds by statics and dynamic to accelerate statics.
+- Acceleration of static objects with KDTree.
+- Time manager wich allows Play/Pause/Stop game logic and restore editor to last state before playing starts. (while playing camera culling is activated by default).
+- Mouse picking with static KDTree.
+- Scene serialization, save/load scenes.
+- Visualize debug options under scene window (AABB, grid,... under eye/grid icon option).
+- Configure editor camera options under scene window (camera icon option).
+
 ### Camera Controls
 
+- **CTRL + Z** : Restore last deleted gameobject.
 - **Mouse Right** Hold: 
 - **Mouse Movement**: Look Around.
-- **WASD**: Change local position on X-Z Plane
-- **QE**: Move up and down
-- **Mouse Wheel**: Zoom In/Out
-- **Shift** Hold : Movement Speed x2
-- **F**: Focus selected GameObject
+- **WASD**: Change local position on X-Z Plane.
+- **QE**: Move up and down.
+- **Mouse Wheel**: Zoom In/Out.
+- **Shift** Hold : Movement Speed x2.
+- **F**: Focus selected GameObject.
 - **Alt** Hold :
-- **Mouse Left** Hold : Orbit Last Selected GameObject
+- **Mouse Left** Hold : Orbit Last Selected GameObject.
 
 ## Third Party Tools
 
@@ -66,6 +88,7 @@ The code is written in C++.
 	- Assimp 4.1
 	- DevIL 1.8
 	- ImGui 1.8 ( Docking Branch)
+	- ImGuizmo
 	- MathGeoLib 1.5
 	- PCG Random Number Generator 0.94
 	- Parson
