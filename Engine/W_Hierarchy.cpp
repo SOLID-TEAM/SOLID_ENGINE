@@ -134,9 +134,8 @@ void W_Hierarchy::DrawAll(GameObject* go)
 			IM_ASSERT(payload->DataSize == sizeof(GameObject*));
 			GameObject** source_go = (GameObject**)payload->Data;
 
-			App->editor->SetSelectedObject(&source_go, SelectedObject::Type::GAME_OBJECT);
+			App->editor->SetSelectedObject(*source_go, SelectedObject::Type::GAME_OBJECT);
 			selected_go = *source_go;
-
 			App->scene->AddGoToHierarchyChange(App->scene->root_go, (*source_go));
 
 			//LOG("[Info] Moved %s to %s", (*source_go)->GetName(), go->GetName());
@@ -156,7 +155,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 			
 			/*go->AddChildren((*source_go));*/
 			
-			App->editor->SetSelectedObject(&source_go, SelectedObject::Type::GAME_OBJECT);
+			App->editor->SetSelectedObject(*source_go, SelectedObject::Type::GAME_OBJECT);
 			selected_go = *source_go;
 
 			App->scene->AddGoToHierarchyChange(go, (*source_go));

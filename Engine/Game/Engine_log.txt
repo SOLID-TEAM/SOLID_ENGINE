@@ -4,15 +4,15 @@
 [Init] SDL window & surface
 [Init] SDL input event system
 [Init] Loaded configuration file Library/Settings/lastuid
-[Init] Loaded configuration file Assets//Building_V01_C.png.meta
-[Init] Loaded configuration file Assets//Building_V02_C.png.meta
-[Init] Loaded configuration file Assets//Street environment_V01.FBX.meta
-[Init] Loaded configuration file Assets//building 01_c.tga.meta
-[Init] Loaded configuration file Assets//building 06_ c.tga.meta
-[Init] Loaded configuration file Assets//building03_c.tga.meta
-[Init] Loaded configuration file Assets//building05 _c.tga.meta
-[Init] Loaded configuration file Assets//building_016_c.tga.meta
-[Init] Loaded configuration file Assets//building_025_c.tga.meta
+[Init] Loaded configuration file Assets/Models/Street environment_V01.FBX.meta
+[Init] Loaded configuration file Assets/Textures/Building_V01_C.png.meta
+[Init] Loaded configuration file Assets/Textures/Building_V02_C.png.meta
+[Init] Loaded configuration file Assets/Textures/building 01_c.tga.meta
+[Init] Loaded configuration file Assets/Textures/building 06_ c.tga.meta
+[Init] Loaded configuration file Assets/Textures/building03_c.tga.meta
+[Init] Loaded configuration file Assets/Textures/building05 _c.tga.meta
+[Init] Loaded configuration file Assets/Textures/building_016_c.tga.meta
+[Init] Loaded configuration file Assets/Textures/building_025_c.tga.meta
 Loading File System
 [Info] Using Developer's Image Library (DevIL) 1.8.0
 [Info] Using Assimp v4.1.0
@@ -23,6 +23,10 @@ Loading File System
 [Info] OpenGL version supported: 4.6.0 NVIDIA 441.12
 [Info] GLSL: 4.60 NVIDIA
 -------------- Application Start --------------
+[Info:ModuleResources] Recognized file extension .FBX
+[success] File Duplicated Correctly
+[Info:ModuleResources] Dropped file duplicated to Assets/Models/Street environment_V01.FBX
+[Info] Resource duplicated, returning loaded resource Assets/Models/1837517038
 Loading Test assets
 [Start] Loading Editor
 // ---------------------------------------------------
@@ -75,10 +79,6 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
- ------------------------------------------------------- 
-[Info] Succesfully erased child Main Camera from parent Scene Root
-[Info] Added Main Camera to undo buffers
- ------------------------------------------------------- 
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

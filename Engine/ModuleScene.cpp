@@ -123,12 +123,12 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 	{
 		// If scene has selected go save id ---------------
 
-		App->editor->DeselectSelectedObject();
-
 		if (selected_go != nullptr)
 		{
 			last_selected_go_uid = selected_go->uid;
 		}
+
+		App->editor->DeselectSelectedObject();
 
 		CleanUp();
 		create_new_scene = false;
@@ -178,6 +178,7 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 		UndoLastDelete();
 	}
 
+
 	// Set selected game object ---------------------------
 
 	if (App->editor->IsSelectedObjectValid(SelectedObject::Type::GAME_OBJECT))
@@ -188,6 +189,7 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 	{
 		selected_go = nullptr;
 	}
+
 
 	return UPDATE_CONTINUE;
 }
@@ -434,6 +436,7 @@ void ModuleScene::UpdateHierarchy()
 		else
 			LOG("[Info] Parent not found");
 	}
+
 	if (temp_to_undo_go.size() > 0) temp_to_undo_go.clear();
 
 	// RE-parent all needed childrens if needed --------------
