@@ -137,6 +137,20 @@ void W_Project::DrawFolder()
 			ImGui::EndDragDropSource();
 		}
 
+	
+
+		// Copy this to target window
+		if (ImGui::BeginDragDropTarget())
+		{
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("resource_node");
+
+			if (payload != nullptr && payload->Data != nullptr)
+			{
+				/*ResoruceModel* model = (ResoruceModel*)ImGui::GetDragDropPayload()->Data;*/
+			}
+
+			ImGui::EndDragDropTarget();
+		}
 
 
 		ImGui::NewLine();

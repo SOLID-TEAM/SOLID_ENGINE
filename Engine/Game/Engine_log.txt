@@ -3,7 +3,16 @@
 [Init] Loaded configuration file editor_config.json
 [Init] SDL window & surface
 [Init] SDL input event system
-[Error] Configuration file Library/Settings/lastuid not found
+[Init] Loaded configuration file Library/Settings/lastuid
+[Init] Loaded configuration file Assets//Building_V01_C.png.meta
+[Init] Loaded configuration file Assets//Building_V02_C.png.meta
+[Init] Loaded configuration file Assets//Street environment_V01.FBX.meta
+[Init] Loaded configuration file Assets//building 01_c.tga.meta
+[Init] Loaded configuration file Assets//building 06_ c.tga.meta
+[Init] Loaded configuration file Assets//building03_c.tga.meta
+[Init] Loaded configuration file Assets//building05 _c.tga.meta
+[Init] Loaded configuration file Assets//building_016_c.tga.meta
+[Init] Loaded configuration file Assets//building_025_c.tga.meta
 Loading File System
 [Info] Using Developer's Image Library (DevIL) 1.8.0
 [Info] Using Assimp v4.1.0
@@ -66,195 +75,6 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
-[Info:ModuleResources] New file dropped D:\Documentos\GitHub Projects\SOLID_ENGINE\Engine\Game\Assets\Models\street\Street environment_V01.FBX
-[Info:ModuleResources] Recognized file extension .FBX
-[success] File Duplicated Correctly
-[Info:ModuleResources] Dropped file duplicated to Assets/Street environment_V01.FBX
-[Info] Loading mesh data : City_building_004
-[Info] Vertices:    3850 
-[Info] Indices:    5988
-[Info] Triangles:  1996
-[Info] Normals:   3850
-New file created [.Library/Meshes/2] of 147198 bytes
-[Info] Succesfully saved 2
-Created mesh data: City_building_004
-[Info] Loading mesh data : City_building_001
-[Info] Vertices:    2147 
-[Info] Indices:    4176
-[Info] Triangles:  1392
-[Info] Normals:   2147
-New file created [.Library/Meshes/3] of 85454 bytes
-[Info] Succesfully saved 3
-Created mesh data: City_building_001
-[Info] Loading mesh data : City_building_007
-[Info] Vertices:    436 
-[Info] Indices:    684
-[Info] Triangles:  228
-[Info] Normals:   436
-New file created [.Library/Meshes/4] of 16734 bytes
-[Info] Succesfully saved 4
-Created mesh data: City_building_007
-[Info] Loading mesh data : City_building_008
-[Info] Vertices:    419 
-[Info] Indices:    864
-[Info] Triangles:  288
-[Info] Normals:   419
-New file created [.Library/Meshes/5] of 16910 bytes
-[Info] Succesfully saved 5
-Created mesh data: City_building_008
-[Info] Loading mesh data : City_building_010
-[Info] Vertices:    4 
-[Info] Indices:    6
-[Info] Triangles:  2
-[Error], Mesh contains 2 no triangle faces
-[Info] Normals:   4
-New file created [.Library/Meshes/6] of 198 bytes
-[Info] Succesfully saved 6
-Created mesh data: City_building_010
-[Info] Loading mesh data : City_building_010
-[Info] Vertices:    3268 
-[Info] Indices:    4998
-[Info] Triangles:  1666
-[Info] Normals:   3268
-New file created [.Library/Meshes/7] of 124614 bytes
-[Info] Succesfully saved 7
-Created mesh data: City_building_010
-[Info] Loading mesh data : City_building_013
-[Info] Vertices:    2452 
-[Info] Indices:    4197
-[Info] Triangles:  1399
-[Info] Normals:   2452
-New file created [.Library/Meshes/8] of 95298 bytes
-[Info] Succesfully saved 8
-Created mesh data: City_building_013
-[Info] Loading mesh data : City_building_028
-[Info] Vertices:    6069 
-[Info] Indices:    8292
-[Info] Triangles:  2764
-[Info] Normals:   6069
-New file created [.Library/Meshes/9] of 227422 bytes
-[Info] Succesfully saved 9
-Created mesh data: City_building_028
-[Info] Loading mesh data : Line002
-[Info] Vertices:    48 
-[Info] Indices:    72
-[Info] Triangles:  24
-[Info] Normals:   48
-New file created [.Library/Meshes/10] of 1468 bytes
-[Info] Succesfully saved 10
-Created mesh data: Line002
-[Info] Loading mesh data : Plane001
-[Info] Vertices:    25 
-[Info] Indices:    96
-[Info] Triangles:  32
-[Info] Normals:   25
-New file created [.Library/Meshes/11] of 1221 bytes
-[Info] Succesfully saved 11
-Created mesh data: Plane001
-[Info] Loading mesh data : City_building_014
-[Info] Vertices:    4218 
-[Info] Indices:    6636
-[Info] Triangles:  2212
-[Info] Normals:   4218
-New file created [.Library/Meshes/12] of 161566 bytes
-[Info] Succesfully saved 12
-Created mesh data: City_building_014
-[Info] Loading mesh data : City_building_022
-[Info] Vertices:    4670 
-[Info] Indices:    8496
-[Info] Triangles:  2832
-[Info] Normals:   4670
-New file created [.Library/Meshes/13] of 183470 bytes
-[Info] Succesfully saved 13
-Created mesh data: City_building_022
-[Info] Loading mesh data : City_building_026
-[Info] Vertices:    4523 
-[Info] Indices:    8232
-[Info] Triangles:  2744
-[Info] Normals:   4523
-New file created [.Library/Meshes/14] of 177710 bytes
-[Info] Succesfully saved 14
-Created mesh data: City_building_026
-[Info] Loading mesh data : Object010
-[Info] Vertices:    1440 
-[Info] Indices:    2160
-[Info] Triangles:  720
-[Info] Normals:   1440
-New file created [.Library/Meshes/15] of 43230 bytes
-[Info] Succesfully saved 15
-Created mesh data: Object010
-[Info] Loading mesh data : City_building_033
-[Info] Vertices:    4772 
-[Info] Indices:    7986
-[Info] Triangles:  2662
-[Info] Normals:   4772
-New file created [.Library/Meshes/16] of 184694 bytes
-[Info] Succesfully saved 16
-Created mesh data: City_building_033
-[Info] Loading mesh data : City_building_034
-[Info] Vertices:    3481 
-[Info] Indices:    6378
-[Info] Triangles:  2126
-[Info] Normals:   3481
-New file created [.Library/Meshes/17] of 136950 bytes
-[Info] Succesfully saved 17
-Created mesh data: City_building_034
-[Info] Loading mesh data : City_building_037
-[Info] Vertices:    2548 
-[Info] Indices:    4530
-[Info] Triangles:  1510
-[Info] Normals:   2548
-New file created [.Library/Meshes/18] of 99702 bytes
-[Info] Succesfully saved 18
-Created mesh data: City_building_037
-[Info] Loading mesh data : City_building_038
-[Info] Vertices:    3972 
-[Info] Indices:    7392
-[Info] Triangles:  2464
-[Info] Normals:   3972
-New file created [.Library/Meshes/19] of 156718 bytes
-[Info] Succesfully saved 19
-Created mesh data: City_building_038
-[Info] Correctly generated library texture Library/Textures/1205822928
-[success] File Duplicated Correctly
-[Info] correctly duplicated original image Assets/building03_c.tga to Assets/
-New file created [.Library/Materials/20] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/1167341764
-[success] File Duplicated Correctly
-[Info] correctly duplicated original image Assets/Building_V02_C.png to Assets/
-New file created [.Library/Materials/21] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/2129814376
-[success] File Duplicated Correctly
-[Info] correctly duplicated original image Assets/building_016_c.tga to Assets/
-New file created [.Library/Materials/22] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/355813440
-[success] File Duplicated Correctly
-[Info] correctly duplicated original image Assets/building_025_c.tga to Assets/
-New file created [.Library/Materials/23] of 48 bytes
-[Error] NO TEXTURE ON MODEL
-New file created [.Library/Materials/24] of 48 bytes
-[Error] NO TEXTURE ON MODEL
-New file created [.Library/Materials/25] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/863638095
-[success] File Duplicated Correctly
-[Info] correctly duplicated original image Assets/building 01_c.tga to Assets/
-New file created [.Library/Materials/26] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/2100663289
-[success] File Duplicated Correctly
-[Info] correctly duplicated original image Assets/building 06_ c.tga to Assets/
-New file created [.Library/Materials/27] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/200031828
-[success] File Duplicated Correctly
-[Info] correctly duplicated original image Assets/building05 _c.tga to Assets/
-New file created [.Library/Materials/28] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/2131930040
-[success] File Duplicated Correctly
-[Info] correctly duplicated original image Assets/Building_V01_C.png to Assets/
-New file created [.Library/Materials/29] of 48 bytes
-[Error] NO TEXTURE ON MODEL
-New file created [.Library/Materials/30] of 48 bytes
-New file created [.Library/Models/1621568788] of 7060 bytes
-File System error while trying to delete [Library/Settings/untitled]: 
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor
