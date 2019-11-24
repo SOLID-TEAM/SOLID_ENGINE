@@ -252,7 +252,7 @@ void ModuleResources::ImportFileDropped(const char* file)
 			LOG("[Info:%s] Dropped file duplicated to %s", name.c_str(), (final_path + filename).c_str() );
 
 			bool force_find = false;
-			if (type == Resource::Type::TEXTURE)
+			if (type == Resource::Type::TEXTURE || type == Resource::Type::MODEL) // TODO: temporal force find, todo re-import asset
 				force_find = true;
 
 			UID uid = ImportFile((final_path + filename).c_str(), type, path, force_find);

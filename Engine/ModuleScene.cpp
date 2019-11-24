@@ -60,7 +60,10 @@ bool ModuleScene::Start(Config& config)
 	//ToLoadScene(scene_name.c_str());
 	// load default scene
 
-	ToLoadScene("default.solidscene");
+	//ToLoadScene("default.solidscene");
+
+	// assignment 2 requeriment, auto-load street
+	App->resources->ImportFileDropped("Assets/Models/street/Street environment_V01.FBX");
 
 	return true;
 }
@@ -192,10 +195,6 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 
 update_status ModuleScene::Update()
 {
-	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-	{
-		App->scene->ToSaveScene("backup_scene", LIBRARY_SETTINGS_FOLDER);
-	}
 
 	// Update hierarchy -----------------------------------------
 
