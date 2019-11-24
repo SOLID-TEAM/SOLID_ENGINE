@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "ModuleEditor.h"
 #include "W_Hierarchy.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
@@ -10,16 +11,35 @@ W_Hierarchy::W_Hierarchy(std::string name, bool active) : Window(name, active)
 
 void W_Hierarchy::Draw()
 {
-	//static bool show_hierarchy = true;
+	// Set selected go  ---------------------------
+
+	if (App->editor->IsSelectedObjectValid(SelectedObject::Type::GAME_OBJECT))
+	{
+		selected_go = (GameObject*)App->editor->GetSelectedObject().data;
+	}
+	else
+	{
+		selected_go = nullptr;
+	}
+
+	// Draw window --------------------------------------
 
 	if (ImGui::Begin("Hierarchy", &active))
 	{
 		GameObject* root = App->scene->root_go;
+
 		if (root != nullptr)
 		{
 			for (std::vector<GameObject*>::iterator it = root->childs.begin(); it != root->childs.end(); ++it)
 				DrawAll(*it);
 		}
+	}
+
+	// Deselect if any window item is clicked ------------
+
+	if (ImGui::IsMouseDown(0) && ImGui::IsAnyItemHovered() == false && ImGui::IsWindowHovered())
+	{
+		App->editor->DeselectSelectedObject();
 	}
 
 	ImGui::End();
@@ -36,8 +56,9 @@ void W_Hierarchy::DrawAll(GameObject* go)
 
 	/*node_flags |= ImGuiTreeNodeFlags_CollapsingHeader;*/
 
-	bool selected = App->scene->selected_go == go;
 	//bool hover_check = hovered_go == go;
+
+	bool selected = selected_go == go;
 
 	if (selected)
 	{
@@ -92,7 +113,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 	if (clicked)
 	{
 		//LOG("Clicked: %s", go->GetName());
-		App->scene->selected_go = go;
+		App->editor->SetSelectedObject(go, SelectedObject::Type::GAME_OBJECT);
 	}
 
 	// DRAG AND DROP
@@ -113,8 +134,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 			IM_ASSERT(payload->DataSize == sizeof(GameObject*));
 			GameObject** source_go = (GameObject**)payload->Data;
 
-			App->scene->selected_go = (*source_go);
-
+			App->editor->SetSelectedObject(&source_go, SelectedObject::Type::GAME_OBJECT);
 			App->scene->AddGoToHierarchyChange(App->scene->root_go, (*source_go));
 
 			//LOG("[Info] Moved %s to %s", (*source_go)->GetName(), go->GetName());
@@ -133,9 +153,9 @@ void W_Hierarchy::DrawAll(GameObject* go)
 			//LOG("%s",(*source_go)->GetName());
 			
 			/*go->AddChildren((*source_go));*/
+			
+			App->editor->SetSelectedObject(&source_go, SelectedObject::Type::GAME_OBJECT);
 			App->scene->AddGoToHierarchyChange(go, (*source_go));
-
-			App->scene->selected_go = (*source_go);
 
 			//LOG("[Info] Moved %s to %s", (*source_go)->GetName(), go->GetName());
 		}

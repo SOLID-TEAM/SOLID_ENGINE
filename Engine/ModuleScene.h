@@ -150,6 +150,7 @@ public:
 
 	GameObject*				root_go = nullptr;
 	GameObject*				selected_go = nullptr;
+	UID						last_selected_go_uid = 0u;
 	GameObject*				main_camera = nullptr;
 	CameraEditor*			editor_camera = nullptr;
 

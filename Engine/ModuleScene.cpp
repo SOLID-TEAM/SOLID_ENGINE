@@ -118,6 +118,14 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 
 	if (create_new_scene)
 	{
+		// If scene has selected go save id ---------------
+
+		if (delete_after_load && selected_go != nullptr)
+		{
+			App->editor->DeselectSelectedObject();
+			last_selected_go_uid = selected_go->uid;
+		}
+
 		CleanUp();
 		create_new_scene = false;
 		
@@ -133,8 +141,23 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 
 	if (load_new_scene)
 	{
+
+
 		LoadSceneNow();
 		load_new_scene = false;
+
+		// After reload scene attach it again --------------
+
+		if (delete_after_load)
+		{
+			GameObject* last_selected_go = FindByUID(last_selected_go_uid, root_go);
+
+			if (last_selected_go != nullptr)
+			{
+				App->editor->SetSelectedObject(last_selected_go, SelectedObject::Type::GAME_OBJECT);
+			}
+		}
+
 		// TODO!!!:
 		// in the case the save doesnt contain any camera, adds default one
 		if (main_camera == nullptr)
@@ -151,6 +174,17 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{
 		UndoLastDelete();
+	}
+
+	// Set selected game object ---------------------------
+
+	if (App->editor->IsSelectedObjectValid(SelectedObject::Type::GAME_OBJECT))
+	{
+		selected_go = (GameObject*)App->editor->GetSelectedObject().data;
+	}
+	else
+	{
+		selected_go = nullptr;
 	}
 
 	return UPDATE_CONTINUE;
@@ -342,7 +376,15 @@ void ModuleScene::UpdateMousePicking()
 			}
 		}
 
-		selected_go = near_go;
+		if (near_go != nullptr)
+		{
+			App->editor->SetSelectedObject(near_go, SelectedObject::Type::GAME_OBJECT);
+		}
+		else
+		{
+			App->editor->DeselectSelectedObject();
+		}
+		
 	}
 }
 
@@ -365,7 +407,7 @@ void ModuleScene::UpdateHierarchy()
 				AddGOToUndoDeque(*gotu);
 				LOG(" ------------------------------------------------------- ");
 				// "unselect from hierarchy"
-				selected_go = nullptr;
+				App->editor->DeselectSelectedObject();
 			}
 			else
 				LOG("child not found on parent");
@@ -380,7 +422,10 @@ void ModuleScene::UpdateHierarchy()
 	std::map<GameObject*, GameObject*>::iterator it = childrens_to_move.begin();
 
 	for (; it != childrens_to_move.end(); ++it)
+	{
 		(*it).first->AddChild((*it).second);
+	}
+		
 
 	if (childrens_to_move.size() > 0)
 		childrens_to_move.clear();
@@ -411,10 +456,22 @@ void ModuleScene::UpdateGoLists()
 		{
 			static_go_list.remove(event_go.go);
 			update_kdtree = true;
+
+			if (event_go.go == selected_go)
+			{
+				App->editor->DeselectSelectedObject();
+			}
+
 		}
 		else if (event_go.type == EventGoType::DELETE_FROM_DYNAMIC)
 		{
 			dynamic_go_list.remove(event_go.go);
+
+
+			if (event_go.go == selected_go)
+			{
+				App->editor->DeselectSelectedObject();
+			}
 		}
 		else if (event_go.type == EventGoType::DYNAMIC_TO_STATIC || event_go.type == EventGoType::STATIC_TO_DYNAMIC)
 		{
@@ -620,7 +677,7 @@ void ModuleScene::UndoLastDelete()
 			// TODO: if the parent is already deleted the object doesn't re-arrange on scene (not tested) || currently this never gonna happen
 			LOG("[Info] Succesfully re-attached child %s to its parent %s", to_undo_buffer_go.back()->GetName(), to_undo_buffer_go.back()->parent->GetName());
 			// restore hierarchy selection
-			selected_go = to_undo_buffer_go.back();
+			App->editor->SetSelectedObject( to_undo_buffer_go.back(), SelectedObject::Type::GAME_OBJECT);
 			LOG("[Info] %s deleted from undo buffer", to_undo_buffer_go.back()->GetName());
 			to_undo_buffer_go.pop_back();
 		}

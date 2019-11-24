@@ -1,7 +1,7 @@
 #include "W_Project.h"
 #include "Application.h"
 #include "ModuleFileSystem.h"
-
+#include "ModuleEditor.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 #include "IconFontAwesome/IconsFontAwesome5.h"
@@ -14,9 +14,22 @@ W_Project::W_Project(std::string name, bool active) : Window(name, active)
 
 void W_Project::Draw()
 {
+	// Set selected resource ---------------------------
+
+	if (App->editor->IsSelectedObjectValid(SelectedObject::Type::RESOURCE))
+	{
+		selected_resource = (Resource*)App->editor->GetSelectedObject().data;
+	}
+	else
+	{
+		selected_resource = nullptr;
+	}
+
+	// Draw Window -------------------------------------
+
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
 
-	if (ImGui::Begin(" " ICON_FA_FOLDER " Project", &active, ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar  /*| ImGuiWindowFlags_::ImGuiWindowFlags_NoDecoration*/))
+	if (ImGui::Begin(" " ICON_FA_FOLDER " Project", &active, ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar))
 	{
 		if (ImGui::BeginMenuBar())
 		{
@@ -37,10 +50,13 @@ void W_Project::Draw()
 		}
 
 		// Draw tree ----------------------------
-		ImGui::BeginChild("##project_tree", {0 , 0}, ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysUseWindowPadding);
-		ImGui::Spacing();
-		DrawTree();
-		ImGui::EndChild();
+		if (ImGui::BeginChild("##project_tree", { 0 , 0 }, ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysUseWindowPadding))
+		{
+			ImGui::Spacing();
+			DrawTree();
+			ImGui::EndChild();
+		};
+
 
 		ImGui::PopStyleColor();
 		ImGui::NextColumn();
@@ -48,15 +64,19 @@ void W_Project::Draw()
 		// Draw inside folder --------------------
 		ImGui::PopStyleVar();
 		ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(10.f, 10.f));
-		ImGui::BeginChild("##project_view", { 0 , 0 }, ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysUseWindowPadding);
-		DrawFolder();
-		ImGui::EndChild();
+		if (ImGui::BeginChild("##project_view", { 0 , 0 }, ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysUseWindowPadding))
+		{
+			DrawFolder();
+			ImGui::EndChild();
+		}
+
 		ImGui::EndColumns();
 		ImGui::PopStyleVar();
 
-		ImGui::End();
+
 	}
 
+	ImGui::End();
 	ImGui::PopStyleVar();
 }
 
@@ -107,6 +127,8 @@ void W_Project::DrawFolder()
 	ImVec2 last_cursor_pos ={ 0,0 };
 	float width_amount = 0;
 
+	// Draw folder files ------------------------------
+
 	ImGui::Columns( max(1, int (folder_column_width / (item_width + 20.f) ) ), "project_folder_columns", false);
 
 	for (Resource* resource : visible_resources)
@@ -120,7 +142,7 @@ void W_Project::DrawFolder()
 
 		if (ImGui::IsItemClicked())
 		{
-			selected_resource = resource;
+			App->editor->SetSelectedObject(resource, SelectedObject::Type::RESOURCE);
 			// TODO: Select resource and show info
 		}
 		if (ImGui::IsMouseDoubleClicked(0))
@@ -162,6 +184,10 @@ void W_Project::DrawFolder()
 		ImGui::NextColumn();
 
 		ImGui::PopID();
+	}
 
+	if (ImGui::IsMouseDown(0) && ImGui::IsAnyItemHovered() == false && ImGui::IsWindowHovered())
+	{
+		App->editor->DeselectSelectedObject();
 	}
 }

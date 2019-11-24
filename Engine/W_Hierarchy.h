@@ -3,15 +3,19 @@
 
 #include "Window.h"
 
+class GameObject;
+
 class W_Hierarchy : public Window
 {
 public:
 	W_Hierarchy(std::string name, bool active);
-	void Draw();
 
+	void Draw();
 	void DrawAll(GameObject* go);
 
 private:
+
+	GameObject* selected_go = nullptr;
 
 };
 
