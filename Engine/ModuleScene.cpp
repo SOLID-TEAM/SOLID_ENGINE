@@ -385,6 +385,7 @@ void ModuleScene::UpdateMousePicking()
 			App->editor->DeselectSelectedObject();
 		}
 		
+		selected_go = near_go;
 	}
 }
 
