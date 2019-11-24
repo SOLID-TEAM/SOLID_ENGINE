@@ -840,14 +840,18 @@ GameObject* ModuleScene::FindByUID(UID uid, GameObject* go)
 bool ModuleScene::LoadSceneNow()
 {
 	// TODO: maybe the scene is not on assets folder, but for now we dont let decide, scene are saved on assets folder
-	Config to_load(std::string(ASSETS_FOLDER + scene_to_load).c_str());
+	Config to_load(std::string(scene_to_load).c_str());
+
+	if(delete_after_load)
+		App->file_sys->Remove(scene_to_load.c_str());
+
 	scene_to_load.clear();
 
 	return LoadScene(to_load);;
 }
 
 // TODO: pass this on finishupdate on app.cpp
-bool ModuleScene::ToLoadScene(const char* name, const char* source_path, bool clean)
+bool ModuleScene::ToLoadScene(const char* name, const char* source_path, bool clean, bool delete_after_load)
 {
 	bool ret = false;
 
@@ -869,9 +873,10 @@ bool ModuleScene::ToLoadScene(const char* name, const char* source_path, bool cl
 		{
 			if (file_list[i].compare(name) == 0)
 			{
-				scene_to_load.assign(name);
-				if(clean)
-					create_new_scene = true;
+				scene_to_load.assign(source_path + std::string(name));
+				create_new_scene = clean;
+				this->delete_after_load = delete_after_load;
+				
 				load_new_scene = true;
 
 				ret = true;

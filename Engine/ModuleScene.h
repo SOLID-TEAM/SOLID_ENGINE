@@ -68,7 +68,7 @@ public:
 
 	bool ToSaveScene(const char* scene_name, const char* destination_path = ASSETS_FOLDER);
 
-	bool ToLoadScene(const char* scene_name, const char* source_path = ASSETS_FOLDER, bool clean = true);
+	bool ToLoadScene(const char* scene_name, const char* source_path = ASSETS_FOLDER, bool clean = true, bool delete_afer_load = false);
 
 	std::string GetSceneName() const;
 
@@ -174,7 +174,7 @@ public:
 	uint dyntree_collisions = 0u;
 
 private:
-
+	bool delete_after_load = false;
 	bool create_new_scene = false;
 	bool load_new_scene = false;
 	std::string scene_name;

@@ -270,12 +270,12 @@ void GameObject::RemoveChild(GameObject* child)
 
 	if (it != childs.end())
 	{
-		LOG("[Info] I %s i lost treat with my child %s", this->GetName(), child->GetName());
+		//LOG("[Info] I %s i lost treat with my child %s", this->GetName(), child->GetName());
 		childs.erase(it);
 	}
 	else
 	{
-		LOG("[Info] I never known about %s child");
+		//LOG("[Info] I never known about %s child");
 		//return childs.end();
 	}
 

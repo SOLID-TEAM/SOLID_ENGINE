@@ -136,9 +136,8 @@ void ModuleTime::StopGame()
 		time_since_load = 0.f;
 
 		// Load scene ------------------------------
-		std::string scene_name(App->scene->GetSceneName());
-		App->scene->ToLoadScene(scene_name.c_str(), LIBRARY_SETTINGS_FOLDER);
-		App->file_sys->Remove((LIBRARY_SETTINGS_FOLDER + scene_name).c_str());
+		std::string scene_name(App->scene->GetSceneName() + ".solidscene");
+		App->scene->ToLoadScene(scene_name.c_str(), LIBRARY_SETTINGS_FOLDER, true, true);
 	}
 
 }
