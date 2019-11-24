@@ -120,18 +120,31 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 	{
 		CleanUp();
 		create_new_scene = false;
-		// Main camera ---------------
-
-		main_camera = CreateGameObject("Main Camera", root_go, false);
-		main_camera->CreateComponent<C_Camera>();
-		main_camera->ignore_culling = true;
-		game_viewport->SetCamera(main_camera);
+		
+		if (!load_new_scene)
+		{
+			// Main camera ---------------
+			main_camera = CreateGameObject("Main Camera", root_go, false);
+			main_camera->CreateComponent<C_Camera>();
+			main_camera->ignore_culling = true;
+			game_viewport->SetCamera(main_camera);
+		}
 	}
 
 	if (load_new_scene)
 	{
 		LoadSceneNow();
 		load_new_scene = false;
+		// TODO!!!:
+		// in the case the save doesnt contain any camera, adds default one
+		if (main_camera == nullptr)
+		{
+			// Main camera ---------------
+			main_camera = CreateGameObject("Main Camera", root_go, false);
+			main_camera->CreateComponent<C_Camera>();
+			main_camera->ignore_culling = true;
+			game_viewport->SetCamera(main_camera);
+		}
 	}
 
 	// check CTRL + Z
@@ -231,7 +244,7 @@ update_status ModuleScene::Draw()
 		if (editor_mode)
 		{
 			App->test->main_grid->Render();
- 			if (render_kdtree && camera->cullling && App->time->game_state != GameState::STOP)
+ 			if (render_kdtree && camera->culling && App->time->game_state != GameState::STOP)
 				App->renderer3D->RenderKDTree(kdtree, 3.f);
 		}
 
@@ -483,7 +496,7 @@ void ModuleScene::UpdateGoToRender()
 
 	C_Camera* camera = main_camera->GetComponent<C_Camera>();
 
-	if (camera->cullling && App->time->game_state != GameState::STOP) // Check if go is colliding with main camera frustum optimizing the game
+	if (camera->culling && App->time->game_state != GameState::STOP) // Check if go is colliding with main camera frustum optimizing the game
 	{
 		// Add dynamic go to render list -----------------------------
 
@@ -525,7 +538,7 @@ void ModuleScene::UpdateGoToRender()
 		ImGui::Spacing();
 
 
-		if (camera->cullling)
+		if (camera->culling)
 		{
 			ImGui::Separator();
 

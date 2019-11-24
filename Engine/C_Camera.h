@@ -16,6 +16,9 @@ public:
 
 	bool CleanUp();
 
+	bool Save(Config& config);
+	bool Load(Config& config);
+
 	void UpdateTransform();
 
 	bool Render();
@@ -59,7 +62,7 @@ private:
 
 public:
 
-	bool cullling = true;
+	bool culling = true;
 
 private:
 

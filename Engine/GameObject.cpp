@@ -8,6 +8,8 @@
 #include "KDTree.h"
 #include "DynTree.h"
 
+#include "Viewport.h" //TODO, remove this when we rework how main camera links 
+
 GameObject::GameObject(std::string name, GameObject* parent, bool is_static) : name(name), is_static(is_static) ,parent(parent)
 {
 	uid = App->random->Int();
@@ -345,8 +347,24 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 				new_component = CreateComponent<C_Material>();
 				break;
 			case ComponentType::CAMERA:
-				new_component = CreateComponent<C_Camera>();
+			{
+				// TODO: IMPROVE THIS when we get more scene cameras
+				// if we are loading a new scene, the first camera found
+				// always is linked to new scene camera
+				if (App->scene->main_camera == nullptr)
+				{
+					new_component = CreateComponent<C_Camera>();
+					ignore_culling = true;
+					App->scene->main_camera = this;
+					App->scene->game_viewport->SetCamera(this);
+				}
+				else
+				{
+					new_component = CreateComponent<C_Camera>();
+				}
+				
 				break;
+			}
 			case ComponentType::LIGHT:
 				break;
 			case ComponentType::MESH_RENDERER:
