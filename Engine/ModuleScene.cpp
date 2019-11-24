@@ -123,9 +123,10 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 	{
 		// If scene has selected go save id ---------------
 
-		if (delete_after_load && selected_go != nullptr)
+		App->editor->DeselectSelectedObject();
+
+		if (selected_go != nullptr)
 		{
-			App->editor->DeselectSelectedObject();
 			last_selected_go_uid = selected_go->uid;
 		}
 
@@ -228,10 +229,6 @@ update_status ModuleScene::Update()
 		}
 	}
 
-	// Update Gizmo --------------------------------------------
-
-	UpdateGizmo();
-
 	// Update Space partitioning ------------------------------
 
 	UpdateSpacePartitioning();
@@ -239,6 +236,10 @@ update_status ModuleScene::Update()
 	// --------------------------------------------------------
 
 	UpdateMousePicking();
+
+	// Update Gizmo --------------------------------------------
+
+	UpdateGizmo();
 
 	// Update render list ------------------------------------- (Pre Render/Draw Function ?)
 
@@ -407,6 +408,7 @@ void ModuleScene::UpdateHierarchy()
 				LOG(" ------------------------------------------------------- ");
 				// "unselect from hierarchy"
 				App->editor->DeselectSelectedObject();
+				selected_go = nullptr;
 			}
 			else
 				LOG("child not found on parent");
@@ -459,6 +461,7 @@ void ModuleScene::UpdateGoLists()
 			if (event_go.go == selected_go)
 			{
 				App->editor->DeselectSelectedObject();
+				selected_go = nullptr;
 			}
 
 		}
@@ -470,6 +473,7 @@ void ModuleScene::UpdateGoLists()
 			if (event_go.go == selected_go)
 			{
 				App->editor->DeselectSelectedObject();
+				selected_go = nullptr;
 			}
 		}
 		else if (event_go.type == EventGoType::DYNAMIC_TO_STATIC || event_go.type == EventGoType::STATIC_TO_DYNAMIC)

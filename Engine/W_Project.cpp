@@ -151,27 +151,10 @@ void W_Project::DrawFolder()
 		// Drag  same as double click ?
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoDisableHover)) 
 		{
-			ImGui::SetDragDropPayload("resource_node", &resource, sizeof(Resource), ImGuiCond_Once);
+			ImGui::SetDragDropPayload("resource_node", &resource, sizeof(Resource*), ImGuiCond_Once);
 			ImGui::Text(resource->GetName().c_str());
-
 			ImGui::EndDragDropSource();
 		}
-
-	
-
-		// Copy this to target window
-		if (ImGui::BeginDragDropTarget())
-		{
-			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("resource_node");
-
-			if (payload != nullptr && payload->Data != nullptr)
-			{
-				/*ResoruceModel* model = (ResoruceModel*)ImGui::GetDragDropPayload()->Data;*/
-			}
-
-			ImGui::EndDragDropTarget();
-		}
-
 
 		ImGui::NewLine();
 		ImGui::SameLine();

@@ -2,15 +2,20 @@
 
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleResources.h"
 #include "ModuleInput.h"
+
 #include "CameraEditor.h"
 #include "Viewport.h"
 
 #include "ImGui/imgui.h"
+#include "ImGui/imgui_internal.h"
 #include "ImGuizmo/ImGuizmo.h"
 #include "IconFontAwesome/IconsFontAwesome5.h"
 
 #include "C_Camera.h"
+#include "Resource.h"
+#include "R_Model.h"
 
 void W_Scene::Draw()
 {
@@ -45,6 +50,25 @@ void W_Scene::Draw()
 
 			ImGui::PopStyleVar();
 			ImGui::SetSeparationType(ImGuiSeparationType::ImGui_WindowSeparation);
+		}
+
+		// Drag & Drop -------------------------------------------------------
+
+		if (ImGui::BeginDragDropTargetCustom(ImGui::GetCurrentWindow()->Rect(), ImGui::GetID("Scene_Window")))
+		{
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("resource_node");
+
+			if (payload != nullptr && payload->Data != nullptr)
+			{
+				Resource** res = (Resource**)ImGui::GetDragDropPayload()->Data;
+
+				if ((*res)->GetType() == Resource::Type::MODEL)
+				{
+					App->scene->CreateGameObjectFromModel((*res)->GetUID());
+				}
+			}
+
+			ImGui::EndDragDropTarget();
 		}
 
 		// Input camera ----------------------------------------------------
