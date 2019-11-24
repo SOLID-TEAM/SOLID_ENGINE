@@ -303,10 +303,28 @@ bool ModuleTextures::LoadTexResource(R_Texture* r)
 	ilBindImage(texture);
 	if (ilLoadImage(full_path.c_str()))
 	{
-
 		r->buffer_id = ilutGLBindTexImage();
 
-		// TODO: FILL INFORMATION
+		ILinfo info;
+		iluGetImageInfo(&info);
+
+		r->width = info.Width;
+		r->height = info.Height;
+		r->bpp = info.Bpp;
+		r->depth = info.Depth;
+		r->bytes = info.SizeOfData;
+
+		switch (info.Format)
+		{
+			case IL_COLOUR_INDEX: r->format = R_Texture::Format::color_index; break;
+			//case IL_ALPHA: r->format = R_Texture::Format::luminance; break;
+			case IL_RGB:  r->format = R_Texture::Format::rgb; break;
+			case IL_RGBA: r->format = R_Texture::Format::rgba; break;
+			case IL_BGR:  r->format = R_Texture::Format::bgr; break;
+			case IL_BGRA: r->format = R_Texture::Format::bgra; break;
+			case IL_LUMINANCE: r->format = R_Texture::Format::luminance; break;
+			default: r->format = R_Texture::Format::unknown;
+		}
 
 
 		glBindTexture(GL_TEXTURE_2D, 0);

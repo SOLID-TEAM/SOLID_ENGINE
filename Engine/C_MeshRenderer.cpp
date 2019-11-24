@@ -81,27 +81,28 @@ bool C_MeshRenderer::Render()
 
 	uint custom_tex_id = 0;
 
-	//if (c_mat->view_checker)
-	//{
-	//	// check if checker still is valid (not deleted gl buffer on the way)
-	//	if (glIsTexture(c_mat->checker_gl_id))
-	//	{
-	//		custom_tex_id = c_mat->checker_gl_id;
-	//	}
-	//	else
-	//	{
-	//		if (c_mat->checker_gl_id != 0)
-	//			c_mat->checker_gl_id = 0;
-	//	}
-	//}
+	// TODO: migrate checker to new resources system...
+	if (c_mat->view_checker)
+	{
+		// check if checker still is valid (not deleted gl buffer on the way)
+		if (glIsTexture(c_mat->checker_gl_id))
+		{
+			custom_tex_id = c_mat->checker_gl_id;
+		}
+		else
+		{
+			if (c_mat->checker_gl_id != 0)
+				c_mat->checker_gl_id = 0;
+		}
+	}
 
 	// CHECK if textured for apply or not default albedo color for mesh data
 	float4 albedo_color = { 1.0f,1.0f,1.0f,1.0f }; // TODO: change variable type if needed
 
-	/*if (!c_mat->textured)
+	if (!c_mat->textured)
 	{
-		albedo_color = r_material->diffuse_color;
-	}*/
+		albedo_color = r_mat->diffuse_color;
+	}
 
 	// Push matrix ---------------------------------------------------------
 	glPushMatrix();
@@ -119,7 +120,7 @@ bool C_MeshRenderer::Render()
 
 	if (vp.mode == V_MODE_SHADED || App->scene->editor_mode == false)
 	{
-		RenderMesh(albedo_color.ptr(), custom_tex_id, true);// c_mat->textured);
+		RenderMesh(albedo_color.ptr(), custom_tex_id, c_mat->textured);
 	}
 	else if (vp.mode == V_MODE_WIREFRAME)
 	{
@@ -127,7 +128,7 @@ bool C_MeshRenderer::Render()
 	}
 	else if (vp.mode == V_MODE_SHADED_WIREFRAME)
 	{
-		RenderMesh(albedo_color.ptr(), custom_tex_id, true);// c_mat->textured);
+		RenderMesh(albedo_color.ptr(), custom_tex_id, c_mat->textured);
 		RenderWireframe(vp.wire_line_width, vp.wire_color);
 	}
 
