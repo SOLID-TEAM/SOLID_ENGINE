@@ -6,6 +6,9 @@
 
 struct aiScene;
 struct aiNode;
+//struct aiMatrix4x4;
+
+#include "external/Assimp/include/matrix4x4.h"
 
 class R_Model : public Resource
 {
@@ -45,7 +48,7 @@ public:
 
 private:
 
-	void        GenerateNodes(const aiScene* model, const aiNode* node, uint parent, const std::vector<UID>& meshes, const std::vector<UID>& materials);
+	void        GenerateNodes(const aiScene* model, const aiNode* node, uint parent, const std::vector<UID>& meshes, const std::vector<UID>& materials, aiMatrix4x4 accTransform);
 	void        GenerateMaterials(const aiScene* scene, const char* file, std::vector<UID>& materials, std::string from_path);
 	void        GenerateMeshes(const aiScene* scene, const char* file, std::vector<UID>& meshes);
 	//void        SaveToStream(simple::mem_ostream<std::true_type>& write_stream) const;
