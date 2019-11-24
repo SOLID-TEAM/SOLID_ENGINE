@@ -54,8 +54,9 @@ void W_Project::Draw()
 		ImGui::EndColumns();
 		ImGui::PopStyleVar();
 
-		ImGui::End();
+		
 	}
+	ImGui::End();
 
 	ImGui::PopStyleVar();
 }
