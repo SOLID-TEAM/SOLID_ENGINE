@@ -175,7 +175,7 @@ bool C_Camera::DrawPanelInfo()
 
 	ImGui::Spacing();
 
-	ImGui::Title("Culling", 1);  ImGui::Checkbox("##culling", &cullling);
+	ImGui::Title("Culling", 1);  ImGui::Checkbox("##culling", &culling);
 	ImGui::Title("Projection", 1);
 
 	if (ImGui::BeginComboEx(std::string("##frustum_type").c_str(), std::string(" " + std::string(current_item)).c_str(), 200, ImGuiComboFlags_NoArrowButton))
@@ -227,6 +227,26 @@ bool C_Camera::DrawPanelInfo()
 	{
 		SetClippingFarPlane(far_plane);
 	}
+
+	return true;
+}
+
+bool C_Camera::Save(Config& config)
+{
+	config.AddString("Name", name.c_str());
+
+	// TODO: add needed values to save
+	// frustrum clipping distances etc
+
+
+	return true;
+}
+
+bool C_Camera::Load(Config& config)
+{
+	name.assign(config.GetString("Name", "Main Camera"));
+
+	// TODO: add needed values to load
 
 	return true;
 }

@@ -22,7 +22,7 @@ public:
 public:
 
 	UID resource = 0;
-	bool textured = true;
+	bool textured = false;
 	bool view_checker = false;
 	uint checker_gl_id = 0;
 

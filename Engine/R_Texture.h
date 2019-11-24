@@ -37,6 +37,7 @@ public:
 	bool has_mips = false;
 	bool linear = false;
 	uint bytes = 0;
+	uint bpp = 0;
 
 	Format format = unknown;
 };

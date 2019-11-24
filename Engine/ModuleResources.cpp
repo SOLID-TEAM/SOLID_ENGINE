@@ -177,7 +177,10 @@ UID ModuleResources::Find(const char* file_in_assets) const
 	for (std::map<UID, Resource*>::const_iterator it = resources.begin(); it != resources.end(); ++it)
 	{
 		if (it->second->GetOriginalFile().compare(file) == 0)
+		{
+			LOG("[Info] Resource duplicated, returning loaded resource %s", it->second->GetExportedFile().c_str());
 			return it->first;
+		}
 	}
 	return 0;
 }
@@ -248,10 +251,15 @@ void ModuleResources::ImportFileDropped(const char* file)
 		{
 			LOG("[Info:%s] Dropped file duplicated to %s", name.c_str(), (final_path + filename).c_str() );
 
-			UID uid = ImportFile((final_path + filename).c_str(), type, path);
+			bool force_find = false;
+			if (type == Resource::Type::TEXTURE)
+				force_find = true;
+
+			UID uid = ImportFile((final_path + filename).c_str(), type, path, force_find);
 			
 			// TODO: testing creating gameobjects from model
-			App->scene->CreateGameObjectFromModel(uid);
+			if(type == Resource::Type::MODEL)
+				App->scene->CreateGameObjectFromModel(uid);
 
 		}
 		else
