@@ -70,6 +70,7 @@ The code is written in C++.
 - Mouse picking with static KDTree.
 - Scene serialization, save/load scenes.
 - Visualize debug options under scene window (AABB, grid,... under eye/grid icon option).
+- Visualization of KDTree while playing (objects must be static).
 - Configure editor camera options under scene window (camera icon option).
 
 ### Camera Controls
