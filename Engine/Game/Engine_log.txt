@@ -162,19 +162,19 @@ Created mesh data: City_building_037
 New file created [.Library/Meshes/19] of 156718 bytes
 [Info] Succesfully saved 19
 Created mesh data: City_building_038
-[Info] Correctly generated library texture Library/Textures/1667890749
+[Info] Correctly generated library texture Library/Textures/1053665972
 [success] File Duplicated Correctly
 [Info] correctly duplicated original image Assets/Textures/building03_c.tga to Assets/Textures/
 New file created [.Library/Materials/20] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/1486075545
+[Info] Correctly generated library texture Library/Textures/1384738739
 [success] File Duplicated Correctly
 [Info] correctly duplicated original image Assets/Textures/Building_V02_C.png to Assets/Textures/
 New file created [.Library/Materials/21] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/598373279
+[Info] Correctly generated library texture Library/Textures/2059866795
 [success] File Duplicated Correctly
 [Info] correctly duplicated original image Assets/Textures/building_016_c.tga to Assets/Textures/
 New file created [.Library/Materials/22] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/310789106
+[Info] Correctly generated library texture Library/Textures/1028188035
 [success] File Duplicated Correctly
 [Info] correctly duplicated original image Assets/Textures/building_025_c.tga to Assets/Textures/
 New file created [.Library/Materials/23] of 48 bytes
@@ -182,25 +182,25 @@ New file created [.Library/Materials/23] of 48 bytes
 New file created [.Library/Materials/24] of 48 bytes
 [Error] NO TEXTURE ON MODEL
 New file created [.Library/Materials/25] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/1550605301
+[Info] Correctly generated library texture Library/Textures/1406779284
 [success] File Duplicated Correctly
 [Info] correctly duplicated original image Assets/Textures/building 01_c.tga to Assets/Textures/
 New file created [.Library/Materials/26] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/688726231
+[Info] Correctly generated library texture Library/Textures/1093842635
 [success] File Duplicated Correctly
 [Info] correctly duplicated original image Assets/Textures/building 06_ c.tga to Assets/Textures/
 New file created [.Library/Materials/27] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/794058235
+[Info] Correctly generated library texture Library/Textures/353001421
 [success] File Duplicated Correctly
 [Info] correctly duplicated original image Assets/Textures/building05 _c.tga to Assets/Textures/
 New file created [.Library/Materials/28] of 48 bytes
-[Info] Correctly generated library texture Library/Textures/456854214
+[Info] Correctly generated library texture Library/Textures/509075173
 [success] File Duplicated Correctly
 [Info] correctly duplicated original image Assets/Textures/Building_V01_C.png to Assets/Textures/
 New file created [.Library/Materials/29] of 48 bytes
 [Error] NO TEXTURE ON MODEL
 New file created [.Library/Materials/30] of 48 bytes
-New file created [.Library/Models/266937177] of 7060 bytes
+New file created [.Library/Models/252509345] of 7060 bytes
 Loading Test assets
 [Start] Loading Editor
 // ---------------------------------------------------
@@ -253,8 +253,6 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
-[Info] editor_config.json succesfully saved
-[Info] Succesfully loaded last valid config from memory
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor
