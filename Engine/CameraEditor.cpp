@@ -8,7 +8,7 @@
 
 CameraEditor::CameraEditor() : GameObject("Camera Editor", false, nullptr)
 {
-	camera = CreateComponent<C_Camera>();
+	camera = AddComponent<C_Camera>();
 	camera->SetClippingFarPlane(800.f);
 	camera->SetFov(60.f);
 

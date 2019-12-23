@@ -41,7 +41,7 @@ bool ModuleScene::Start(Config& config)
 	// Main camera ---------------
 
 	main_camera = CreateGameObject("Main Camera", root_go, false);
-	main_camera->CreateComponent<C_Camera>();
+	main_camera->AddComponent<C_Camera>();
 	main_camera->ignore_culling = true;
 
 	// Editor camera ---------------
@@ -136,7 +136,7 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 		{
 			// Main camera ---------------
 			main_camera = CreateGameObject("Main Camera", root_go, false);
-			main_camera->CreateComponent<C_Camera>();
+			main_camera->AddComponent<C_Camera>();
 			main_camera->ignore_culling = true;
 			game_viewport->SetCamera(main_camera);
 		}
@@ -165,7 +165,7 @@ update_status ModuleScene::PreUpdate()	// TODO: SHORTCUTS
 		{
 			// Main camera ---------------
 			main_camera = CreateGameObject("Main Camera", root_go, false);
-			main_camera->CreateComponent<C_Camera>();
+			main_camera->AddComponent<C_Camera>();
 			main_camera->ignore_culling = true;
 			game_viewport->SetCamera(main_camera);
 		}
@@ -1037,17 +1037,17 @@ GameObject* ModuleScene::CreateGameObjectFromModel(UID uid)
 
 		if (node.mesh > 0)
 		{
-			C_Mesh* c_mesh = new_go->CreateComponent< C_Mesh>();
+			C_Mesh* c_mesh = new_go->AddComponent< C_Mesh>();
 			
 			if (c_mesh->SetMeshResource(node.mesh))
 			{
-				new_go->CreateComponent<C_MeshRenderer>();
+				new_go->AddComponent<C_MeshRenderer>();
 			}
 		}
 
 		if (node.material > 0)
 		{
-			C_Material* c_mat = new_go->CreateComponent< C_Material>();
+			C_Material* c_mat = new_go->AddComponent< C_Material>();
 			c_mat->SetMaterialResource(node.material);
 			/*if (c_mat->SetMaterialResource(node.material))
 			{

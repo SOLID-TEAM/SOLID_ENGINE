@@ -3,28 +3,19 @@
 #include "ModulePhysics.h"
 #include "ModuleTime.h"
 #include "Primitive.h"
-
-
 #include "Bullet/include/btBulletDynamicsCommon.h"
 #include "PhysBody.h"
 #include "PhysVehicle.h"
-
-
+#include "GL/glew.h"
 
 ModulePhysics::ModulePhysics(bool start_enabled) : Module(start_enabled)
 {
-	debug = true;
-	collision_config = new btDefaultCollisionConfiguration();
-	dispatcher = new btCollisionDispatcher(collision_config);
-	broad_phase = new btDbvtBroadphase();
-	solver = new btSequentialImpulseConstraintSolver();
-	//debug_draw = new DebugDrawer();
+
 }
 
 // Destructor
 ModulePhysics::~ModulePhysics()
 {
-	//delete debug_draw;
 	delete solver;
 	delete broad_phase;
 	delete dispatcher;
@@ -32,34 +23,26 @@ ModulePhysics::~ModulePhysics()
 }
 
 // Render not available yet----------------------------------
-bool ModulePhysics::Init()
+bool ModulePhysics::Init(Config& config)
 {
 	LOG("Creating 3D Physics simulation");
 
 	bool ret = true;
-
+	collision_config = new btDefaultCollisionConfiguration();
+	dispatcher = new btCollisionDispatcher(collision_config);
+	broad_phase = new btDbvtBroadphase();
+	solver = new btSequentialImpulseConstraintSolver();
 	return ret;
 }
 
 // ---------------------------------------------------------
-bool ModulePhysics::Start()
+bool ModulePhysics::Start(Config& config)
 {
 	LOG("Creating Physics environment");
 
 	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_config);
-	//world->setDebugDrawer(debug_draw);
 	world->setGravity(GRAVITY);
 	vehicle_raycaster = new btDefaultVehicleRaycaster(world);
-	// Big plane as ground
-	{
-		btCollisionShape* colShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
-
-		btDefaultMotionState* myMotionState = new btDefaultMotionState();
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
-
-		btRigidBody* body = new btRigidBody(rbInfo);
-		world->addRigidBody(body);
-	}
 
 	return true;
 }
@@ -67,39 +50,44 @@ bool ModulePhysics::Start()
 // ---------------------------------------------------------
 update_status ModulePhysics::PreUpdate()
 {
-	world->stepSimulation(App->time->DeltaTime(), 15);
+	float dt = App->time->DeltaTime();
+	if (dt != 0)
+	{
+		world->stepSimulation(App->time->DeltaTime(), 15);
+	}
 
 	int numManifolds = world->getDispatcher()->getNumManifolds();
-	for (int i = 0; i < numManifolds; i++)
-	{
-		btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
-		btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0());
-		btCollisionObject* obB = (btCollisionObject*)(contactManifold->getBody1());
 
-		int numContacts = contactManifold->getNumContacts();
+	//for (int i = 0; i < numManifolds; i++)
+	//{
+	//	btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
+	//	btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0());
+	//	btCollisionObject* obB = (btCollisionObject*)(contactManifold->getBody1());
 
-		if (numContacts > 0)
-		{
-			PhysBody* pbodyA = (PhysBody*)obA->getUserPointer();
-			PhysBody* pbodyB = (PhysBody*)obB->getUserPointer();
+	//	int numContacts = contactManifold->getNumContacts();
 
-			if (pbodyA && pbodyB)
-			{
+	//	if (numContacts > 0)
+	//	{
+	//		PhysBody* pbodyA = (PhysBody*)obA->getUserPointer();
+	//		PhysBody* pbodyB = (PhysBody*)obB->getUserPointer();
 
-				for (Module* modules : pbodyA->listeners)
-				{
-					// TODO:: Add oncollision
-					//modules->OnCollision(pbodyA, pbodyB);
-				}
+	//		if (pbodyA && pbodyB)
+	//		{
 
-				for (Module* modules : pbodyB->listeners)
-				{
-					//modules->OnCollision(pbodyB, pbodyA);
-				}
-	
-			}
-		}
-	}
+	//			for (Module* modules : pbodyA->listeners)
+	//			{
+	//				// TODO:: Add oncollision
+	//				//modules->OnCollision(pbodyA, pbodyB);
+	//			}
+
+	//			for (Module* modules : pbodyB->listeners)
+	//			{
+	//				//modules->OnCollision(pbodyB, pbodyA);
+	//			}
+	//
+	//		}
+	//	}
+	//}
 
 	return UPDATE_CONTINUE;
 }
@@ -107,29 +95,6 @@ update_status ModulePhysics::PreUpdate()
 // ---------------------------------------------------------
 update_status ModulePhysics::Draw()
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		debug = !debug;
-
-	//if (debug == true)
-	//{
-	//	world->debugDrawWorld();
-
-	//	// Render vehicles
-	//	p2List_item<PhysVehicle*>* item = vehicles.getFirst();
-	//	while (item)
-	//	{
-	//		item->data->Render();
-	//		item = item->next;
-	//	}
-
-	//	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-	//	{
-	//		Sphere s(1);
-	//		s.SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-	//		float force = 30.0f;
-	//		AddBody(s)->Push(-(App->camera->Z.x * force), -(App->camera->Z.y * force), -(App->camera->Z.z * force));
-	//	}
-	//}
 
 	return UPDATE_CONTINUE;
 }
@@ -144,48 +109,11 @@ bool ModulePhysics::CleanUp()
 {
 	LOG("Destroying 3D Physics simulation");
 
-	// Remove from the world all collision bodies
 	for (int i = world->getNumCollisionObjects() - 1; i >= 0; i--)
 	{
 		btCollisionObject* obj = world->getCollisionObjectArray()[i];
 		world->removeCollisionObject(obj);
 	}
-
-
-	for each (btTypedConstraint* constraint in constraints)
-	{
-		world->removeConstraint(constraint);
-	}
-
-	constraints.clear();
-
-	for each (btDefaultMotionState * motion in motions)
-	{
-		delete motion;
-	}
-
-	motions.clear();
-
-	for each (btCollisionShape * shapes in shapes)
-	{
-		delete shapes;
-	}
-
-	shapes.clear();
-
-	for each (PhysBody * body in bodies)
-	{
-		delete body;
-	}
-
-	bodies.clear();
-
-	for each (PhysVehicle * vehicle in vehicles)
-	{
-		delete vehicle;
-	}
-
-	vehicles.clear();
 
 	delete vehicle_raycaster;
 	delete world;
@@ -193,31 +121,14 @@ bool ModulePhysics::CleanUp()
 	return true;
 }
 
-PhysBody* ModulePhysics::AddBody(const float4x4& matrix, const float3& size , float mass)
+void ModulePhysics::AddBody(btRigidBody* body)
 {
-	float3 half_size = size * 0.5f;
-	btCollisionShape* collision_shape = new btBoxShape(btVector3(half_size.x, half_size.y, half_size.z));
-	shapes.push_back(collision_shape);
-
-	btTransform startTransform;
-	startTransform.setFromOpenGLMatrix((btScalar*)&matrix[0]);
-	btVector3 localInertia(0, 0, 0);
-	
-	if (mass != 0.f)
-		collision_shape->calculateLocalInertia(mass, localInertia);
-
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	motions.push_back(myMotionState);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, collision_shape, localInertia);
-
-	btRigidBody* body = new btRigidBody(rbInfo);
-	PhysBody* pbody = new PhysBody(body);
-
-	body->setUserPointer(pbody);
 	world->addRigidBody(body);
-	bodies.push_back(pbody);
+}
 
-	return pbody;
+void ModulePhysics::RemoveBody(btRigidBody* body)
+{
+	world->removeRigidBody(body);
 }
 
 //RigidBody* ModulePhysics::AddBody(const Sphere& sphere, float mass)
@@ -358,37 +269,38 @@ void ModulePhysics::AddConstraintHinge(PhysBody& bodyA, PhysBody& bodyB, const v
 }
 
 // =============================================
-//void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
-//{
-//	line.origin.Set(from.getX(), from.getY(), from.getZ());
-//	line.destination.Set(to.getX(), to.getY(), to.getZ());
-//	line.color.Set(color.getX(), color.getY(), color.getZ());
-//	line.Render();
-//}
-//
-//void DebugDrawer::drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color)
-//{
-//	point.transform.translate(PointOnB.getX(), PointOnB.getY(), PointOnB.getZ());
-//	point.color.Set(color.getX(), color.getY(), color.getZ());
-//	point.Render();
-//}
-//
-//void DebugDrawer::reportErrorWarning(const char* warningString)
-//{
-//	LOG("Bullet warning: %s", warningString);
-//}
-//
-//void DebugDrawer::draw3dText(const btVector3& location, const char* textString)
-//{
-//	LOG("Bullet draw text: %s", textString);
-//}
-//
-//void DebugDrawer::setDebugMode(int debugMode)
-//{
-//	mode = (DebugDrawModes)debugMode;
-//}
-//
-//int	 DebugDrawer::getDebugMode() const
-//{
-//	return mode;
-//}
+void DebugRenderer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
+{
+	glColor3f(color[0], color[1], color[2]);
+	glBegin(GL_LINES);
+	glVertex3f(from[0], from[1], from[2]);
+	glVertex3f(to[0], to[1], to[2]);
+	glEnd();
+}
+
+void DebugRenderer::drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color)
+{
+	//point.transform.translate(PointOnB.getX(), PointOnB.getY(), PointOnB.getZ());
+	//point.color.Set(color.getX(), color.getY(), color.getZ());
+	//point.Render();
+}
+
+void DebugRenderer::reportErrorWarning(const char* warningString)
+{
+	LOG("Bullet warning: %s", warningString);
+}
+
+void DebugRenderer::draw3dText(const btVector3& location, const char* textString)
+{
+	LOG("Bullet draw text: %s", textString);
+}
+
+void DebugRenderer::setDebugMode(int debugMode)
+{
+	mode = (DebugDrawModes)debugMode;
+}
+
+int	 DebugRenderer::getDebugMode() const
+{
+	return mode;
+}

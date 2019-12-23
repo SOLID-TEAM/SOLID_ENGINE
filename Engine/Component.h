@@ -15,6 +15,8 @@ enum class ComponentType
 	CAMERA,
 	LIGHT,
 	MESH_RENDERER,
+	BOX_COLLIDER,
+	RIGID_BODY,
 	NO_TYPE
 };
 

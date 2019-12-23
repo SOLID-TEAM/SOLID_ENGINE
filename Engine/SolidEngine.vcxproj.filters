@@ -1521,6 +1521,12 @@
     <ClInclude Include="Bullet\include\btBulletDynamicsCommon.h">
       <Filter>Sources\Thirds Party\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="C_RigidBody.h">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Collider.h">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -2380,6 +2386,12 @@
     </ClCompile>
     <ClCompile Include="Bullet\include\LinearMath\TaskScheduler\btThreadSupportWin32.cpp">
       <Filter>Sources\Thirds Party\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="C_RigidBody.cpp">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="C_Collider.cpp">
+      <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -18,6 +18,7 @@ Application::Application()
 	editor = new ModuleEditor();
 	file_sys = new ModuleFileSystem();
 	textures = new ModuleTextures();
+	physics = new ModulePhysics();
 	scene = new ModuleScene();
 	resources = new ModuleResources();
 
@@ -27,6 +28,7 @@ Application::Application()
 	AddModule(window);
 	AddModule(input);
 	AddModule(resources);
+	AddModule(physics);
 	AddModule(scene);
 	AddModule(test);
 	AddModule(file_sys);

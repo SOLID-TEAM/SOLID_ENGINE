@@ -16,6 +16,7 @@
 #include "ModuleEditor.h"
 #include "ModuleFileSystem.h"
 #include "ModuleTextures.h"
+#include "ModulePhysics.h"
 #include "ModuleScene.h"
 #include "ModuleResources.h"
 
@@ -83,6 +84,7 @@ public:
 	ModuleImporter* importer = nullptr;
 	ModuleEditor* editor = nullptr;
 	ModuleFileSystem* file_sys = nullptr;
+	ModulePhysics* physics = nullptr;
 	ModuleScene* scene = nullptr;
 	ModuleResources* resources = nullptr;
 

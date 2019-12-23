@@ -16,6 +16,8 @@
 #include "C_Material.h"
 #include "C_MeshRenderer.h"
 #include "C_Camera.h"
+#include "C_Collider.h"
+#include "C_RigidBody.h"
 
 #include <typeinfo>
 #include <list>
@@ -68,7 +70,13 @@ public:
 	virtual void  Update();
 		     
 	virtual void  Render();
-		     
+
+	virtual void OnCollisionEnter() {}
+
+	virtual void OnCollision() {}
+
+	virtual void OnCollisionExit() {}
+
 	virtual void  CleanUp();
 
 	// SERIALIZE ME
@@ -78,7 +86,7 @@ public:
 	// Components Funtions -------------------------------------------
 
 	template <class T>
-	T* CreateComponent();
+	T* AddComponent();
 	template <class T>
 	T* GetComponent() const;
 
@@ -160,20 +168,27 @@ T* GameObject::GetComponent() const
 	return nullptr;
 }
 template<class T>
-T* GameObject::CreateComponent()
+T* GameObject::AddComponent()
 {
 	T* new_component = nullptr;
 
 	if (typeid(C_Transform) == typeid(T))
-		components.push_back(new_component = (T*) new C_Transform(this));
+		new_component = (T*) new C_Transform(this);
 	else if (typeid(C_Mesh) == typeid(T))
-		components.push_back(new_component = (T*)new C_Mesh(this));
+		new_component = (T*)new C_Mesh(this);
 	else if (typeid(C_MeshRenderer) == typeid(T))
-		components.push_back(new_component = (T*)new C_MeshRenderer(this));
+		new_component = (T*)new C_MeshRenderer(this);
 	else if (typeid(C_Material) == typeid(T))
-		components.push_back(new_component = (T*)new C_Material(this));
+		new_component = (T*)new C_Material(this);
 	else if (typeid(C_Camera) == typeid(T))
-		components.push_back(new_component = (T*)new C_Camera(this));
+		new_component = (T*)new C_Camera(this);
+	else if (typeid(C_Collider) == typeid(T))
+		new_component = (T*)new C_Collider(this);
+	else if (typeid(C_RigidBody) == typeid(T))
+		new_component = (T*)new C_RigidBody(this);
+
+	if (new_component != nullptr)
+		components.push_back(new_component);
 
 	return new_component;
 }

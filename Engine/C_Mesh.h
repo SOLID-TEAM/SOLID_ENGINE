@@ -7,6 +7,7 @@
 
 class C_MeshRenderer;
 class C_Transform;
+class C_Collider;
 class R_Mesh;
 
 
@@ -17,6 +18,7 @@ public:
 	friend ModuleImporter;
 	friend C_MeshRenderer;
 	friend C_Transform;
+	friend C_Collider;
 
 public:
 

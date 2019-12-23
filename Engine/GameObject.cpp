@@ -15,7 +15,7 @@ GameObject::GameObject(std::string name, GameObject* parent, bool is_static) : n
 	uid = App->random->Int();
 
 	// Adds a component transform ---------------------
-	transform = CreateComponent<C_Transform>();
+	transform = AddComponent<C_Transform>();
 
 	// Add to its parent childs -----------------------
 	if (parent != nullptr)
@@ -341,10 +341,10 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 				new_component = transform;
 				break;
 			case ComponentType::MESH:
-				new_component = CreateComponent<C_Mesh>();
+				new_component = AddComponent<C_Mesh>();
 				break;
 			case ComponentType::MATERIAL:
-				new_component = CreateComponent<C_Material>();
+				new_component = AddComponent<C_Material>();
 				break;
 			case ComponentType::CAMERA:
 			{
@@ -353,14 +353,14 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 				// always is linked to new scene camera
 				if (App->scene->main_camera == nullptr)
 				{
-					new_component = CreateComponent<C_Camera>();
+					new_component = AddComponent<C_Camera>();
 					ignore_culling = true;
 					App->scene->main_camera = this;
 					App->scene->game_viewport->SetCamera(this);
 				}
 				else
 				{
-					new_component = CreateComponent<C_Camera>();
+					new_component = AddComponent<C_Camera>();
 				}
 				
 				break;
@@ -368,7 +368,7 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 			case ComponentType::LIGHT:
 				break;
 			case ComponentType::MESH_RENDERER:
-				new_component = CreateComponent<C_MeshRenderer>();
+				new_component = AddComponent<C_MeshRenderer>();
 				break;
 			case ComponentType::NO_TYPE:
 				break;

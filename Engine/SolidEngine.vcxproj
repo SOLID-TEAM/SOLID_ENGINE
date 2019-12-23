@@ -433,6 +433,7 @@
     <ClInclude Include="Bullet\include\LinearMath\btTransformUtil.h" />
     <ClInclude Include="Bullet\include\LinearMath\btVector3.h" />
     <ClInclude Include="Bullet\include\LinearMath\TaskScheduler\btThreadSupportInterface.h" />
+    <ClInclude Include="C_RigidBody.h" />
     <ClInclude Include="DynTree.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Component.h" />
@@ -443,6 +444,7 @@
     <ClInclude Include="C_MeshRenderer.h" />
     <ClInclude Include="C_Transform.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="C_Collider.h" />
     <ClInclude Include="ModulePhysics.h" />
     <ClInclude Include="ModuleResources.h" />
     <ClInclude Include="ModuleTime.h" />
@@ -760,6 +762,8 @@
     <ClCompile Include="Bullet\include\LinearMath\TaskScheduler\btTaskScheduler.cpp" />
     <ClCompile Include="Bullet\include\LinearMath\TaskScheduler\btThreadSupportPosix.cpp" />
     <ClCompile Include="Bullet\include\LinearMath\TaskScheduler\btThreadSupportWin32.cpp" />
+    <ClCompile Include="C_Collider.cpp" />
+    <ClCompile Include="C_RigidBody.cpp" />
     <ClCompile Include="DynTree.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Component.cpp" />

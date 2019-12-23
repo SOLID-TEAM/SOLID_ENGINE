@@ -62,7 +62,7 @@ private:
 
 public:
 
-	bool culling = true;
+	bool culling = false;
 
 private:
 

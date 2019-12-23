@@ -183,7 +183,6 @@ void ModuleRenderer3D::RenderOBB(math::OBB& obb, float width, float4& color)
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24 * 3, vertices, GL_STATIC_DRAW);
 
-
 	BeginDebugDraw(color);
 	glLineWidth(width);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
