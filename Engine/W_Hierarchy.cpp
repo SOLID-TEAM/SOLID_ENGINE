@@ -77,8 +77,17 @@ void W_Hierarchy::DrawAll(GameObject* go)
 
 	ImGui::PushID(go);
 	// ---------------------------------------
+	//change name color ----
+	bool inactive = false;
+	if (!go->IsActive())
+	{
+		ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor(120, 120, 120, 255)); // when current clicked
+		ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor(80, 80, 80, 255)); // when current clicked
+		inactive = true;
+	}
 	// https://github.com/ocornut/imgui/issues/2077
 	bool open = ImGui::TreeNodeEx(go->GetName(), node_flags);
+	if (inactive) ImGui::PopStyleColor(2);
 	bool clicked = ImGui::IsItemClicked(0);
 	//bool right_clicked = ImGui::IsItemClicked(1);
 	bool hover = ImGui::IsItemHovered();

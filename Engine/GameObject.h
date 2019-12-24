@@ -103,6 +103,8 @@ public:
 
 	void RemoveChild(GameObject* child);
 
+	bool IsActive() const { return active; };
+
 private:
 
 	void  DoStart();
