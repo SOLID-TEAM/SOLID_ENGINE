@@ -27,6 +27,8 @@ enum class EventGoType
 	ADD_TO_DYNAMIC,
 	DELETE_FROM_STATIC,
 	DELETE_FROM_DYNAMIC,
+	ACTIVATE,
+	DEACTIVATE,
 	UKNNOWKN
 };
 
@@ -182,6 +184,9 @@ private:
 	std::string scene_to_load;
 	std::deque<GameObject*> to_undo_buffer_go;
 	std::vector<GameObject*> temp_to_undo_go;
+	// used for active/deactive gameobject itself, and removes temporally from culling lists
+	//std::map<GameObject*, std::list<GameObject*>&> temp_culling_map;
+	std::map<GameObject*, uint> temp_culling_map;
 
 	// store childrens we must to move
 	// TODO: think is this the better place, the idea is any hierarchy change is made outside any loop except preupdate

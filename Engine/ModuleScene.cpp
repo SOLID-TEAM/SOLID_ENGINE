@@ -218,11 +218,14 @@ update_status ModuleScene::Update()
 			GameObject* go = go_stack.top();
 			go_stack.pop();
 
-			go->DoUpdate();
-
-			for (GameObject* child : go->childs)
+			if (go->active)
 			{
-				go_stack.push(child);
+				go->DoUpdate();
+
+				for (GameObject* child : go->childs)
+				{
+					go_stack.push(child);
+				}
 			}
 		}
 	}
@@ -455,7 +458,7 @@ void ModuleScene::UpdateHierarchy()
 void ModuleScene::UpdateGoLists()
 {
 	EventGo event_go;
-	GameObject* go = nullptr;
+	//GameObject* go = nullptr;
 
 	while (!events_go_stack.empty())
 	{
@@ -503,6 +506,41 @@ void ModuleScene::UpdateGoLists()
 
 			list_from.remove(event_go.go);
 			list_to.push_back(event_go.go);
+			update_kdtree = true;
+		}
+		else if (event_go.type == EventGoType::DEACTIVATE)
+		{
+			bool correct = false;
+			// search on what list is it
+			std::list<GameObject*>::iterator found = std::find(static_go_list.begin(), static_go_list.end(), event_go.go);
+			if (found != static_go_list.end())
+			{
+				//temp_culling_map[event_go.go] = static_go_list;
+				temp_culling_map[event_go.go] = 0;
+				static_go_list.remove(event_go.go);
+
+				correct = true;
+			}
+			else
+			{
+				found = std::find(dynamic_go_list.begin(), dynamic_go_list.end(), event_go.go);
+				if (found != dynamic_go_list.end())
+				{
+					//temp_culling_map[event_go.go] = dynamic_go_list;
+					temp_culling_map[event_go.go] = 1;
+					dynamic_go_list.remove(event_go.go);
+
+					correct = true;
+				}
+			}
+
+			if(correct)
+				update_kdtree = true;
+		}
+		else if (event_go.type == EventGoType::ACTIVATE)
+		{
+			temp_culling_map[event_go.go] == 0 ? static_go_list.push_back(event_go.go) : dynamic_go_list.push_back(event_go.go);
+			temp_culling_map.erase(event_go.go);
 			update_kdtree = true;
 		}
 	}
@@ -555,6 +593,8 @@ void ModuleScene::UpdateSpacePartitioning()
 
 		for (GameObject* go : static_go_list)
 		{
+			//if (!go->active) continue;
+
 			if (go->ignore_culling)
 			{
 				go_ignore_culling.push_back(go);
@@ -582,6 +622,8 @@ void ModuleScene::UpdateGoToRender()
 
 		for (GameObject* go : dynamic_go_list)
 		{
+			//if (!go->active) continue;
+
 			if (go->ignore_culling)
 			{
 				go_to_render.push_back(go);

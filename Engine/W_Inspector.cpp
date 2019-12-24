@@ -37,7 +37,13 @@ void W_Inspector::DrawGameObjectInfo()
 		return;
 
 	ImGui::Spacing();
-	ImGui::Checkbox("##active", &go->active); ImGui::SameLine(); ImGui::SetNextItemWidth(ImGui::GetWindowContentRegionMax().x - ImGui::GetCursorPosY() - 85.F);  ImGui::InputText("##etc", &go->name); ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 75.F);
+	if (ImGui::Checkbox("##active", &go->active))
+	{
+		App->scene->PushEvent(go, go->active ? EventGoType::ACTIVATE : EventGoType::DEACTIVATE);
+	}
+	ImGui::SameLine(); 
+	ImGui::SetNextItemWidth(ImGui::GetWindowContentRegionMax().x - ImGui::GetCursorPosY() - 85.F);  ImGui::InputText("##etc", &go->name); 
+	ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 75.F);
 
 	bool go_is_static = go->is_static;
 
