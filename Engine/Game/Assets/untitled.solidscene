@@ -1,0 +1,87 @@
+{
+    "general": {
+        "scene_name": "untitled"
+    },
+    "GameObjects": [
+        {
+            "UID": 634264172,
+            "Parent UID": 0,
+            "Name": "Main Camera",
+            "Active": true,
+            "Static": false,
+            "Components": [
+                {
+                    "Type": 0,
+                    "Name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Name": "Camera"
+                }
+            ]
+        },
+        {
+            "UID": 2063416213,
+            "Parent UID": 0,
+            "Name": "Box001",
+            "Active": true,
+            "Static": false,
+            "Components": [
+                {
+                    "Type": 0,
+                    "Name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        0,
+                        -0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 1,
+                    "Name": "Mesh",
+                    "Resource": 2,
+                    "Active": true
+                },
+                {
+                    "Type": 6,
+                    "Name": "Box Collider"
+                },
+                {
+                    "Type": 5,
+                    "Name": "Mesh Renderer"
+                },
+                {
+                    "Type": 2,
+                    "Name": "Material",
+                    "Resource": 3,
+                    "Active": true
+                }
+            ]
+        }
+    ]
+}

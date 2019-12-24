@@ -44,7 +44,17 @@ public:
 
 	float UnscaledDeltaTime();
 
+	uint RealTimeSinceStartup();
+
+	uint TimeSinceGameLoad();
+
 	void SetGameTimeScale( float scale);
+
+	void SetCap(uint max_frames);
+
+	uint GetCap();
+
+	GameState GetGameState();
 
 	bool Save(Config& config);
 
@@ -52,19 +62,7 @@ public:
 
 private:
 
-	// Real functions -------------------------
-
-	void SetCap ( uint max_frames);
-
-	uint GetCap();
-
 	// Game functions -------------------------
-
-	GameState GetGameState();
-
-	uint RealTimeSinceStartup();
-
-	uint TimeSinceGameLoad();
 
 	void StartGame();
 

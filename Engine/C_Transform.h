@@ -34,6 +34,8 @@ public:
 
 	math::float3 GetRotation() const;
 
+	math::Quat GetQuatRotation() const;
+
 	math::float3 GetScale() const;
 
 	math::float4x4 GetGlobalTransform() const;

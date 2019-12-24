@@ -20,6 +20,7 @@
 #include "../MathBuildConfig.h"
 #include "SSEMath.h"
 
+
 #ifdef MATH_ENABLE_STL_SUPPORT
 #include <string>
 #endif

@@ -304,3 +304,13 @@ int	 DebugRenderer::getDebugMode() const
 {
 	return mode;
 }
+
+btVector3 ToBtVector3(float3& vec)
+{
+	return btVector3(vec.x, vec.y, vec.z);
+}
+
+btQuaternion ToBtQuaternion(Quat& quat)
+{
+	return btQuaternion(quat.x, quat.y, quat.z, quat.w);
+}

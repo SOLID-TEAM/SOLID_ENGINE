@@ -79,5 +79,8 @@ public:
 	DebugDrawModes mode;
 };
 
+btVector3 ToBtVector3(float3 &vec);
+btQuaternion ToBtQuaternion(Quat& quat);
+
 #endif // !_MODULE_PHYSICS_H__
 

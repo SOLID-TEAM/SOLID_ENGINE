@@ -19,6 +19,7 @@ subject to the following restrictions:
 #include "btScalar.h"
 #include "btMinMax.h"
 #include "btAlignedAllocator.h"
+#include "../../MathGeoLib/include/Math/float3.h"
 
 #ifdef BT_USE_DOUBLE_PRECISION
 #define btVector3Data btVector3DoubleData
@@ -129,6 +130,11 @@ public:
 		m_floats[1] = _y;
 		m_floats[2] = _z;
 		m_floats[3] = btScalar(0.f);
+	}
+
+	SIMD_FORCE_INLINE float3 toFloat3()
+	{
+		return float3(m_floats[0], m_floats[2] , m_floats[1]);
 	}
 
 #if (defined(BT_USE_SSE_IN_API) && defined(BT_USE_SSE)) || defined(BT_USE_NEON)

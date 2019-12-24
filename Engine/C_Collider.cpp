@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModulePhysics.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleTime.h"
 #include "C_Collider.h"
 #include "C_Transform.h"
 #include "C_Mesh.h"
@@ -12,29 +13,6 @@ C_Collider::C_Collider(GameObject* go) : Component(go, ComponentType::BOX_COLLID
 {
 	name.assign("Box Collider");
 
-	float3 size(1.f, 1.f, 1.f);
-	C_Mesh* mesh = linked_go->GetComponent<C_Mesh>();
-
-	if (mesh)
-	{
-		size = mesh->mesh_aabb.Size() * 0.5F;
-	}
-
-	shape = new btBoxShape(btVector3(size.x, size.y, size.z));
-
-	btTransform startTransform;
-	startTransform.setFromOpenGLMatrix((btScalar*)&go->transform->GetGlobalTransform().Transposed());
-	btVector3 localInertia(0, 0, 0);
-	
-	shape->calculateLocalInertia(1.0f, localInertia);
-
-	motion_state = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(1.0f, motion_state, shape, localInertia);
-
-	body = new btRigidBody(rbInfo);
-	body->setUserPointer(linked_go);
-
-	App->physics->AddBody(body);
 }
 
 bool C_Collider::CleanUp()
@@ -60,12 +38,42 @@ bool C_Collider::Load(Config& config)
 
 bool C_Collider::Update()
 {
-	btTransform transform = body->getCenterOfMassTransform();
-	btVector3 position = transform.getOrigin();
-	btQuaternion rotation = transform.getRotation();
+	// Load Collider on pdate -------------------------------
 
-	linked_go->transform->SetPosition(float3((btScalar*)position));
-	linked_go->transform->SetRotation(math::Quat((btScalar*)rotation));
+	if (body == nullptr)
+	{
+		LoadCollider();
+	}
+
+	// Match Size Scalling ----------------------------------
+
+	float3 scaled_size = size.Mul( linked_go->transform->scale.Abs());
+	float3 scaled_center = center.Mul(linked_go->transform->scale);
+
+	shape->setLocalScaling(btVector3(scaled_size.x, scaled_size.y, scaled_size.z));
+
+	// Set Transform ------------------------------------------
+
+	if (App->time->GetGameState() == GameState::RUN)
+	{
+		btTransform transform = body->getCenterOfMassTransform();
+		btVector3 position = transform.getOrigin();
+		btQuaternion rotation = transform.getRotation();
+		linked_go->transform->SetPosition(float3(position));
+		float3 local_position = linked_go->transform->GetLocalPosition();
+		linked_go->transform->SetLocalPosition(local_position - scaled_center);
+		//linked_go->transform->SetRotation(math::Quat((btScalar*)rotation));
+	}
+	else
+	{
+
+		btTransform transform;
+		transform.setIdentity();
+		transform.setOrigin(ToBtVector3(linked_go->obb.CenterPoint()));
+		transform.setRotation(ToBtQuaternion(linked_go->transform->GetQuatRotation()));
+		body->setWorldTransform(transform);
+	}
+	
 
 	return true;
 }
@@ -97,7 +105,7 @@ bool C_Collider::Render()
 	ModuleRenderer3D::EndDebugDraw();
 	glPopMatrix();
 
-	glPointSize(3.f);
+	glPointSize(4.f);
 
 	ModuleRenderer3D::BeginDebugDraw(float4(1.f, 0.f, 0.f, 1.f));
 	glBegin(GL_POINTS);
@@ -105,17 +113,59 @@ bool C_Collider::Render()
 	glEnd();
 	ModuleRenderer3D::EndDebugDraw();
 
+	glPointSize(7.f);
+
 	ModuleRenderer3D::BeginDebugDraw(float4(0.f, 0.f, 1.f, 1.f));
 	glBegin(GL_POINTS);
 	btVector3 c = body->getCenterOfMassPosition();
 	glVertex3fv(&c[0]);
 	glEnd();
 	ModuleRenderer3D::EndDebugDraw();
-
+	
 	return true;
 }
 
 bool C_Collider::DrawPanelInfo()
 {
 	return true;
+}
+
+
+void C_Collider::LoadCollider()
+{
+	float3 position;
+	Quat rotation;
+	C_Mesh* mesh = linked_go->GetComponent<C_Mesh>();
+
+	if (mesh != nullptr)
+	{
+		position = linked_go->obb.CenterPoint();
+		size = mesh->mesh_aabb.Size();
+		center = linked_go->bounding_box.CenterPoint();
+	}
+	else
+	{
+		position = linked_go->transform->position;
+
+	}
+
+	float3 shape_size = float3::one * 0.5f;
+	rotation = linked_go->transform->GetQuatRotation();
+
+	shape = new btBoxShape(btVector3(shape_size.x, shape_size.y, shape_size.z));
+
+	btTransform startTransform;
+	startTransform.setOrigin(btVector3(position.x, position.y, position.z));
+	startTransform.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w));
+	btVector3 localInertia(0, 0, 0);
+
+	shape->calculateLocalInertia(1.0f, localInertia);
+
+	motion_state = new btDefaultMotionState(startTransform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(1.0f, motion_state, shape, localInertia);
+
+	body = new btRigidBody(rbInfo);
+	body->setUserPointer(linked_go);
+
+	App->physics->AddBody(body);
 }

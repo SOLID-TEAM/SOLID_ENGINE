@@ -62,7 +62,7 @@ bool ModuleScene::Start(Config& config)
 	//ToLoadScene("default.solidscene");
 
 	// TODO: assignment 2 requeriment, auto-load street
-	App->resources->ImportFileDropped("Assets/Models/street/Street environment_V01.FBX");
+	//App->resources->ImportFileDropped("Assets/Models/street/Street environment_V01.FBX");
 
 	return true;
 }

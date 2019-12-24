@@ -46,6 +46,7 @@ public:
 	friend 	C_Material;
 	friend 	C_MeshRenderer;
 	friend 	C_Camera;
+	friend	C_Collider;
 
 public:
 
@@ -96,6 +97,10 @@ public:
 
 	AABB GetHierarchyAABB();
 
+	AABB GetAABB();
+
+	OBB GetOBB();
+
 	void RemoveChild(GameObject* child);
 
 private:
@@ -111,8 +116,6 @@ private:
 	// Hierarchy functions -----------------------------------------
 
 	void AddChild(GameObject* child); // Addchild currently is used to hierarchical changes
-
-	
 
 	void SetNewParent(GameObject* parent);
 
@@ -148,7 +151,7 @@ private:
 
 	math::AABB bounding_box;
 
-	OBB obb;
+	math::OBB obb;
 
 	DynTreeNode* dyn_node = nullptr;
 

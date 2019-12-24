@@ -1,0 +1,199 @@
+{
+    "general": {
+        "scene_name": "BOX"
+    },
+    "GameObjects": [
+        {
+            "UID": 991662655,
+            "Parent UID": 0,
+            "Name": "Main Camera",
+            "Active": true,
+            "Static": false,
+            "Components": [
+                {
+                    "Type": 0,
+                    "Name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Name": "Camera"
+                }
+            ]
+        },
+        {
+            "UID": 435221737,
+            "Parent UID": 0,
+            "Name": "RootNode",
+            "Active": true,
+            "Static": false,
+            "Components": [
+                {
+                    "Type": 0,
+                    "Name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        0,
+                        -0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1725776154,
+            "Parent UID": 435221737,
+            "Name": "Box001_$AssimpF",
+            "Active": true,
+            "Static": false,
+            "Components": [
+                {
+                    "Type": 0,
+                    "Name": "Transform",
+                    "Position": [
+                        1.6967697143554688,
+                        -7.3044519424438477,
+                        0.026470184326171875
+                    ],
+                    "Rotation": [
+                        0,
+                        -0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 699051631,
+            "Parent UID": 1725776154,
+            "Name": "Box001_$AssimpF",
+            "Active": true,
+            "Static": false,
+            "Components": [
+                {
+                    "Type": 0,
+                    "Name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        -90.000007629394531,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 251709890,
+            "Parent UID": 699051631,
+            "Name": "Box001_$AssimpF",
+            "Active": true,
+            "Static": false,
+            "Components": [
+                {
+                    "Type": 0,
+                    "Name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        0,
+                        -0,
+                        0
+                    ],
+                    "Scale": [
+                        0.49134618043899536,
+                        0.49134618043899536,
+                        0.49134618043899536
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 827692170,
+            "Parent UID": 251709890,
+            "Name": "Box001",
+            "Active": true,
+            "Static": false,
+            "Components": [
+                {
+                    "Type": 0,
+                    "Name": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Rotation": [
+                        5.9195731410000008e-06,
+                        -0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        0.99936991930007935,
+                        0.99936991930007935
+                    ]
+                },
+                {
+                    "Type": 1,
+                    "Name": "Mesh",
+                    "Resource": 2,
+                    "Active": true
+                },
+                {
+                    "Type": 6,
+                    "Name": "Box Collider"
+                },
+                {
+                    "Type": 5,
+                    "Name": "Mesh Renderer"
+                },
+                {
+                    "Type": 2,
+                    "Name": "Material",
+                    "Resource": 3,
+                    "Active": true
+                }
+            ]
+        }
+    ]
+}

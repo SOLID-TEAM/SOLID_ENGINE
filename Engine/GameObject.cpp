@@ -197,6 +197,16 @@ AABB GameObject::GetHierarchyAABB()
 
 }
 
+AABB GameObject::GetAABB()
+{
+	return bounding_box;
+}
+
+OBB GameObject::GetOBB()
+{
+	return obb;
+}
+
 bool GameObject::SearchParentRecursive(GameObject* parent, GameObject* parent_match)
 {
 	bool match = false;

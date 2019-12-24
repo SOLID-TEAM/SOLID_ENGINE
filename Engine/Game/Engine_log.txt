@@ -4,31 +4,19 @@
 [Init] SDL window & surface
 [Init] SDL input event system
 [Init] Loaded configuration file Library/Settings/lastuid
-[Init] Loaded configuration file Assets/Models/Street environment_V01.FBX.meta
-[Init] Loaded configuration file Assets/Textures/Building_V01_C.png.meta
-[Init] Loaded configuration file Assets/Textures/Building_V02_C.png.meta
-[Init] Loaded configuration file Assets/Textures/building 01_c.tga.meta
-[Init] Loaded configuration file Assets/Textures/building 06_ c.tga.meta
-[Init] Loaded configuration file Assets/Textures/building03_c.tga.meta
-[Init] Loaded configuration file Assets/Textures/building05 _c.tga.meta
-[Init] Loaded configuration file Assets/Textures/building_016_c.tga.meta
-[Init] Loaded configuration file Assets/Textures/building_025_c.tga.meta
+[Init] Loaded configuration file Assets/Models/cube.FBX.meta
 Creating 3D Physics simulation
 Loading File System
 [Info] Using Developer's Image Library (DevIL) 1.8.0
 [Info] Using Assimp v4.1.0
 [Init] Creating 3D Renderer context
 [Init] Using Glew 2.1.0
-[Info] Vendor: NVIDIA Corporation
-[Info] Renderer: GeForce GTX 1080/PCIe/SSE2
-[Info] OpenGL version supported: 4.6.0 NVIDIA 441.12
-[Info] GLSL: 4.60 NVIDIA
+[Info] Vendor: Intel
+[Info] Renderer: Intel(R) HD Graphics 530
+[Info] OpenGL version supported: 3.0.0 - Build 22.20.16.4836
+[Info] GLSL: 1.30 - Build 22.20.16.4836
 -------------- Application Start --------------
 Creating Physics environment
-[Info:ModuleResources] Recognized file extension .FBX
-[success] File Duplicated Correctly
-[Info:ModuleResources] Dropped file duplicated to Assets/Models/Street environment_V01.FBX
-[Info] Resource duplicated, returning loaded resource Assets/Models/395674983
 Loading Test assets
 [Start] Loading Editor
 // ---------------------------------------------------
@@ -81,6 +69,21 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
+[Init] Loaded configuration file Assets/untitled.solidscene
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

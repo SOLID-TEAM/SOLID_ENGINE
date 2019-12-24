@@ -140,6 +140,11 @@ math::float3 C_Transform::GetRotation() const
 	return rotation;
 }
 
+math::Quat C_Transform::GetQuatRotation() const
+{
+	return Quat::FromEulerZYX(rotation.z * DEGTORAD, rotation.y * DEGTORAD, rotation.x * DEGTORAD);
+}
+
 math::float3 C_Transform::GetScale() const
 {
 	return scale;

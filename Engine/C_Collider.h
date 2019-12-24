@@ -26,12 +26,21 @@ public:
 
 private:
 
+	void LoadCollider();
+
+private:
+
 	bool isTrigger = false;
+
 	float3 center;
+	float3 size;
+
 	btBoxShape* shape = nullptr;
 	btDefaultMotionState* motion_state = nullptr;
 	btRigidBody* body = nullptr;
 
+
+	bool fit_mesh = false;
 };
 
 #endif // !_C_COLLIDER_H__
