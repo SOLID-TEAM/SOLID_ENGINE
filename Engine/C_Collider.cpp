@@ -162,7 +162,6 @@ void C_Collider::LoadCollider()
 
 	body = new btRigidBody(rbInfo);
 	body->setUserPointer(linked_go);
-
 	App->physics->AddBody(body);
 }
 
