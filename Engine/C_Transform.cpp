@@ -6,7 +6,6 @@
 C_Transform::C_Transform(GameObject* parent) : Component(parent, ComponentType::TRANSFORM)
 {
 	name.assign("Transform");
-	flags |= ImGuiTreeNodeFlags_DefaultOpen;
 
 	position = float3::zero;
 	rotation = float3::zero;

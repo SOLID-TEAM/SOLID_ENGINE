@@ -3,7 +3,10 @@
 #include "ModuleImporter.h"
 #include "ModuleScene.h"
 
-Component::Component(GameObject* go, ComponentType type) : linked_go(go), type(type) {}
+Component::Component(GameObject* go, ComponentType type) : linked_go(go), type(type)
+{
+	flags |= ImGuiTreeNodeFlags_DefaultOpen;
+}
 
 void Component::Reset()
 {

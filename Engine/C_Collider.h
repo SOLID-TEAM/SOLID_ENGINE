@@ -24,13 +24,21 @@ public:
 
 	bool DrawPanelInfo();
 
+	 // Set/Get functions ----------------------------
+
+	void SetIsTrigger(bool is_trigger);
+
+	bool GetIsTrigger();
+
 private:
 
 	void LoadCollider();
 
+	float3 CheckInvalidCollider(float3 size);
+
 private:
 
-	bool isTrigger = false;
+	bool is_trigger = false;
 
 	float3 center;
 	float3 size;
