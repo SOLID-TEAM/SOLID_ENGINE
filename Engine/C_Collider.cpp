@@ -45,6 +45,8 @@ bool C_Collider::Update()
 		LoadCollider();
 	}
 
+	if (body == nullptr || shape == nullptr) return true;
+
 	// Match Size Scalling ----------------------------------
 
 	float3 scaled_size = size.Mul( linked_go->transform->scale.Abs());
@@ -58,18 +60,17 @@ bool C_Collider::Update()
 	{
 		btTransform transform = body->getCenterOfMassTransform();
 		btVector3 position = transform.getOrigin();
-		btQuaternion rotation = transform.getRotation();
-		linked_go->transform->SetPosition(float3(position));
-		float3 local_position = linked_go->transform->GetLocalPosition();
-		linked_go->transform->SetLocalPosition(local_position - scaled_center);
+		btMatrix3x3 rotation = transform.getBasis();
+	
+		linked_go->transform->SetPosition(float3(position - rotation * ToBtVector3(scaled_center)));
 		//linked_go->transform->SetRotation(math::Quat((btScalar*)rotation));
 	}
 	else
 	{
 
 		btTransform transform;
-		transform.setIdentity();
-		transform.setOrigin(ToBtVector3(linked_go->obb.CenterPoint()));
+		scaled_center = linked_go->transform->GetGlobalTransform().RotatePart().MulPos(scaled_center);
+		transform.setOrigin(ToBtVector3(linked_go->transform->GetPosition() + scaled_center));
 		transform.setRotation(ToBtQuaternion(linked_go->transform->GetQuatRotation()));
 		body->setWorldTransform(transform);
 	}
@@ -82,6 +83,8 @@ bool C_Collider::Render()
 {
 	//if (App->scene->selected_go != linked_go) 
 	//	return true;
+
+	if (body == nullptr || shape == nullptr) return true;;
 
 	uint num_edges = shape->getNumEdges();
 	btVector3 a, b;
@@ -127,6 +130,11 @@ bool C_Collider::Render()
 
 bool C_Collider::DrawPanelInfo()
 {
+	ImGui::Spacing();
+	ImGui::Title("Center", 1);	ImGui::DragFloat3("##center", center.ptr(), 0.1f);
+	ImGui::Title("Size", 1);	ImGui::DragFloat3("##size", size.ptr(), 0.1f);
+	ImGui::Spacing();
+
 	return true;
 }
 
@@ -141,12 +149,11 @@ void C_Collider::LoadCollider()
 	{
 		position = linked_go->obb.CenterPoint();
 		size = mesh->mesh_aabb.Size();
-		center = linked_go->bounding_box.CenterPoint();
+		center = mesh->mesh_aabb.CenterPoint();
 	}
 	else
 	{
 		position = linked_go->transform->position;
-
 	}
 
 	float3 shape_size = float3::one * 0.5f;

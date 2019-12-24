@@ -76,6 +76,19 @@ File deleted: [Library/Settings/untitled.solidscene]
 File deleted: [Library/Settings/untitled.solidscene]
 [Init] Loaded configuration file Library/Settings/untitled.solidscene
 File deleted: [Library/Settings/untitled.solidscene]
+no more gameobjects to restore
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
 [Init] Loaded configuration file Library/Settings/untitled.solidscene
 File deleted: [Library/Settings/untitled.solidscene]
 [Init] Loaded configuration file Library/Settings/untitled.solidscene
