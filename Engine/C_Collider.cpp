@@ -97,7 +97,7 @@ bool C_Collider::DrawPanelInfo()
 	ImGui::Spacing();
 	ImGui::Title("Is Trigger", 1);	ImGui::Checkbox("##is_trigger", &last_is_trigger);
 	ImGui::Title("Center", 1);	ImGui::DragFloat3("##center", center.ptr(), 0.1f);
-	ImGui::Title("Size", 1);	ImGui::DragFloat3("##size", size.ptr(), 0.1f, 0.01f);
+	ImGui::Title("Size", 1);	ImGui::DragFloat3("##size", size.ptr(), 0.1f, 0.01f, FLT_MAX);
 	ImGui::Spacing();
 
 	if (last_is_trigger != is_trigger)

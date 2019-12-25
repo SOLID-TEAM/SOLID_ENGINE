@@ -77,8 +77,6 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
-[Init] Loaded configuration file Library/Settings/untitled.solidscene
-File deleted: [Library/Settings/untitled.solidscene]
 [Init] Loaded configuration file Assets/street.solidscene
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
