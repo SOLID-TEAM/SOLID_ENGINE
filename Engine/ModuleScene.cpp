@@ -105,6 +105,7 @@ bool ModuleScene::CleanUp()
 	dynamic_go_list.clear();
 	go_to_render.clear();
 
+
 	// TODO
 	/*if (editor_camera != nullptr)
 	{
@@ -510,44 +511,71 @@ void ModuleScene::UpdateGoLists()
 		}
 		else if (event_go.type == EventGoType::DEACTIVATE)
 		{
-			bool correct = false;
-			// search on what list is it
-			std::list<GameObject*>::iterator found = std::find(static_go_list.begin(), static_go_list.end(), event_go.go);
-			if (found != static_go_list.end())
-			{
-				//temp_culling_map[event_go.go] = static_go_list;
-				temp_culling_map[event_go.go] = 0;
-				static_go_list.remove(event_go.go);
-
-				correct = true;
-			}
-			else
-			{
-				found = std::find(dynamic_go_list.begin(), dynamic_go_list.end(), event_go.go);
-				if (found != dynamic_go_list.end())
-				{
-					//temp_culling_map[event_go.go] = dynamic_go_list;
-					temp_culling_map[event_go.go] = 1;
-					dynamic_go_list.remove(event_go.go);
-
-					correct = true;
-				}
-			}
-
-			if(correct)
-				update_kdtree = true;
+			RemoveMyTreeFromPartitioningLists(event_go.go);
 		}
 		else if (event_go.type == EventGoType::ACTIVATE)
 		{
-			temp_culling_map[event_go.go] == 0 ? static_go_list.push_back(event_go.go) : dynamic_go_list.push_back(event_go.go);
-			temp_culling_map.erase(event_go.go);
-			update_kdtree = true;
+			if(!IsAnyParentInactive(event_go.go))
+				AddMyTreeToPartitioningLists(event_go.go);
 		}
 	}
 
 	dynamic_go_list.unique();
 	static_go_list.unique();
 
+}
+
+
+void ModuleScene::RemoveMyTreeFromPartitioningLists(GameObject* go)
+{
+	go->is_static ? static_go_list.remove(go) : dynamic_go_list.remove(go);
+
+	for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
+	{
+		RemoveMyTreeFromPartitioningLists(*it);
+	}
+
+	update_kdtree = true;
+}
+
+bool ModuleScene::IsAnyParentInactive(GameObject* go) const
+{
+	std::stack<GameObject*> go_stack;
+
+	go_stack.push(go);
+
+	bool inactive_parent = false;
+	while (!go_stack.empty())
+	{
+		GameObject* _go = go_stack.top();
+
+		if (!_go->active && _go != go)
+		{
+			inactive_parent = true;
+			break;
+		}
+
+		go_stack.pop();
+
+		if (_go->parent != nullptr)
+			go_stack.push(_go->parent);
+	}
+
+	return inactive_parent;
+}
+
+void ModuleScene::AddMyTreeToPartitioningLists(GameObject* go)
+{
+	if (!go->active) return;
+	
+	go->is_static ? static_go_list.push_back(go) : dynamic_go_list.push_back(go);
+
+	for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
+	{
+		AddMyTreeToPartitioningLists(*it);
+	}
+
+	update_kdtree = true;
 }
 
 void ModuleScene::UpdateGizmo()
@@ -948,7 +976,8 @@ bool ModuleScene::LoadScene(Config& scene)
 	{
 		GameObject* new_go = new GameObject("Unknown", root_go, false);
 		new_go->Load(scene.GetArray("GameObjects", i), relations);
-		PushEvent(new_go, (new_go->is_static) ? EventGoType::ADD_TO_STATIC : EventGoType::ADD_TO_DYNAMIC);
+		//if(new_go->active)
+			//PushEvent(new_go, (new_go->is_static) ? EventGoType::ADD_TO_STATIC : EventGoType::ADD_TO_DYNAMIC);
 
 		//to_load_gos.push_back(new_go);
 	}
@@ -970,12 +999,34 @@ bool ModuleScene::LoadScene(Config& scene)
 		GameObject* parent_match = FindByUID(parent_id, root_go);
 
 		go->SetNewParent(parent_match);
-
-		//LOG("");
 	}
 
+	FillCullingLists();
 
 	return true;
+}
+
+void ModuleScene::FillCullingLists()
+{
+	std::stack<GameObject*> go_stack;
+
+	go_stack.push(root_go);
+
+	while (!go_stack.empty())
+	{
+		GameObject* go = go_stack.top();
+		go_stack.pop();
+
+		if (go->IsActive())
+		{
+			go->is_static ? static_go_list.push_back(go) : dynamic_go_list.push_back(go);
+			for (GameObject* child : go->childs)
+			{
+				go_stack.push(child);
+			}
+		}
+	}
+
 }
 
 GameObject* ModuleScene::FindByUID(UID uid, GameObject* go)

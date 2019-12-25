@@ -92,6 +92,10 @@ public:
 
 	GameObject* FindByUID(UID uid, GameObject* go);
 
+	// -----
+
+	bool IsAnyParentInactive(GameObject* go) const;
+
 	// Commands -------------------------------------------------------------
 
 	std::deque<GameObject*>& GetUndoDeque();
@@ -131,6 +135,11 @@ private:
 	AABB EncloseAllGo();
 
 	void AddGOToUndoDeque(GameObject* gameObject);
+
+	void RemoveMyTreeFromPartitioningLists(GameObject* go);
+	void AddMyTreeToPartitioningLists(GameObject* go);
+	
+	void FillCullingLists();
 
 	// Others ------------------------------------------------
 
@@ -184,9 +193,6 @@ private:
 	std::string scene_to_load;
 	std::deque<GameObject*> to_undo_buffer_go;
 	std::vector<GameObject*> temp_to_undo_go;
-	// used for active/deactive gameobject itself, and removes temporally from culling lists
-	//std::map<GameObject*, std::list<GameObject*>&> temp_culling_map;
-	std::map<GameObject*, uint> temp_culling_map;
 
 	// store childrens we must to move
 	// TODO: think is this the better place, the idea is any hierarchy change is made outside any loop except preupdate

@@ -79,7 +79,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 	// ---------------------------------------
 	//change name color ----
 	bool inactive = false;
-	if (!go->IsActive())
+	if (!go->IsActive() || App->scene->IsAnyParentInactive(go))
 	{
 		ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor(120, 120, 120, 255)); // when current clicked
 		ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor(80, 80, 80, 255)); // when current clicked
