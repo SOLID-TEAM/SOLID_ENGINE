@@ -1010,7 +1010,8 @@ void ModuleScene::FillCullingLists()
 {
 	std::stack<GameObject*> go_stack;
 
-	go_stack.push(root_go);
+	for(GameObject* childs_of_root : root_go->childs)
+		go_stack.push(childs_of_root);
 
 	while (!go_stack.empty())
 	{
