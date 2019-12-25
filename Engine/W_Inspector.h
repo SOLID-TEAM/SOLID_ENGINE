@@ -22,6 +22,10 @@ private:
 
 	void DrawResourceInfo();
 
+	void DrawAddComponents(GameObject* selected_go);
+
+	//std::string GetNameFromComponentType(ComponentType type) { return std::string("blas"); };
+
 };
 
 #endif // !_W_INSPECTOR_H__

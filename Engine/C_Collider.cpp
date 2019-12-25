@@ -32,7 +32,8 @@ bool C_Collider::Save(Config& config)
 
 bool C_Collider::Load(Config& config)
 {
-	
+	LoadCollider();
+
 	return true;
 }
 

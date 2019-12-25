@@ -86,9 +86,6 @@ bool C_Mesh::SetMeshResource(UID uid)
 	R_Mesh* res = (R_Mesh*)App->resources->Get(resource);
 	mesh_aabb = res->aabb;
 
-	// TODO: Delete Test Colliders
-	linked_go->AddComponent<C_Collider>();
-
 	return ret;
 
 }

@@ -24,6 +24,7 @@ void Component::Disable()
 		active = !active;
 }
 
+
 bool Component::Update()
 {
 	return true;
