@@ -3,10 +3,11 @@
 #include "W_Inspector.h"
 #include "ImGui/imgui.h"
 #include "GameObject.h"
+//#include "Component.h"
 #include "Resource.h"
-#include "Component.h"
 #include <vector>
 #include "ImGui/misc/cpp/imgui_stdlib.h" // input text wrapper for std::string
+
 
 void W_Inspector::Draw()
 {
@@ -88,7 +89,62 @@ void W_Inspector::DrawGameObjectInfo()
 		/*else
 			(*components)->collapsed = true;*/
 	}
+
+	DrawAddComponents(go);
+
 }
+
+void W_Inspector::DrawAddComponents(GameObject* selected_go)
+{
+	ImGui::Separator();
+
+	ImVec2 window_size = ImVec2(230,120);
+	ImGui::SetCursorPosX((ImGui::GetWindowWidth() - window_size.x) * 0.5f);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
+	{
+		//ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+		//ImGui::SetNextWindowPosCenter(ImGuiCond_Always);
+		
+		ImGui::BeginChild("Child1", window_size);//ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 260), false, window_flags);
+		
+		if(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowWidth(), 22)))
+			ImGui::OpenPopup("add_component_popup");
+		//ImGui::SameLine();
+		// TODO: get available space on y, if less than needed window size, substract size.y from pos.y
+		ImVec2 win_pos = ImGui::GetWindowPos();
+		ImGui::SetNextWindowPos(ImVec2(win_pos.x, win_pos.y + 22));
+		ImGui::SetNextWindowSize(window_size);
+		
+		if (ImGui::BeginPopup("add_component_popup", ImGuiWindowFlags_NoScrollbar))
+		{
+			const char* names[] = { "Transform", "Mesh", "Material", "Camera", "Light","Mesh Renderer","Box Collider","RigidBody" };
+			
+			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - strlen("Component") * 8) * 0.5f);
+			ImGui::Text("Component");
+			ImGui::Separator();
+			ImGui::BeginChild("CompoChild", ImVec2(0, 80));
+			for (int i = 0; i < (int)ComponentType::NO_TYPE; i++)
+			{
+				//if (ImGui::Selectable(GetNameFromComponentType(ComponentType(i)).c_str()))
+				if (ImGui::Selectable(names[i]))
+				{
+					//TODO: create any component
+					// test
+					if (i == 6)
+					{
+						selected_go->AddComponent<C_Collider>();
+					}
+				}
+					
+			}
+			ImGui::EndChild();
+			ImGui::EndPopup();
+		}
+
+		ImGui::EndChild();
+	}
+}
+
 
 void W_Inspector::DrawStaticPopUp()
 {

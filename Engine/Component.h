@@ -17,7 +17,7 @@ enum class ComponentType
 	MESH_RENDERER,
 	BOX_COLLIDER,
 	RIGID_BODY,
-	NO_TYPE
+	NO_TYPE // last
 };
 
 class ModuleScene;

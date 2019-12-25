@@ -380,6 +380,9 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 			case ComponentType::MESH_RENDERER:
 				new_component = AddComponent<C_MeshRenderer>();
 				break;
+			case ComponentType::BOX_COLLIDER:
+				new_component = AddComponent<C_Collider>();
+				break;
 			case ComponentType::NO_TYPE:
 				break;
 			default:
