@@ -279,9 +279,15 @@ update_status ModuleScene::Draw()
 
 		if (editor_mode)
 		{
+			// Main grid ---------------------------
+
 			App->test->main_grid->Render();
+
+			// Space partitioning ------------------
+
  			if (render_kdtree && camera->culling && App->time->game_state != GameState::STOP)
 				App->renderer3D->RenderKDTree(kdtree, 3.f);
+
 		}
 
 		// End ------------------------------------------------

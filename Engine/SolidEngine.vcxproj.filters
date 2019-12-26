@@ -67,6 +67,9 @@
     <Filter Include="Sources\Thirds Party\Bullet">
       <UniqueIdentifier>{ecddd560-70ac-4853-acb4-fb3480792ef6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Game Object\Components\Colliders">
+      <UniqueIdentifier>{a28eb5f6-bd37-47c8-8824-42c90207096b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -1525,7 +1528,16 @@
       <Filter>Sources\Game Object\Components</Filter>
     </ClInclude>
     <ClInclude Include="C_Collider.h">
-      <Filter>Sources\Game Object\Components</Filter>
+      <Filter>Sources\Game Object\Components\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="C_BoxCollider.h">
+      <Filter>Sources\Game Object\Components\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="C_SphereCollider.h">
+      <Filter>Sources\Game Object\Components\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="C_CapsuleCollider.h">
+      <Filter>Sources\Game Object\Components\Colliders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2391,7 +2403,16 @@
       <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
     <ClCompile Include="C_Collider.cpp">
-      <Filter>Sources\Game Object\Components</Filter>
+      <Filter>Sources\Game Object\Components\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="C_BoxCollider.cpp">
+      <Filter>Sources\Game Object\Components\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="C_SphereCollider.cpp">
+      <Filter>Sources\Game Object\Components\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="C_CapsuleCollider.cpp">
+      <Filter>Sources\Game Object\Components\Colliders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

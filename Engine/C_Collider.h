@@ -6,9 +6,14 @@
 #include "Bullet/include/btBulletDynamicsCommon.h"
 
 class GameObject;
+class ModulePhysics;
 
 class C_Collider : public Component
 {
+public:
+
+	friend ModulePhysics;
+
 public:
 
 	C_Collider(GameObject* go);
@@ -16,6 +21,7 @@ public:
 	bool CleanUp();
 
 	bool Save(Config& config);
+
 	bool Load(Config& config);
 
 	bool Update();
@@ -24,11 +30,14 @@ public:
 
 	bool DrawPanelInfo();
 
-	 // Set/Get functions ----------------------------
+	 // Common Functoins ------------------------------
 
 	void SetIsTrigger(bool is_trigger);
 
 	bool GetIsTrigger();
+
+	// Virtual Functions ------------------------------
+
 
 private:
 
@@ -43,12 +52,11 @@ private:
 	float3 center;
 	float3 size;
 
-	btBoxShape* shape = nullptr;
+	btCollisionShape* shape = nullptr;
 	btDefaultMotionState* motion_state = nullptr;
 	btRigidBody* body = nullptr;
 
-
-	bool fit_mesh = false;
+	bool is_visible = false;
 };
 
 #endif // !_C_COLLIDER_H__

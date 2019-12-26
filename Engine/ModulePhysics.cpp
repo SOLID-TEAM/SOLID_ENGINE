@@ -16,6 +16,7 @@ ModulePhysics::ModulePhysics(bool start_enabled) : Module(start_enabled)
 // Destructor
 ModulePhysics::~ModulePhysics()
 {
+	delete debug_renderer;
 	delete solver;
 	delete broad_phase;
 	delete dispatcher;
@@ -28,10 +29,14 @@ bool ModulePhysics::Init(Config& config)
 	LOG("Creating 3D Physics simulation");
 
 	bool ret = true;
+
+	debug_renderer = new DebugRenderer();
 	collision_config = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collision_config);
 	broad_phase = new btDbvtBroadphase();
 	solver = new btSequentialImpulseConstraintSolver();
+
+
 	return ret;
 }
 
@@ -42,6 +47,8 @@ bool ModulePhysics::Start(Config& config)
 
 	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_config);
 	world->setGravity(GRAVITY);
+	world->setDebugDrawer(debug_renderer);
+
 	vehicle_raycaster = new btDefaultVehicleRaycaster(world);
 
 	return true;
@@ -51,9 +58,10 @@ bool ModulePhysics::Start(Config& config)
 update_status ModulePhysics::PreUpdate()
 {
 	float dt = App->time->DeltaTime();
-	if (dt != 0)
+
+	if (dt != 0.f)
 	{
-		world->stepSimulation(App->time->DeltaTime(), 20);
+		world->stepSimulation(App->time->DeltaTime(), 20, 0.005);
 	}
 
 	int numManifolds = world->getDispatcher()->getNumManifolds();
@@ -92,14 +100,6 @@ update_status ModulePhysics::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-// ---------------------------------------------------------
-update_status ModulePhysics::Draw()
-{
-
-	return UPDATE_CONTINUE;
-}
-
-// ---------------------------------------------------------
 update_status ModulePhysics::PostUpdate()
 {
 	return UPDATE_CONTINUE;
@@ -119,6 +119,14 @@ bool ModulePhysics::CleanUp()
 	delete world;
 
 	return true;
+}
+
+void ModulePhysics::RenderCollider( C_Collider* collider)
+{
+	debug_renderer->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+	ModuleRenderer3D::BeginDebugDraw(float4(0.f, 1.f, 0.f, 1.f));
+	world->debugDrawObject(collider->body->getCenterOfMassTransform(), collider->shape, btVector3(0.f, 1.f, 0.f));
+	ModuleRenderer3D::EndDebugDraw();
 }
 
 void ModulePhysics::AddBody(btRigidBody* body)
@@ -268,7 +276,7 @@ void ModulePhysics::AddConstraintHinge(PhysBody& bodyA, PhysBody& bodyB, const v
 	hinge->setDbgDrawSize(2.0f);
 }
 
-// =============================================
+
 void DebugRenderer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
 	glColor3f(color[0], color[1], color[2]);
@@ -300,7 +308,7 @@ void DebugRenderer::setDebugMode(int debugMode)
 	mode = (DebugDrawModes)debugMode;
 }
 
-int	 DebugRenderer::getDebugMode() const
+int	DebugRenderer::getDebugMode() const
 {
 	return mode;
 }

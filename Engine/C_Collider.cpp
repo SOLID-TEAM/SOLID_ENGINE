@@ -6,8 +6,6 @@
 #include "C_Transform.h"
 #include "C_Mesh.h"
 #include "GameObject.h"
-#include <gl\glew.h>
-#include "SDL\include\SDL_opengl.h"
 
 C_Collider::C_Collider(GameObject* go) : Component(go, ComponentType::BOX_COLLIDER)
 {
@@ -79,14 +77,24 @@ bool C_Collider::Update()
 	}
 	else
 	{
-
 		btTransform transform;
 		scaled_center = linked_go->transform->GetGlobalTransform().RotatePart().MulPos(scaled_center);
 		transform.setOrigin(ToBtVector3(linked_go->transform->GetPosition() + scaled_center));
 		transform.setRotation(ToBtQuaternion(linked_go->transform->GetQuatRotation()));
 		body->setWorldTransform(transform);
 	}
-	
+
+	return true;
+}
+
+bool C_Collider::Render()
+{
+	if (body == nullptr || shape == nullptr) return true;
+
+	if (App->scene->selected_go == linked_go && App->scene->editor_mode)
+	{
+		App->physics->RenderCollider(this);
+	}
 
 	return true;
 }
@@ -144,6 +152,8 @@ void C_Collider::LoadCollider()
 	else
 	{
 		position = linked_go->transform->position;
+		size = float3::one;
+		center = float3::zero;
 	}
 
 	float3 shape_size = float3::one * 0.5f;
@@ -164,58 +174,10 @@ void C_Collider::LoadCollider()
 	body = new btRigidBody(rbInfo);
 	body->setUserPointer(linked_go);
 	App->physics->AddBody(body);
+	
 }
 
 float3 C_Collider::CheckInvalidCollider(float3 size)
 {
 	return size.Max(float3(0.01, 0.01, 0.01));
-}
-
-bool C_Collider::Render()
-{
-	//if (App->scene->selected_go != linked_go) 
-	//	return true;
-
-	if (body == nullptr || shape == nullptr) return true;;
-
-	uint num_edges = shape->getNumEdges();
-	btVector3 a, b;
-	btTransform transform = body->getCenterOfMassTransform();
-	GLfloat ptr[16];
-	transform.getOpenGLMatrix(ptr);
-
-	glPushMatrix();
-	glMultMatrixf(ptr);
-	ModuleRenderer3D::BeginDebugDraw(float4(0.f, 1.f, 0.f, 1.f));
-	glBegin(GL_LINES);
-
-	for (uint i = 0; i < num_edges; ++i)
-	{
-		shape->getEdge(i, a, b);
-		glVertex3fv((btScalar*)a);
-		glVertex3fv((btScalar*)b);
-	}
-
-	glEnd();
-	ModuleRenderer3D::EndDebugDraw();
-	glPopMatrix();
-
-	//glPointSize(4.f);
-
-	//ModuleRenderer3D::BeginDebugDraw(float4(1.f, 0.f, 0.f, 1.f));
-	//glBegin(GL_POINTS);
-	//glVertex3fv(&linked_go->transform->position[0]);
-	//glEnd();
-	//ModuleRenderer3D::EndDebugDraw();
-
-	//glPointSize(7.f);
-
-	//ModuleRenderer3D::BeginDebugDraw(float4(0.f, 0.f, 1.f, 1.f));
-	//glBegin(GL_POINTS);
-	//btVector3 c = body->getCenterOfMassPosition();
-	//glVertex3fv(&c[0]);
-	//glEnd();
-	//ModuleRenderer3D::EndDebugDraw();
-
-	return true;
 }
