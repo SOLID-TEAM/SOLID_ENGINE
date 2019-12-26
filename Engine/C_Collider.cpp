@@ -7,10 +7,9 @@
 #include "C_Mesh.h"
 #include "GameObject.h"
 
-C_Collider::C_Collider(GameObject* go) : Component(go, ComponentType::BOX_COLLIDER)
+C_Collider::C_Collider(GameObject* go) : Component(go, ComponentType::NO_TYPE)
 {
-	name.assign("Box Collider");
-
+	center = float3::zero;
 }
 
 bool C_Collider::CleanUp()
@@ -25,12 +24,14 @@ bool C_Collider::CleanUp()
 
 bool C_Collider::Save(Config& config)
 {
+	SaveCollider(config);
 	return true;
 }
 
 bool C_Collider::Load(Config& config)
 {
-	LoadCollider();
+	LoadCollider(config);
+	CreateCollider();
 
 	return true;
 }
@@ -41,7 +42,7 @@ bool C_Collider::Update()
 
 	if (body == nullptr)
 	{
-		LoadCollider();
+		CreateCollider();
 	}
 
 	if (body == nullptr || shape == nullptr) return true;
@@ -57,11 +58,10 @@ bool C_Collider::Update()
 
 	// Match Size Scalling ----------------------------------
 
-	float3 scaled_size = size.Mul( linked_go->transform->scale.Abs());
+
 	float3 scaled_center = center.Mul(linked_go->transform->scale);
 
-	scaled_size = CheckInvalidCollider(scaled_size);
-	shape->setLocalScaling(btVector3(scaled_size.x, scaled_size.y, scaled_size.z));
+	AdjustShape();
 
 	// Set Transform ------------------------------------------
 
@@ -104,9 +104,14 @@ bool C_Collider::DrawPanelInfo()
 	bool last_is_trigger = is_trigger;
 
 	ImGui::Spacing();
+
 	ImGui::Title("Is Trigger", 1);	ImGui::Checkbox("##is_trigger", &last_is_trigger);
 	ImGui::Title("Center", 1);	ImGui::DragFloat3("##center", center.ptr(), 0.1f);
-	ImGui::Title("Size", 1);	ImGui::DragFloat3("##size", size.ptr(), 0.1f, 0.01f, FLT_MAX);
+
+	// Draw Collider Adiional Info ---------------
+
+	DrawInfoCollider();
+
 	ImGui::Spacing();
 
 	if (last_is_trigger != is_trigger)
@@ -136,8 +141,7 @@ bool C_Collider::GetIsTrigger()
 	return is_trigger;
 }
 
-
-void C_Collider::LoadCollider()
+void C_Collider::CreateCollider()
 {
 	float3 position;
 	Quat rotation;
@@ -146,38 +150,30 @@ void C_Collider::LoadCollider()
 	if (mesh != nullptr)
 	{
 		position = linked_go->obb.CenterPoint();
-		size = mesh->mesh_aabb.Size();
 		center = mesh->mesh_aabb.CenterPoint();
 	}
 	else
 	{
-		position = linked_go->transform->position;
-		size = float3::one;
+		position = linked_go->transform->position;		
 		center = float3::zero;
 	}
 
-	float3 shape_size = float3::one * 0.5f;
 	rotation = linked_go->transform->GetQuatRotation();
 
-	shape = new btBoxShape(btVector3(shape_size.x, shape_size.y, shape_size.z));
+	// Create specific shape -------------------------------------
+
+	CreateShape(mesh);
+
+	// Create Body & Motion State --------------------------------
 
 	btTransform startTransform;
 	startTransform.setOrigin(btVector3(position.x, position.y, position.z));
 	startTransform.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w));
-	btVector3 localInertia(0, 0, 0);
-
-	shape->calculateLocalInertia(1.0f, localInertia);
-
 	motion_state = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(1.0f, motion_state, shape, localInertia);
+
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(1.0f, motion_state, shape, local_inertia);
 
 	body = new btRigidBody(rbInfo);
 	body->setUserPointer(linked_go);
 	App->physics->AddBody(body);
-	
-}
-
-float3 C_Collider::CheckInvalidCollider(float3 size)
-{
-	return size.Max(float3(0.01, 0.01, 0.01));
 }

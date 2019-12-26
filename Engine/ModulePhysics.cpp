@@ -61,7 +61,7 @@ update_status ModulePhysics::PreUpdate()
 
 	if (dt != 0.f)
 	{
-		world->stepSimulation(App->time->DeltaTime(), 20, 0.005);
+		world->stepSimulation(App->time->DeltaTime(), 20);
 	}
 
 	int numManifolds = world->getDispatcher()->getNumManifolds();

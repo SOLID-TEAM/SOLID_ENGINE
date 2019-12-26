@@ -83,26 +83,22 @@ void GameObject::CleanUpRecursive(GameObject* go)
 {
 	// clean all components of this pointing go
 
-	std::vector<Component*>::iterator component = go->components.begin();
-
-	for (; component != go->components.end();)
+	for (Component* component : go->components)
 	{
-		(*component)->CleanUp();
-		//delete_components.push((*component));
-		delete *component;
-		component = go->components.erase(component);
+		component->CleanUp();
+		delete component;
 	}
+
+	go->components.clear();
 
 	// for each children
 
-	std::vector<GameObject*>::iterator child = go->childs.begin();
 	std::queue<GameObject*> delete_forever;
 
-	for (; child != go->childs.end();) //++child)
+	for (GameObject* child : go->childs)
 	{
-		CleanUpRecursive((*child));
-		delete_forever.push((*child));
-		child = go->childs.erase(child);
+		CleanUpRecursive(child);
+		delete_forever.push(child);
 	}
 
 	while (!delete_forever.empty())
@@ -306,6 +302,7 @@ bool GameObject::Save(Config& config)
 
 	// components
 	myConfig.AddArray("Components");
+
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
 	{
 		Config component;
@@ -381,7 +378,7 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 				new_component = AddComponent<C_MeshRenderer>();
 				break;
 			case ComponentType::BOX_COLLIDER:
-				new_component = AddComponent<C_Collider>();
+				new_component = AddComponent<C_BoxCollider>();
 				break;
 			case ComponentType::NO_TYPE:
 				break;

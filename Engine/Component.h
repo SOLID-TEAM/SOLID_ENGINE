@@ -16,6 +16,8 @@ enum class ComponentType
 	LIGHT,
 	MESH_RENDERER,
 	BOX_COLLIDER,
+	SPHERE_COLLIDER,
+	CAPSULE_COLLIDER,
 	RIGID_BODY,
 	NO_TYPE // last
 };
@@ -36,6 +38,8 @@ public :
 public:
 
 	Component(GameObject* go, ComponentType type);
+
+	virtual ~Component() {};
 
 	virtual void Reset();
 

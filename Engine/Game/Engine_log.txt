@@ -82,6 +82,20 @@ Loading Test assets
 File deleted: [Library/Settings/untitled.solidscene]
 [Init] Loaded configuration file Library/Settings/untitled.solidscene
 File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

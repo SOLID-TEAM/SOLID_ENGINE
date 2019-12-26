@@ -7,6 +7,7 @@
 
 class GameObject;
 class ModulePhysics;
+class C_Mesh;
 
 class C_Collider : public Component
 {
@@ -17,6 +18,8 @@ public:
 public:
 
 	C_Collider(GameObject* go);
+
+	virtual ~C_Collider() {}
 
 	bool CleanUp();
 
@@ -38,25 +41,34 @@ public:
 
 	// Virtual Functions ------------------------------
 
+	// Create specific shape
+	virtual void CreateShape(C_Mesh* mesh) {};
+
+	// Adjust shape to scale and other factors
+	virtual void AdjustShape() {};
+
+	// Draw aditional collider info
+	virtual void DrawInfoCollider() {};
+
+	virtual void SaveCollider(Config& config) {};
+
+	virtual void LoadCollider(Config& config) {};
 
 private:
 
-	void LoadCollider();
+	void CreateCollider();
 
-	float3 CheckInvalidCollider(float3 size);
-
-private:
+protected:
 
 	bool is_trigger = false;
+	bool is_visible = false;
 
 	float3 center;
-	float3 size;
+	btVector3 local_inertia;
 
 	btCollisionShape* shape = nullptr;
 	btDefaultMotionState* motion_state = nullptr;
 	btRigidBody* body = nullptr;
-
-	bool is_visible = false;
 };
 
 #endif // !_C_COLLIDER_H__

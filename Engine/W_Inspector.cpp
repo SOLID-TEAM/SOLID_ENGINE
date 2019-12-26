@@ -117,22 +117,25 @@ void W_Inspector::DrawAddComponents(GameObject* selected_go)
 		
 		if (ImGui::BeginPopup("add_component_popup", ImGuiWindowFlags_NoScrollbar))
 		{
-			const char* names[] = { "Transform", "Mesh", "Material", "Camera", "Light","Mesh Renderer","Box Collider","RigidBody" };
+			const char* names[] = { "Transform", "Mesh", "Material", "Camera", "Light","Mesh Renderer","Box Collider", "Sphere Collider", "Capsule Collider","RigidBody" };
 			
+			uint size = IM_ARRAYSIZE(names);
+
 			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - strlen("Component") * 8) * 0.5f);
 			ImGui::Text("Component");
 			ImGui::Separator();
 			ImGui::BeginChild("CompoChild", ImVec2(0, 80));
-			for (int i = 0; i < (int)ComponentType::NO_TYPE; i++)
+
+			for (int i = 0; i < size; i++)
 			{
 				//if (ImGui::Selectable(GetNameFromComponentType(ComponentType(i)).c_str()))
 				if (ImGui::Selectable(names[i]))
 				{
 					//TODO: create any component
 					// test
-					if (i == 6)
+					if (names[i] == "Box Collider")
 					{
-						selected_go->AddComponent<C_Collider>();
+						selected_go->AddComponent<C_BoxCollider>();
 					}
 				}
 					

@@ -8,6 +8,7 @@
 class C_MeshRenderer;
 class C_Transform;
 class C_Collider;
+class C_BoxCollider;
 class R_Mesh;
 
 
@@ -19,6 +20,7 @@ public:
 	friend C_MeshRenderer;
 	friend C_Transform;
 	friend C_Collider;
+	friend C_BoxCollider;
 
 public:
 

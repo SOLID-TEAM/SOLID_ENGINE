@@ -17,6 +17,8 @@
 #include "C_MeshRenderer.h"
 #include "C_Camera.h"
 #include "C_Collider.h"
+#include "C_BoxCollider.h"
+#include "C_SphereCollider.h"
 #include "C_RigidBody.h"
 
 #include <typeinfo>
@@ -187,8 +189,8 @@ T* GameObject::AddComponent()
 		new_component = (T*)new C_Material(this);
 	else if (typeid(C_Camera) == typeid(T))
 		new_component = (T*)new C_Camera(this);
-	else if (typeid(C_Collider) == typeid(T))
-		new_component = (T*)new C_Collider(this);
+	else if (typeid(C_BoxCollider) == typeid(T))
+		new_component = (T*)new C_BoxCollider(this);
 	else if (typeid(C_RigidBody) == typeid(T))
 		new_component = (T*)new C_RigidBody(this);
 

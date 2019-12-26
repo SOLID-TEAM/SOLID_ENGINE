@@ -9,8 +9,6 @@ class C_Transform : public Component
 public:
 	C_Transform(GameObject* parent);
 
-	~C_Transform();
-
 	bool Update();
 
 	//void Rotate(math::float3 axis, float angle);
