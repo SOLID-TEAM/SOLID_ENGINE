@@ -14,14 +14,14 @@ void Component::Reset()
 
 void Component::Enable()
 {
-	if (!active)
-		active = !active;
+	if (!enable)
+		enable = !enable;
 }
 
 void Component::Disable()
 {
-	if (active)
-		active = !active;
+	if (enable)
+		enable = !enable;
 }
 
 

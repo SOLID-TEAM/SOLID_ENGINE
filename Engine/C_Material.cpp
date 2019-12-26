@@ -87,7 +87,7 @@ bool C_Material::Save(Config& config)
 {
 	
 	config.AddInt("Resource", resource);
-	config.AddBool("Active", active);
+	config.AddBool("Active", enable);
 
 
 	return true;
@@ -96,7 +96,7 @@ bool C_Material::Save(Config& config)
 bool C_Material::Load(Config& config)
 {
 	SetMaterialResource(config.GetInt("Resource", resource));
-	active = config.GetBool("Active", active);
+	enable = config.GetBool("Active", enable);
 
 	return true;
 }

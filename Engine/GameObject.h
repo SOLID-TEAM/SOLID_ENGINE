@@ -191,6 +191,8 @@ T* GameObject::AddComponent()
 		new_component = (T*)new C_Camera(this);
 	else if (typeid(C_BoxCollider) == typeid(T))
 		new_component = (T*)new C_BoxCollider(this);
+	else if (typeid(C_SphereCollider) == typeid(T))
+		new_component = (T*)new C_SphereCollider(this);
 	else if (typeid(C_RigidBody) == typeid(T))
 		new_component = (T*)new C_RigidBody(this);
 

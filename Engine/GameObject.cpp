@@ -60,7 +60,8 @@ void GameObject::DoUpdate()
 
 	for (Component* component : components)
 	{
-		component->Update();
+		if (component->enable == true)
+			component->Update();
 	}
 }
 
@@ -70,7 +71,8 @@ void GameObject::DoRender()
 
 	for (Component* component : components)
 	{
-		component->Render();
+		if (component->enable == true)
+			component->Render();
 	}
 }
 
@@ -379,6 +381,9 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 				break;
 			case ComponentType::BOX_COLLIDER:
 				new_component = AddComponent<C_BoxCollider>();
+				break;			
+			case ComponentType::SPHERE_COLLIDER:
+				new_component = AddComponent<C_SphereCollider>();
 				break;
 			case ComponentType::NO_TYPE:
 				break;

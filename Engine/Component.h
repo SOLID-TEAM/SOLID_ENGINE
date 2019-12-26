@@ -69,7 +69,7 @@ public:
 
 protected:
 
-	bool			active = true;
+	bool			enable = true;
 	ComponentType   type = ComponentType::NO_TYPE;
 	GameObject*		linked_go = nullptr;
 };

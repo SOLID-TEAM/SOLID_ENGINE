@@ -31,8 +31,6 @@ bool C_Collider::Save(Config& config)
 bool C_Collider::Load(Config& config)
 {
 	LoadCollider(config);
-	CreateCollider();
-
 	return true;
 }
 
@@ -57,9 +55,6 @@ bool C_Collider::Update()
 	}
 
 	// Match Size Scalling ----------------------------------
-
-
-	float3 scaled_center = center.Mul(linked_go->transform->scale);
 
 	AdjustShape();
 
@@ -163,6 +158,7 @@ void C_Collider::CreateCollider()
 	// Create specific shape -------------------------------------
 
 	CreateShape(mesh);
+	shape->calculateLocalInertia(1.0f, local_inertia);
 
 	// Create Body & Motion State --------------------------------
 

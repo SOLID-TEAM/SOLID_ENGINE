@@ -22,11 +22,12 @@ void C_BoxCollider::CreateShape(C_Mesh* mesh)
 
 	float3 shape_size = float3::one * 0.5f;
 	shape = new btBoxShape(btVector3(shape_size.x, shape_size.y, shape_size.z));
-	shape->calculateLocalInertia(1.0f, local_inertia);
 }
 
 void C_BoxCollider::AdjustShape()
 {
+	scaled_center = center.Mul(linked_go->transform->scale);
+
 	float3 scaled_size = size.Mul(linked_go->transform->scale.Abs());
 	scaled_size = CheckInvalidCollider(scaled_size);
 	shape->setLocalScaling(btVector3(scaled_size.x, scaled_size.y, scaled_size.z));

@@ -64,6 +64,7 @@ protected:
 	bool is_visible = false;
 
 	float3 center;
+	float3 scaled_center;
 	btVector3 local_inertia;
 
 	btCollisionShape* shape = nullptr;

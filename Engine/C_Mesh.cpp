@@ -104,14 +104,14 @@ void C_Mesh::DeleteMeshResource()
 bool C_Mesh::Save(Config& config)
 {
 	config.AddInt("Resource", resource);
-	config.AddBool("Active", active);
+	config.AddBool("Active", enable);
 	return true;
 }
 
 bool C_Mesh::Load(Config& config)
 {
 	SetMeshResource(config.GetInt("Resource", resource));
-	active = config.GetBool("Active", active);
+	enable = config.GetBool("Active", enable);
 
 	return true;
 }

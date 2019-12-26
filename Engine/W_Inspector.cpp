@@ -78,7 +78,7 @@ void W_Inspector::DrawGameObjectInfo()
 
 		if ((*components)->flags & ImGuiTreeNodeFlags_AllowItemOverlap)
 		{
-			ImGui::SameLine(30.f);  ImGui::Checkbox(("##active" + (*components)->name).c_str(), &(*components)->active);
+			ImGui::SameLine(30.f);  ImGui::Checkbox(("##enable" + (*components)->name).c_str(), &(*components)->enable);
 		}
 
 		if (aux)
@@ -136,6 +136,10 @@ void W_Inspector::DrawAddComponents(GameObject* selected_go)
 					if (names[i] == "Box Collider")
 					{
 						selected_go->AddComponent<C_BoxCollider>();
+					}
+					else if (names[i] == "Sphere Collider")
+					{
+						selected_go->AddComponent<C_SphereCollider>();
 					}
 				}
 					

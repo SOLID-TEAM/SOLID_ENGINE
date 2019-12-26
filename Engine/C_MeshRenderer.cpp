@@ -27,18 +27,6 @@ C_MeshRenderer::~C_MeshRenderer()
 
 bool C_MeshRenderer::Update()
 {
-	//ViewportOptions& vp = App->editor->viewport_options;
-
-	//if (vp.debug_bounding_box)
-	//{
-	//	DebugRender render_bb;
-	//	render_bb.Set(&linked_go->bounding_box, vp.bb_color , 1.2f);
-	//	App->scene->PushDebugRender(render_bb);
-	//	DebugRender render_obb;
-	//	render_obb.Set(&linked_go->obb, float4(1.f, .9f, 0.1f, 1.f), 1.2f);
-	//	App->scene->PushDebugRender(render_obb);
-	//}
-
 	return true;
 }
 
