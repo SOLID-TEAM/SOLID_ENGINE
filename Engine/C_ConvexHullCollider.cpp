@@ -27,16 +27,7 @@ void C_ConvexHullCollider::CreateShape(C_Mesh* mesh)
 	if (r_mesh == nullptr)
 		return;
 
-	btConvexHullShape new_shape;
-	uint num_indices = r_mesh->buffers_size[2]; // buffertype::indices
-	for (uint i = 0; i < num_indices; ++i)
-	{
-		float* v = &r_mesh->vertices[r_mesh->indices[i] * 3];
-
-		btVector3 vertex = { v[0],v[1],v[2] };
-		new_shape.addPoint(vertex);
-	}
-
+	btConvexHullShape new_shape(r_mesh->vertices, r_mesh->buffers_size[0], sizeof(float) * 3);
 	hull = new btShapeHull(&new_shape);
 	hull->buildHull(new_shape.getMargin());
 
