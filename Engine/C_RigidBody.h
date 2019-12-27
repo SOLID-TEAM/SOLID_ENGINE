@@ -6,6 +6,7 @@
 #include "Bullet/include/btBulletDynamicsCommon.h"
 
 class GameObject;
+class C_Collider;
 
 class C_RigidBody : public Component
 {
@@ -29,6 +30,10 @@ public:
 	void AddForce(const float3& force);
 
 	void AddTorque(const float3& force);
+
+private:
+
+	void SearchCollider();
 
 private:
 

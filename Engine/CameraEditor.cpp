@@ -54,7 +54,7 @@ void CameraEditor::Update()
 {
 	float dt = App->time->UnscaledDeltaTime();
 
-	mouse_right_pressed = (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_SPACE)) ;
+	mouse_right_pressed = (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN) ;
 	mouse_left_pressed = (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN);
 	mouse_wheel_pressed = (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_DOWN);
 	alt_pressed = (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RALT) == KEY_REPEAT  || App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN|| App->input->GetKey(SDL_SCANCODE_RALT) == KEY_DOWN);
