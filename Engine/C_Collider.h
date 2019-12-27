@@ -31,7 +31,7 @@ public:
 
 	bool Update();
 
-	bool Render();
+	virtual bool Render();
 
 	bool DrawPanelInfo();
 

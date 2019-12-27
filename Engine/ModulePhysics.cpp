@@ -129,6 +129,33 @@ void ModulePhysics::RenderCollider( C_Collider* collider)
 	ModuleRenderer3D::EndDebugDraw();
 }
 
+void ModulePhysics::RenderConvexCollider(C_Collider* col)
+{
+	debug_renderer->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+	ModuleRenderer3D::BeginDebugDraw(float4(0.f, 1.f, 0.f, 1.f));
+
+	btTransform worldTransform = col->body->getCenterOfMassTransform();
+	btShapeHull* hull = static_cast<btShapeHull*>(col->shape->getUserPointer());
+
+	if (hull == nullptr) return;
+
+	int num_indices = hull->numIndices();
+	btVector3 localScale = col->shape->getLocalScaling();
+	for (int i = 0; i < num_indices; i += 3)
+	{
+		btVector3 v0 = worldTransform * (hull->getVertexPointer()[hull->getIndexPointer()[i]] * localScale);
+		btVector3 v1 = worldTransform * (hull->getVertexPointer()[hull->getIndexPointer()[i+1]] * localScale);
+		btVector3 v2 = worldTransform * (hull->getVertexPointer()[hull->getIndexPointer()[i+2]] * localScale);
+
+		btVector3 color = btVector3(0.f, 1.f, 0.f);
+		debug_renderer->drawLine(v0, v1, color);
+		debug_renderer->drawLine(v1, v2, color);
+		debug_renderer->drawLine(v0, v2, color);
+	}
+
+	ModuleRenderer3D::EndDebugDraw();
+}
+
 void ModulePhysics::AddBody(btRigidBody* body)
 {
 	world->addRigidBody(body);

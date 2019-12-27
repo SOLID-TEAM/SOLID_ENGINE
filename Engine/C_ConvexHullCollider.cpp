@@ -12,6 +12,11 @@ C_ConvexHullCollider::C_ConvexHullCollider(GameObject* go) : C_Collider(go)
 	size = float3::one;
 }
 
+C_ConvexHullCollider::~C_ConvexHullCollider()
+{
+	delete hull;
+}
+
 void C_ConvexHullCollider::CreateShape(C_Mesh* mesh)
 {
 	if (mesh == nullptr)
@@ -21,37 +26,36 @@ void C_ConvexHullCollider::CreateShape(C_Mesh* mesh)
 
 	if (r_mesh == nullptr)
 		return;
-	
-	btConvexHullShape new_shape;
-	uint num_indices = r_mesh->buffers_size[2]; // buffertype::indices
-	for (uint i = 0; i < num_indices; ++i)
-	{
-		float* v = &r_mesh->vertices[r_mesh->indices[i] * 3];
 
-		btVector3 vertex = { v[0],v[1],v[2] };
-		new_shape.addPoint(vertex);
-	}
-
-	//new_shape.setMargin(0);
-	btShapeHull* hull = new btShapeHull(&new_shape);
+	btConvexHullShape new_shape(r_mesh->vertices, r_mesh->buffers_size[0], sizeof(float) * 3);
+	hull = new btShapeHull(&new_shape);
 	hull->buildHull(new_shape.getMargin());
 
 	btConvexHullShape* pConvexHull = new btConvexHullShape((const btScalar*)hull->getVertexPointer(), hull->numVertices());
+	pConvexHull->setUserPointer(hull);
 	
 	shape = pConvexHull;
 
-	delete hull;
+}
+
+bool C_ConvexHullCollider::Render()
+{
+	if (body == nullptr || shape == nullptr) return true;
+
+	if (App->scene->selected_go == linked_go && App->scene->editor_mode && hull)
+	{
+		App->physics->RenderConvexCollider(this);
+	}
+
+	return true;
 }
 
 void C_ConvexHullCollider::AdjustShape()
 {
-	// TODO: 
 	scaled_center = center.Mul(linked_go->transform->scale);
-
 	float3 scaled_size = size.Mul(linked_go->transform->scale.Abs());
 	scaled_size = CheckInvalidCollider(scaled_size);
 	shape->setLocalScaling(btVector3(scaled_size.x, scaled_size.y, scaled_size.z));
-	//shape->setLocalScaling(btVector3(1.0f, 1.0f, 1.0f));
 }
 
 void C_ConvexHullCollider::SaveCollider(Config& config)

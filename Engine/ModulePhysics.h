@@ -41,6 +41,7 @@ public:
 	bool CleanUp();
 
 	void RenderCollider(C_Collider* collider);
+	void RenderConvexCollider(C_Collider* collider);
 
 	void AddBody(btRigidBody* body);
 
