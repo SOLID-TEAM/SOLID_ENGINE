@@ -78,20 +78,6 @@ Loading Test assets
 // ---------------------------------------------------
 -------------- Application Update --------------
 [Init] Loaded configuration file Assets/untitled.solidscene
-Drag				: 0.000000
-Angular Drag		: 0.000000
-Friction			: 0.500000
-Angular Friction	: 0.000000
-[Init] Loaded configuration file Library/Settings/untitled.solidscene
-File deleted: [Library/Settings/untitled.solidscene]
-[Init] Loaded configuration file Library/Settings/untitled.solidscene
-File deleted: [Library/Settings/untitled.solidscene]
-[Init] Loaded configuration file Library/Settings/untitled.solidscene
-File deleted: [Library/Settings/untitled.solidscene]
-[Init] Loaded configuration file Library/Settings/untitled.solidscene
-File deleted: [Library/Settings/untitled.solidscene]
-[Init] Loaded configuration file Library/Settings/untitled.solidscene
-File deleted: [Library/Settings/untitled.solidscene]
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

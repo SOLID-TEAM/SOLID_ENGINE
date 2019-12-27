@@ -65,7 +65,6 @@ private:
 protected:
 
 	bool is_trigger = false;
-	bool is_visible = false;
 
 	float3 center;
 	float3 scaled_center;

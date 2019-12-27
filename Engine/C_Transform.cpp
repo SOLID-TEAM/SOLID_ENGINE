@@ -313,9 +313,9 @@ bool C_Transform::DrawPanelInfo()
 
 bool C_Transform::Save(Config& config)
 {
-	config.AddFloatArray("Position", (float*)&local_position, 3);
-	config.AddFloatArray("Rotation", (float*)&local_rotation, 3);
-	config.AddFloatArray("Scale", (float*)&local_scale, 3);
+	config.AddFloatArray("position", (float*)&local_position, 3);
+	config.AddFloatArray("rotation", (float*)&local_rotation, 3);
+	config.AddFloatArray("scale", (float*)&local_scale, 3);
 	return true;
 }
 
@@ -323,9 +323,9 @@ bool C_Transform::Load(Config& config)
 {
 	// @TODO
 
-	SetLocalPosition(config.GetFloat3("Position", {0.f ,0.f, 0.f}));
-	SetLocalRotation(config.GetFloat3("Rotation", { 0.f ,0.f, 0.f }));
-	SetLocalScale(config.GetFloat3("Scale", { 0.f ,0.f, 0.f }));
+	SetLocalPosition(config.GetFloat3("position", {0.f ,0.f, 0.f}));
+	SetLocalRotation(config.GetFloat3("rotation", { 0.f ,0.f, 0.f }));
+	SetLocalScale(config.GetFloat3("scale", { 0.f ,0.f, 0.f }));
 
 	return true;
 }

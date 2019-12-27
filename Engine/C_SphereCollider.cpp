@@ -1,6 +1,8 @@
 #include "C_SphereCollider.h"
 #include "GameObject.h"
 #include "C_Mesh.h"
+#include "Bullet/include/BulletDynamics/Character/btKinematicCharacterController.h"
+#include "Bullet/include/BulletDynamics/Character/btCharacterControllerInterface.h"
 
 C_SphereCollider::C_SphereCollider(GameObject* go) :C_Collider(go)
 {
@@ -32,10 +34,12 @@ void C_SphereCollider::AdjustShape()
 
 void C_SphereCollider::SaveCollider(Config& config)
 {
+	config.AddFloat("radius", radius);
 }
 
 void C_SphereCollider::LoadCollider(Config& config)
 {
+	radius = config.GetFloat("radius", radius);
 }
 
 void C_SphereCollider::DrawInfoCollider()

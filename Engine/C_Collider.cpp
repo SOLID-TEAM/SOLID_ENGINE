@@ -24,12 +24,20 @@ bool C_Collider::CleanUp()
 
 bool C_Collider::Save(Config& config)
 {
+	config.AddFloatArray("center", (float*)&center, 3);
+	config.AddBool("is_trigger", is_trigger);
+
 	SaveCollider(config);
 	return true;
 }
 
 bool C_Collider::Load(Config& config)
 {
+	CreateCollider();
+
+	center = config.GetFloat3("center", { 0.f ,0.f, 0.f });
+	is_trigger = config.GetBool("is_trigger", false);
+
 	LoadCollider(config);
 	return true;
 }

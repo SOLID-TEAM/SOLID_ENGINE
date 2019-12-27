@@ -35,11 +35,12 @@ void C_BoxCollider::AdjustShape()
 
 void C_BoxCollider::SaveCollider(Config& config)
 {
-
+	config.AddFloatArray("size", (float*)&size, 3);
 }
 
 void C_BoxCollider::LoadCollider(Config& config)
 {
+	size = config.GetFloat3("size", { 1.f ,1.f, 1.f });
 }
 
 float3 C_BoxCollider::CheckInvalidCollider(float3 size)

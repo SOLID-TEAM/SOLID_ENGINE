@@ -6,6 +6,13 @@
 C_RigidBody::C_RigidBody(GameObject* go) : Component(go, ComponentType::RIGID_BODY)
 {
 	name.assign("Rigid Body");
+
+	mass = 1.0f;
+	bouncing = 0.f;
+	drag = 0.f;
+	angular_drag = 0.f;
+	friction = 0.5f;
+	angular_friction = 0.1f;
 }
 
 bool C_RigidBody::CleanUp()
@@ -15,12 +22,25 @@ bool C_RigidBody::CleanUp()
 
 bool C_RigidBody::Save(Config& config)
 {
-	return false;
+	config.AddFloat("mass", mass);
+	config.AddFloat("bouncing", bouncing);
+	config.AddFloat("drag", drag);
+	config.AddFloat("angular_drag", angular_drag);
+	config.AddFloat("friction", friction);
+	config.AddFloat("angular_friction", angular_friction);
+	return true;
 }
 
 bool C_RigidBody::Load(Config& config)
 {
-	return false;
+	mass			 = config.GetFloat("mass", mass);
+	bouncing		 = config.GetFloat("bouncing", bouncing);
+	drag			 = config.GetFloat("drag", drag);
+	angular_drag	 = config.GetFloat("angular_drag", angular_drag);
+	friction		 = config.GetFloat("friction", friction);
+	angular_friction = config.GetFloat("angular_friction", angular_friction);
+
+	return true;
 }
 
 bool C_RigidBody::Update()
@@ -101,6 +121,20 @@ bool C_RigidBody::DrawPanelInfo()
 
 	if (body == nullptr) return true;
 
+	static bool test = false;
+
+	if (test == false)
+	{
+		LOG("Mass				: %f", body->getMass());
+		LOG("Bouncing			: %f", body->getRestitution());
+		LOG("Drag				: %f", body->getLinearDamping());
+		LOG("Angular Drag		: %f", body->getAngularDamping());
+		LOG("Friction			: %f", body->getFriction());
+		LOG("Angular Friction	: %f", body->getRollingFriction());
+		test = true;
+	}
+
+
 	SetMass(aux_mass);
 	SetBouncing(aux_bouncing);
 	SetDrag(aux_drag);
@@ -108,16 +142,6 @@ bool C_RigidBody::DrawPanelInfo()
 	SetFriction(aux_friction);
 	SetAngularFriction(aux_angular_friction);
 
-	static bool test = false;
-
-	if (test == false)
-	{
-		LOG("Drag				: %f", body->getLinearDamping());
-		LOG("Angular Drag		: %f", body->getAngularDamping());
-		LOG("Friction			: %f", body->getFriction());
-		LOG("Angular Friction	: %f", body->getRollingFriction());
-		test = true;
-	}
 
 	// Freeze ------------------------------------ 
 
@@ -200,6 +224,14 @@ void C_RigidBody::SearchCollider()
 	{
 		body = collider->body;
 		this->collider = collider;
+
+		SetMass(mass);
+		SetBouncing(bouncing);
+		SetDrag(drag);
+		SetAngularDrag(angular_drag);
+		SetFriction(friction);
+		SetAngularFriction(angular_friction);
+
 	}
 		
 }
