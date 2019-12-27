@@ -17,8 +17,8 @@
 C_MeshRenderer::C_MeshRenderer(GameObject* parent): Component(parent, ComponentType::MESH_RENDERER)
 {
 	name.assign("Mesh Renderer");
-	flags |= ImGuiTreeNodeFlags_AllowItemOverlap;
-}
+	enable_button = true;
+}	
 
 C_MeshRenderer::~C_MeshRenderer()
 {

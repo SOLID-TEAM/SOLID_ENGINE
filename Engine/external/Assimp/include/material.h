@@ -1586,7 +1586,7 @@ C_ENUM aiReturn aiGetMaterialTexture(const C_STRUCT aiMaterial* mat,
     ai_real* blend                      /*= NULL*/,
     C_ENUM aiTextureOp* op              /*= NULL*/,
     C_ENUM aiTextureMapMode* mapmode    /*= NULL*/,
-    unsigned int* flags                 /*= NULL*/);
+    unsigned int* header_flags                 /*= NULL*/);
 #endif // !#ifdef __cplusplus
 
 

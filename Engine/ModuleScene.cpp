@@ -319,13 +319,16 @@ void ModuleScene::UpdateMousePicking()
 		LineSegment& ray = camera->ViewportPointToRay(screen_point);
 		uint check = 0;
 
-		// Get all static ray intersections -------------------------------------
-	
-		kdtree.GetIntersections(ray, intersections, check);
-
 		// Get all dynamic ray intersections ------------------------------------
 
 		for (GameObject* go : dynamic_go_list)
+		{
+			if (go->bounding_box.IsFinite() && go->bounding_box.Intersects(ray))
+			{
+				intersections.push_back(go);
+			}
+		}
+		for (GameObject* go : static_go_list)
 		{
 			if (go->bounding_box.IsFinite() && go->bounding_box.Intersects(ray))
 			{

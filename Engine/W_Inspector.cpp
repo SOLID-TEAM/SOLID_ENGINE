@@ -68,26 +68,26 @@ void W_Inspector::DrawGameObjectInfo()
 	// -----------------------------------------------------------------
 
 	// iterate each component and draw if it contains something to draw
-	for (std::vector<Component*>::const_iterator components = go->GetComponents().begin();
-		components != go->GetComponents().end(); ++components)
+	for(Component* component : go->components)
 	{
 		// TODO: find another way to store individual go opened/closed collapsingheader
 		//ImGui::SetNextTreeNodeOpen(!(*components)->collapsed); 
 
-		bool aux = ImGui::CollapsingHeader(("   " + (*components)->name).c_str(), (*components)->flags);
+		bool aux = ImGui::CollapsingHeader(("   " + component->name).c_str(), component->header_flags);
 
-		if ((*components)->flags & ImGuiTreeNodeFlags_AllowItemOverlap)
+		if (component->enable_button)
 		{
-			ImGui::SameLine(30.f);  ImGui::Checkbox(("##enable" + (*components)->name).c_str(), &(*components)->enable);
+			ImGui::SameLine(30.f);  ImGui::Checkbox(("##enable" + component->name).c_str(), &component->enable);
 		}
+		//if (component->remove_button)
+		//{
+		//	ImGui::SameLine(30.f);  ImGui::Checkbox(("##remove" + component->name).c_str(), &component->enable);
+		//}
 
 		if (aux)
 		{
-			(*components)->DrawPanelInfo();
-			//(*components)->collapsed = false;
+			component->DrawPanelInfo();
 		}
-		/*else
-			(*components)->collapsed = true;*/
 	}
 
 	DrawAddComponents(go);
