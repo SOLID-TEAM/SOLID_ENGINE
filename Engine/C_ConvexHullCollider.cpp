@@ -22,27 +22,25 @@ void C_ConvexHullCollider::CreateShape(C_Mesh* mesh)
 	if (r_mesh == nullptr)
 		return;
 	
-	btConvexHullShape* new_shape = new btConvexHullShape();
+	btConvexHullShape new_shape;
 	uint num_indices = r_mesh->buffers_size[2]; // buffertype::indices
 	for (uint i = 0; i < num_indices; ++i)
 	{
 		float* v = &r_mesh->vertices[r_mesh->indices[i] * 3];
 
 		btVector3 vertex = { v[0],v[1],v[2] };
-		new_shape->addPoint(vertex);
+		new_shape.addPoint(vertex);
 	}
 
-	bool optimize = false;
+	//new_shape.setMargin(0);
+	btShapeHull* hull = new btShapeHull(&new_shape);
+	hull->buildHull(new_shape.getMargin());
 
-	//if (optimize)
-	//{
-	//	// TODO: use btshapeHull to trim vertices size
-	//	btShapeHull* hull = new btShapeHull(new_shape);
-	//	btScalar margin = new_shape->getMargin();
-	//	hull->buildHull(margin);
-	//}
+	btConvexHullShape* pConvexHull = new btConvexHullShape((const btScalar*)hull->getVertexPointer(), hull->numVertices());
+	
+	shape = pConvexHull;
 
-	shape = new_shape;
+	delete hull;
 }
 
 void C_ConvexHullCollider::AdjustShape()
