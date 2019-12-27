@@ -73,7 +73,7 @@ void W_Inspector::DrawGameObjectInfo()
 	{
 		// TODO: find another way to store individual go opened/closed collapsingheader
 		//ImGui::SetNextTreeNodeOpen(!(*components)->collapsed); 
-
+		ImGui::PushID(*components);
 		bool aux = ImGui::CollapsingHeader(("   " + (*components)->name).c_str(), (*components)->flags);
 
 		if ((*components)->flags & ImGuiTreeNodeFlags_AllowItemOverlap)
@@ -83,11 +83,15 @@ void W_Inspector::DrawGameObjectInfo()
 
 		if (aux)
 		{
+			
 			(*components)->DrawPanelInfo();
+			
 			//(*components)->collapsed = false;
 		}
 		/*else
 			(*components)->collapsed = true;*/
+
+		ImGui::PopID();
 	}
 
 	DrawAddComponents(go);
@@ -117,7 +121,7 @@ void W_Inspector::DrawAddComponents(GameObject* selected_go)
 		
 		if (ImGui::BeginPopup("add_component_popup", ImGuiWindowFlags_NoScrollbar))
 		{
-			const char* names[] = { "Transform", "Mesh", "Material", "Camera", "Light","Mesh Renderer","Box Collider", "Sphere Collider", "Capsule Collider","RigidBody" };
+			const char* names[] = { "Transform", "Mesh", "Material", "Camera", "Light","Mesh Renderer","Box Collider", "Sphere Collider", "Capsule Collider","ConvexHull Collider","RigidBody" };
 			
 			uint size = IM_ARRAYSIZE(names);
 
@@ -141,6 +145,12 @@ void W_Inspector::DrawAddComponents(GameObject* selected_go)
 					{
 						selected_go->AddComponent<C_SphereCollider>();
 					}
+					else if (names[i] == "ConvexHull Collider")
+					{
+						selected_go->AddComponent<C_ConvexHullCollider>();
+					}
+
+					ImGui::CloseCurrentPopup();
 				}
 					
 			}

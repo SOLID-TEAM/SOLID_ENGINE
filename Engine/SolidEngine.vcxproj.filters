@@ -1539,6 +1539,9 @@
     <ClInclude Include="C_CapsuleCollider.h">
       <Filter>Sources\Game Object\Components\Colliders</Filter>
     </ClInclude>
+    <ClInclude Include="C_ConvexHullCollider.h">
+      <Filter>Sources\Game Object\Components\Colliders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -2412,6 +2415,9 @@
       <Filter>Sources\Game Object\Components\Colliders</Filter>
     </ClCompile>
     <ClCompile Include="C_CapsuleCollider.cpp">
+      <Filter>Sources\Game Object\Components\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="C_ConvexHullCollider.cpp">
       <Filter>Sources\Game Object\Components\Colliders</Filter>
     </ClCompile>
   </ItemGroup>
