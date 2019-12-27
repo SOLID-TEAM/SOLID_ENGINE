@@ -1,4 +1,7 @@
 #include "C_RigidBody.h"
+#include "Application.h"
+#include "GameObject.h"
+#include "ModuleInput.h"
 
 C_RigidBody::C_RigidBody(GameObject* go) : Component(go, ComponentType::RIGID_BODY)
 {
@@ -22,7 +25,17 @@ bool C_RigidBody::Load(Config& config)
 
 bool C_RigidBody::Update()
 {
-	return false;
+	if (body == nullptr)
+	{
+		SearchCollider();
+	}
+
+	if (body == nullptr) return true;
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+		AddForce(float3(linked_go->transform->forward));
+
+	return true;
 }
 
 bool C_RigidBody::Render()
@@ -47,4 +60,12 @@ void C_RigidBody::AddTorque(const float3& force)
 	if (body == nullptr) return;
 
 	body->applyTorqueImpulse(btVector3(force.x, force.y, force.z));
+}
+
+void C_RigidBody::SearchCollider()
+{
+	C_Collider* collider = linked_go->GetComponent<C_Collider>();
+	
+	if (collider != nullptr && collider->body != nullptr)
+		body = collider->body;
 }

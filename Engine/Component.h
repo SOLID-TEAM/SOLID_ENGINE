@@ -66,13 +66,16 @@ public:
 	// Editor ----------------------------------------------------
 	std::string		name;
 	bool			collapsed = false; // save individual for each gameobject its prev state
-	int				flags = 0; 			// for imgui draw
+	int				header_flags = 0; 			// for imgui draw
 
 protected:
 
 	bool			enable = true;
 	ComponentType   type = ComponentType::NO_TYPE;
 	GameObject*		linked_go = nullptr;
+
+	bool			enable_button = false;
+	bool            remove_button = false;
 };
 
 

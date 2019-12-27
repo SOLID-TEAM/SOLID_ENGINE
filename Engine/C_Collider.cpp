@@ -49,9 +49,8 @@ bool C_Collider::Update()
 
 	if (linked_go->is_static == true && body->getMass() != 0.f)
 	{
-		btVector3 innertia;
-		shape->calculateLocalInertia(0.f, innertia);
-		body->setMassProps(0.f, innertia);
+		shape->calculateLocalInertia(0.f, local_inertia);
+		body->setMassProps(0.f, local_inertia);
 	}
 
 	// Match Size Scalling ----------------------------------

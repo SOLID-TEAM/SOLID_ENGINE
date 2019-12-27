@@ -5,7 +5,8 @@
 
 Component::Component(GameObject* go, ComponentType type) : linked_go(go), type(type)
 {
-	flags |= ImGuiTreeNodeFlags_DefaultOpen;
+	header_flags |= ImGuiTreeNodeFlags_DefaultOpen;
+	header_flags |= ImGuiTreeNodeFlags_AllowItemOverlap;
 }
 
 void Component::Reset()

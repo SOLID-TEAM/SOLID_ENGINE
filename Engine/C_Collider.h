@@ -8,12 +8,14 @@
 class GameObject;
 class ModulePhysics;
 class C_Mesh;
+class C_RigidBody;
 
 class C_Collider : public Component
 {
 public:
 
 	friend ModulePhysics;
+	friend C_RigidBody;
 
 public:
 

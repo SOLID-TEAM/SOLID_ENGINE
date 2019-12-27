@@ -3574,11 +3574,11 @@ typedef void (APIENTRYP PFNGLPROVOKINGVERTEXPROC) (GLenum mode);
 #ifndef GL_ARB_sync
 #define GL_ARB_sync 1
 #ifdef GLCOREARB_PROTOTYPES
-GLAPI GLsync APIENTRY glFenceSync (GLenum condition, GLbitfield flags);
+GLAPI GLsync APIENTRY glFenceSync (GLenum condition, GLbitfield header_flags);
 GLAPI GLboolean APIENTRY glIsSync (GLsync sync);
 GLAPI void APIENTRY glDeleteSync (GLsync sync);
-GLAPI GLenum APIENTRY glClientWaitSync (GLsync sync, GLbitfield flags, GLuint64 timeout);
-GLAPI void APIENTRY glWaitSync (GLsync sync, GLbitfield flags, GLuint64 timeout);
+GLAPI GLenum APIENTRY glClientWaitSync (GLsync sync, GLbitfield header_flags, GLuint64 timeout);
+GLAPI void APIENTRY glWaitSync (GLsync sync, GLbitfield header_flags, GLuint64 timeout);
 GLAPI void APIENTRY glGetInteger64v (GLenum pname, GLint64 *params);
 GLAPI void APIENTRY glGetSynciv (GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values);
 #endif /* GLCOREARB_PROTOTYPES */
@@ -4158,7 +4158,7 @@ typedef void (APIENTRYP PFNGLGETDOUBLEI_VPROC) (GLenum target, GLuint index, GLd
 #ifndef GL_ARB_cl_event
 #define GL_ARB_cl_event 1
 #ifdef GLCOREARB_PROTOTYPES
-GLAPI GLsync APIENTRY glCreateSyncFromCLeventARB (struct _cl_context * context, struct _cl_event * event, GLbitfield flags);
+GLAPI GLsync APIENTRY glCreateSyncFromCLeventARB (struct _cl_context * context, struct _cl_event * event, GLbitfield header_flags);
 #endif /* GLCOREARB_PROTOTYPES */
 typedef GLsync (APIENTRYP PFNGLCREATESYNCFROMCLEVENTARBPROC) (struct _cl_context * context, struct _cl_event * event, GLbitfield flags);
 #endif
