@@ -116,6 +116,14 @@ bool C_Collider::DrawPanelInfo()
 	return true;
 }
 
+btVector3 C_Collider::UpdateInertia(float mass)
+{
+	if (body == nullptr || shape == nullptr) return btVector3(0.f, 0.f, 0.f);
+	
+	shape->calculateLocalInertia(mass, local_inertia);
+	return local_inertia;
+}
+
 void C_Collider::SetIsTrigger(bool value)
 {
 	if (value == true)

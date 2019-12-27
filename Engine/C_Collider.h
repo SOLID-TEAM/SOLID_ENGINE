@@ -37,6 +37,8 @@ public:
 
 	 // Common Functoins ------------------------------
 
+	btVector3 UpdateInertia(float mass);
+
 	void SetIsTrigger(bool is_trigger);
 
 	bool GetIsTrigger();
