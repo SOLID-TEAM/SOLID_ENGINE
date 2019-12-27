@@ -11,6 +11,7 @@ class C_Collider;
 class C_BoxCollider;
 class C_SphereCollider;
 class C_CapsuleCollider;
+class C_ConvexHullCollider;
 
 class R_Mesh;
 
@@ -26,6 +27,7 @@ public:
 	friend C_BoxCollider;
 	friend C_SphereCollider;
 	friend C_CapsuleCollider;
+	friend C_ConvexHullCollider;
 
 public:
 
