@@ -20,8 +20,11 @@ public:
 public:
 
 	C_ConvexHullCollider(GameObject* go);
+	~C_ConvexHullCollider();
 
 	// Virtual Functions ------------------------------
+
+	bool Render();
 
 	void CreateShape(C_Mesh* mesh);
 
@@ -41,6 +44,7 @@ private:
 private:
 
 	float3 size;
+	btShapeHull* hull = nullptr;
 
 };
 
