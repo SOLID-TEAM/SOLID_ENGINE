@@ -16,14 +16,13 @@ void C_BoxCollider::CreateShape(C_Mesh* mesh)
 		size = (mesh != nullptr) ? mesh->mesh_aabb.Size() : size = float3::one;
 		center = (mesh != nullptr) ? mesh->mesh_aabb.CenterPoint() : float3::zero;
 	}
-
 	float3 shape_size = float3::one * 0.5f;
 	shape = new btBoxShape(btVector3(shape_size.x, shape_size.y, shape_size.z));
 }
 
 void C_BoxCollider::AdjustShape()
 {
-	scaled_center = center.Mul(linked_go->transform->scale);
+	scaled_center = center;
 
 	float3 scaled_size = size.Mul(linked_go->transform->scale.Abs());
 	scaled_size = CheckInvalidCollider(scaled_size);

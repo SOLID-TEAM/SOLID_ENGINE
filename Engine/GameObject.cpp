@@ -385,6 +385,9 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 			case ComponentType::SPHERE_COLLIDER:
 				new_component = AddComponent<C_SphereCollider>();
 				break;
+			case ComponentType::CAPSULE_COLLIDER:
+				new_component = AddComponent<C_CapsuleCollider>();
+				break;
 			case ComponentType::CONVEX_HULL_COLLIDER:
 				new_component = AddComponent<C_ConvexHullCollider>();
 				break;

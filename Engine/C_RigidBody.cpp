@@ -51,18 +51,33 @@ bool C_RigidBody::Save(Config& config)
 	config.AddFloat("friction", friction);
 	config.AddFloat("angular_friction", angular_friction);
 
+	config.AddBool("freeze_pos_x", freeze_position[0]);
+	config.AddBool("freeze_pos_y", freeze_position[1]);
+	config.AddBool("freeze_pos_z", freeze_position[2]);
+
+	config.AddBool("freeze_rot_x", freeze_rotation[0]);
+	config.AddBool("freeze_rot_y", freeze_rotation[1]);
+	config.AddBool("freeze_rot_z", freeze_rotation[2]); 
+
 	return true;
 }
 
 bool C_RigidBody::Load(Config& config)
 {
+	mass			   = config.GetFloat("mass", mass);
+	bouncing		   = config.GetFloat("bouncing", bouncing);
+	drag			   = config.GetFloat("drag", drag);
+	angular_drag	   = config.GetFloat("angular_drag", angular_drag);
+	friction		   = config.GetFloat("friction", friction);
+	angular_friction   = config.GetFloat("angular_friction", angular_friction);
 
-	mass			 = config.GetFloat("mass", mass);
-	bouncing		 = config.GetFloat("bouncing", bouncing);
-	drag			 = config.GetFloat("drag", drag);
-	angular_drag	 = config.GetFloat("angular_drag", angular_drag);
-	friction		 = config.GetFloat("friction", friction);
-	angular_friction = config.GetFloat("angular_friction", angular_friction);
+	freeze_position[0] = config.GetBool("freeze_pos_x", freeze_position[0]);
+	freeze_position[1] = config.GetBool("freeze_pos_y", freeze_position[1]);
+	freeze_position[2] = config.GetBool("freeze_pos_z", freeze_position[2]);
+
+	freeze_rotation[0] = config.GetBool("freeze_rot_x", freeze_rotation[0]);
+	freeze_rotation[1] = config.GetBool("freeze_rot_y", freeze_rotation[1]);
+	freeze_rotation[2] = config.GetBool("freeze_rot_z", freeze_rotation[2]);
 
 	return true;
 }
@@ -88,13 +103,13 @@ bool C_RigidBody::Update()
 	if (collider != nullptr) 
 	{
 		current_shape->calculateLocalInertia(current_mass, inertia);
-		body->setMassProps(current_mass, inertia);
 	}
 	else
 	{
 		inertia = btVector3(0.f, 0.f, 0.f);
 	}
-		
+
+	body->setMassProps(current_mass, inertia);
 
 	// Add body to world ------------------------
 
@@ -138,10 +153,12 @@ bool C_RigidBody::Update()
 
 	if (body->getLinearFactor() != freeze_p)
 	{
+		body->activate(true);
 		body->setLinearFactor(freeze_p);
 	}
 	if (body->getAngularFactor() != freeze_r)
 	{
+		body->activate(true);
 		body->setAngularFactor(freeze_r);
 	}
 
@@ -154,13 +171,13 @@ bool C_RigidBody::Update()
 	linked_go->transform->SetPosition(float3(position));
 	linked_go->transform->SetRotation(math::Quat((btScalar*)rotation));
 
-	// Apply torque & force ----------------------
+	// Apply Test ----------------------
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		AddForce(float3(linked_go->transform->forward * 10.F));
 
 	if (App->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN)
-		AddTorque(float3(linked_go->transform->forward * 2.F));
+		AddTorque(float3(linked_go->transform->forward * 10.f));
 
 
 	return true;

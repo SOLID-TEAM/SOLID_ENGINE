@@ -19,6 +19,7 @@
 #include "C_Collider.h"
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
+#include "C_CapsuleCollider.h"
 #include "C_ConvexHullCollider.h"
 #include "C_RigidBody.h"
 #include "C_JointP2P.h"
@@ -197,6 +198,8 @@ T* GameObject::AddComponent()
 		new_component = (T*)new C_BoxCollider(this);
 	else if (typeid(C_SphereCollider) == typeid(T))
 		new_component = (T*)new C_SphereCollider(this);
+	else if (typeid(C_CapsuleCollider) == typeid(T))
+		new_component = (T*)new C_CapsuleCollider(this);
 	else if (typeid(C_ConvexHullCollider) == typeid(T))
 		new_component = (T*)new C_ConvexHullCollider(this);
 	else if (typeid(C_RigidBody) == typeid(T))

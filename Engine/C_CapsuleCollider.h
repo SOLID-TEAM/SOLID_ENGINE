@@ -8,6 +8,7 @@
 class GameObject;
 class ModulePhysics;
 
+
 class C_CapsuleCollider : public C_Collider
 {
 public:
@@ -16,15 +17,30 @@ public:
 
 public:
 
+	enum class CapsuleType
+	{
+		X, Y, Z
+	};
+
 	C_CapsuleCollider(GameObject* go);
 
 	// Virtual Functions ------------------------------
+
+	void CreateShape(C_Mesh* mesh);
+
+	void AdjustShape();
 
 	void SaveCollider(Config& config);
 
 	void LoadCollider(Config& config);
 
 	void DrawInfoCollider();
+
+private:
+
+	float radius = 0.5f;
+	float height = 1.f;
+	CapsuleType capsule_type = CapsuleType::Y;
 
 };
 

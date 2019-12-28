@@ -141,6 +141,10 @@ void W_Inspector::DrawAddComponents(GameObject* selected_go)
 					{
 						selected_go->AddComponent<C_SphereCollider>();
 					}
+					else if (names[i] == "Capsule Collider")
+					{
+						selected_go->AddComponent<C_CapsuleCollider>();
+					}
 					else if (names[i] == "ConvexHull Collider")
 					{
 						selected_go->AddComponent<C_ConvexHullCollider>();

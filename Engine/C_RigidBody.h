@@ -7,9 +7,13 @@
 
 class GameObject;
 class C_Collider;
+class C_CapsuleCollider;
 
 class C_RigidBody : public Component
 {
+public:
+	friend class C_CapsuleCollider;
+
 public:
 
 	C_RigidBody(GameObject* go);
