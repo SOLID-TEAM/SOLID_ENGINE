@@ -187,9 +187,13 @@ void C_JointP2P::RemakeConstraint()
 	else
 	{
 		constraint = new btPoint2PointConstraint(*linked_go->GetComponent<C_Collider>()->body, btVector3(pivotA.x, pivotA.y, pivotA.z));
-		btVector3 _pivotB = dynamic_cast<btPoint2PointConstraint*>(constraint)->getPivotInB();
-		pivotB = { _pivotB.x(), _pivotB.y(), _pivotB.z() };
 	}
+
+	btVector3 _pivotA = dynamic_cast<btPoint2PointConstraint*>(constraint)->getPivotInA();
+	pivotA = { _pivotA.x(), _pivotA.y(), _pivotA.z() };
+
+	btVector3 _pivotB = dynamic_cast<btPoint2PointConstraint*>(constraint)->getPivotInB();
+	pivotB = { _pivotB.x(), _pivotB.y(), _pivotB.z() };
 
 	constraint->setDbgDrawSize(2.0f);
 
