@@ -436,6 +436,7 @@
     <ClInclude Include="C_BoxCollider.h" />
     <ClInclude Include="C_CapsuleCollider.h" />
     <ClInclude Include="C_ConvexHullCollider.h" />
+    <ClInclude Include="C_JointP2P.h" />
     <ClInclude Include="C_RigidBody.h" />
     <ClInclude Include="C_SphereCollider.h" />
     <ClInclude Include="DynTree.h" />
@@ -770,6 +771,7 @@
     <ClCompile Include="C_CapsuleCollider.cpp" />
     <ClCompile Include="C_Collider.cpp" />
     <ClCompile Include="C_ConvexHullCollider.cpp" />
+    <ClCompile Include="C_JointP2P.cpp" />
     <ClCompile Include="C_RigidBody.cpp" />
     <ClCompile Include="C_SphereCollider.cpp" />
     <ClCompile Include="DynTree.cpp" />

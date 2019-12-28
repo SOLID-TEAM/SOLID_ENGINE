@@ -14,6 +14,9 @@ C_Collider::C_Collider(GameObject* go) : Component(go, ComponentType::NO_TYPE)
 
 bool C_Collider::CleanUp()
 {
+	for (int i = 0; i < body->getNumConstraintRefs(); ++i)
+		body->removeConstraintRef(body->getConstraintRef(i));
+
 	App->physics->RemoveBody(body);
 	delete shape;
 	delete motion_state;

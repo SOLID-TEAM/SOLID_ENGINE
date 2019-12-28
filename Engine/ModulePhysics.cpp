@@ -155,6 +155,14 @@ void ModulePhysics::RenderConvexCollider(C_Collider* col)
 	ModuleRenderer3D::EndDebugDraw();
 }
 
+void ModulePhysics::RenderConstraint(btTypedConstraint* constraint)
+{
+	debug_renderer->setDebugMode(btIDebugDraw::DBG_DrawConstraints);
+	ModuleRenderer3D::BeginDebugDraw(float4(1.f, 1.f, 0.f, 1.f));
+	world->debugDrawConstraint(constraint);
+	ModuleRenderer3D::EndDebugDraw();
+}
+
 void ModulePhysics::AddBody(btRigidBody* body)
 {
 	world->addRigidBody(body);
@@ -163,6 +171,16 @@ void ModulePhysics::AddBody(btRigidBody* body)
 void ModulePhysics::RemoveBody(btRigidBody* body)
 {
 	world->removeRigidBody(body);
+}
+
+void ModulePhysics::AddConstraint(btTypedConstraint* constraint, bool bodiesCollision)
+{
+	world->addConstraint(constraint, bodiesCollision);
+}
+
+void ModulePhysics::RemoveConstraint(btTypedConstraint* constraint)
+{
+	world->removeConstraint(constraint);
 }
 
 //RigidBody* ModulePhysics::AddBody(const Sphere& sphere, float mass)

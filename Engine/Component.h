@@ -20,6 +20,7 @@ enum class ComponentType
 	CAPSULE_COLLIDER,
 	CONVEX_HULL_COLLIDER,
 	RIGID_BODY,
+	JOINTP2P,
 	NO_TYPE // last
 };
 

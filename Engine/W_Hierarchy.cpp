@@ -89,8 +89,10 @@ void W_Hierarchy::DrawAll(GameObject* go)
 	bool open = ImGui::TreeNodeEx(go->GetName(), node_flags);
 	if (inactive) ImGui::PopStyleColor(2);
 	bool clicked = ImGui::IsItemClicked(0);
-	//bool right_clicked = ImGui::IsItemClicked(1);
-	bool hover = ImGui::IsItemHovered();
+	bool mouse_released = (ImGui::IsMouseReleased(0) && ImGui::IsItemHovered());
+	
+	bool right_clicked = ImGui::IsItemClicked(1);
+	//bool hover = ImGui::IsItemHovered();
 
 	// pop colors ------------------------
 	if (selected) ImGui::PopStyleColor(2);
@@ -119,7 +121,7 @@ void W_Hierarchy::DrawAll(GameObject* go)
 	}
 	ImGui::PopID();
 
-	if (clicked)
+	if (mouse_released || right_clicked)
 	{
 		//LOG("Clicked: %s", go->GetName());
 		App->editor->SetSelectedObject(go, SelectedObject::Type::GAME_OBJECT);

@@ -1542,6 +1542,9 @@
     <ClInclude Include="C_ConvexHullCollider.h">
       <Filter>Sources\Game Object\Components\Colliders</Filter>
     </ClInclude>
+    <ClInclude Include="C_JointP2P.h">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -2419,6 +2422,9 @@
     </ClCompile>
     <ClCompile Include="C_ConvexHullCollider.cpp">
       <Filter>Sources\Game Object\Components\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="C_JointP2P.cpp">
+      <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

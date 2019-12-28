@@ -21,6 +21,7 @@
 #include "C_SphereCollider.h"
 #include "C_ConvexHullCollider.h"
 #include "C_RigidBody.h"
+#include "C_JointP2P.h"
 
 #include <typeinfo>
 #include <list>
@@ -50,6 +51,7 @@ public:
 	friend 	C_MeshRenderer;
 	friend 	C_Camera;
 	friend	C_Collider;
+	friend C_JointP2P;
 
 public:
 
@@ -198,6 +200,8 @@ T* GameObject::AddComponent()
 		new_component = (T*)new C_ConvexHullCollider(this);
 	else if (typeid(C_RigidBody) == typeid(T))
 		new_component = (T*)new C_RigidBody(this);
+	else if (typeid(C_JointP2P) == typeid(T))
+		new_component = (T*)new C_JointP2P(this);
 
 	if (new_component != nullptr)
 		components.push_back(new_component);

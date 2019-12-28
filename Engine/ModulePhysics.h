@@ -42,10 +42,14 @@ public:
 
 	void RenderCollider(C_Collider* collider);
 	void RenderConvexCollider(C_Collider* collider);
+	void RenderConstraint(btTypedConstraint* constraint);
 
 	void AddBody(btRigidBody* body);
 
 	void RemoveBody(btRigidBody* body);
+
+	void AddConstraint(btTypedConstraint* constraint, bool bodiesCollision = true);
+	void RemoveConstraint(btTypedConstraint* constraint);
 
 	void AddConstraintPointToPoint(PhysBody& bodyA, PhysBody& bodyB, const vec3& anchorA, const vec3& anchorB);
 
