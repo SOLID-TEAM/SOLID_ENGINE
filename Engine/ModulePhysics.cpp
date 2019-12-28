@@ -173,9 +173,9 @@ void ModulePhysics::RemoveBody(btRigidBody* body)
 	world->removeRigidBody(body);
 }
 
-void ModulePhysics::AddConstraint(btTypedConstraint* constraint, bool bodiesCollision)
+void ModulePhysics::AddConstraint(btTypedConstraint* constraint, bool disableBodiesCollision)
 {
-	world->addConstraint(constraint, bodiesCollision);
+	world->addConstraint(constraint, disableBodiesCollision);
 }
 
 void ModulePhysics::RemoveConstraint(btTypedConstraint* constraint)

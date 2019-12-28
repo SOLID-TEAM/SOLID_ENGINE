@@ -23,6 +23,7 @@ public:
 	bool DrawPanelInfo();
 private:
 	bool CheckForValidConnectedBody();
+	void RemakeConstraint();
 
 private:
 
@@ -33,7 +34,7 @@ private:
 	btVector3 pivotB;*/
 	float3 pivotA;
 	float3 pivotB;
-	bool bodies_collision = true;
+	bool disable_collision = false;
 
 	GameObject* connected_body = nullptr; // both gameobjects need a physics rigidbody
 	UID connected_body_id = 0;

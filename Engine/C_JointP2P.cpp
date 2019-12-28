@@ -17,17 +17,17 @@ C_JointP2P::C_JointP2P(GameObject* go) : Component(go, ComponentType::JOINTP2P)
 	//btRigidBody* rbody = linked_go->GetComponent<C_RigidBody>();
 	C_Collider* col = linked_go->GetComponent<C_Collider>();
 
-	// TODO: if no RigidBody attached, create one with empty shape
 	if (col == nullptr)
 	{
+		// TODO: if no RigidBody attached, create one with empty shape
 		col = linked_go->AddComponent<C_BoxCollider>();
 		col->CreateCollider();
 	}
 
-	constraint = new btPoint2PointConstraint(*col->body, btVector3(pivotA.x, 10, pivotA.z));
+	constraint = new btPoint2PointConstraint(*col->body, btVector3(pivotA.x, pivotA.y, pivotA.z));
 	constraint->setDbgDrawSize(2.0f);
 
-	App->physics->AddConstraint(constraint, bodies_collision);
+	App->physics->AddConstraint(constraint, disable_collision);
 
 }
 
@@ -38,9 +38,11 @@ bool C_JointP2P::Update()
 	if (fromLoad)
 	{
 		connected_body = App->scene->FindByUID(connected_body_id, App->scene->root_go);
+		RemakeConstraint();
 		
 		if (connected_body == nullptr)
 		{
+			
 			connected_body_id = 0;
 			pivotB = float3::zero;
 		}
@@ -94,7 +96,7 @@ bool C_JointP2P::DrawPanelInfo()
 		// TODO: CHANGE TO COMPONENT RIGIDBODY
 		C_Collider* col = (*go)->GetComponent<C_Collider>();
 
-		if (col)
+		if (col && *go != linked_go)
 		{
 			if (col->body)
 			{
@@ -108,6 +110,7 @@ bool C_JointP2P::DrawPanelInfo()
 		if (ImGui::AcceptDragDropPayload("gameobject_object") && validBody)
 		{
 			connected_body = *go;
+			RemakeConstraint();
 		}
 
 		ImGui::EndDragDropTarget();
@@ -121,24 +124,47 @@ bool C_JointP2P::DrawPanelInfo()
 	ImGui::Title("Pivot A", 1);	
 	if (ImGui::DragFloat3("##anchor", pivotA.ptr(), 0.1f))
 	{
-		//constraint.
-
-
+		dynamic_cast<btPoint2PointConstraint*>(constraint)->setPivotA(btVector3(pivotA.x, pivotA.y, pivotA.z));
 	}
 	ImGui::PopID();
 	// linked rigibody ---
 	if (!body_linked)
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-	ImGui::Title("Pivot B", 1);	ImGui::DragFloat3("##anchor", pivotB.ptr(), 0.1f);
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.1f, 1.0f));
+	ImGui::Title("Pivot B", 1);	
+	if (ImGui::DragFloat3("##anchor", pivotB.ptr(), 0.1f))
+	{
+		dynamic_cast<btPoint2PointConstraint*>(constraint)->setPivotB(btVector3(pivotB.x, pivotB.y, pivotB.z));
+	}
 	if(!body_linked)
 		ImGui::PopStyleColor();
 
-	ImGui::Title("Bodies Collision", 1); ImGui::Checkbox("##col", &bodies_collision);
+	ImGui::Title("Disable Collision", 1); 
+	if (ImGui::Checkbox("##col", &disable_collision))
+	{
+		RemakeConstraint();
+	}
 	// --------------------
 
-	
-
 	return true;
+}
+
+void C_JointP2P::RemakeConstraint()
+{
+	if (connected_body == nullptr) return;
+
+	App->physics->RemoveConstraint(constraint);
+
+	delete constraint;
+
+	constraint = new btPoint2PointConstraint(
+		*linked_go->GetComponent<C_Collider>()->body, 
+		*connected_body->GetComponent<C_Collider>()->body, 
+		btVector3(pivotA.x, pivotA.y, pivotA.z),
+		btVector3(pivotB.x, pivotB.y, pivotB.z));
+
+	constraint->setDbgDrawSize(2.0f);
+
+	App->physics->AddConstraint(constraint, disable_collision);
 }
 
 bool C_JointP2P::CleanUp()
@@ -159,7 +185,7 @@ bool C_JointP2P::Save(Config& config)
 
 	config.AddFloatArray("pivotA", (float*)&pivotA, 3);
 	config.AddFloatArray("pivotB", (float*)&pivotB, 3);
-	config.AddBool("BodiesCollision", bodies_collision);
+	config.AddBool("BodiesCollision", disable_collision);
 
 	return true;
 }
@@ -168,12 +194,13 @@ bool C_JointP2P::Load(Config& config)
 	connected_body_id = config.GetInt("connected_body", 0);
 	pivotA = config.GetFloat3("pivotA", { 0.f ,0.f, 0.f });
 	pivotB = config.GetFloat3("pivotB", { 0.f ,0.f, 0.f });
-	bodies_collision = config.GetBool("BodiesCollision", true);
+	disable_collision = config.GetBool("BodiesCollision", true);
+
+	dynamic_cast<btPoint2PointConstraint*>(constraint)->setPivotA(btVector3(pivotA.x, pivotA.y, pivotA.z));
+	dynamic_cast<btPoint2PointConstraint*>(constraint)->setPivotB(btVector3(pivotB.x, pivotB.y, pivotB.z));
 
 	if (connected_body_id > 0)
 		fromLoad = true;
 
 	return true;
 }
-
-//bool C_JointP2P::
