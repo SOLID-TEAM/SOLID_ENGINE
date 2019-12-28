@@ -15,14 +15,8 @@ void C_SphereCollider::CreateShape(C_Mesh* mesh)
 {
 	if (is_loaded == false)
 	{
-		if (mesh != nullptr)
-		{
-			radius = linked_go->GetOBB().MinimalEnclosingSphere().Diameter() * 0.5f;
-		}
-		else
-		{
-			radius = 0.5f;
-		}
+		radius = (mesh != nullptr) ? linked_go->GetOBB().MinimalEnclosingSphere().Diameter() * 0.5f : 0.5f;
+		center = (mesh != nullptr) ? mesh->mesh_aabb.CenterPoint() : float3::zero;
 	}
 
 	shape = new btSphereShape(1.f);

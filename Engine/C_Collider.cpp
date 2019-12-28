@@ -58,11 +58,6 @@ bool C_Collider::Update()
 	if (shape == nullptr)
 	{
 		C_Mesh* mesh = linked_go->GetComponent<C_Mesh>();
-
-		if (is_loaded == true)
-		{
-			center = (mesh != nullptr) ? mesh->mesh_aabb.CenterPoint() : float3::zero;
-		}
 		
 		CreateShape(mesh);
 		aux_body->setCollisionShape(shape);
@@ -74,8 +69,8 @@ bool C_Collider::Update()
 
 	// Body Logic -------------------------------------------
 
-	scaled_center = linked_go->transform->GetGlobalTransform().RotatePart().MulPos(scaled_center);
-	btTransform transform = ToBtTransform(linked_go->transform->GetPosition() + scaled_center, linked_go->transform->GetQuatRotation());
+	float3 world_center = GetWorldCenter();
+	btTransform transform = ToBtTransform(linked_go->transform->GetPosition() + world_center, linked_go->transform->GetQuatRotation());
 	aux_body->setWorldTransform(transform);
 
 	if (App->time->GetGameState() == GameState::STOP) return true;
@@ -152,6 +147,11 @@ void C_Collider::SetIsTrigger(bool value)
 bool C_Collider::GetIsTrigger()
 {
 	return is_trigger;
+}
+
+float3 C_Collider::GetWorldCenter()
+{
+	return linked_go->transform->GetGlobalTransform().RotatePart().MulPos(scaled_center);
 }
 
 bool C_Collider::SearchRigidBody()

@@ -19,6 +19,11 @@ C_ConvexHullCollider::~C_ConvexHullCollider()
 
 void C_ConvexHullCollider::CreateShape(C_Mesh* mesh)
 {
+	if (is_loaded == false)
+	{
+		center = float3::zero;
+	}
+
 	if (mesh == nullptr)
 		return;
 

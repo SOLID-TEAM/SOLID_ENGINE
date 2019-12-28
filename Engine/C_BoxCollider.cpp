@@ -13,14 +13,8 @@ void C_BoxCollider::CreateShape(C_Mesh* mesh)
 {
 	if (is_loaded == false)
 	{
-		if (mesh != nullptr)
-		{
-			size = mesh->mesh_aabb.Size();
-		}
-		else
-		{
-			size = float3::one;
-		}
+		size = (mesh != nullptr) ? mesh->mesh_aabb.Size() : size = float3::one;
+		center = (mesh != nullptr) ? mesh->mesh_aabb.CenterPoint() : float3::zero;
 	}
 
 	float3 shape_size = float3::one * 0.5f;

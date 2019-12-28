@@ -8,14 +8,16 @@ C_RigidBody::C_RigidBody(GameObject* go) : Component(go, ComponentType::RIGID_BO
 {
 	name.assign("Rigid Body");
 
+	// Set default values --------------------------
+
 	mass = 1.0f;
-	bouncing = 0.f;
+	bouncing = 0.1f;
 	drag = 0.f;
 	angular_drag = 0.f;
 	friction = 0.5f;
 	angular_friction = 0.1f;
 
-	// Create empty shape ----------------------------------------
+	// Create empty shape --------------------------
 
 	empty_shape = new btEmptyShape();
 
@@ -72,15 +74,6 @@ bool C_RigidBody::Update()
 	if (App->time->GetGameState() == GameState::STOP)
 		return true;
 
-	// Add body to world ------------------------
-
-	if (body_added == false)
-	{
-		SetBodyTranform(linked_go->transform->GetPosition(), linked_go->transform->GetQuatRotation());
-		App->physics->AddBody(body);
-		body_added = true;
-	}
-
 	// Search Colliders --------------------------
 
 	SearchCollider();
@@ -88,13 +81,28 @@ bool C_RigidBody::Update()
 	// Update Local Vars  ------------------------
 
 	btCollisionShape* current_shape = (collider != nullptr) ? collider->shape : empty_shape;  // Update Shape 
+	float3 go_offset = (collider != nullptr) ? collider->GetWorldCenter() : float3::zero;     // Update Go Offset
 	float current_mass = (linked_go->is_static) ? 0.f : mass;							      // Update Mass
 
-	// Update Inertia
-	if (collider != nullptr)
+	 // Update Inertia
+	if (collider != nullptr) 
+	{
 		current_shape->calculateLocalInertia(current_mass, inertia);
+	}
 	else
+	{
 		inertia = btVector3(0.f, 0.f, 0.f);
+	}
+		
+
+	// Add body to world ------------------------
+
+	if (body_added == false)
+	{
+		SetBodyTranform(linked_go->transform->GetPosition() + go_offset, linked_go->transform->GetQuatRotation());
+		App->physics->AddBody(body);
+		body_added = true;
+	}
 
 	// Update Rigid Body Vars ---------------------
 
@@ -136,16 +144,14 @@ bool C_RigidBody::Update()
 		body->setAngularFactor(freeze_r);
 	}
 
-	// Offset given by colliders
-	float3 offset(0.f, 0.f, 0.f);
+	// Set Go Transform ---------------------------
 
 	btTransform transform = body->getCenterOfMassTransform();
-	btMatrix3x3 rotation = transform.getBasis();
-	btQuaternion quat_rotation = transform.getRotation();
-	btVector3 position = transform.getOrigin() - rotation * ToBtVector3(offset);
+	btQuaternion rotation = transform.getRotation();
+	btVector3 position = transform.getOrigin() - ToBtVector3(go_offset);
 
 	linked_go->transform->SetPosition(float3(position));
-	linked_go->transform->SetRotation(math::Quat((btScalar*)quat_rotation));
+	linked_go->transform->SetRotation(math::Quat((btScalar*)rotation));
 
 	// Apply torque & force ----------------------
 

@@ -43,6 +43,8 @@ public:
 
 	bool GetIsTrigger();
 
+	float3 GetWorldCenter();
+
 	// Virtual Functions ------------------------------
 
 	// Create specific shape
