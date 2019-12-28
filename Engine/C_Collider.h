@@ -39,8 +39,6 @@ public:
 
 	 // Common Functoins ------------------------------
 
-	btVector3 UpdateInertia(float mass);
-
 	void SetIsTrigger(bool is_trigger);
 
 	bool GetIsTrigger();
@@ -62,19 +60,25 @@ public:
 
 private:
 
-	void CreateCollider();
+	bool SearchRigidBody();
 
 protected:
 
 	bool is_trigger = false;
+	bool is_loaded = false;
 
 	float3 center;
 	float3 scaled_center;
-	btVector3 local_inertia;
 
+	// Collider shape used in collision simulation
 	btCollisionShape* shape = nullptr;
-	btDefaultMotionState* motion_state = nullptr;
-	btRigidBody* body = nullptr;
+	// Used when GameObject has notrigid body in run time
+	btRigidBody* aux_body = nullptr; 
+	// Used when GameObject has notrigid body in run time
+	btDefaultMotionState* aux_motion_state = nullptr;
+	// Added to world
+	bool body_added = false;
+
 };
 
 #endif // !_C_COLLIDER_H__

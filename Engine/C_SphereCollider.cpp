@@ -13,13 +13,16 @@ C_SphereCollider::C_SphereCollider(GameObject* go) :C_Collider(go)
 
 void C_SphereCollider::CreateShape(C_Mesh* mesh)
 {
-	if (mesh != nullptr)
+	if (is_loaded == false)
 	{
-		radius = linked_go->GetOBB().MinimalEnclosingSphere().Diameter() * 0.5f;
-	}
-	else
-	{
-		radius = 0.5f;
+		if (mesh != nullptr)
+		{
+			radius = linked_go->GetOBB().MinimalEnclosingSphere().Diameter() * 0.5f;
+		}
+		else
+		{
+			radius = 0.5f;
+		}
 	}
 
 	shape = new btSphereShape(1.f);

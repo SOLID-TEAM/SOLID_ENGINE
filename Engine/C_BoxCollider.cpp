@@ -11,13 +11,16 @@ C_BoxCollider::C_BoxCollider(GameObject* go) : C_Collider(go)
 
 void C_BoxCollider::CreateShape(C_Mesh* mesh)
 {
-	if (mesh != nullptr)
+	if (is_loaded == false)
 	{
-		size = mesh->mesh_aabb.Size();
-	}
-	else
-	{
-		size = float3::one;
+		if (mesh != nullptr)
+		{
+			size = mesh->mesh_aabb.Size();
+		}
+		else
+		{
+			size = float3::one;
+		}
 	}
 
 	float3 shape_size = float3::one * 0.5f;

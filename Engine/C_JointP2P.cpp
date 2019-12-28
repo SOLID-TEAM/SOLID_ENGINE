@@ -21,10 +21,10 @@ C_JointP2P::C_JointP2P(GameObject* go) : Component(go, ComponentType::JOINTP2P)
 	{
 		// TODO: if no RigidBody attached, create one with empty shape
 		col = linked_go->AddComponent<C_BoxCollider>();
-		col->CreateCollider();
+		//col->CreateCollider();
 	}
 
-	constraint = new btPoint2PointConstraint(*col->body, btVector3(pivotA.x, pivotA.y, pivotA.z));
+	constraint = new btPoint2PointConstraint(*col->aux_body, btVector3(pivotA.x, pivotA.y, pivotA.z));
 	constraint->setDbgDrawSize(2.0f);
 
 	App->physics->AddConstraint(constraint, disable_collision);
@@ -116,7 +116,7 @@ bool C_JointP2P::DrawPanelInfo()
 
 		if (col && *go != linked_go)
 		{
-			if (col->body)
+			if (col->aux_body)
 			{
 				color = color_green;
 				validBody = true;
@@ -174,19 +174,19 @@ void C_JointP2P::RemakeConstraint()
 
 	btRigidBody* bodyB = nullptr;
 	if (connected_body != nullptr)
-		bodyB = connected_body->GetComponent<C_Collider>()->body;
+		bodyB = connected_body->GetComponent<C_Collider>()->aux_body;
 
 	if (bodyB)
 	{
 		constraint = new btPoint2PointConstraint(
-			*linked_go->GetComponent<C_Collider>()->body,
+			*linked_go->GetComponent<C_Collider>()->aux_body,
 			*bodyB,
 			btVector3(pivotA.x, pivotA.y, pivotA.z),
 			btVector3(pivotB.x, pivotB.y, pivotB.z));
 	}
 	else
 	{
-		constraint = new btPoint2PointConstraint(*linked_go->GetComponent<C_Collider>()->body, btVector3(pivotA.x, pivotA.y, pivotA.z));
+		constraint = new btPoint2PointConstraint(*linked_go->GetComponent<C_Collider>()->aux_body, btVector3(pivotA.x, pivotA.y, pivotA.z));
 	}
 
 	btVector3 _pivotA = dynamic_cast<btPoint2PointConstraint*>(constraint)->getPivotInA();

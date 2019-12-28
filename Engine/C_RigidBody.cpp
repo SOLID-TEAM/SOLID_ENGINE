@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "ModuleInput.h"
+#include "ModuleTime.h"
 
 C_RigidBody::C_RigidBody(GameObject* go) : Component(go, ComponentType::RIGID_BODY)
 {
@@ -13,11 +14,30 @@ C_RigidBody::C_RigidBody(GameObject* go) : Component(go, ComponentType::RIGID_BO
 	angular_drag = 0.f;
 	friction = 0.5f;
 	angular_friction = 0.1f;
+
+	// Create empty shape ----------------------------------------
+
+	empty_shape = new btEmptyShape();
+
+	// Create Body  --------------------------------
+
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,  nullptr, empty_shape);
+	body = new btRigidBody(rbInfo);
+	body->setUserPointer(linked_go);
 }
 
 bool C_RigidBody::CleanUp()
 {
-	return false;
+	if (body_added == true)
+	{
+		body_added = false;
+		App->physics->RemoveBody(body);
+	}
+
+	delete body;
+	delete empty_shape;
+
+	return true;
 }
 
 bool C_RigidBody::Save(Config& config)
@@ -28,11 +48,13 @@ bool C_RigidBody::Save(Config& config)
 	config.AddFloat("angular_drag", angular_drag);
 	config.AddFloat("friction", friction);
 	config.AddFloat("angular_friction", angular_friction);
+
 	return true;
 }
 
 bool C_RigidBody::Load(Config& config)
 {
+
 	mass			 = config.GetFloat("mass", mass);
 	bouncing		 = config.GetFloat("bouncing", bouncing);
 	drag			 = config.GetFloat("drag", drag);
@@ -45,19 +67,93 @@ bool C_RigidBody::Load(Config& config)
 
 bool C_RigidBody::Update()
 {
-	if (body == nullptr)
+	// Only run in game --------------------------
+
+	if (App->time->GetGameState() == GameState::STOP)
+		return true;
+
+	// Add body to world ------------------------
+
+	if (body_added == false)
 	{
-		SearchCollider();
+		SetBodyTranform(linked_go->transform->GetPosition(), linked_go->transform->GetQuatRotation());
+		App->physics->AddBody(body);
+		body_added = true;
 	}
 
-	if (body == nullptr) return true;
+	// Search Colliders --------------------------
+
+	SearchCollider();
+
+	// Update Local Vars  ------------------------
+
+	btCollisionShape* current_shape = (collider != nullptr) ? collider->shape : empty_shape;  // Update Shape 
+	float current_mass = (linked_go->is_static) ? 0.f : mass;							      // Update Mass
+
+	// Update Inertia
+	if (collider != nullptr)
+		current_shape->calculateLocalInertia(current_mass, inertia);
+	else
+		inertia = btVector3(0.f, 0.f, 0.f);
+
+	// Update Rigid Body Vars ---------------------
+
+	// Set Is Trigger 
+	if (collider != nullptr)
+	{
+		if (collider->is_trigger == true)
+		{
+			body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+		}
+		else
+		{
+			body->setCollisionFlags(body->getCollisionFlags() & ~btCollisionObject::CF_NO_CONTACT_RESPONSE);
+		}
+	}
+
+	// Set Collision Shape 
+	if (body->getCollisionShape() != current_shape)
+	{
+		body->setCollisionShape(current_shape);
+	}
+
+	SetMass(current_mass);
+	SetBouncing(bouncing);
+	SetDrag(drag);
+	SetAngularDrag(angular_drag);
+	SetFriction(friction);
+	SetAngularFriction(angular_friction);
+
+	btVector3 freeze_p((float)!freeze_position[0], (float)!freeze_position[1], (float)!freeze_position[2]);
+	btVector3 freeze_r((float)!freeze_rotation[0], (float)!freeze_rotation[1], (float)!freeze_rotation[2]);
+
+	if (body->getLinearFactor() != freeze_p)
+	{
+		body->setLinearFactor(freeze_p);
+	}
+	if (body->getAngularFactor() != freeze_r)
+	{
+		body->setAngularFactor(freeze_r);
+	}
+
+	// Offset given by colliders
+	float3 offset(0.f, 0.f, 0.f);
+
+	btTransform transform = body->getCenterOfMassTransform();
+	btMatrix3x3 rotation = transform.getBasis();
+	btQuaternion quat_rotation = transform.getRotation();
+	btVector3 position = transform.getOrigin() - rotation * ToBtVector3(offset);
+
+	linked_go->transform->SetPosition(float3(position));
+	linked_go->transform->SetRotation(math::Quat((btScalar*)quat_rotation));
+
+	// Apply torque & force ----------------------
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		AddForce(float3(linked_go->transform->forward * 10.F));
 
 	if (App->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN)
 		AddTorque(float3(linked_go->transform->forward * 2.F));
-
 
 
 	return true;
@@ -68,9 +164,60 @@ bool C_RigidBody::Render()
 	return true;
 }
 
+void C_RigidBody::SetMass(float& mass)
+{
+	if (mass != body->getMass())
+	{
+		body->setMassProps(mass, inertia);
+	}
+}
+
+void C_RigidBody::SetBouncing(float& bouncing)
+{
+	if (bouncing != body->getRestitution())
+	{
+		float min = 0.f, max = 1.f;
+		math::Clamp(&bouncing, &min, &max);
+		body->setRestitution(bouncing);
+	}
+}
+
+void C_RigidBody::SetDrag(float& drag)
+{
+	if (drag != body->getLinearDamping())
+	{
+		body->setDamping(drag, angular_drag);
+	}
+}
+
+void C_RigidBody::SetAngularDrag(float& angular_drag)
+{
+	if (angular_drag != body->getAngularDamping())
+	{
+		body->setDamping(drag, angular_drag);
+	}
+}
+
+void C_RigidBody::SetFriction(float& friction)
+{
+	if (friction != body->getFriction())
+	{
+		body->setFriction(friction);
+	}
+}
+
+void C_RigidBody::SetAngularFriction(float& angular_drag)
+{
+	if (angular_drag != body->getRollingFriction())
+	{
+		body->setRollingFriction(angular_drag);
+	}
+}
+
 void C_RigidBody::AddForce(const float3& force)
 {
 	if (body == nullptr) return;
+
 	body->activate(true);
 	body->applyCentralImpulse(btVector3(force.x, force.y, force.z));
 }
@@ -78,27 +225,21 @@ void C_RigidBody::AddForce(const float3& force)
 void C_RigidBody::AddTorque(const float3& force)
 {
 	if (body == nullptr) return;
+
 	body->activate(true);
 	body->applyTorqueImpulse(btVector3(force.x, force.y, force.z));
 }
 
 bool C_RigidBody::DrawPanelInfo()
 {
-	float aux_mass = mass;
-	float aux_bouncing = bouncing;
-	float aux_drag = drag;
-	float aux_angular_drag = angular_drag;
-	float aux_friction = friction;
-	float aux_angular_friction = angular_friction;
-
 	ImGui::Spacing();
 
-	ImGui::Title("Mass", 1);			ImGui::DragFloat("##mass", &aux_mass, 0.1f, 0.00f, FLT_MAX);
-	ImGui::Title("Bouncing", 1);		ImGui::DragFloat("##bouncing", &aux_bouncing, 0.1f, 0.00f, FLT_MAX);
-	ImGui::Title("Drag", 1);			ImGui::DragFloat("##drag", &aux_drag, 0.1f, 0.00f, FLT_MAX);
-	ImGui::Title("Angular Drag", 1);	ImGui::DragFloat("##angular_drag", &aux_angular_drag, 0.1f, 0.00f, FLT_MAX);
-	ImGui::Title("Friction", 1);		ImGui::DragFloat("##friction", &aux_friction, 0.1f, 0.00f, FLT_MAX);
-	ImGui::Title("Angular Friction",1);	ImGui::DragFloat("##angular_friction", &aux_angular_friction, 0.1f, 0.00f, FLT_MAX);
+	ImGui::Title("Mass", 1);			ImGui::DragFloat("##mass", &mass, 0.01f, 0.00f, FLT_MAX);
+	ImGui::Title("Bouncing", 1);		ImGui::DragFloat("##bouncing", &bouncing, 0.01f, 0.00f, 1.f);
+	ImGui::Title("Drag", 1);			ImGui::DragFloat("##drag", &drag, 0.01f, 0.00f, FLT_MAX);
+	ImGui::Title("Angular Drag", 1);	ImGui::DragFloat("##angular_drag", &angular_drag, 0.01f, 0.00f, FLT_MAX);
+	ImGui::Title("Friction", 1);		ImGui::DragFloat("##friction", &friction, 0.01f, 0.00f, FLT_MAX);
+	ImGui::Title("Angular Friction",1);	ImGui::DragFloat("##angular_friction", &angular_friction, 0.01f, 0.00f, FLT_MAX);
 
 	ImGui::Title("Freeze", 1);	ImGui::Text("");
 	ImGui::Spacing();
@@ -117,121 +258,42 @@ bool C_RigidBody::DrawPanelInfo()
 
 	ImGui::Spacing();
 
-	// Vars --------------------------------------
-
-	if (body == nullptr) return true;
-
-	static bool test = false;
-
-	if (test == false)
-	{
-		LOG("Mass				: %f", body->getMass());
-		LOG("Bouncing			: %f", body->getRestitution());
-		LOG("Drag				: %f", body->getLinearDamping());
-		LOG("Angular Drag		: %f", body->getAngularDamping());
-		LOG("Friction			: %f", body->getFriction());
-		LOG("Angular Friction	: %f", body->getRollingFriction());
-		test = true;
-	}
-
-
-	SetMass(aux_mass);
-	SetBouncing(aux_bouncing);
-	SetDrag(aux_drag);
-	SetAngularDrag(aux_angular_drag);
-	SetFriction(aux_friction);
-	SetAngularFriction(aux_angular_friction);
-
-
-	// Freeze ------------------------------------ 
-
-	btVector3 freeze_p((float)!freeze_position[0], (float)!freeze_position[1], (float)!freeze_position[2]);
-	btVector3 freeze_r((float)!freeze_rotation[0], (float)!freeze_rotation[1], (float)!freeze_rotation[2]);
-
-	if (body->getLinearFactor() != freeze_p)
-	{
-		body->setLinearFactor(freeze_p);
-	}
-	if (body->getAngularFactor() != freeze_r)
-	{
-		body->setAngularFactor(freeze_r);
-	}
-
 	return true;
 }
 
-void C_RigidBody::SetMass(float v)
+void C_RigidBody::CreateBody()
 {
-	if (mass != v)
+	float3 position;
+	Quat rotation;
+	C_Mesh* mesh = linked_go->GetComponent<C_Mesh>();
+
+	if (mesh != nullptr)
 	{
-		mass = v;
-		body->setMassProps(mass,  collider->UpdateInertia(mass));
+		position = linked_go->obb.CenterPoint();
 	}
+	else
+	{
+		position = linked_go->transform->position;
+	}
+
+	rotation = linked_go->transform->GetQuatRotation();
+
+
 }
 
-void C_RigidBody::SetBouncing(float v)
+void C_RigidBody::SetBodyTranform(const float3& pos, const Quat& rot)
 {
-	if (bouncing != v)
-	{
-		float min = 0.f, max = 1.f;
-		math::Clamp(&v, &min, &max);
-		bouncing = v;
-		body->setRestitution(bouncing);
-	}
+	body->setWorldTransform( ToBtTransform(pos, rot) );
 }
 
-void C_RigidBody::SetDrag(float v)
-{
-	if (drag != v)
-	{
-		drag = v;
-		body->setDamping(drag, angular_drag);
-	}
-}
-
-void C_RigidBody::SetAngularDrag(float v)
-{
-	if (angular_drag != v)
-	{
-		angular_drag = v;
-		body->setDamping(drag, angular_drag);
-	}
-}
-
-void C_RigidBody::SetFriction(float v)
-{
-	if (friction != v)
-	{
-		friction = v;
-		body->setFriction(friction);
-	}
-}
-
-void C_RigidBody::SetAngularFriction(float v)
-{
-	if (angular_drag != v)
-	{
-		angular_drag = v;
-		body->setRollingFriction(angular_drag);
-	}
-}
 
 void C_RigidBody::SearchCollider()
 {
 	C_Collider* collider = linked_go->GetComponent<C_Collider>();
 	
-	if (collider != nullptr && collider->body != nullptr)
+	if (collider != nullptr && collider->shape != nullptr)
 	{
-		body = collider->body;
 		this->collider = collider;
-
-		SetMass(mass);
-		SetBouncing(bouncing);
-		SetDrag(drag);
-		SetAngularDrag(angular_drag);
-		SetFriction(friction);
-		SetAngularFriction(angular_friction);
-
 	}
 		
 }

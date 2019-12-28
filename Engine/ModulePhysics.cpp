@@ -124,7 +124,7 @@ void ModulePhysics::RenderCollider( C_Collider* collider)
 {
 	debug_renderer->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
 	ModuleRenderer3D::BeginDebugDraw(float4(0.f, 1.f, 0.f, 1.f));
-	world->debugDrawObject(collider->body->getCenterOfMassTransform(), collider->shape, btVector3(0.f, 1.f, 0.f));
+	world->debugDrawObject(collider->aux_body->getCenterOfMassTransform(), collider->shape, btVector3(0.f, 1.f, 0.f));
 	ModuleRenderer3D::EndDebugDraw();
 }
 
@@ -133,7 +133,7 @@ void ModulePhysics::RenderConvexCollider(C_Collider* col)
 	debug_renderer->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
 	ModuleRenderer3D::BeginDebugDraw(float4(0.f, 1.f, 0.f, 1.f));
 
-	btTransform worldTransform = col->body->getCenterOfMassTransform();
+	btTransform worldTransform = col->aux_body->getCenterOfMassTransform();
 	btShapeHull* hull = static_cast<btShapeHull*>(col->shape->getUserPointer());
 
 	if (hull == nullptr) return;
@@ -357,12 +357,22 @@ int	DebugRenderer::getDebugMode() const
 	return mode;
 }
 
-btVector3 ToBtVector3(float3& vec)
+btVector3 ToBtVector3(const float3& vec)
 {
 	return btVector3(vec.x, vec.y, vec.z);
 }
 
-btQuaternion ToBtQuaternion(Quat& quat)
+btQuaternion ToBtQuaternion(const Quat& quat)
 {
 	return btQuaternion(quat.x, quat.y, quat.z, quat.w);
+}
+
+btTransform ToBtTransform(const btVector3&  pos, const  btQuaternion& quat)
+{
+	return btTransform(quat, pos);
+}
+
+btTransform ToBtTransform(const float3&  pos, const Quat& quat)
+{
+	return btTransform(ToBtQuaternion(quat), ToBtVector3(pos));
 }

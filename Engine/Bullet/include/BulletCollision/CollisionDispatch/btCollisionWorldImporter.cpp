@@ -92,7 +92,7 @@ bool btCollisionWorldImporter::convertAllObjects(btBulletSerializedArrays* array
 				btBvhTriangleMeshShape* trimesh = (btBvhTriangleMeshShape*)shape;
 				if (trimesh->getTriangleInfoMap())
 				{
-					body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+					aux_body->setCollisionFlags(aux_body->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
 				}
 			}
 #endif  //USE_INTERNAL_EDGE_UTILITY
@@ -122,7 +122,7 @@ bool btCollisionWorldImporter::convertAllObjects(btBulletSerializedArrays* array
 				btBvhTriangleMeshShape* trimesh = (btBvhTriangleMeshShape*)shape;
 				if (trimesh->getTriangleInfoMap())
 				{
-					body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+					aux_body->setCollisionFlags(aux_body->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
 				}
 			}
 #endif  //USE_INTERNAL_EDGE_UTILITY

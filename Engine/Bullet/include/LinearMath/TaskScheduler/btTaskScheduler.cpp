@@ -108,9 +108,9 @@ class ParallelForJob : public IJob
 	int m_end;
 
 public:
-	ParallelForJob(int iBegin, int iEnd, const btIParallelForBody& body)
+	ParallelForJob(int iBegin, int iEnd, const btIParallelForBody& aux_body)
 	{
-		m_body = &body;
+		m_body = &aux_body;
 		m_begin = iBegin;
 		m_end = iEnd;
 	}
@@ -131,9 +131,9 @@ class ParallelSumJob : public IJob
 	int m_end;
 
 public:
-	ParallelSumJob(int iBegin, int iEnd, const btIParallelSumBody& body, ThreadLocalStorage* tls)
+	ParallelSumJob(int iBegin, int iEnd, const btIParallelSumBody& aux_body, ThreadLocalStorage* tls)
 	{
-		m_body = &body;
+		m_body = &aux_body;
 		m_threadLocalStoreArray = tls;
 		m_begin = iBegin;
 		m_end = iEnd;
@@ -653,7 +653,7 @@ public:
 		setWorkerDirectives(WorkerThreadDirectives::kScanForJobs);
 	}
 
-	virtual void parallelFor(int iBegin, int iEnd, int grainSize, const btIParallelForBody& body) BT_OVERRIDE
+	virtual void parallelFor(int iBegin, int iEnd, int grainSize, const btIParallelForBody& aux_body) BT_OVERRIDE
 	{
 		BT_PROFILE("parallelFor_ThreadSupport");
 		btAssert(iEnd >= iBegin);
@@ -684,7 +684,7 @@ public:
 				btAssert(jq);
 				btAssert((jq - &m_jobQueues[0]) < m_numActiveJobQueues);
 				void* jobMem = jq->allocJobMem(jobSize);
-				JobType* job = new (jobMem) ParallelForJob(i, iE, body);  // placement new
+				JobType* job = new (jobMem) ParallelForJob(i, iE, aux_body);  // placement new
 				jq->submitJob(job);
 				iJob++;
 				iThread++;
@@ -703,10 +703,10 @@ public:
 		{
 			BT_PROFILE("parallelFor_mainThread");
 			// just run on main thread
-			body.forLoop(iBegin, iEnd);
+			aux_body.forLoop(iBegin, iEnd);
 		}
 	}
-	virtual btScalar parallelSum(int iBegin, int iEnd, int grainSize, const btIParallelSumBody& body) BT_OVERRIDE
+	virtual btScalar parallelSum(int iBegin, int iEnd, int grainSize, const btIParallelSumBody& aux_body) BT_OVERRIDE
 	{
 		BT_PROFILE("parallelSum_ThreadSupport");
 		btAssert(iEnd >= iBegin);
@@ -743,7 +743,7 @@ public:
 				btAssert(jq);
 				btAssert((jq - &m_jobQueues[0]) < m_numActiveJobQueues);
 				void* jobMem = jq->allocJobMem(jobSize);
-				JobType* job = new (jobMem) ParallelSumJob(i, iE, body, &m_threadLocalStorage[0]);  // placement new
+				JobType* job = new (jobMem) ParallelSumJob(i, iE, aux_body, &m_threadLocalStorage[0]);  // placement new
 				jq->submitJob(job);
 				iJob++;
 				iThread++;
@@ -770,7 +770,7 @@ public:
 		{
 			BT_PROFILE("parallelSum_mainThread");
 			// just run on main thread
-			return body.sumLoop(iBegin, iEnd);
+			return aux_body.sumLoop(iBegin, iEnd);
 		}
 	}
 };

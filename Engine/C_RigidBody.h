@@ -17,6 +17,7 @@ public:
 	bool CleanUp();
 
 	bool Save(Config& config);
+
 	bool Load(Config& config);
 
 	bool Update();
@@ -27,23 +28,27 @@ public:
 
 	// User Functions ----------------------
 
-	void SetMass(float v);
+	void SetMass(float& v);
 
-	void SetBouncing(float v);
+	void SetBouncing(float& v);
 
-	void SetDrag(float v);
+	void SetDrag(float& v);
 
-	void SetAngularDrag(float v);
+	void SetAngularDrag(float& v);
 
-	void SetFriction(float v);
+	void SetFriction(float& v);
 
-	void SetAngularFriction(float v);
+	void SetAngularFriction(float& v);
 
 	void AddForce(const float3& force);
 
 	void AddTorque(const float3& force);
 
 private:
+
+	void CreateBody();
+
+	void SetBodyTranform(const float3& pos, const Quat& rot);
 
 	void SearchCollider();
 
@@ -62,8 +67,15 @@ private:
 	bool freeze_rotation[3] = {false, false, false};
 
 	float3 velocity;
-	C_Collider* collider = nullptr;
+	btVector3 inertia;
+
+	bool body_added = false;
+	// Body used in physics simulation
 	btRigidBody* body = nullptr;
+	// Used when GameObejct has not a collider
+	btEmptyShape* empty_shape = nullptr;
+	// Collider component
+	C_Collider* collider = nullptr;
 };
 
 #endif // !_C_RIGID_BODY_H__

@@ -690,21 +690,21 @@ int btSequentialImpulseConstraintSolver::getOrInitSolverBody(btCollisionObject& 
 {
 #if BT_THREADSAFE
 	int solverBodyId = -1;
-	bool isRigidBodyType = btRigidBody::upcast(&body) != NULL;
-	if (isRigidBodyType && !body.isStaticOrKinematicObject())
+	bool isRigidBodyType = btRigidBody::upcast(&aux_body) != NULL;
+	if (isRigidBodyType && !aux_body.isStaticOrKinematicObject())
 	{
 		// dynamic body
 		// Dynamic bodies can only be in one island, so it's safe to write to the companionId
-		solverBodyId = body.getCompanionId();
+		solverBodyId = aux_body.getCompanionId();
 		if (solverBodyId < 0)
 		{
 			solverBodyId = m_tmpSolverBodyPool.size();
 			btSolverBody& solverBody = m_tmpSolverBodyPool.expand();
-			initSolverBody(&solverBody, &body, timeStep);
-			body.setCompanionId(solverBodyId);
+			initSolverBody(&solverBody, &aux_body, timeStep);
+			aux_body.setCompanionId(solverBodyId);
 		}
 	}
-	else if (isRigidBodyType && body.isKinematicObject())
+	else if (isRigidBodyType && aux_body.isKinematicObject())
 	{
 		//
 		// NOTE: must test for kinematic before static because some kinematic objects also
@@ -713,7 +713,7 @@ int btSequentialImpulseConstraintSolver::getOrInitSolverBody(btCollisionObject& 
 		// Kinematic bodies can be in multiple islands at once, so it is a
 		// race condition to write to them, so we use an alternate method
 		// to record the solverBodyId
-		int uniqueId = body.getWorldArrayIndex();
+		int uniqueId = aux_body.getWorldArrayIndex();
 		const int INVALID_SOLVER_BODY_ID = -1;
 		if (uniqueId >= m_kinematicBodyUniqueIdToSolverBodyTable.size())
 		{
@@ -726,17 +726,17 @@ int btSequentialImpulseConstraintSolver::getOrInitSolverBody(btCollisionObject& 
 			// create a table entry for this body
 			solverBodyId = m_tmpSolverBodyPool.size();
 			btSolverBody& solverBody = m_tmpSolverBodyPool.expand();
-			initSolverBody(&solverBody, &body, timeStep);
+			initSolverBody(&solverBody, &aux_body, timeStep);
 			m_kinematicBodyUniqueIdToSolverBodyTable[uniqueId] = solverBodyId;
 		}
 	}
 	else
 	{
-		bool isMultiBodyType = (body.getInternalType() & btCollisionObject::CO_FEATHERSTONE_LINK);
+		bool isMultiBodyType = (aux_body.getInternalType() & btCollisionObject::CO_FEATHERSTONE_LINK);
 		// Incorrectly set collision object flags can degrade performance in various ways.
 		if (!isMultiBodyType)
 		{
-			btAssert(body.isStaticOrKinematicObject());
+			btAssert(aux_body.isStaticOrKinematicObject());
 		}
 		//it could be a multibody link collider
 		// all fixed bodies (inf mass) get mapped to a single solver id

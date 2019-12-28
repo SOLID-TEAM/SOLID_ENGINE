@@ -40,7 +40,7 @@ void C_ConvexHullCollider::CreateShape(C_Mesh* mesh)
 
 bool C_ConvexHullCollider::Render()
 {
-	if (body == nullptr || shape == nullptr) return true;
+	if (aux_body == nullptr || shape == nullptr) return true;
 
 	if (App->scene->selected_go == linked_go && App->scene->editor_mode && hull)
 	{

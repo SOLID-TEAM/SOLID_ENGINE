@@ -88,8 +88,13 @@ public:
 	DebugDrawModes mode;
 };
 
-btVector3 ToBtVector3(float3 &vec);
-btQuaternion ToBtQuaternion(Quat& quat);
+btVector3 ToBtVector3(const float3& vec);
+
+btQuaternion ToBtQuaternion(const Quat& quat);
+
+btTransform ToBtTransform(const btVector3& pos, const btQuaternion& quat);
+
+btTransform ToBtTransform(const float3& pos, const Quat& quat);
 
 #endif // !_MODULE_PHYSICS_H__
 

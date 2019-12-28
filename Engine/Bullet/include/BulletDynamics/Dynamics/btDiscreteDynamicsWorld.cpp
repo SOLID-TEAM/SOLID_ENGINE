@@ -875,7 +875,7 @@ void btDiscreteDynamicsWorld::createPredictiveContactsInternal(btRigidBody** bod
 						}
 					};
 
-					StaticOnlyCallback sweepResults(body, body->getWorldTransform().getOrigin(), predictedTrans.getOrigin(), getBroadphase()->getOverlappingPairCache(), getDispatcher());
+					StaticOnlyCallback sweepResults(aux_body, aux_body->getWorldTransform().getOrigin(), predictedTrans.getOrigin(), getBroadphase()->getOverlappingPairCache(), getDispatcher());
 #else
 					btClosestNotMeConvexResultCallback sweepResults(body, body->getWorldTransform().getOrigin(), predictedTrans.getOrigin(), getBroadphase()->getOverlappingPairCache(), getDispatcher());
 #endif
@@ -977,7 +977,7 @@ void btDiscreteDynamicsWorld::integrateTransformsInternal(btRigidBody** bodies, 
 						}
 					};
 
-					StaticOnlyCallback sweepResults(body, body->getWorldTransform().getOrigin(), predictedTrans.getOrigin(), getBroadphase()->getOverlappingPairCache(), getDispatcher());
+					StaticOnlyCallback sweepResults(aux_body, aux_body->getWorldTransform().getOrigin(), predictedTrans.getOrigin(), getBroadphase()->getOverlappingPairCache(), getDispatcher());
 #else
 					btClosestNotMeConvexResultCallback sweepResults(body, body->getWorldTransform().getOrigin(), predictedTrans.getOrigin(), getBroadphase()->getOverlappingPairCache(), getDispatcher());
 #endif
@@ -1000,20 +1000,20 @@ void btDiscreteDynamicsWorld::integrateTransformsInternal(btRigidBody** bodies, 
 						body->proceedToTransform(predictedTrans);
 
 #if 0
-						btVector3 linVel = body->getLinearVelocity();
+						btVector3 linVel = aux_body->getLinearVelocity();
 
-						btScalar maxSpeed = body->getCcdMotionThreshold()/getSolverInfo().m_timeStep;
+						btScalar maxSpeed = aux_body->getCcdMotionThreshold()/getSolverInfo().m_timeStep;
 						btScalar maxSpeedSqr = maxSpeed*maxSpeed;
 						if (linVel.length2()>maxSpeedSqr)
 						{
 							linVel.normalize();
 							linVel*= maxSpeed;
-							body->setLinearVelocity(linVel);
-							btScalar ms2 = body->getLinearVelocity().length2();
-							body->predictIntegratedTransform(timeStep, predictedTrans);
+							aux_body->setLinearVelocity(linVel);
+							btScalar ms2 = aux_body->getLinearVelocity().length2();
+							aux_body->predictIntegratedTransform(timeStep, predictedTrans);
 
-							btScalar sm2 = (predictedTrans.getOrigin()-body->getWorldTransform().getOrigin()).length2();
-							btScalar smt = body->getCcdSquareMotionThreshold();
+							btScalar sm2 = (predictedTrans.getOrigin()-aux_body->getWorldTransform().getOrigin()).length2();
+							btScalar smt = aux_body->getCcdSquareMotionThreshold();
 							printf("sm2=%f\n",sm2);
 						}
 #else

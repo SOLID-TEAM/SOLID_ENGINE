@@ -51,7 +51,8 @@ public:
 	friend 	C_MeshRenderer;
 	friend 	C_Camera;
 	friend	C_Collider;
-	friend C_JointP2P;
+	friend  C_RigidBody;
+	friend  C_JointP2P;
 
 public:
 
