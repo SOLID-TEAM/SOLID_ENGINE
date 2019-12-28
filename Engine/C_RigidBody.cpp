@@ -88,6 +88,7 @@ bool C_RigidBody::Update()
 	if (collider != nullptr) 
 	{
 		current_shape->calculateLocalInertia(current_mass, inertia);
+		body->setMassProps(current_mass, inertia);
 	}
 	else
 	{
