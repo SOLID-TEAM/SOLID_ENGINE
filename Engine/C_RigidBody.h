@@ -9,11 +9,13 @@
 class GameObject;
 class C_Collider;
 class C_CapsuleCollider;
+class C_JointP2P;
 
 class C_RigidBody : public Component
 {
 public:
 	friend class C_CapsuleCollider;
+	friend class C_JointP2P;
 
 public:
 

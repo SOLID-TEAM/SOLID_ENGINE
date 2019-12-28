@@ -9,7 +9,6 @@ class GameObject;
 class ModulePhysics;
 class C_Mesh;
 class C_RigidBody;
-class C_JointP2P;
 
 class C_Collider : public Component
 {
@@ -17,7 +16,6 @@ public:
 
 	friend ModulePhysics;
 	friend C_RigidBody;
-	friend C_JointP2P;
 
 public:
 

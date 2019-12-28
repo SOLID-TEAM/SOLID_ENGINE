@@ -28,6 +28,9 @@ C_RigidBody::C_RigidBody(GameObject* go) : Component(go, ComponentType::RIGID_BO
 
 bool C_RigidBody::CleanUp()
 {
+	for (int i = 0; i < body->getNumConstraintRefs(); ++i)
+		body->removeConstraintRef(body->getConstraintRef(i));
+
 	if (body_added == true)
 	{
 		body_added = false;
