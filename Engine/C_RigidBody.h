@@ -2,6 +2,7 @@
 #define  _C_RIGID_BODY_H__
 
 #include "Component.h"
+#include "ModulePhysics.h"
 #include "external/MathGeoLib/include/Math/MathAll.h"
 #include "Bullet/include/btBulletDynamicsCommon.h"
 
@@ -34,21 +35,21 @@ public:
 
 	void SetMass(float& v);
 
-	void SetBouncing(float& v);
-
 	void SetDrag(float& v);
 
 	void SetAngularDrag(float& v);
 
+	void AddForce(const float3& force, Space space = Space::Local);
+
+	void AddTorque(const float3& force, Space space = Space::Local);
+
+private:
+
+	void SetBouncing(float& v);
+
 	void SetFriction(float& v);
 
 	void SetAngularFriction(float& v);
-
-	void AddForce(const float3& force);
-
-	void AddTorque(const float3& force);
-
-private:
 
 	void CreateBody();
 
@@ -58,12 +59,13 @@ private:
 
 private:
 
+	float3 force_to_apply = float3::zero;
+	float3 torque_to_apply = float3::zero;
+
 	float mass = 0.0f;
-	float bouncing = 0.f;
 	float drag = 0.f;
 	float angular_drag = 0.f;
-	float friction = 0.f;
-	float angular_friction = 0.f;
+
 	
 	bool use_gravity = true;
 	bool is_kinematic = false;

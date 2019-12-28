@@ -4,6 +4,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleImporter.h"
+#include"ModuleEditor.h"
+#include "W_Primitives.h"
 #include "GameObject.h"
 #include "Random.h"
 
@@ -370,7 +372,81 @@ UID ModuleImporter::GetNewUID()
 //	return d_texture;
 //}
 
-GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, float3 position, float3 size, float2 slicesStacks, float4 color)
+void ModuleImporter::CreateDefaultMeshResources()
+{
+	//PrimitiveType primitive_type = PrimitiveType::CUBE;
+	//bool isPlatonic = false; // par_shapes weld its vertices on creation and needs to be unwelded to compute normals
+	//std::string name;
+	//par_shapes_mesh* p_mesh = nullptr;
+
+
+	//for (int i = 0; i < PrimitiveType::MAX; ++i)
+	//{
+	//	float2 size = App->editor->w_primitives->GetSlicesAndStacks(i);
+	//	PrimitiveType primitive_type = (PrimitiveType)i;
+
+	//	switch (primitive_type)
+	//	{
+	//	//case CUBE:
+	//	//	p_mesh = par_shapes_create_cube();
+	//	//	isPlatonic = true;
+	//	//	name.assign("Cube");
+	//	//	break;
+	//	//case ICOSPHERE:
+	//	//	/*p_mesh = par_shapes_create_icosahedron();*/
+	//	//	p_mesh = par_shapes_create_subdivided_sphere(1);
+	//	//	//isPlatonic = true;
+	//	//	name.assign("Icosphere");
+	//	//	break;
+	//	case PLANE:
+	//		p_mesh = par_shapes_create_plane(size.x, size.y);
+	//		name.assign("Plane");
+	//		break;
+	//	case SPHERE:
+	//		p_mesh = par_shapes_create_parametric_sphere(size.x, size.y);
+	//		name.assign("Sphere");
+	//		break;
+	//	//case CYLINDER:
+	//	//	p_mesh = par_shapes_create_cylinder(size.x, size.y);
+	//	//	name.assign("Cylinder");
+	//	//	break;
+	//	//case CONE:
+	//	//	p_mesh = par_shapes_create_cone(size.x, size.y);
+	//	//	name.assign("Cone");
+	//	//	break;
+	//	//case TORUS:
+	//	//	p_mesh = par_shapes_create_torus(size.x, size.y, size.x * 0.5f); // Gets the radius from the size x component
+	//	//	name.assign("Torus");
+	//	//	break;
+	//	default:
+	//		continue;
+	//		break;
+	//	}
+	//	name += "_Mesh";
+
+	//	par_shapes_scale(p_mesh, 1, 1, 1);
+	//	par_shapes_translate(p_mesh, 0, 0, 0);
+	//	par_shapes_unweld(p_mesh, true);
+	//	par_shapes_compute_normals(p_mesh);
+
+	//	if (App->resources->FindByName(name.c_str()) == 0)
+	//	{
+	//		UID id = App->random->Int();
+	//		R_Mesh* res = (R_Mesh*)App->resources->CreateNewResource(Resource::Type::MESH, id);
+	//		res->SetFromParseShapes(id, p_mesh->points, p_mesh->triangles, p_mesh->normals, p_mesh->tcoords, p_mesh->npoints, p_mesh->ntriangles);
+	//		res->name.assign(name);
+	//		res->SaveToFile(std::to_string(id).c_str());
+	//		res->Release();
+
+	//		App->resources->CreateNewMetaData(std::string(ASSETS_MESH_FOLDER, );
+
+	//	}
+
+	//	par_shapes_free_mesh(p_mesh);
+	//}
+}
+
+GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, float3 position, float3 size, GameObject* parent, float2 slicesStacks, float4 color)
 {
 	bool isPlatonic = false; // par_shapes weld its vertices on creation and needs to be unwelded to compute normals
 	std::string name;
@@ -421,6 +497,7 @@ GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, float3 position,
 	}*/
 	
 
+
 	if (isPlatonic)
 	{
 		par_shapes_unweld(p_mesh, true);
@@ -434,32 +511,31 @@ GameObject* ModuleImporter::CreatePrimitive(PrimitiveType type, float3 position,
 
 	GameObject* gameobject;
 
-
-	if (App->scene->selected_go != nullptr)
-	{
-		gameobject = App->scene->CreateGameObject(name, App->scene->selected_go , false);
-	}
-	else
+	if (parent == nullptr)
 	{
 		gameobject = App->scene->CreateGameObject(name, App->scene->root_go , false);
 	}
+	else
+	{
+		gameobject = App->scene->CreateGameObject(name, parent, false);
+	}
 	
 
-	// Components --------------------------------------------
-	//C_Mesh* c_mesh = gameobject->CreateComponent<C_Mesh>();
+	//// Components --------------------------------------------
+	//C_Mesh* c_mesh = gameobject->AddComponent<C_Mesh>();
 	//// TODO: GEN NEW UID FOR PRIMITIVES
-	//c_mesh->data = new R_Mesh(0,p_mesh->points, p_mesh->triangles, p_mesh->normals, p_mesh->tcoords, p_mesh->npoints, p_mesh->ntriangles);
-	//c_mesh->data->name.assign(name.data());
-	//c_mesh->data->GLGenBuffersAndLoad();
+	//c_mesh->resource = new R_Mesh(0,p_mesh->points, p_mesh->triangles, p_mesh->normals, p_mesh->tcoords, p_mesh->npoints, p_mesh->ntriangles);
+	//c_mesh->resource->name.assign(name.data());
+	//c_mesh->resource->GLGenBuffersAndLoad();
 	//c_mesh->data->CreateAABB();
-
-	//C_Material* c_material = gameobject->CreateComponent< C_Material>();
+	//
+	//C_Material* c_material = gameobject->AddComponent<C_Material>();
 	////c_material->data = CreateDefaultMaterial("Default material", color);
 	//c_material->textured = false;
 
-	//C_MeshRenderer* c_renderer = gameobject->CreateComponent< C_MeshRenderer>();
+	//C_MeshRenderer* c_renderer = gameobject->AddComponent< C_MeshRenderer>();
 
-	//par_shapes_free_mesh(p_mesh);
+	//
 
 	return gameobject;
 }

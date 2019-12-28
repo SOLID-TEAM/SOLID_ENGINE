@@ -19,8 +19,13 @@ R_Mesh::R_Mesh(UID uid) : Resource(uid, Type::MESH )
 }
 
 // TODO: update this constructor exclusively for primitives
-R_Mesh::R_Mesh(UID uid,float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices) : Resource(uid,Type::MESH)
+void R_Mesh::SetFromParseShapes(UID uid,float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices) 
 { 
+	for (uint i = 0; i < BufferType::MAX; i++)
+	{
+		buffers_id[i] = 0;
+		buffers_size[i] = 0;
+	}
 	// par_shapes meshes fixed num uv components per uv = 2
 	this->uv_num_components = 2;
 

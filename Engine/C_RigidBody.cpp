@@ -1,8 +1,9 @@
-#include "C_RigidBody.h"
 #include "Application.h"
+#include "C_RigidBody.h"
 #include "GameObject.h"
 #include "ModuleInput.h"
 #include "ModuleTime.h"
+
 
 C_RigidBody::C_RigidBody(GameObject* go) : Component(go, ComponentType::RIGID_BODY)
 {
@@ -11,11 +12,8 @@ C_RigidBody::C_RigidBody(GameObject* go) : Component(go, ComponentType::RIGID_BO
 	// Set default values --------------------------
 
 	mass = 1.0f;
-	bouncing = 0.1f;
 	drag = 0.f;
 	angular_drag = 0.f;
-	friction = 0.5f;
-	angular_friction = 0.1f;
 
 	// Create empty shape --------------------------
 
@@ -45,11 +43,8 @@ bool C_RigidBody::CleanUp()
 bool C_RigidBody::Save(Config& config)
 {
 	config.AddFloat("mass", mass);
-	config.AddFloat("bouncing", bouncing);
 	config.AddFloat("drag", drag);
 	config.AddFloat("angular_drag", angular_drag);
-	config.AddFloat("friction", friction);
-	config.AddFloat("angular_friction", angular_friction);
 
 	config.AddBool("freeze_pos_x", freeze_position[0]);
 	config.AddBool("freeze_pos_y", freeze_position[1]);
@@ -65,11 +60,9 @@ bool C_RigidBody::Save(Config& config)
 bool C_RigidBody::Load(Config& config)
 {
 	mass			   = config.GetFloat("mass", mass);
-	bouncing		   = config.GetFloat("bouncing", bouncing);
+
 	drag			   = config.GetFloat("drag", drag);
 	angular_drag	   = config.GetFloat("angular_drag", angular_drag);
-	friction		   = config.GetFloat("friction", friction);
-	angular_friction   = config.GetFloat("angular_friction", angular_friction);
 
 	freeze_position[0] = config.GetBool("freeze_pos_x", freeze_position[0]);
 	freeze_position[1] = config.GetBool("freeze_pos_y", freeze_position[1]);
@@ -92,7 +85,7 @@ bool C_RigidBody::Update()
 	// Search Colliders --------------------------
 
 	SearchCollider();
-
+	
 	// Update Local Vars  ------------------------
 
 	btCollisionShape* current_shape = (collider != nullptr) ? collider->shape : empty_shape;  // Update Shape 
@@ -142,11 +135,15 @@ bool C_RigidBody::Update()
 	}
 
 	SetMass(current_mass);
-	SetBouncing(bouncing);
 	SetDrag(drag);
 	SetAngularDrag(angular_drag);
-	SetFriction(friction);
-	SetAngularFriction(angular_friction);
+
+	if (collider != nullptr)
+	{
+		SetBouncing(collider->bouncing);
+		SetFriction(collider->friction);
+		SetAngularFriction(collider->angular_friction);
+	}
 
 	btVector3 freeze_p((float)!freeze_position[0], (float)!freeze_position[1], (float)!freeze_position[2]);
 	btVector3 freeze_r((float)!freeze_rotation[0], (float)!freeze_rotation[1], (float)!freeze_rotation[2]);
@@ -171,13 +168,21 @@ bool C_RigidBody::Update()
 	linked_go->transform->SetPosition(float3(position));
 	linked_go->transform->SetRotation(math::Quat((btScalar*)rotation));
 
-	// Apply Test ----------------------
+	// Apply Forces ----------------------
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-		AddForce(float3(linked_go->transform->forward * 10.F));
+	if (!force_to_apply.Equals(float3::zero))
+	{
+		body->activate(true);
+		body->applyCentralImpulse(ToBtVector3(force_to_apply));
+		force_to_apply = float3::zero;
+	}
 
-	if (App->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN)
-		AddTorque(float3(linked_go->transform->forward * 10.f));
+	if (!torque_to_apply.Equals(float3::zero))
+	{
+		body->activate(true);
+		body->applyTorqueImpulse(ToBtVector3(torque_to_apply));
+		torque_to_apply = float3::zero;
+	}
 
 
 	return true;
@@ -193,16 +198,6 @@ void C_RigidBody::SetMass(float& mass)
 	if (mass != body->getMass())
 	{
 		body->setMassProps(mass, inertia);
-	}
-}
-
-void C_RigidBody::SetBouncing(float& bouncing)
-{
-	if (bouncing != body->getRestitution())
-	{
-		float min = 0.f, max = 1.f;
-		math::Clamp(&bouncing, &min, &max);
-		body->setRestitution(bouncing);
 	}
 }
 
@@ -222,6 +217,40 @@ void C_RigidBody::SetAngularDrag(float& angular_drag)
 	}
 }
 
+void C_RigidBody::AddForce(const float3& force, Space space)
+{
+	float3 final_force = force;
+
+	if (space == Space::Local)
+	{
+		final_force = linked_go->transform->global_transform.RotatePart().Mul(final_force);
+	}
+
+	force_to_apply += final_force;
+}
+
+void C_RigidBody::AddTorque(const float3& force, Space space)
+{
+	float3 final_force = force;
+
+	if (space == Space::Local)
+	{
+		final_force = linked_go->transform->global_transform.RotatePart().Mul(final_force);
+	}
+
+	torque_to_apply += final_force;
+}
+
+void C_RigidBody::SetBouncing(float& bouncing)
+{
+	if (bouncing != body->getRestitution())
+	{
+		float min = 0.f, max = 1.f;
+		math::Clamp(&bouncing, &min, &max);
+		body->setRestitution(bouncing);
+	}
+}
+
 void C_RigidBody::SetFriction(float& friction)
 {
 	if (friction != body->getFriction())
@@ -230,7 +259,7 @@ void C_RigidBody::SetFriction(float& friction)
 	}
 }
 
-void C_RigidBody::SetAngularFriction(float& angular_drag)
+void C_RigidBody::SetAngularFriction(float& angular_bouncing)
 {
 	if (angular_drag != body->getRollingFriction())
 	{
@@ -238,32 +267,13 @@ void C_RigidBody::SetAngularFriction(float& angular_drag)
 	}
 }
 
-void C_RigidBody::AddForce(const float3& force)
-{
-	if (body == nullptr) return;
-
-	body->activate(true);
-	body->applyCentralImpulse(btVector3(force.x, force.y, force.z));
-}
-
-void C_RigidBody::AddTorque(const float3& force)
-{
-	if (body == nullptr) return;
-
-	body->activate(true);
-	body->applyTorqueImpulse(btVector3(force.x, force.y, force.z));
-}
-
 bool C_RigidBody::DrawPanelInfo()
 {
 	ImGui::Spacing();
 
 	ImGui::Title("Mass", 1);			ImGui::DragFloat("##mass", &mass, 0.01f, 0.00f, FLT_MAX);
-	ImGui::Title("Bouncing", 1);		ImGui::DragFloat("##bouncing", &bouncing, 0.01f, 0.00f, 1.f);
 	ImGui::Title("Drag", 1);			ImGui::DragFloat("##drag", &drag, 0.01f, 0.00f, FLT_MAX);
 	ImGui::Title("Angular Drag", 1);	ImGui::DragFloat("##angular_drag", &angular_drag, 0.01f, 0.00f, FLT_MAX);
-	ImGui::Title("Friction", 1);		ImGui::DragFloat("##friction", &friction, 0.01f, 0.00f, FLT_MAX);
-	ImGui::Title("Angular Friction",1);	ImGui::DragFloat("##angular_friction", &angular_friction, 0.01f, 0.00f, FLT_MAX);
 
 	ImGui::Title("Freeze", 1);	ImGui::Text("");
 	ImGui::Spacing();

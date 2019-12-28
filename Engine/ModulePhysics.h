@@ -21,6 +21,13 @@ struct Collision
 
 };
 
+enum class Space
+{
+	Global,
+	Local
+};
+
+
 class DebugRenderer;
 
 class ModulePhysics : public Module

@@ -51,8 +51,10 @@ public:
 	//bool ReComputeVertexNormals(float length = 0.4f);
 	//bool ReComputeFacesNormals(float length = 0.4f);
 
+	void CreateDefaultMeshResources();
+
 	// Create primitives with par_shapes tool
-	GameObject* CreatePrimitive(PrimitiveType type, float3 position = { 0,0,0 }, float3 size = { 1,1,1 }, float2 slicesStacks = { 10,10 }, float4 color = { 1.0f,1.0f,1.0f,1.0f });
+	GameObject* CreatePrimitive(PrimitiveType type, float3 position = { 0,0,0 }, float3 size = { 1,1,1 }, GameObject* parent = nullptr,  float2 slicesStacks = { 10,10 }, float4 color = { 1.0f,1.0f,1.0f,1.0f } );
 
 	// TODO: implement base class gameObjects (for future components addition)
 	std::vector<R_Mesh*>& GetModels();

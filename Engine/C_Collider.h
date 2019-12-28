@@ -39,6 +39,12 @@ public:
 
 	 // Common Functoins ------------------------------
 
+	void SetBouncing(float& v);
+
+	void SetFriction(float& v);
+
+	void SetAngularFriction(float& v);
+
 	void SetIsTrigger(bool is_trigger);
 
 	bool GetIsTrigger();
@@ -71,6 +77,10 @@ protected:
 
 	float3 center;
 	float3 scaled_center;
+
+	float bouncing = 0.f;
+	float friction = 0.f;
+	float angular_friction = 0.f;
 
 	// Collider shape used in collision simulation
 	btCollisionShape* shape = nullptr;

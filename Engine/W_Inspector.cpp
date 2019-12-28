@@ -117,7 +117,7 @@ void W_Inspector::DrawAddComponents(GameObject* selected_go)
 		
 		if (ImGui::BeginPopup("add_component_popup", ImGuiWindowFlags_NoScrollbar))
 		{
-			const char* names[] = { "Mesh", "Material", "Camera", "Light","Mesh Renderer","Box Collider", "Sphere Collider", "Capsule Collider","ConvexHull Collider","RigidBody", "Joint P2P" };
+			const char* names[] = { "Mesh", "Material", "Camera", "Light","Mesh Renderer","Box Collider", "Sphere Collider", "Capsule Collider","ConvexHull Collider","RigidBody", "Joint P2P", "Character Controller" };
 			
 			uint size = IM_ARRAYSIZE(names);
 
@@ -156,6 +156,10 @@ void W_Inspector::DrawAddComponents(GameObject* selected_go)
 					else if (names[i] == "Joint P2P")
 					{
 						selected_go->AddComponent<C_JointP2P>();
+					}
+					else if (names[i] == "Character Controller")
+					{
+						selected_go->AddComponent<C_CharacterController>();
 					}
 
 					ImGui::CloseCurrentPopup();

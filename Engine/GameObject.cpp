@@ -396,6 +396,10 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 				break;
 			case ComponentType::JOINTP2P:
 				new_component = AddComponent<C_JointP2P>();
+				break;
+			case ComponentType::CHARACTER_CONTROLLER:
+				new_component = AddComponent<C_CharacterController>();
+				break;
 			case ComponentType::NO_TYPE:
 				break;
 			default:

@@ -100,19 +100,20 @@ void C_CapsuleCollider::AdjustShape()
 	case C_CapsuleCollider::CapsuleType::X:
 		height_scaled *= scale.x;
 		radius_scaled *= math::Max(scale.z, scale.y);
+		shape->setLocalScaling(btVector3(height_scaled, radius_scaled, radius_scaled));
 		break;
 	case C_CapsuleCollider::CapsuleType::Y:
 		height_scaled *= scale.y;
 		radius_scaled *= math::Max(scale.z, scale.x);
+		shape->setLocalScaling(btVector3(radius_scaled, height_scaled, radius_scaled));
 		break;
 	case C_CapsuleCollider::CapsuleType::Z:
 		height_scaled *= scale.z;
 		radius_scaled *= math::Max(scale.x, scale.y);
+		shape->setLocalScaling(btVector3(radius_scaled, radius_scaled, height_scaled));
 
 		break;
 	}
-
-	shape->setLocalScaling(btVector3(radius_scaled, height_scaled, radius_scaled));
 	
 }
 

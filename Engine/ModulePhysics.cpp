@@ -58,12 +58,13 @@ update_status ModulePhysics::PreUpdate()
 {
 	float dt = App->time->DeltaTime();
 	world->getSolverInfo().m_splitImpulse = true;
+
 	if (dt != 0.f)
 	{
 		world->stepSimulation(App->time->DeltaTime(), 20);
 	}
 
-	int numManifolds = world->getDispatcher()->getNumManifolds();
+	//int numManifolds = world->getDispatcher()->getNumManifolds();
 
 	//for (int i = 0; i < numManifolds; i++)
 	//{
@@ -75,23 +76,13 @@ update_status ModulePhysics::PreUpdate()
 
 	//	if (numContacts > 0)
 	//	{
-	//		PhysBody* pbodyA = (PhysBody*)obA->getUserPointer();
-	//		PhysBody* pbodyB = (PhysBody*)obB->getUserPointer();
+	//		GameObject* go_a = (GameObject*)obA->getUserPointer();
+	//		GameObject* go_b = (GameObject*)obB->getUserPointer();
 
-	//		if (pbodyA && pbodyB)
+	//		if (go_a && go_b)
 	//		{
-
-	//			for (Module* modules : pbodyA->listeners)
-	//			{
-	//				// TODO:: Add oncollision
-	//				//modules->OnCollision(pbodyA, pbodyB);
-	//			}
-
-	//			for (Module* modules : pbodyB->listeners)
-	//			{
-	//				//modules->OnCollision(pbodyB, pbodyA);
-	//			}
-	//
+	//			go_a->OnCollision();
+	//			go_b->OnCollision();
 	//		}
 	//	}
 	//}

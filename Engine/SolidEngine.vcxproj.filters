@@ -1545,6 +1545,9 @@
     <ClInclude Include="C_JointP2P.h">
       <Filter>Sources\Game Object\Components</Filter>
     </ClInclude>
+    <ClInclude Include="C_CharacterController.h">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -2424,6 +2427,9 @@
       <Filter>Sources\Game Object\Components\Colliders</Filter>
     </ClCompile>
     <ClCompile Include="C_JointP2P.cpp">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="C_CharacterController.cpp">
       <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
   </ItemGroup>

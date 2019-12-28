@@ -55,6 +55,7 @@ bool ModuleScene::Start(Config& config)
 
 	Load(config);
 	
+	App->importer->CreateDefaultMeshResources();
 	// TODO: get the last scene saved, or simply do nothing and let the user load one
 	//ToLoadScene(scene_name.c_str());
 	// load default scene

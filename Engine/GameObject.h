@@ -23,6 +23,7 @@
 #include "C_ConvexHullCollider.h"
 #include "C_RigidBody.h"
 #include "C_JointP2P.h"
+#include "C_CharacterController.h"
 
 #include <typeinfo>
 #include <list>
@@ -206,6 +207,9 @@ T* GameObject::AddComponent()
 		new_component = (T*)new C_RigidBody(this);
 	else if (typeid(C_JointP2P) == typeid(T))
 		new_component = (T*)new C_JointP2P(this);
+	else if (typeid(C_CharacterController) == typeid(T))
+		new_component = (T*)new C_CharacterController(this);
+
 
 	if (new_component != nullptr)
 		components.push_back(new_component);

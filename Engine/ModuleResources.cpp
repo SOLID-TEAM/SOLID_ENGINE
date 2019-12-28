@@ -185,6 +185,18 @@ UID ModuleResources::Find(const char* file_in_assets) const
 	return 0;
 }
 
+Resource* ModuleResources::FindByName(const char* name) const
+{
+	for (std::map<UID, Resource*>::const_iterator it = resources.begin(); it != resources.end(); ++it)
+	{
+		if (it->second->GetName().compare(name) == 0)
+		{
+			return it->second;
+		}
+	}
+	return nullptr;
+}
+
 // TODO: save and load last uid from another place, not editor_configuration
 bool ModuleResources::Save(Config& config)
 {
@@ -360,12 +372,9 @@ void ModuleResources::LoadAllMetaResources()
 			r->GetOriginalFile().assign(path + file);
 			r->GetName().assign(file);
 			r->GetExportedFile().assign(GetRelativePathToWriteFromType(type) + std::to_string(resource_uid));
-
 			LoadDependencies(r);
 		}
-
 	}
-	
 }
 
 void ModuleResources::GetMetasFromNodes(PathNode node, std::vector<std::string>& meta_vector)

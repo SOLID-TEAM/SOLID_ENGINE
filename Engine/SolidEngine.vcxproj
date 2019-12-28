@@ -435,6 +435,7 @@
     <ClInclude Include="Bullet\include\LinearMath\TaskScheduler\btThreadSupportInterface.h" />
     <ClInclude Include="C_BoxCollider.h" />
     <ClInclude Include="C_CapsuleCollider.h" />
+    <ClInclude Include="C_CharacterController.h" />
     <ClInclude Include="C_ConvexHullCollider.h" />
     <ClInclude Include="C_JointP2P.h" />
     <ClInclude Include="C_RigidBody.h" />
@@ -769,6 +770,7 @@
     <ClCompile Include="Bullet\include\LinearMath\TaskScheduler\btThreadSupportWin32.cpp" />
     <ClCompile Include="C_BoxCollider.cpp" />
     <ClCompile Include="C_CapsuleCollider.cpp" />
+    <ClCompile Include="C_CharacterController.cpp" />
     <ClCompile Include="C_Collider.cpp" />
     <ClCompile Include="C_ConvexHullCollider.cpp" />
     <ClCompile Include="C_JointP2P.cpp" />

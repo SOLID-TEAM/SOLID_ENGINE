@@ -29,6 +29,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module()
 	
 	CreateDir(ASSETS_FOLDER);
 	CreateDir(ASSETS_MODEL_FOLDER);
+	CreateDir(ASSETS_MESH_FOLDER);
 	CreateDir(ASSETS_TEXTURES_FOLDER);
 	CreateDir(LIBRARY_FOLDER);
 	CreateDir(LIBRARY_EDITOR_FOLDER);

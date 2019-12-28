@@ -16,9 +16,9 @@ public:
 
 	R_Mesh(UID uid);
 
-	R_Mesh(UID uid, float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices);
-
 	~R_Mesh();
+
+	void SetFromParseShapes(UID uid, float* vertices, uint* indices, float* normals, float* uvs, uint n_vertices, uint n_indices);
 
 	void GLGenBuffersAndLoad();
 

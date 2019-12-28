@@ -44,7 +44,7 @@ void W_Primitives::Draw()
 
 			if (ImGui::ImageButton((ImTextureID)(*miniatures), buttonSize, ImVec2(0, 1), ImVec2(1, 0)))
 			{
-				last_created = App->importer->CreatePrimitive(PrimitiveType(counter), { 0,0,0 }, { 1,1,1 }, GetSlicesAndStacks(counter), {color.x, color.y, color.z, color.w});
+				last_created = App->importer->CreatePrimitive(PrimitiveType(counter), { 0,0,0 }, { 1,1,1 }, App->scene->selected_go, GetSlicesAndStacks(counter), {color.x, color.y, color.z, color.w});
 			}
 			++counter;
 		}
@@ -91,18 +91,18 @@ void W_Primitives::Draw()
 // return default values for primitives creation
 float2 W_Primitives::GetSlicesAndStacks(int i)
 {
-	float2 ret = { 10,10 };
+	float2 ret = { 1,1 };
 
 	switch (PrimitiveType(i))
 	{
 	case CUBE:
-		//ret = { 1,1 };
+		ret = { 1,1 };
 		break;
 	case SPHERE:
 		ret = { 20,20 };
 		break;
 	case ICOSPHERE:
-		//ret = { 1,1 };
+		ret = { 20,20 };
 		break;
 	case PLANE:
 		ret = { 1,1 };
@@ -121,8 +121,6 @@ float2 W_Primitives::GetSlicesAndStacks(int i)
 	default:
 		break;
 	}
-
-
 	return ret;
 }
 
