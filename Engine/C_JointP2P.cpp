@@ -61,7 +61,10 @@ bool C_JointP2P::CheckForValidConnectedBody()
 	{
 		// TODO: change to rigidbody
 		if (connected_body->GetComponent<C_Collider>() == nullptr)
+		{
 			connected_body = nullptr;
+			RemakeConstraint();
+		}
 	}
 
 	return true;
@@ -80,6 +83,21 @@ bool C_JointP2P::DrawPanelInfo()
 	bool body_linked = connected_body ? true : false;
 
 	ImGui::Title("Connected Body"); ImGui::Button(body_linked ? connected_body->GetName() : "none", ImVec2(120, 22)); ImGui::SameLine();
+
+	if (body_linked) 
+	{
+		if (ImGui::BeginPopupContextItem(linked_go->GetName()))
+		{
+			if (ImGui::Button("Remove connexion"))
+			{
+				connected_body = nullptr;
+				RemakeConstraint();
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+	}
+	
 	if (ImGui::BeginDragDropTarget())
 	{
 		ImVec4 color_red = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -150,17 +168,28 @@ bool C_JointP2P::DrawPanelInfo()
 
 void C_JointP2P::RemakeConstraint()
 {
-	if (connected_body == nullptr) return;
-
 	App->physics->RemoveConstraint(constraint);
 
 	delete constraint;
 
-	constraint = new btPoint2PointConstraint(
-		*linked_go->GetComponent<C_Collider>()->body, 
-		*connected_body->GetComponent<C_Collider>()->body, 
-		btVector3(pivotA.x, pivotA.y, pivotA.z),
-		btVector3(pivotB.x, pivotB.y, pivotB.z));
+	btRigidBody* bodyB = nullptr;
+	if (connected_body != nullptr)
+		bodyB = connected_body->GetComponent<C_Collider>()->body;
+
+	if (bodyB)
+	{
+		constraint = new btPoint2PointConstraint(
+			*linked_go->GetComponent<C_Collider>()->body,
+			*bodyB,
+			btVector3(pivotA.x, pivotA.y, pivotA.z),
+			btVector3(pivotB.x, pivotB.y, pivotB.z));
+	}
+	else
+	{
+		constraint = new btPoint2PointConstraint(*linked_go->GetComponent<C_Collider>()->body, btVector3(pivotA.x, pivotA.y, pivotA.z));
+		btVector3 _pivotB = dynamic_cast<btPoint2PointConstraint*>(constraint)->getPivotInB();
+		pivotB = { _pivotB.x(), _pivotB.y(), _pivotB.z() };
+	}
 
 	constraint->setDbgDrawSize(2.0f);
 
