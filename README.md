@@ -28,6 +28,10 @@ The code is written in C++.
 - Space partitioning window.
 - Icons for layout.
 
+### v3.0:
+- Convex hull collider.
+- Character controller. (that shots, jump and moves)
+
 ## Features
 
 ### View port
@@ -73,6 +77,24 @@ The code is written in C++.
 - Visualization of KDTree while playing (objects must be static).
 - Configure editor camera options under scene window (camera icon option).
 
+### 3.0 features:
+- Added bullet physics engine.
+- Components Collider: Box, sphere, capsule and convex hull.
+- component RigidBody
+- Component Character controller -> Keys: UHJK for move, turn left Y, turn right I, and for shoot balls key P.
+- Component vehicle controller -> Keys: UP, LEFT, DOWN, RIGHT
+- Component Joint Point to point
+
+##NOTES:
+### Colliders and rigidbodies
+- Gameobject with only any component collider, only affects to collision from other dynamic bodies with rigidbody attached. If you want a gameobject that is atracted from world physics, you need to attach a rigidbody to its collider.
+- GameObjects with only a rigidody are computed on physics world, but not collide, if you want to collide, add any collider type.
+### Joint
+- You can add any GameObject with rigidbody attached to connected body field with drag and drop, pivot B field automatic attachs to connected body transform.
+- If no connected body attached, you can still move pivotB values and attach the gameobject to world.
+
+
+
 ### Camera Controls
 
 - **CTRL + Z** : Restore last deleted gameobject.
@@ -102,6 +124,7 @@ The code is written in C++.
 	- PCG Random Number Generator 0.94
 	- Parson
 	- MMGR
+	- Bullet 2.8.3
 
 ## License
 
