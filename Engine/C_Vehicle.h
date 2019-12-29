@@ -38,6 +38,28 @@ private:
 
 private:
 
+	class Cylinder
+	{
+	public:
+
+		Cylinder();
+		Cylinder(float radius, float height);
+
+		void			Render() const;
+		void			InnerRender() const;
+		void			SetPos(float x, float y, float z);
+		void			SetRotation(float angle, const vec3& u);
+		void			Scale(float x, float y, float z);
+
+	public:
+
+		//Color color;
+		mat4x4 transform;
+		bool axis, wire;
+		float radius;
+		float height;
+	};
+
 	struct Wheel
 	{
 		vec3 connection; // origin of the ray. Must come from within the chassis

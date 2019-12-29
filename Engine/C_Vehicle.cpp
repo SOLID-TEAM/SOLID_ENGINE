@@ -4,6 +4,8 @@
 #include "C_RigidBody.h"
 #include "C_Collider.h"
 
+#include <gl/GL.h>
+
 C_Vehicle::C_Vehicle(GameObject* go) : Component(go, ComponentType::VEHICLE)
 {
 	name.assign("Vehicle Controller");
@@ -26,23 +28,23 @@ C_Vehicle::C_Vehicle(GameObject* go) : Component(go, ComponentType::VEHICLE)
 	info.maxSuspensionForce = 6000.0f; // defaults to 6000 / max force to the chassis
 
 	// Wheel properties ---------------------------------------
-	float front_connection_height = 0.5625f;
-	float front_wheel_radius = 0.5625f;
-	float front_wheel_width = 0.5325f;
-	float front_suspensionRestLength = 0.5f;
+	float front_connection_height = 0.0f;
+	float front_wheel_radius = 0.42f;
+	float front_wheel_width = 0.3f;
+	float front_suspensionRestLength = 0.3f;
 
-	float rear_connection_height = 0.6f;
-	float rear_wheel_radius = 0.6f;
-	float rear_wheel_width = 0.5625f;
-	float rear_suspensionRestLength = 0.6f;
+	float rear_connection_height = 0.0f;
+	float rear_wheel_radius = 0.42f;
+	float rear_wheel_width = 0.3f;
+	float rear_suspensionRestLength = 0.3f;
 
 
 	// car properties
 
-	float half_rear_width = 1.0f; 
-	float half_front_width = 1.0f; 
+	float half_rear_width = 1.2f; 
+	float half_front_width = 1.2f; 
 
-	float half_length = 2.0f;
+	float half_length = 1.8f;
 
 	vec3 direction(0, -1, 0);
 	vec3 axis(-1, 0, 0);
@@ -129,7 +131,7 @@ void C_Vehicle::VehicleControls()
 	// ACCEL
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
-		acceleration = max_accel;
+		acceleration = 1500.f;
 	}
 	else 
 	{
@@ -205,7 +207,6 @@ bool C_Vehicle::CreateVehicle()
 	vehicle = new btRaycastVehicle(tuning, r_body->body, App->physics->vehicle_raycaster);
 
 	r_body->body->setActivationState(DISABLE_DEACTIVATION);
-	//r_body->body->setMassProps(mass, localInertia); // this fucks me, rb sets constantly its mass
 
 	//vehicle->setCoordinateSystem(0, 1, 2);
 
@@ -225,6 +226,21 @@ bool C_Vehicle::CreateVehicle()
 
 bool C_Vehicle::Render()
 {
+	Cylinder wheel;
+
+	//wheel.color = { 0.2f, 0.2f, 0.2f, 1.0f };
+
+	for (int i = 0; i < vehicle->getNumWheels(); ++i)
+	{
+		wheel.radius = info.wheels[i].radius;
+		wheel.height = info.wheels[i].width;
+
+		vehicle->updateWheelTransform(i);
+		vehicle->getWheelInfo(i).m_worldTransform.getOpenGLMatrix(&wheel.transform);
+
+		wheel.Render();
+	}
+
 	// test debug draw
 	App->physics->world->debugDrawWorld();
 
@@ -233,6 +249,8 @@ bool C_Vehicle::Render()
 
 bool C_Vehicle::DrawPanelInfo()
 {
+	ImGui::Text("Work in progress component, unexpected behaviours - Experimental");
+
 	return true;
 }
 
@@ -241,6 +259,8 @@ bool C_Vehicle::CleanUp()
 	App->physics->RemoveVehicle(vehicle);
 	delete vehicle;
 	vehicle = nullptr;
+
+	delete[] info.wheels;
 
 	return true;
 }
@@ -295,4 +315,77 @@ void C_Vehicle::Turn(float degrees)
 float C_Vehicle::GetKmh() const
 {
 	return vehicle->getCurrentSpeedKmHour();
+}
+
+// TODO: REWORK the wheels, for now old method
+// ----------------------------------------------
+
+C_Vehicle::Cylinder::Cylinder() : radius(1.0f), height(1.0f) {};
+
+C_Vehicle::Cylinder::Cylinder(float radius, float height) : radius(radius), height(height) {}
+
+void C_Vehicle::Cylinder::Render() const
+{
+	glPushMatrix();
+	glMultMatrixf(transform.M);
+
+	glColor4f(0.0f, 0.0f, 0.0f,1.0f);
+
+	InnerRender();
+
+	glPopMatrix();
+}
+
+void C_Vehicle::Cylinder::InnerRender() const
+{
+	int n = 30;
+
+	// Cylinder Bottom
+	glBegin(GL_POLYGON);
+
+	for (int i = 0; i <= 360; i += (360 / n))
+	{
+		float a = i * M_PI / 180; // degrees to radians
+		glVertex3f(-height * 0.5f, radius * cos(a), radius * sin(a));
+	}
+	glEnd();
+
+	// Cylinder Top
+	glBegin(GL_POLYGON);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	for (int i = 360; i >= 0; i -= (360 / n))
+	{
+		float a = i * M_PI / 180; // degrees to radians
+		glVertex3f(height * 0.5f, radius * cos(a), radius * sin(a));
+	}
+	glEnd();
+
+	// Cylinder "Cover"
+	glBegin(GL_QUAD_STRIP);
+	for (int i = 480; i > 0; i -= (360 / n))
+	{
+		float a = i * M_PI / 180; // degrees to radians
+
+		glVertex3f(height * 0.5f, radius * cos(a), radius * sin(a));
+		glVertex3f(-height * 0.5f, radius * cos(a), radius * sin(a));
+	}
+	glEnd();
+}
+
+// ------------------------------------------------------------
+void C_Vehicle::Cylinder::SetPos(float x, float y, float z)
+{
+	transform.translate(x, y, z);
+}
+
+// ------------------------------------------------------------
+void C_Vehicle::Cylinder::SetRotation(float angle, const vec3& u)
+{
+	transform.rotate(angle, u);
+}
+
+// ------------------------------------------------------------
+void C_Vehicle::Cylinder::Scale(float x, float y, float z)
+{
+	transform.scale(x, y, z);
 }
