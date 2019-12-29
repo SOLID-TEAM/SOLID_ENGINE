@@ -27,6 +27,13 @@ enum class Space
 	Local
 };
 
+enum class ForceMode : uint
+{
+	FORCE ,
+	VELOCITY,
+	IMPULSE,
+	MAX
+};
 
 class DebugRenderer;
 

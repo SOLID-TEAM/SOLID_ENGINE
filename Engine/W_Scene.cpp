@@ -74,9 +74,10 @@ void W_Scene::Draw()
 		// Input camera ----------------------------------------------------
 
 		is_focused = ImGui::IsWindowFocused();
-		ImVec2 min = ImGui::GetCursorScreenPos();
-		ImVec2 max = ImGui::GetCursorScreenPos() + ImGui::GetContentRegionAvail();
-		bool mouse_is_hovering = ImGui::IsMouseHoveringRect(min, max);
+		viewport_min = ImGui::GetCursorScreenPos();
+		viewport_max = ImGui::GetCursorScreenPos() + ImGui::GetContentRegionAvail();
+
+		bool mouse_is_hovering = ImGui::IsMouseHoveringRect(viewport_min, viewport_max);
 
 		if (App->scene->editor_camera)
 		{
@@ -94,7 +95,7 @@ void W_Scene::Draw()
 
 		// Set Guizmo Config ----------------------------------------------
 
-		ImGuizmo::SetRect(min.x, min.y, current_viewport_size.x, current_viewport_size.y);
+		ImGuizmo::SetRect(viewport_min.x, viewport_min.y, current_viewport_size.x, current_viewport_size.y);
 		ImGuizmo::SetDrawlist();
 
 		if (App->scene->selected_go != nullptr)
@@ -104,7 +105,7 @@ void W_Scene::Draw()
 
 		// Set viewport values --------------------------------------------
 
-		App->scene->scene_viewport->SetPos(float2(min.x,min.y)); // Viewport position after menu bar 
+		App->scene->scene_viewport->SetPos(float2(viewport_min.x, viewport_min.y)); // Viewport position after menu bar 
 
 		if (!(current_viewport_size == viewport_size)) // Viewport resize if window size change
 		{

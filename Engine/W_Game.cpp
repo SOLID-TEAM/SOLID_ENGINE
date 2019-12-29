@@ -24,6 +24,9 @@ void W_Game::Draw()
 			ImGui::EndMenuBar();
 		}
 
+		is_focused = ImGui::IsWindowFocused();
+		viewport_min = ImGui::GetCursorScreenPos();
+		viewport_max = ImGui::GetCursorScreenPos() + ImGui::GetContentRegionAvail();
 		ImVec2 current_viewport_size = ImGui::GetContentRegionAvail();
 
 		// Attach texture to window ----------------------------------------

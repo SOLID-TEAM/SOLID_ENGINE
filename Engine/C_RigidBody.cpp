@@ -9,6 +9,12 @@ C_RigidBody::C_RigidBody(GameObject* go) : Component(go, ComponentType::RIGID_BO
 {
 	name.assign("Rigid Body");
 
+	for (uint i = 0; i < (uint)ForceMode::MAX; ++i)
+	{
+		force_to_apply[i] = float3::zero;
+		torque_to_apply[i] = float3::zero;
+	}
+
 	// Set default values --------------------------
 
 	mass = 1.0f;
@@ -160,22 +166,67 @@ bool C_RigidBody::Update()
 
 		// Apply Forces ----------------------
 
-		if (!force_to_apply.Equals(float3::zero))
+		for( uint i = 0; i < (uint) ForceMode::MAX ; ++i)
 		{
-			body->applyCentralImpulse(ToBtVector3(force_to_apply));
-			force_to_apply = float3::zero;
+			if (!force_to_apply[i].Equals(float3::zero))
+			{
+				switch ((ForceMode)i)
+				{
+				case ForceMode::FORCE:
+					body->applyCentralForce(ToBtVector3(force_to_apply[i]));
+					break;
+				case ForceMode::IMPULSE:
+					body->applyCentralImpulse(ToBtVector3(force_to_apply[i]));
+					break;
+				}
+				force_to_apply[i] = float3::zero;
+			}
+		}
+	
+		for (uint i = 0; i < (uint)ForceMode::MAX; ++i)
+		{
+			if (!torque_to_apply[i].Equals(float3::zero))
+			{
+				switch ((ForceMode)i)
+				{
+				case ForceMode::FORCE:
+					body->applyTorque(ToBtVector3(torque_to_apply[i]));
+					break;
+				case ForceMode::IMPULSE:
+					body->applyTorqueImpulse(ToBtVector3(torque_to_apply[i]));
+					break;
+				}
+				
+				torque_to_apply[i] = float3::zero;
+			}
 		}
 
-		if (!torque_to_apply.Equals(float3::zero))
-		{
-			body->applyTorqueImpulse(ToBtVector3(torque_to_apply));
-			torque_to_apply = float3::zero;
-		}
 	}
 
 
 	return true;
 }
+
+float3 C_RigidBody::GetVelocity()
+{
+	return float3(&body->getLinearVelocity()[0]);
+}
+
+void C_RigidBody::SetVelocity(float3 velocity)
+{
+	body->setLinearVelocity(ToBtVector3(velocity));
+}
+
+float3 C_RigidBody::GetAngularVelocity()
+{
+	return float3(&body->getAngularVelocity()[0]);
+}
+
+void C_RigidBody::SetAngularVelocity(float3 velocity)
+{
+	body->setAngularVelocity(ToBtVector3(velocity));
+}
+
 
 bool C_RigidBody::Render()
 {
@@ -206,7 +257,7 @@ void C_RigidBody::SetAngularDrag(float& angular_drag)
 	}
 }
 
-void C_RigidBody::AddForce(const float3& force, Space space)
+void C_RigidBody::AddForce(const float3& force, ForceMode mode, Space space)
 {
 	float3 final_force = force;
 
@@ -215,10 +266,10 @@ void C_RigidBody::AddForce(const float3& force, Space space)
 		final_force = linked_go->transform->global_transform.RotatePart().Mul(final_force);
 	}
 
-	force_to_apply += final_force;
+	force_to_apply[(uint)mode] += final_force;
 }
 
-void C_RigidBody::AddTorque(const float3& force, Space space)
+void C_RigidBody::AddTorque(const float3& force, ForceMode mode, Space space)
 {
 	float3 final_force = force;
 
@@ -227,7 +278,7 @@ void C_RigidBody::AddTorque(const float3& force, Space space)
 		final_force = linked_go->transform->global_transform.RotatePart().Mul(final_force);
 	}
 
-	torque_to_apply += final_force;
+	torque_to_apply[(uint)mode] += final_force;
 }
 
 void C_RigidBody::SetBouncing(float& bouncing)

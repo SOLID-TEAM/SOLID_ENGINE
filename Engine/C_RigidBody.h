@@ -31,6 +31,14 @@ public:
 
 	bool Update();
 
+	float3 GetVelocity();
+
+	void SetVelocity(float3 velocity);
+
+	float3 GetAngularVelocity();
+
+	void SetAngularVelocity(float3 velocity);
+
 	bool Render();
 
 	bool DrawPanelInfo();
@@ -43,9 +51,9 @@ public:
 
 	void SetAngularDrag(float& v);
 
-	void AddForce(const float3& force, Space space = Space::Local);
+	void AddForce(const float3& force, ForceMode mode = ForceMode::IMPULSE, Space space = Space::Global);
 
-	void AddTorque(const float3& force, Space space = Space::Local);
+	void AddTorque(const float3& force, ForceMode mode = ForceMode::IMPULSE, Space space = Space::Global);
 
 private:
 
@@ -63,8 +71,8 @@ private:
 
 private:
 
-	float3 force_to_apply = float3::zero;
-	float3 torque_to_apply = float3::zero;
+	float3 force_to_apply[(uint)ForceMode::MAX];
+	float3 torque_to_apply[(uint)ForceMode::MAX];
 
 	float mass = 0.0f;
 	float drag = 0.f;
