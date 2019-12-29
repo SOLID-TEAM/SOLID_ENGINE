@@ -688,34 +688,34 @@ void ModuleScene::UpdateGoToRender()
 
 	// Test Window --------------------------------------------
 
-	if (ImGui::Begin("Space Partitioning"))
-	{
-		ImGui::Title("Game Objects"); ImGui::Text("");
-		ImGui::Title("Static", 2); ImGui::Text("%i", static_go_list.size());
-		ImGui::Title("Dynamic", 2); ImGui::Text("%i", dynamic_go_list.size());
-		ImGui::Title("Rendering", 2); ImGui::Text("%i", go_to_render.size());
+	//if (ImGui::Begin("Space Partitioning"))
+	//{
+	//	ImGui::Title("Game Objects"); ImGui::Text("");
+	//	ImGui::Title("Static", 2); ImGui::Text("%i", static_go_list.size());
+	//	ImGui::Title("Dynamic", 2); ImGui::Text("%i", dynamic_go_list.size());
+	//	ImGui::Title("Rendering", 2); ImGui::Text("%i", go_to_render.size());
 
-		ImGui::Spacing();
+	//	ImGui::Spacing();
 
 
-		if (camera->culling)
-		{
-			ImGui::Separator();
+	//	if (camera->culling)
+	//	{
+	//		ImGui::Separator();
 
-			ImGui::Title("KDTree");	ImGui::Text((kdtree.Active()) ? "ON" : "OFF");
-			ImGui::Title("Render", 2); ImGui::Checkbox("##render_kdtree", &render_kdtree);
-			ImGui::Title("Checked Collisions");  ImGui::Text("");
-			ImGui::Title("Frustum", 2);  ImGui::Text("%i", frustum_collisions);
-		}
-		else
-		{
-			ImGui::Title("Active Camera Culling", 2);  ImGui::Text("");
-		}
+	//		ImGui::Title("KDTree");	ImGui::Text((kdtree.Active()) ? "ON" : "OFF");
+	//		ImGui::Title("Render", 2); ImGui::Checkbox("##render_kdtree", &render_kdtree);
+	//		ImGui::Title("Checked Collisions");  ImGui::Text("");
+	//		ImGui::Title("Frustum", 2);  ImGui::Text("%i", frustum_collisions);
+	//	}
+	//	else
+	//	{
+	//		ImGui::Title("Active Camera Culling", 2);  ImGui::Text("");
+	//	}
 
-		
-	}
+	//	
+	//}
 
-	ImGui::End();
+	//ImGui::End();
 }
 
 GameObject* ModuleScene::Find(std::string name)

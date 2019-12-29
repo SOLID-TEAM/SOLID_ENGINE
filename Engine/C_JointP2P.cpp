@@ -31,6 +31,9 @@ bool C_JointP2P::Update()
 			pivotB = float3::zero;
 			connected_body = nullptr;
 		}
+
+		RecreateConstraint();
+		is_loaded = false;
 	}
 	else
 	{
@@ -45,9 +48,6 @@ bool C_JointP2P::Update()
 
 			check_rigid_body_exist = false;
 		}
-
-		RecreateConstraint();
-		is_loaded = false;
 	}
 
 	if (constraint == nullptr)
