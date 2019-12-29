@@ -15,7 +15,8 @@ void C_SphereCollider::CreateShape(C_Mesh* mesh)
 {
 	if (is_loaded == false)
 	{
-		radius = (mesh != nullptr) ? linked_go->GetOBB().MinimalEnclosingSphere().Diameter() * 0.5f : 0.5f;
+		
+		radius = (mesh != nullptr) ? mesh->mesh_aabb.Size().MaxElement() * 0.5f : 0.5f;
 		center = (mesh != nullptr) ? mesh->mesh_aabb.CenterPoint() : float3::zero;
 	}
 

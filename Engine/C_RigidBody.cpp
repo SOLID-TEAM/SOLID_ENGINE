@@ -17,28 +17,29 @@ C_RigidBody::C_RigidBody(GameObject* go) : Component(go, ComponentType::RIGID_BO
 
 	// Create empty shape --------------------------
 
-	empty_shape = new btEmptyShape();
+	aux_shape = new btBoxShape(btVector3(1.f,1.f,1.f));
 
 	// Create Body  --------------------------------
 
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,  nullptr, empty_shape);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,  nullptr, aux_shape);
 	body = new btRigidBody(rbInfo);
 	body->setUserPointer(linked_go);
+	App->physics->AddBody(body);
 }
 
 bool C_RigidBody::CleanUp()
 {
 	for (int i = 0; i < body->getNumConstraintRefs(); ++i)
-		body->removeConstraintRef(body->getConstraintRef(i));
-
-	if (body_added == true)
 	{
-		body_added = false;
-		App->physics->RemoveBody(body);
+		C_JointP2P * joint =(C_JointP2P *) body->getConstraintRef(i)->getUserConstraintPtr();
+		joint->BodyDeleted(linked_go);
+		body->removeConstraintRef(body->getConstraintRef(i));
 	}
+		
+	App->physics->RemoveBody(body);
 
 	delete body;
-	delete empty_shape;
+	delete aux_shape;
 
 	return true;
 }
@@ -80,55 +81,34 @@ bool C_RigidBody::Load(Config& config)
 
 bool C_RigidBody::Update()
 {
-	// Only run in game --------------------------
-
-	if (App->time->GetGameState() == GameState::STOP)
-		return true;
-
 	// Search Colliders --------------------------
 
 	SearchCollider();
-	
+
 	// Update Local Vars  ------------------------
 
-	btCollisionShape* current_shape = (collider != nullptr) ? collider->shape : empty_shape;  // Update Shape 
+	btCollisionShape* current_shape = (collider != nullptr) ? collider->shape : aux_shape;  // Update Shape 
 	float3 go_offset = (collider != nullptr) ? collider->GetWorldCenter() : float3::zero;     // Update Go Offset
-	float current_mass = (linked_go->is_static) ? 0.f : mass;							      // Update Mass
+	float current_mass = (linked_go->is_static) ? 0.f : mass;								  // Update Mass
 
-	 // Update Inertia
-	if (collider != nullptr) 
-	{
-		current_shape->calculateLocalInertia(current_mass, inertia);
-	}
-	else
-	{
-		inertia = btVector3(0.f, 0.f, 0.f);
-	}
+	 // Update Inertia ---------------------------
 
+	current_shape->calculateLocalInertia(current_mass, inertia);
 	body->setMassProps(current_mass, inertia);
-
-	// Add body to world ------------------------
-
-	if (body_added == false)
-	{
-		SetBodyTranform(linked_go->transform->GetPosition() + go_offset, linked_go->transform->GetQuatRotation());
-		App->physics->AddBody(body);
-		body_added = true;
-	}
 
 	// Update Rigid Body Vars ---------------------
 
 	// Set Is Trigger 
-	if (collider != nullptr)
+	if (collider)
 	{
-		if (collider->is_trigger == true)
-		{
+		if (collider->is_trigger)
 			body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
-		}
 		else
-		{
 			body->setCollisionFlags(body->getCollisionFlags() & ~btCollisionObject::CF_NO_CONTACT_RESPONSE);
-		}
+	}
+	else
+	{
+		body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
 	}
 
 	// Set Collision Shape 
@@ -164,27 +144,33 @@ bool C_RigidBody::Update()
 
 	// Set Go Transform ---------------------------
 
-	btTransform transform = body->getCenterOfMassTransform();
-	btQuaternion rotation = transform.getRotation();
-	btVector3 position = transform.getOrigin() - ToBtVector3(go_offset);
-
-	linked_go->transform->SetPosition(float3(position));
-	linked_go->transform->SetRotation(math::Quat((btScalar*)rotation));
-
-	// Apply Forces ----------------------
-
-	if (!force_to_apply.Equals(float3::zero))
+	if (App->time->GetGameState() == GameState::STOP)
 	{
-		body->activate(true);
-		body->applyCentralImpulse(ToBtVector3(force_to_apply));
-		force_to_apply = float3::zero;
+		SetBodyTranform(linked_go->transform->GetPosition() + go_offset, linked_go->transform->GetQuatRotation());
 	}
-
-	if (!torque_to_apply.Equals(float3::zero))
+	else
 	{
+		btTransform transform = body->getCenterOfMassTransform();
+		btQuaternion rotation = transform.getRotation();
+		btVector3 position = transform.getOrigin() - ToBtVector3(go_offset);
+
 		body->activate(true);
-		body->applyTorqueImpulse(ToBtVector3(torque_to_apply));
-		torque_to_apply = float3::zero;
+		linked_go->transform->SetPosition(float3(position));
+		linked_go->transform->SetRotation(math::Quat((btScalar*)rotation));
+
+		// Apply Forces ----------------------
+
+		if (!force_to_apply.Equals(float3::zero))
+		{
+			body->applyCentralImpulse(ToBtVector3(force_to_apply));
+			force_to_apply = float3::zero;
+		}
+
+		if (!torque_to_apply.Equals(float3::zero))
+		{
+			body->applyTorqueImpulse(ToBtVector3(torque_to_apply));
+			torque_to_apply = float3::zero;
+		}
 	}
 
 

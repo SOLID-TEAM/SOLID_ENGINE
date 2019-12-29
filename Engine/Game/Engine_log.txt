@@ -3,7 +3,8 @@
 [Init] Loaded configuration file editor_config.json
 [Init] SDL window & surface
 [Init] SDL input event system
-[Error] Configuration file Library/Settings/lastuid not found
+[Init] Loaded configuration file Library/Settings/lastuid
+[Init] Loaded configuration file Assets/Models/monkey.fbx.meta
 Creating 3D Physics simulation
 Loading File System
 [Info] Using Developer's Image Library (DevIL) 1.8.0
@@ -68,6 +69,12 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Library/Settings/untitled.solidscene
+File deleted: [Library/Settings/untitled.solidscene]
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

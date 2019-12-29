@@ -47,7 +47,6 @@ bool ModulePhysics::Start(Config& config)
 	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_config);
 	world->setGravity(GRAVITY);
 	world->setDebugDrawer(debug_renderer);
-	world->getSolverInfo().m_splitImpulse = true;
 	vehicle_raycaster = new btDefaultVehicleRaycaster(world);
 
 	return true;
@@ -57,14 +56,13 @@ bool ModulePhysics::Start(Config& config)
 update_status ModulePhysics::PreUpdate()
 {
 	float dt = App->time->DeltaTime();
-	world->getSolverInfo().m_splitImpulse = true;
 
 	if (dt != 0.f)
 	{
 		world->stepSimulation(App->time->DeltaTime(), 20);
 	}
 
-	//int numManifolds = world->getDispatcher()->getNumManifolds();
+	int numManifolds = world->getDispatcher()->getNumManifolds();
 
 	//for (int i = 0; i < numManifolds; i++)
 	//{

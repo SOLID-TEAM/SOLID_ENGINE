@@ -78,6 +78,8 @@ protected:
 
 	bool			enable_button = false;
 	bool            remove_button = false;
+	bool			is_loaded = false;
+
 };
 
 

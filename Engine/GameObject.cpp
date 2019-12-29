@@ -408,6 +408,7 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 
 			if (new_component != nullptr)
 			{
+				new_component->is_loaded = true;
 				new_component->Load(c_config);
 			}
 		}

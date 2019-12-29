@@ -18,23 +18,24 @@ public:
 
 	bool Update();
 
+	void BodyDeleted(GameObject* go);
+
+	void RecreateConstraint();
+
 	bool Render();
 
 	bool DrawPanelInfo();
 private:
-	bool CheckForValidConnectedBody();
+
 	void RemakeConstraint();
 
 private:
 
-	bool fromLoad = false;
-
 	btTypedConstraint* constraint = nullptr;
-	/*btVector3 pivotA;
-	btVector3 pivotB;*/
 	float3 pivotA;
 	float3 pivotB;
 	bool disable_collision = false;
+	bool check_rigid_body_exist = true;
 
 	GameObject* connected_body = nullptr; // both gameobjects need a physics rigidbody
 	UID connected_body_id = 0;

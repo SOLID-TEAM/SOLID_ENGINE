@@ -71,7 +71,6 @@ private:
 protected:
 
 	bool is_trigger = false;
-	bool is_loaded = false;
 
 	float3 center;
 	float3 scaled_center;

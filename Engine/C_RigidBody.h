@@ -81,7 +81,7 @@ private:
 	// Body used in physics simulation
 	btRigidBody* body = nullptr;
 	// Used when GameObejct has not a collider
-	btEmptyShape* empty_shape = nullptr;
+	btBoxShape* aux_shape = nullptr;
 	// Collider component
 	C_Collider* collider = nullptr;
 };

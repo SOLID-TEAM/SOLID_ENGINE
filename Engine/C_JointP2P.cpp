@@ -11,61 +11,107 @@ C_JointP2P::C_JointP2P(GameObject* go) : Component(go, ComponentType::JOINTP2P)
 
 	pivotA = float3::zero;
 	pivotB = float3::zero;
-
-	// on component creation adds this constraint to world alone ------
-	// search for rb
-	C_RigidBody* c_rbody = linked_go->GetComponent<C_RigidBody>();
-
-	if (c_rbody == nullptr)
-	{
-		c_rbody = linked_go->AddComponent<C_RigidBody>();
-		//col->CreateCollider();
-	}
-
-	constraint = new btPoint2PointConstraint(*c_rbody->body, btVector3(pivotA.x, pivotA.y, pivotA.z));
-	constraint->setDbgDrawSize(2.0f);
-
-	App->physics->AddConstraint(constraint, disable_collision);
-
 }
 
 C_JointP2P::~C_JointP2P() {}
 
 bool C_JointP2P::Update() 
 {
-	if (fromLoad)
+	//dynamic_cast<btPoint2PointConstraint*>(constraint)->m_setting.m_damping = 0.f;
+	//dynamic_cast<btPoint2PointConstraint*>(constraint)->m_setting.m_tau = 1.f;
+	//dynamic_cast<btPoint2PointConstraint*>(constraint)->m_setting.m_impulseClamp = 1.f;
+
+	if (is_loaded)
 	{
 		connected_body = App->scene->FindByUID(connected_body_id, App->scene->root_go);
-		RemakeConstraint();
-		
-		if (connected_body == nullptr)
+
+		if (connected_body == nullptr || connected_body == App->scene->root_go)
 		{
-			
 			connected_body_id = 0;
 			pivotB = float3::zero;
+			connected_body = nullptr;
+		}
+	}
+	else
+	{
+		if (check_rigid_body_exist)
+		{
+			C_RigidBody* c_rbody = linked_go->GetComponent<C_RigidBody>();
+
+			if (c_rbody == nullptr)
+			{
+				c_rbody = linked_go->AddComponent<C_RigidBody>();
+			}
+
+			check_rigid_body_exist = false;
 		}
 
-		fromLoad = false;
+		RecreateConstraint();
+		is_loaded = false;
 	}
 
-	CheckForValidConnectedBody();
+	if (constraint == nullptr)
+	{
+		RecreateConstraint();
+	}
+	
+	if (constraint != nullptr)
+	{
+		dynamic_cast<btPoint2PointConstraint*>(constraint)->setEnabled(true);
+		dynamic_cast<btPoint2PointConstraint*>(constraint)->setPivotA(btVector3(pivotA.x, pivotA.y, pivotA.z));
+		dynamic_cast<btPoint2PointConstraint*>(constraint)->setPivotB(btVector3(pivotB.x, pivotB.y, pivotB.z));
+	}
 
 	return true;
 }
 
-bool C_JointP2P::CheckForValidConnectedBody()
+void C_JointP2P::BodyDeleted( GameObject* go)
 {
-	if (connected_body)
+	if (connected_body == go)
 	{
-		// TODO: change to rigidbody
-		if (connected_body->GetComponent<C_RigidBody>() == nullptr)
-		{
-			connected_body = nullptr;
-			RemakeConstraint();
-		}
+		connected_body = nullptr;
+		RecreateConstraint();
+	}
+}
+
+void C_JointP2P::RecreateConstraint()
+{
+	if (constraint)
+	{
+		App->physics->RemoveConstraint(constraint);
+		delete constraint;
+		constraint = nullptr;
 	}
 
-	return true;
+	C_RigidBody* c_rb_a = linked_go->GetComponent<C_RigidBody>();
+	C_RigidBody* c_rb_b = (connected_body) ? connected_body->GetComponent<C_RigidBody>() : nullptr;
+
+	if (c_rb_a && c_rb_b)
+	{
+		if (is_loaded == false)
+		{
+			float3 pos = c_rb_a->linked_go->transform->position;
+			pos = c_rb_b->linked_go->transform->GetGlobalTransform().Inverted().TransformPos(pos);
+			pivotB = pos;
+		}
+
+		constraint = new btPoint2PointConstraint(*c_rb_a->body, *c_rb_b->body, ToBtVector3(pivotA), ToBtVector3(pivotB));
+	}
+	else if (c_rb_a)
+	{
+		if (is_loaded == false)
+		{
+			pivotB = c_rb_a->linked_go->transform->position;
+		}
+		constraint = new btPoint2PointConstraint(*c_rb_a->body, ToBtVector3(pivotA));	
+	}
+
+	if (constraint != nullptr)
+	{
+		constraint->setUserConstraintPtr(this);  // Add ptr reference	
+		constraint->setDbgDrawSize(2.0f);
+		App->physics->AddConstraint(constraint, disable_collision);
+	}
 }
 
 bool C_JointP2P::Render()
@@ -79,6 +125,8 @@ bool C_JointP2P::Render()
 bool C_JointP2P::DrawPanelInfo()
 {
 	bool body_linked = connected_body ? true : false;
+	bool last_disable_collision = disable_collision;
+	bool changed_conected_body = false;
 
 	ImGui::Title("Connected Body"); ImGui::Button(body_linked ? connected_body->GetName() : "none", ImVec2(120, 22)); ImGui::SameLine();
 
@@ -118,6 +166,7 @@ bool C_JointP2P::DrawPanelInfo()
 			{
 				color = color_green;
 				validBody = true;
+				changed_conected_body = true;
 			}
 		}
 
@@ -136,29 +185,23 @@ bool C_JointP2P::DrawPanelInfo()
 	App->editor->HelpMarker("Drag and drop a gameobject with rigidbody component attached to link to");
 	
 	// --------------------
-	ImGui::PushID(linked_go);
 	ImGui::Title("Pivot A", 1);	
-	if (ImGui::DragFloat3("##anchor", pivotA.ptr(), 0.1f))
-	{
-		dynamic_cast<btPoint2PointConstraint*>(constraint)->setPivotA(btVector3(pivotA.x, pivotA.y, pivotA.z));
-	}
-	ImGui::PopID();
+	ImGui::DragFloat3("##pivotA", pivotA.ptr(), 0.1f);
 	// linked rigibody ---
 	if (!body_linked)
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.1f, 1.0f));
 	ImGui::Title("Pivot B", 1);	
-	if (ImGui::DragFloat3("##anchor", pivotB.ptr(), 0.1f))
-	{
-		dynamic_cast<btPoint2PointConstraint*>(constraint)->setPivotB(btVector3(pivotB.x, pivotB.y, pivotB.z));
-	}
+	ImGui::DragFloat3("##pivotB", pivotB.ptr(), 0.1f);
 	if(!body_linked)
 		ImGui::PopStyleColor();
-
 	ImGui::Title("Disable Collision", 1); 
-	if (ImGui::Checkbox("##col", &disable_collision))
+	ImGui::Checkbox("##col", &disable_collision);
+
+	if (last_disable_collision != disable_collision || changed_conected_body)
 	{
-		RemakeConstraint();
+		RecreateConstraint();
 	}
+
 	// --------------------
 
 	return true;
@@ -166,36 +209,36 @@ bool C_JointP2P::DrawPanelInfo()
 
 void C_JointP2P::RemakeConstraint()
 {
-	App->physics->RemoveConstraint(constraint);
+	//App->physics->RemoveConstraint(constraint);
 
-	delete constraint;
+	//delete constraint;
 
-	btRigidBody* bodyB = nullptr;
-	if (connected_body != nullptr)
-		bodyB = connected_body->GetComponent<C_RigidBody>()->body;
+	//btRigidBody* bodyB = nullptr;
+	//if (connected_body != nullptr)
+	//	bodyB = connected_body->GetComponent<C_RigidBody>()->body;
 
-	if (bodyB)
-	{
-		constraint = new btPoint2PointConstraint(
-			*linked_go->GetComponent<C_RigidBody>()->body,
-			*bodyB,
-			btVector3(pivotA.x, pivotA.y, pivotA.z),
-			btVector3(pivotB.x, pivotB.y, pivotB.z));
-	}
-	else
-	{
-		constraint = new btPoint2PointConstraint(*linked_go->GetComponent<C_RigidBody>()->body, btVector3(pivotA.x, pivotA.y, pivotA.z));
-	}
+	//if (bodyB)
+	//{
+	//	constraint = new btPoint2PointConstraint(
+	//		*linked_go->GetComponent<C_RigidBody>()->body,
+	//		*bodyB,
+	//		btVector3(pivotA.x, pivotA.y, pivotA.z),
+	//		btVector3(pivotB.x, pivotB.y, pivotB.z));
+	//}
+	//else
+	//{
+	//	constraint = new btPoint2PointConstraint(*linked_go->GetComponent<C_RigidBody>()->body, btVector3(pivotA.x, pivotA.y, pivotA.z));
+	//}
 
-	btVector3 _pivotA = dynamic_cast<btPoint2PointConstraint*>(constraint)->getPivotInA();
-	pivotA = { _pivotA.x(), _pivotA.y(), _pivotA.z() };
+	//btVector3 _pivotA = dynamic_cast<btPoint2PointConstraint*>(constraint)->getPivotInA();
+	//pivotA = { _pivotA.x(), _pivotA.y(), _pivotA.z() };
 
-	btVector3 _pivotB = dynamic_cast<btPoint2PointConstraint*>(constraint)->getPivotInB();
-	pivotB = { _pivotB.x(), _pivotB.y(), _pivotB.z() };
+	//btVector3 _pivotB = dynamic_cast<btPoint2PointConstraint*>(constraint)->getPivotInB();
+	//pivotB = { _pivotB.x(), _pivotB.y(), _pivotB.z() };
 
-	constraint->setDbgDrawSize(2.0f);
+	//constraint->setDbgDrawSize(2.0f);
 
-	App->physics->AddConstraint(constraint, disable_collision);
+	//App->physics->AddConstraint(constraint, disable_collision);
 }
 
 bool C_JointP2P::CleanUp()
@@ -226,12 +269,6 @@ bool C_JointP2P::Load(Config& config)
 	pivotA = config.GetFloat3("pivotA", { 0.f ,0.f, 0.f });
 	pivotB = config.GetFloat3("pivotB", { 0.f ,0.f, 0.f });
 	disable_collision = config.GetBool("BodiesCollision", true);
-
-	dynamic_cast<btPoint2PointConstraint*>(constraint)->setPivotA(btVector3(pivotA.x, pivotA.y, pivotA.z));
-	dynamic_cast<btPoint2PointConstraint*>(constraint)->setPivotB(btVector3(pivotB.x, pivotB.y, pivotB.z));
-
-	if (connected_body_id > 0)
-		fromLoad = true;
 
 	return true;
 }
