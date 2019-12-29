@@ -14,7 +14,7 @@ C_Vehicle::C_Vehicle(GameObject* go) : Component(go, ComponentType::VEHICLE)
 	C_RigidBody* r_body = linked_go->GetComponent<C_RigidBody>();
 
 	if (col == nullptr)
-		linked_go->AddComponent<C_ConvexHullCollider>();
+		linked_go->AddComponent<C_BoxCollider>();
 	if (r_body == nullptr)
 		linked_go->AddComponent<C_RigidBody>();
 
