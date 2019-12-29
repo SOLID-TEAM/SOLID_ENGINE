@@ -25,11 +25,11 @@ C_RigidBody::C_RigidBody(GameObject* go) : Component(go, ComponentType::RIGID_BO
 
 	aux_shape = new btBoxShape(btVector3(1.f,1.f,1.f));
 
-	// Create Body  --------------------------------
-
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,  nullptr, aux_shape);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, nullptr, aux_shape);
 	body = new btRigidBody(rbInfo);
 	body->setUserPointer(linked_go);
+
+	SetBodyTranform(linked_go->transform->GetPosition(), linked_go->transform->GetQuatRotation() );
 	App->physics->AddBody(body);
 }
 

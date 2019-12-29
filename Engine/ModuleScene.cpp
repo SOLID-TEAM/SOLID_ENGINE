@@ -63,7 +63,9 @@ bool ModuleScene::Start(Config& config)
 	//ToLoadScene("default.solidscene");
 
 	// TODO: assignment 2 requeriment, auto-load street
-	//App->resources->ImportFileDropped("Assets/Models/street/Street environment_V01.FBX");
+	App->resources->ImportFileDropped("Assets/Models/Monkey/monkey.fbx");
+	App->resources->ImportFileDropped(".Editor/Models/sphere.fbx");
+	App->resources->ImportFileDropped(".Editor/Models/cube.fbx");
 
 	return true;
 }
@@ -1168,7 +1170,7 @@ GameObject* ModuleScene::CreateGameObjectFromModel(UID uid)
 	// when we are done creating a usable gameobjects classes from model data, unload model
 	model->Release();
 
-	return nullptr;
+	return all_go[0];
 }
 
 std::string ModuleScene::GetSceneName() const

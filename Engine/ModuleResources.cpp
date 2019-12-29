@@ -173,9 +173,11 @@ UID ModuleResources::GenerateNewUID()
 UID ModuleResources::Find(const char* file_in_assets) const
 {
 	std::string file = App->file_sys->NormalizePath(file_in_assets);
-
+		
 	for (std::map<UID, Resource*>::const_iterator it = resources.begin(); it != resources.end(); ++it)
 	{
+		LOG("namr: %s", it->second->GetOriginalFile().c_str());
+
 		if (it->second->GetOriginalFile().compare(file) == 0)
 		{
 			LOG("[Info] Resource duplicated, returning loaded resource %s", it->second->GetExportedFile().c_str());
@@ -189,6 +191,7 @@ Resource* ModuleResources::FindByName(const char* name) const
 {
 	for (std::map<UID, Resource*>::const_iterator it = resources.begin(); it != resources.end(); ++it)
 	{
+
 		if (it->second->GetName().compare(name) == 0)
 		{
 			return it->second;
@@ -269,9 +272,9 @@ void ModuleResources::ImportFileDropped(const char* file)
 
 			UID uid = ImportFile((final_path + filename).c_str(), type, path, force_find);
 			
-			// TODO: testing creating gameobjects from model
-			if(type == Resource::Type::MODEL)
-				App->scene->CreateGameObjectFromModel(uid);
+			//// TODO: testing creating gameobjects from model
+			//if(type == Resource::Type::MODEL)
+			//	App->scene->CreateGameObjectFromModel(uid);
 
 		}
 		else

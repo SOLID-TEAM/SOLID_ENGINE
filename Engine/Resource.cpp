@@ -34,6 +34,11 @@ bool Resource::LoadToMemory()
 	return loaded > 0;
 }
 
+const char* Resource::GetCharName()
+{
+	return name.c_str();
+}
+
 std::string Resource::GetNameFromUID() const
 {
 	return std::to_string(uid);

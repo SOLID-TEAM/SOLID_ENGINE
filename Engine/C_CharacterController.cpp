@@ -41,8 +41,18 @@ bool C_CharacterController::Update()
 
 	if (App->time->GetGameState() != GameState::STOP)
 	{
-		App->editor->w_game->GetViewportSize();
-		//linked_go->transform->SetRotation();
+		if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+		{
+			UID uid = App->resources->Find("Assets/Models/sphere.fbx");
+			GameObject* ball = App->scene->CreateGameObjectFromModel(uid);
+		
+			ball->transform->SetPosition(linked_go->transform->GetPosition() - linked_go->transform->forward * 3.f);
+			ball->transform->SetRotation(linked_go->transform->GetRotation());
+			C_RigidBody* ball_rb = ball->AddComponent<C_RigidBody>();
+			C_SphereCollider* ball_coll = ball->AddComponent<C_SphereCollider>();
+
+			ball_rb->AddForce(-float3::unitZ  *60.F, ForceMode::IMPULSE, Space::Local);
+		}
 
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 			current_rb->AddForce( float3::unitY * 10.F);
@@ -68,16 +78,16 @@ bool C_CharacterController::Update()
 		float3 movement(0.f, 0.f, 0.f);
 
 		if (App->input->GetKey(SDL_SCANCODE_U) == KEY_REPEAT)
-			movement -= float3::unitZ;
+			movement -= linked_go->transform->forward ;
 
 		if (App->input->GetKey(SDL_SCANCODE_J) == KEY_REPEAT)
-			movement += float3::unitZ;
+			movement += linked_go->transform->forward ;
 
 		if (App->input->GetKey(SDL_SCANCODE_H) == KEY_REPEAT)
-			movement -= float3::unitX;
+			movement -= linked_go->transform->right;
 
 		if (App->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT)
-			movement += float3::unitX;
+			movement += linked_go->transform->right;
 
 		if(!movement.Equals(float3::zero))
 		{

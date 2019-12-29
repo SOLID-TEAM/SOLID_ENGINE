@@ -94,6 +94,8 @@ private:
 	btBoxShape* aux_shape = nullptr;
 	// Collider component
 	C_Collider* collider = nullptr;
+	// MotionState 
+	btMotionState* motion_state = nullptr;
 };
 
 #endif // !_C_RIGID_BODY_H__

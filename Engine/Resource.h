@@ -27,6 +27,8 @@ public:
 
 	virtual ~Resource() {}
 
+	const char* GetCharName();
+
 	std::string & GetName() { return name; }
 
 	Resource::Type GetType() const { return type; }

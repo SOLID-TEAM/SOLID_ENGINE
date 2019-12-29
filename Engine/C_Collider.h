@@ -74,8 +74,8 @@ protected:
 
 	bool is_trigger = false;
 
-	float3 center;
-	float3 scaled_center;
+	float3 center = float3::zero;
+	float3 scaled_center = float3::zero;
 
 	float bouncing = 0.f;
 	float friction = 0.f;
