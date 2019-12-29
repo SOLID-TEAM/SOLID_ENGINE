@@ -136,34 +136,42 @@ void W_Inspector::DrawAddComponents(GameObject* selected_go)
 					// test
 					if (names[i] == "Box Collider")
 					{
-						selected_go->AddComponent<C_BoxCollider>();
+						if (selected_go->GetComponent<C_BoxCollider>() == nullptr)
+							selected_go->AddComponent<C_BoxCollider>();
 					}
 					else if (names[i] == "Sphere Collider")
 					{
-						selected_go->AddComponent<C_SphereCollider>();
+						if (selected_go->GetComponent<C_SphereCollider>() == nullptr)
+							selected_go->AddComponent<C_SphereCollider>();
 					}
 					else if (names[i] == "Capsule Collider")
 					{
+						if (selected_go->GetComponent<C_CapsuleCollider>() == nullptr)
 						selected_go->AddComponent<C_CapsuleCollider>();
 					}
 					else if (names[i] == "ConvexHull Collider")
 					{
+						if (selected_go->GetComponent<C_ConvexHullCollider>() == nullptr)
 						selected_go->AddComponent<C_ConvexHullCollider>();
 					}
 					else if (names[i] == "RigidBody")
 					{
+						if (selected_go->GetComponent<C_RigidBody>() == nullptr)
 						selected_go->AddComponent<C_RigidBody>();
 					}
 					else if (names[i] == "Joint P2P")
 					{
+						if (selected_go->GetComponent<C_JointP2P>() == nullptr)
 						selected_go->AddComponent<C_JointP2P>();
 					}
 					else if (names[i] == "Character Controller")
 					{
+						if (selected_go->GetComponent<C_CharacterController>() == nullptr)
 						selected_go->AddComponent<C_CharacterController>();
 					}
 					else if (names[i] == "Vehicle Controller")
 					{
+						if (selected_go->GetComponent<C_Vehicle>() == nullptr)
 						selected_go->AddComponent<C_Vehicle>();
 					}
 

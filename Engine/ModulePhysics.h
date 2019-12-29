@@ -73,9 +73,9 @@ public:
 	void AddConstraintHinge(PhysBody& bodyA, PhysBody& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisS, const vec3& axisB, bool disable_collision = false);
 
 public:
-	// TODO: MOVE TO PRIVATE, temporaly for fast test
+
 	btDefaultVehicleRaycaster* vehicle_raycaster = nullptr;
-	btDiscreteDynamicsWorld* world = nullptr;
+
 private:
 
 	DebugRenderer* debug_renderer = nullptr;
@@ -83,9 +83,7 @@ private:
 	btCollisionDispatcher* dispatcher = nullptr;
 	btBroadphaseInterface* broad_phase = nullptr;
 	btSequentialImpulseConstraintSolver* solver = nullptr;
-	
-	
-
+	btDiscreteDynamicsWorld* world = nullptr;
 	std::list<btTypedConstraint*> constraints;
 };
 

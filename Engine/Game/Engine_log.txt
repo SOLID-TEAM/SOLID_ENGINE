@@ -4,9 +4,20 @@
 [Init] SDL window & surface
 [Init] SDL input event system
 [Init] Loaded configuration file Library/Settings/lastuid
+[Init] Loaded configuration file Assets/Models/Street environment_V01.FBX.meta
+[Init] Loaded configuration file Assets/Models/alone_city_car13.fbx.meta
 [Init] Loaded configuration file Assets/Models/cube.fbx.meta
 [Init] Loaded configuration file Assets/Models/monkey.fbx.meta
 [Init] Loaded configuration file Assets/Models/sphere.fbx.meta
+[Init] Loaded configuration file Assets/Textures/Building_V01_C.png.meta
+[Init] Loaded configuration file Assets/Textures/Building_V02_C.png.meta
+[Init] Loaded configuration file Assets/Textures/Car_09.png.meta
+[Init] Loaded configuration file Assets/Textures/building 01_c.tga.meta
+[Init] Loaded configuration file Assets/Textures/building 06_ c.tga.meta
+[Init] Loaded configuration file Assets/Textures/building03_c.tga.meta
+[Init] Loaded configuration file Assets/Textures/building05 _c.tga.meta
+[Init] Loaded configuration file Assets/Textures/building_016_c.tga.meta
+[Init] Loaded configuration file Assets/Textures/building_025_c.tga.meta
 Creating 3D Physics simulation
 Loading File System
 [Info] Using Developer's Image Library (DevIL) 1.8.0
@@ -28,10 +39,52 @@ namr:
 namr: 
 namr: 
 namr: 
-namr: Assets/Models/cube.fbx
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: Assets/Textures/building 06_ c.tga
+namr: Assets/Textures/building 01_c.tga
+namr: Assets/Models/alone_city_car13.fbx
+namr: Assets/Textures/Building_V02_C.png
+namr: Assets/Textures/building05 _c.tga
+namr: Assets/Textures/Building_V01_C.png
 namr: Assets/Models/sphere.fbx
+namr: Assets/Textures/building03_c.tga
+namr: Assets/Models/Street environment_V01.FBX
+namr: Assets/Textures/Car_09.png
+namr: Assets/Textures/building_016_c.tga
+namr: Assets/Textures/building_025_c.tga
+namr: Assets/Models/cube.fbx
 namr: Assets/Models/monkey.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/2090628675
+[Info] Resource duplicated, returning loaded resource Assets/Models/1998604779
 [Info:ModuleResources] Recognized file extension .fbx
 [success] File Duplicated Correctly
 [Info:ModuleResources] Dropped file duplicated to Assets/Models/sphere.fbx
@@ -41,9 +94,45 @@ namr:
 namr: 
 namr: 
 namr: 
-namr: Assets/Models/cube.fbx
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: Assets/Textures/building 06_ c.tga
+namr: Assets/Textures/building 01_c.tga
+namr: Assets/Models/alone_city_car13.fbx
+namr: Assets/Textures/Building_V02_C.png
+namr: Assets/Textures/building05 _c.tga
+namr: Assets/Textures/Building_V01_C.png
 namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
+[Info] Resource duplicated, returning loaded resource Assets/Models/807895041
 [Info:ModuleResources] Recognized file extension .fbx
 [success] File Duplicated Correctly
 [Info:ModuleResources] Dropped file duplicated to Assets/Models/cube.fbx
@@ -53,8 +142,51 @@ namr:
 namr: 
 namr: 
 namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: 
+namr: Assets/Textures/building 06_ c.tga
+namr: Assets/Textures/building 01_c.tga
+namr: Assets/Models/alone_city_car13.fbx
+namr: Assets/Textures/Building_V02_C.png
+namr: Assets/Textures/building05 _c.tga
+namr: Assets/Textures/Building_V01_C.png
+namr: Assets/Models/sphere.fbx
+namr: Assets/Textures/building03_c.tga
+namr: Assets/Models/Street environment_V01.FBX
+namr: Assets/Textures/Car_09.png
+namr: Assets/Textures/building_016_c.tga
+namr: Assets/Textures/building_025_c.tga
 namr: Assets/Models/cube.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1440237459
+[Info] Resource duplicated, returning loaded resource Assets/Models/1716450884
 Loading Test assets
 [Start] Loading Editor
 // ---------------------------------------------------
@@ -107,1289 +239,18 @@ Loading Test assets
 [Info] Image deleted from DevIL
 // ---------------------------------------------------
 -------------- Application Update --------------
-[Init] Loaded configuration file Assets/untitled.solidscene
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-[Init] Loaded configuration file Library/Settings/untitled.solidscene
-File deleted: [Library/Settings/untitled.solidscene]
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: 
-namr: Assets/Models/cube.fbx
-namr: Assets/Models/sphere.fbx
-[Info] Resource duplicated, returning loaded resource Assets/Models/1659839456
-[Init] Loaded configuration file Library/Settings/untitled.solidscene
-File deleted: [Library/Settings/untitled.solidscene]
+[Init] Loaded configuration file Assets/assigment_3.solidscene
+[Init] Loaded configuration file Library/Settings/assigment_3.solidscene
+File deleted: [Library/Settings/assigment_3.solidscene]
+[Init] Loaded configuration file Assets/assigment_3.solidscene
+[Init] Loaded configuration file Library/Settings/assigment_3.solidscene
+File deleted: [Library/Settings/assigment_3.solidscene]
+[Init] Loaded configuration file Library/Settings/assigment_3.solidscene
+File deleted: [Library/Settings/assigment_3.solidscene]
+[Init] Loaded configuration file Library/Settings/assigment_3.solidscene
+File deleted: [Library/Settings/assigment_3.solidscene]
+[Init] Loaded configuration file Library/Settings/assigment_3.solidscene
+File deleted: [Library/Settings/assigment_3.solidscene]
 -------------- Application CleanUp --------------
 [CleanUp] Destroying 3D Renderer
 [CleanUp] Unloading Editor

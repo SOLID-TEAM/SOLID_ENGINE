@@ -180,7 +180,6 @@ bool R_Model::LoadInMemory()
 
 void R_Model::LoadDependencies()
 {
-
 	if (LoadNodesFromFile())
 	{
 		for (uint i = 0; i < nodes.size(); ++i)

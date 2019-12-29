@@ -242,7 +242,7 @@ bool C_Vehicle::Render()
 	}
 
 	// test debug draw
-	App->physics->world->debugDrawWorld();
+	//App->physics->world->debugDrawWorld();
 
 	return true;
 }
