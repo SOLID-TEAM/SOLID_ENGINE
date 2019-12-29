@@ -400,6 +400,9 @@ bool GameObject::Load(Config& config, std::map<GameObject*, uint>& relationship)
 			case ComponentType::CHARACTER_CONTROLLER:
 				new_component = AddComponent<C_CharacterController>();
 				break;
+			case ComponentType::VEHICLE:
+				new_component = AddComponent<C_Vehicle>();
+				break;
 			case ComponentType::NO_TYPE:
 				break;
 			default:

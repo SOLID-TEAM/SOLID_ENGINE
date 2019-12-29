@@ -22,6 +22,7 @@ enum class ComponentType
 	RIGID_BODY,
 	CHARACTER_CONTROLLER,
 	JOINTP2P,
+	VEHICLE,
 	NO_TYPE // last
 };
 

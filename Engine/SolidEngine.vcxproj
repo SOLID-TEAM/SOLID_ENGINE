@@ -440,6 +440,7 @@
     <ClInclude Include="C_JointP2P.h" />
     <ClInclude Include="C_RigidBody.h" />
     <ClInclude Include="C_SphereCollider.h" />
+    <ClInclude Include="C_Vehicle.h" />
     <ClInclude Include="DynTree.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Component.h" />
@@ -776,6 +777,7 @@
     <ClCompile Include="C_JointP2P.cpp" />
     <ClCompile Include="C_RigidBody.cpp" />
     <ClCompile Include="C_SphereCollider.cpp" />
+    <ClCompile Include="C_Vehicle.cpp" />
     <ClCompile Include="DynTree.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Component.cpp" />
