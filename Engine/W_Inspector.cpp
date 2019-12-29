@@ -117,7 +117,8 @@ void W_Inspector::DrawAddComponents(GameObject* selected_go)
 		
 		if (ImGui::BeginPopup("add_component_popup", ImGuiWindowFlags_NoScrollbar))
 		{
-			const char* names[] = { "Mesh", "Material", "Camera", "Light","Mesh Renderer","Box Collider", "Sphere Collider", "Capsule Collider","ConvexHull Collider","RigidBody", "Joint P2P", "Character Controller" };
+			const char* names[] = { "Mesh", "Material", "Camera", "Light","Mesh Renderer","Box Collider", 
+				"Sphere Collider", "Capsule Collider","ConvexHull Collider","RigidBody", "Joint P2P", "Character Controller", "Vehicle Controller" };
 			
 			uint size = IM_ARRAYSIZE(names);
 
@@ -160,6 +161,10 @@ void W_Inspector::DrawAddComponents(GameObject* selected_go)
 					else if (names[i] == "Character Controller")
 					{
 						selected_go->AddComponent<C_CharacterController>();
+					}
+					else if (names[i] == "Vehicle Controller")
+					{
+						selected_go->AddComponent<C_Vehicle>();
 					}
 
 					ImGui::CloseCurrentPopup();

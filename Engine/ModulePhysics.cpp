@@ -174,6 +174,16 @@ void ModulePhysics::RemoveConstraint(btTypedConstraint* constraint)
 	world->removeConstraint(constraint);
 }
 
+void ModulePhysics::AddVehicle(btRaycastVehicle* vehicle)
+{
+	world->addVehicle(vehicle);
+}
+
+void ModulePhysics::RemoveVehicle(btRaycastVehicle* vehicle)
+{
+	world->removeVehicle(vehicle);
+}
+
 //RigidBody* ModulePhysics::AddBody(const Sphere& sphere, float mass)
 //{
 //	btCollisionShape* colShape = new btSphereShape(sphere.radius);

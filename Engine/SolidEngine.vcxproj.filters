@@ -1548,6 +1548,9 @@
     <ClInclude Include="C_CharacterController.h">
       <Filter>Sources\Game Object\Components</Filter>
     </ClInclude>
+    <ClInclude Include="C_Vehicle.h">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -2430,6 +2433,9 @@
       <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
     <ClCompile Include="C_CharacterController.cpp">
+      <Filter>Sources\Game Object\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="C_Vehicle.cpp">
       <Filter>Sources\Game Object\Components</Filter>
     </ClCompile>
   </ItemGroup>

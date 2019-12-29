@@ -24,6 +24,7 @@
 #include "C_RigidBody.h"
 #include "C_JointP2P.h"
 #include "C_CharacterController.h"
+#include "C_Vehicle.h"
 
 #include <typeinfo>
 #include <list>
@@ -55,6 +56,7 @@ public:
 	friend	C_Collider;
 	friend  C_RigidBody;
 	friend  C_JointP2P;
+	friend C_Vehicle;
 
 public:
 
@@ -209,6 +211,8 @@ T* GameObject::AddComponent()
 		new_component = (T*)new C_JointP2P(this);
 	else if (typeid(C_CharacterController) == typeid(T))
 		new_component = (T*)new C_CharacterController(this);
+	else if (typeid(C_Vehicle) == typeid(T))
+		new_component = (T*)new C_Vehicle(this);
 
 
 	if (new_component != nullptr)
