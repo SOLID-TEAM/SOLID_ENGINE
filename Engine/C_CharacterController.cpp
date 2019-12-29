@@ -48,6 +48,7 @@ bool C_CharacterController::Update()
 		
 			ball->transform->SetPosition(linked_go->transform->GetPosition() - linked_go->transform->forward * 3.f);
 			ball->transform->SetRotation(linked_go->transform->GetRotation());
+
 			C_RigidBody* ball_rb = ball->AddComponent<C_RigidBody>();
 			C_SphereCollider* ball_coll = ball->AddComponent<C_SphereCollider>();
 
