@@ -5,6 +5,10 @@
 -  [Code](https://github.com/SOLID-TEAM/SOLID_ENGINE)
 - [Release](https://github.com/SOLID-TEAM/SOLID_ENGINE/releases/tag/Assignment3.0)
 
+# Video
+
+<iframe width="100%" height="500" src="https://www.youtube.com/embed/I8HB0hHQbtI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 # Downloads
 
  Zip: <a class="github-button" href="https://github.com/SOLID-TEAM/SOLID_ENGINE/releases/download/Assignment3.0/Assigment3.zip" data-icon="octicon-cloud-download" aria-label="Download ntkme/github-buttons on GitHub">Solid Engine 3.0</a>
@@ -82,10 +86,6 @@ The component needs a collider and a rigid body. Turn any game object into a cha
 The component needs a collider and a rigid body. Turn any game object into a vehicle . Some keys have been added as a demo to test the physics.
 
 -   **Arrows :**  movement
-
-# Videos
-
-<iframe width="100%" height="500" src="https://www.youtube.com/embed/I8HB0hHQbtI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 # Team
 
