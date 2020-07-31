@@ -107,7 +107,16 @@ The component needs a collider and a rigid body. Turn any game object into a veh
 <iframe src="" width="300" height="400"></iframe>
 
 ###  Member implementations
-
+- OpenGl rendering.
+- Imgui implementation.
+- 3D models importing system to own custom extension.
+- Meshes and models own file structures.
+- Materials and texture systems.
+- Resources management system.
+- Module Physics core.
+- Vehicle controller.
+- Joints P2P through components and simple drag and drop.
+- Components: Colliders convex, reshaping of collision mesh, vehicle controller, joint point to point.
 
 # License
 
